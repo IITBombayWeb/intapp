@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * @file
+ * This module is an add-on to the FAQ module that allows users with the 'ask question'
+ * permission to create a question which will be queued for an 'expert' to answer.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function excel_import_export_schema() {
+  $schema['excel_import_export_imports'] = array(
+    'description' => 'Excel import details table.',
+    'fields' => array(
+      'sid' => array(
+        'description' => 'The primary identifier for import files.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        ),
+      'uid' => array(
+        'description' => 'User Who imported',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        ),
+      'timestamp' => array(
+        'description' => 'Import start time stamp.',
+        'type' => 'varchar',
+        'length' => '25',
+        'not null' => TRUE,
+        'default' => '',
+        ),
+      'total_import' => array(
+        'description' => 'Total imports in upload.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        ),
+      'total_invalid_nodes' => array(
+        'description' => 'Total invalid nodes in upload.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        ),
+      'invalid_nodes' => array(
+        'description' => 'Invalid nodes in upload.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        ),
+      'valid_imports' => array(
+        'description' => 'Valid import nids.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        ),
+      'total_valid_imports' => array(
+        'description' => 'Total valid imports.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        ),
+      'invalid_imports' => array(
+        'description' => 'Invalid import nids.',
+       'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        ),
+      'total_invalid_imports' => array(
+        'description' => 'Total invalid imports.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        ),
+      ),
+    'primary key' => array('sid'),
+  );
+  return $schema;
+}
