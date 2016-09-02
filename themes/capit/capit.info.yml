@@ -1,0 +1,25 @@
+core: 8.x
+type: theme
+base theme: bootstrap
+
+name: 'CAP-IT'
+description: 'Default theme for CAP-IT.'
+package: 'Bootstrap'
+
+regions:
+  header: 'Header'
+  primary_menu: 'Primary menu'
+  secondary_menu: 'Secondary menu'
+  highlighted: Highlighted
+  featured_top: 'Featured top'
+  navigation: 'Navigation'
+  content: 'Content'
+  sidebar_first: 'Sidebar first'
+  sidebar_second: 'Sidebar second'
+  footer: 'Footer'
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+
+libraries:
+  - 'capit/global-styling'
+  - 'capit/bootstrap-scripts'

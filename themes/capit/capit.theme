@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * Bootstrap sub-theme.
+ *
+ * Place your custom PHP code in this file.
+ */
+use Drupal\Core\Template\Attribute;
+/**
+ * Implements hook_form_alter() to add classes to the search form.
+ */
+function capit_preprocess_block(&$vars) {
+	if ($vars['plugin_id'] == 'search_api_page_form_block') {
+    $vars['attributes']['class'][] = 'search-div';
+  }
+}

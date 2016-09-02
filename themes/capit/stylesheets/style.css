@@ -1,0 +1,1511 @@
+@charset "UTF-8";
+/**
+ * Default Variables.
+ *
+ * Modify this file to provide default Bootstrap Framework variables. The
+ * Bootstrap Framework will not override any variables defined here because it
+ * uses the `!default` flag which will only set their default if not already
+ * defined here.
+ *
+ * You can copy existing variables directly from the following file:
+ * ./THEMENAME/bootstrap/assets/stylesheets/_variables.scss
+ */
+/* line 1, ../sass/_overrides.scss */
+.clearfix:before, .filter-wrapper:before, .clearfix:after, .filter-wrapper:after {
+  content: " ";
+  display: table;
+}
+
+/* line 5, ../sass/_overrides.scss */
+.clearfix:after, .filter-wrapper:after {
+  clear: both;
+}
+
+/**
+ * Alert styling.
+ */
+/* line 4, ../sass/component/_alert.scss */
+.alert-sm {
+  padding: 5px 10px;
+}
+
+/* line 9, ../sass/component/_alert.scss */
+.alert a {
+  font-weight: bold;
+}
+
+/* line 13, ../sass/component/_alert.scss */
+.alert-success a, .alert-success a:hover, .alert-success a:focus {
+  color: #2b542c;
+}
+
+/* line 18, ../sass/component/_alert.scss */
+.alert-info a, .alert-info a:hover, .alert-info a:focus {
+  color: #245269;
+}
+
+/* line 23, ../sass/component/_alert.scss */
+.alert-warning a, .alert-warning a:hover, .alert-warning a:focus {
+  color: #66512c;
+}
+
+/* line 28, ../sass/component/_alert.scss */
+.alert-danger a, .alert-danger a:hover, .alert-danger a:focus {
+  color: #843534;
+}
+
+/**
+ * AJAX (throbber) styling.
+ */
+@keyframes glyphicon-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+/* line 10, ../sass/component/_ajax.scss */
+.glyphicon-spin {
+  display: inline-block;
+  animation: glyphicon-spin 1s infinite linear;
+}
+
+/* line 14, ../sass/component/_ajax.scss */
+a .glyphicon-spin {
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* line 20, ../sass/component/_ajax.scss */
+html.js .btn .ajax-throbber {
+  margin-left: .5em;
+  margin-right: -.25em;
+}
+/* line 26, ../sass/component/_ajax.scss */
+html.js .form-item .input-group-addon .glyphicon {
+  color: #777777;
+  opacity: .5;
+  transition: 150ms color, 150ms opacity;
+}
+/* line 30, ../sass/component/_ajax.scss */
+html.js .form-item .input-group-addon .glyphicon.glyphicon-spin {
+  color: #337ab7;
+  opacity: 1;
+}
+/* line 35, ../sass/component/_ajax.scss */
+html.js .form-item .input-group-addon .input-group-addon {
+  background-color: white;
+}
+/* line 41, ../sass/component/_ajax.scss */
+html.js .ajax-new-content:empty {
+  display: none !important;
+}
+
+/**
+ * $file
+ * Visual styles for fields.
+ */
+/* line 6, ../sass/component/_field.scss */
+.field--label {
+  font-weight: bold;
+}
+
+/* line 9, ../sass/component/_field.scss */
+.field--label-inline .field--label,
+.field--label-inline .field--items {
+  float: left;
+  /*LTR*/
+}
+
+/* line 13, ../sass/component/_field.scss */
+.field--label-inline .field--label,
+.field--label-inline > .field--item,
+.field--label-inline .field--items {
+  padding-right: 0.5em;
+}
+
+/* line 18, ../sass/component/_field.scss */
+[dir="rtl"] .field--label-inline .field--label,
+[dir="rtl"] .field--label-inline .field--items {
+  padding-left: 0.5em;
+  padding-right: 0;
+}
+
+/* line 23, ../sass/component/_field.scss */
+.field--label-inline .field--label::after {
+  content: ':';
+}
+
+/**
+ * File (and Image Widget) styles.
+ */
+/* line 4, ../sass/component/_file.scss */
+.file {
+  display: table;
+  font-size: 75%;
+  font-weight: 700;
+  margin: 5px 0;
+  width: 100%;
+}
+/* line 10, ../sass/component/_file.scss */
+.file > span {
+  background: #fff;
+  color: #337ab7;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+/* line 15, ../sass/component/_file.scss */
+.file > span:first-child {
+  border-left: 1px solid #ccc;
+}
+/* line 18, ../sass/component/_file.scss */
+.file > span:last-child {
+  border-right: 1px solid #ccc;
+}
+/* line 22, ../sass/component/_file.scss */
+.file > .tabledrag-changed {
+  background: #fcf8e3;
+  border-radius: 0;
+  color: #8a6d3b;
+  display: table-cell;
+  padding: 0 1em;
+  top: 0;
+  vertical-align: middle;
+  border-left: 1px solid inherit;
+}
+/* line 23, ../sass/component/_file.scss */
+.file > .tabledrag-changed, .file > .tabledrag-changed:last-child {
+  border: 1px solid #f7e1b5;
+}
+
+/* line 36, ../sass/component/_file.scss */
+.file-icon {
+  display: table-cell;
+  font-size: 150%;
+  padding: .25em .5em;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* line 43, ../sass/component/_file.scss */
+.file-link {
+  display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+}
+/* line 47, ../sass/component/_file.scss */
+.file-link a, .file-link a:hover, .file-link a:focus, .file-link a:active {
+  color: inherit;
+}
+
+/* line 51, ../sass/component/_file.scss */
+.file-size {
+  display: table-cell;
+  padding: 0 1em;
+  text-align: right;
+  white-space: pre;
+  vertical-align: middle;
+}
+
+/* line 59, ../sass/component/_file.scss */
+.image-widget.row {
+  overflow: hidden;
+}
+
+/**
+ * Filter styles.
+ */
+/* line 6, ../sass/component/_filter.scss */
+.filter-wrapper {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  margin-bottom: 0;
+  padding: 10px;
+  height: 51px;
+}
+
+/* line 17, ../sass/component/_filter.scss */
+.filter-help {
+  float: right;
+  line-height: 1;
+  margin: .5em 0 0;
+}
+
+/* line 24, ../sass/component/_filter.scss */
+.nav.nav-tabs.filter-formats {
+  margin-bottom: 15px;
+}
+
+/**
+ * Form styles.
+ */
+/* line 8, ../sass/component/_form.scss */
+.select-wrapper {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+}
+/* line 12, ../sass/component/_form.scss */
+.form-inline .select-wrapper {
+  width: auto;
+}
+/* line 15, ../sass/component/_form.scss */
+.input-group .select-wrapper {
+  display: table-cell;
+}
+/* line 18, ../sass/component/_form.scss */
+.input-group .select-wrapper:first-child .form-control:first-child {
+  -moz-border-radius-topleft: 4px;
+  -webkit-border-top-left-radius: 4px;
+  border-top-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+/* line 21, ../sass/component/_form.scss */
+.input-group .select-wrapper:last-child .form-control:first-child {
+  -moz-border-radius-topright: 4px;
+  -webkit-border-top-right-radius: 4px;
+  border-top-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+/* line 25, ../sass/component/_form.scss */
+.select-wrapper select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  line-height: 1;
+  padding-right: 2em;
+}
+/* line 31, ../sass/component/_form.scss */
+.select-wrapper select::-ms-expand {
+  opacity: 0;
+}
+/* line 35, ../sass/component/_form.scss */
+.select-wrapper:after {
+  color: #337ab7;
+  content: '▼';
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  margin-top: -.5em;
+  padding-right: .5em;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  z-index: 10;
+}
+/* line 50, ../sass/component/_form.scss */
+.has-glyphicons .select-wrapper:after {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: '\e114';
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+}
+/* line 57, ../sass/component/_form.scss */
+.has-error .select-wrapper:after {
+  color: #a94442;
+}
+/* line 60, ../sass/component/_form.scss */
+.has-success .select-wrapper:after {
+  color: #3c763d;
+}
+/* line 63, ../sass/component/_form.scss */
+.has-warning .select-wrapper:after {
+  color: #8a6d3b;
+}
+
+/* line 72, ../sass/component/_form.scss */
+.form-required:after {
+  background-image: url(../images/required.svg);
+  background-size: 10px 7px;
+  content: "";
+  display: inline-block;
+  line-height: 1;
+  height: 7px;
+  width: 10px;
+}
+
+/**
+ * Icon styles.
+ */
+/* line 5, ../sass/component/_icon.scss */
+a.icon-before .glyphicon {
+  margin-right: .25em;
+}
+/* line 8, ../sass/component/_icon.scss */
+a.icon-after .glyphicon {
+  margin-left: .25em;
+}
+
+/* line 14, ../sass/component/_icon.scss */
+.btn.icon-before .glyphicon {
+  margin-left: -.25em;
+  margin-right: .25em;
+}
+/* line 18, ../sass/component/_icon.scss */
+.btn.icon-after .glyphicon {
+  margin-left: .25em;
+  margin-right: -.25em;
+}
+
+/**
+ * Navbar styling.
+ */
+/* line 9, ../sass/component/_navbar.scss */
+body {
+  position: relative;
+}
+/* line 14, ../sass/component/_navbar.scss */
+body.navbar-is-static-top {
+  margin-top: 0;
+}
+/* line 17, ../sass/component/_navbar.scss */
+body.navbar-is-fixed-top {
+  margin-top: 65px;
+}
+/* line 20, ../sass/component/_navbar.scss */
+body.navbar-is-fixed-bottom {
+  padding-bottom: 65px;
+}
+@media screen and (min-width: 768px) {
+  /* line 9, ../sass/component/_navbar.scss */
+  body {
+    margin-top: 15px;
+  }
+}
+@media screen and (max-width: 767px) {
+  /* line 31, ../sass/component/_navbar.scss */
+  body.toolbar-vertical.navbar-is-fixed-top .toolbar-bar, body.toolbar-vertical.navbar-is-fixed-bottom .toolbar-bar {
+    position: fixed;
+  }
+  /* line 34, ../sass/component/_navbar.scss */
+  body.toolbar-vertical.navbar-is-fixed-top header, body.toolbar-vertical.navbar-is-fixed-bottom header {
+    z-index: 500;
+  }
+  /* line 40, ../sass/component/_navbar.scss */
+  body.toolbar-vertical.navbar-is-fixed-top header {
+    top: 39px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  /* line 46, ../sass/component/_navbar.scss */
+  .navbar.container {
+    max-width: 720px;
+  }
+}
+@media screen and (min-width: 992px) {
+  /* line 46, ../sass/component/_navbar.scss */
+  .navbar.container {
+    max-width: 940px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  /* line 46, ../sass/component/_navbar.scss */
+  .navbar.container {
+    max-width: 1140px;
+  }
+}
+
+/* line 57, ../sass/component/_navbar.scss */
+.navbar.container > .container,
+.navbar.container-fluid > .container-fluid {
+  margin: 0;
+  padding: 0;
+  width: auto;
+}
+
+/**
+ * Node styling.
+ */
+/* line 5, ../sass/component/_node.scss */
+.node-preview-container {
+  margin-top: -15px;
+}
+
+/* line 9, ../sass/component/_node.scss */
+.node-preview-form-select {
+  padding: 15px;
+}
+
+/**
+ * Panel styling.
+ */
+/* line 4, ../sass/component/_panel.scss */
+.panel-title {
+  display: block;
+  margin: -10px -15px;
+  padding: 10px 15px;
+}
+/* line 8, ../sass/component/_panel.scss */
+.panel-title, .panel-title:hover, .panel-title:focus, .panel-title:hover:focus {
+  color: inherit;
+}
+/* line 11, ../sass/component/_panel.scss */
+.panel-title:focus, .panel-title:hover {
+  text-decoration: none;
+}
+
+/**
+ * Progress bar styles.
+ */
+/* line 4, ../sass/component/_progress-bar.scss */
+.progress-wrapper {
+  margin-bottom: 15px;
+}
+/* line 7, ../sass/component/_progress-bar.scss */
+.progress-wrapper:last-child .progress {
+  margin-bottom: 5px;
+}
+/* line 11, ../sass/component/_progress-bar.scss */
+.progress-wrapper .message {
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+/* line 16, ../sass/component/_progress-bar.scss */
+.progress-wrapper .percentage,
+.progress-wrapper .progress-label {
+  font-size: 12px;
+}
+/* line 21, ../sass/component/_progress-bar.scss */
+.progress-wrapper .progress-bar {
+  min-width: 2em;
+}
+
+/**
+ * Table drag styles.
+ */
+/* line 4, ../sass/component/_table-drag.scss */
+.tabledrag-toggle-weight {
+  float: right;
+  margin: 1px 2px 1px 10px;
+}
+
+/* line 8, ../sass/component/_table-drag.scss */
+.tabledrag-changed-warning {
+  margin: 0;
+  overflow: hidden;
+}
+
+/* line 12, ../sass/component/_table-drag.scss */
+.tabledrag-handle {
+  color: #777777;
+  cursor: move;
+  float: left;
+  font-size: 125%;
+  line-height: 1;
+  margin: -10px 0 0 -10px;
+  padding: 10px;
+}
+/* line 20, ../sass/component/_table-drag.scss */
+.tabledrag-handle:hover, .tabledrag-handle:focus {
+  color: #337ab7;
+}
+
+/**
+ * Tabs and local action styles.
+ */
+/* line 4, ../sass/component/_tabs.scss */
+.local-actions {
+  margin: 10px 0 10px -5px;
+}
+
+/* line 7, ../sass/component/_tabs.scss */
+.tabs--secondary {
+  margin: 10px 0 5px;
+}
+
+/**
+ * Missing Bootstrap 2 tab styling.
+ * $see http://stackoverflow.com/questions/18432577/stacked-tabs-in-bootstrap-3
+ * $see http://bootply.com/74926
+ */
+/* line 16, ../sass/component/_tabs.scss */
+.tabbable {
+  margin-bottom: 20px;
+}
+
+/* line 20, ../sass/component/_tabs.scss */
+.tabs-below > .nav-tabs, .tabs-left > .nav-tabs, .tabs-right > .nav-tabs {
+  border-bottom: 0;
+}
+/* line 22, ../sass/component/_tabs.scss */
+.tabs-below > .nav-tabs .summary, .tabs-left > .nav-tabs .summary, .tabs-right > .nav-tabs .summary {
+  color: #777777;
+  font-size: 12px;
+}
+
+/* line 28, ../sass/component/_tabs.scss */
+.tab-pane > .panel-heading {
+  display: none;
+}
+
+/* line 31, ../sass/component/_tabs.scss */
+.tab-content > .active {
+  display: block;
+}
+
+/* line 37, ../sass/component/_tabs.scss */
+.tabs-below > .nav-tabs {
+  border-top: 1px solid #ddd;
+}
+/* line 39, ../sass/component/_tabs.scss */
+.tabs-below > .nav-tabs > li {
+  margin-top: -1px;
+  margin-bottom: 0;
+}
+/* line 42, ../sass/component/_tabs.scss */
+.tabs-below > .nav-tabs > li > a {
+  border-radius: 0 0 4px 4px;
+}
+/* line 44, ../sass/component/_tabs.scss */
+.tabs-below > .nav-tabs > li > a:hover, .tabs-below > .nav-tabs > li > a:focus {
+  border-top-color: #ddd;
+  border-bottom-color: transparent;
+}
+/* line 52, ../sass/component/_tabs.scss */
+.tabs-below > .nav-tabs > .active > a,
+.tabs-below > .nav-tabs > .active > a:hover,
+.tabs-below > .nav-tabs > .active > a:focus {
+  border-color: transparent #ddd #ddd #ddd;
+}
+
+/* line 64, ../sass/component/_tabs.scss */
+.tabs-left > .nav-tabs,
+.tabs-right > .nav-tabs {
+  padding-bottom: 20px;
+  width: 220px;
+}
+/* line 67, ../sass/component/_tabs.scss */
+.tabs-left > .nav-tabs > li,
+.tabs-right > .nav-tabs > li {
+  float: none;
+}
+/* line 69, ../sass/component/_tabs.scss */
+.tabs-left > .nav-tabs > li:focus,
+.tabs-right > .nav-tabs > li:focus {
+  outline: 0;
+}
+/* line 72, ../sass/component/_tabs.scss */
+.tabs-left > .nav-tabs > li > a,
+.tabs-right > .nav-tabs > li > a {
+  margin-right: 0;
+  margin-bottom: 3px;
+}
+/* line 75, ../sass/component/_tabs.scss */
+.tabs-left > .nav-tabs > li > a:focus,
+.tabs-right > .nav-tabs > li > a:focus {
+  outline: 0;
+}
+/* line 81, ../sass/component/_tabs.scss */
+.tabs-left > .tab-content,
+.tabs-right > .tab-content {
+  border-radius: 0 4px 4px 4px;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  padding: 10px 15px;
+}
+
+/* line 92, ../sass/component/_tabs.scss */
+.tabs-left > .nav-tabs {
+  float: left;
+  margin-right: -1px;
+}
+/* line 95, ../sass/component/_tabs.scss */
+.tabs-left > .nav-tabs > li > a {
+  border-radius: 4px 0 0 4px;
+}
+/* line 97, ../sass/component/_tabs.scss */
+.tabs-left > .nav-tabs > li > a:hover, .tabs-left > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #ddd #eeeeee #eeeeee;
+}
+/* line 102, ../sass/component/_tabs.scss */
+.tabs-left > .nav-tabs > .active > a,
+.tabs-left > .nav-tabs > .active > a:hover,
+.tabs-left > .nav-tabs > .active > a:focus {
+  border-color: #ddd transparent #ddd #ddd;
+  box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+/* line 113, ../sass/component/_tabs.scss */
+.tabs-right > .nav-tabs {
+  float: right;
+  margin-left: -1px;
+}
+/* line 116, ../sass/component/_tabs.scss */
+.tabs-right > .nav-tabs > li > a {
+  border-radius: 0 4px 4px 0;
+}
+/* line 118, ../sass/component/_tabs.scss */
+.tabs-right > .nav-tabs > li > a:hover, .tabs-right > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #eeeeee #eeeeee #ddd;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+}
+/* line 124, ../sass/component/_tabs.scss */
+.tabs-right > .nav-tabs > .active > a,
+.tabs-right > .nav-tabs > .active > a:hover,
+.tabs-right > .nav-tabs > .active > a:focus {
+  border-color: #ddd #ddd #ddd transparent;
+}
+
+/**
+ * Toolbar module styling.
+ */
+/* line 10, ../sass/component/_toolbar.scss */
+body.toolbar-fixed .toolbar-oriented .toolbar-bar {
+  z-index: 1031;
+}
+/* line 14, ../sass/component/_toolbar.scss */
+body.toolbar-fixed .navbar-fixed-top {
+  top: 39px;
+}
+/* line 19, ../sass/component/_toolbar.scss */
+body.toolbar-fixed.toolbar-horizontal.toolbar-tray-open .navbar-fixed-top {
+  top: 79px;
+}
+/* line 26, ../sass/component/_toolbar.scss */
+body.toolbar-fixed.toolbar-vertical.toolbar-tray-open .navbar-fixed-top {
+  left: 240px;
+}
+/* line 30, ../sass/component/_toolbar.scss */
+body.toolbar-fixed.toolbar-vertical.toolbar-tray-open.toolbar-fixed {
+  margin-left: 240px;
+}
+/* line 33, ../sass/component/_toolbar.scss */
+body.toolbar-fixed.toolbar-vertical.toolbar-tray-open.toolbar-fixed .toolbar-tray {
+  padding-bottom: 40px;
+}
+/* line 35, ../sass/component/_toolbar.scss */
+body.toolbar-fixed.toolbar-vertical.toolbar-tray-open.toolbar-fixed .toolbar-tray, body.toolbar-fixed.toolbar-vertical.toolbar-tray-open.toolbar-fixed .toolbar-tray > .toolbar-lining:before {
+  width: 240px;
+}
+
+/**
+ * jQuery UI autocomplete widget style overrides.
+ *
+ * $todo Remove once jQuery UI is no longer used?
+ */
+/* line 8, ../sass/jquery-ui/_autocomplete.scss */
+.ui-autocomplete {
+  background: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  color: inherit;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  list-style: none;
+  min-width: 160px;
+  padding: 5px 0;
+  text-align: left;
+  z-index: 1000;
+}
+/* line 24, ../sass/jquery-ui/_autocomplete.scss */
+.ui-autocomplete .ui-menu-item {
+  border: 0;
+  border-radius: 0;
+  clear: both;
+  color: #333333;
+  cursor: pointer;
+  display: block;
+  font-weight: normal;
+  line-height: 1.42857;
+  margin: 0;
+  outline: 0;
+  padding: 3px 20px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+/* line 39, ../sass/jquery-ui/_autocomplete.scss */
+.ui-autocomplete .ui-menu-item.ui-state-hover {
+  background: #f5f5f5;
+  color: #262626;
+}
+/* line 44, ../sass/jquery-ui/_autocomplete.scss */
+.ui-autocomplete .ui-menu-item.ui-state-active, .ui-autocomplete .ui-menu-item.ui-state-focus {
+  background: #337ab7;
+  color: #fff;
+}
+
+/* line 29, ../sass/_overrides.scss */
+ol, ul {
+  padding-left: 1.5em;
+}
+/* line 31, ../sass/_overrides.scss */
+.popover ol:last-child, .popover ul:last-child {
+  margin-bottom: 0;
+}
+
+/* line 37, ../sass/_overrides.scss */
+.page-header {
+  margin-top: 0;
+}
+
+/* line 42, ../sass/_overrides.scss */
+.footer {
+  margin-top: 45px;
+  padding-top: 35px;
+  padding-bottom: 36px;
+  border-top: 1px solid #E5E5E5;
+}
+
+/* line 50, ../sass/_overrides.scss */
+p:last-child,
+.form-group:last-child,
+.panel:last-child {
+  margin-bottom: 0;
+}
+
+/* line 58, ../sass/_overrides.scss */
+.region-help > .glyphicon {
+  font-size: 18px;
+  float: left;
+  margin: -0.05em 0.5em 0 0;
+}
+/* line 63, ../sass/_overrides.scss */
+.region-help .block {
+  overflow: hidden;
+}
+
+/* line 69, ../sass/_overrides.scss */
+.help-block, .control-group .help-inline {
+  color: #777777;
+  font-size: 12px;
+  margin: 5px 0 10px;
+  padding: 0;
+}
+/* line 74, ../sass/_overrides.scss */
+.help-block:first-child, .control-group .help-inline:first-child {
+  margin-top: 0;
+}
+
+/* line 80, ../sass/_overrides.scss */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 84, ../sass/_overrides.scss */
+html {
+  font-size: 100%;
+}
+
+/* line 87, ../sass/_overrides.scss */
+body {
+  background: url("../images/bg.jpg") no-repeat center center fixed;
+  background-size: cover;
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 100%;
+  line-height: 1.5;
+}
+
+/* line 94, ../sass/_overrides.scss */
+a {
+  text-decoration: none;
+  cursor: pointer;
+  color: #000;
+}
+
+/* line 99, ../sass/_overrides.scss */
+a:hover, a:focus {
+  text-decoration: none;
+}
+
+/* line 102, ../sass/_overrides.scss */
+button {
+  cursor: pointer;
+}
+
+/* line 105, ../sass/_overrides.scss */
+h1 {
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 3.125em;
+}
+
+/* line 109, ../sass/_overrides.scss */
+h2 {
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 2.5em;
+}
+
+/*.clearfix {
+	overflow: auto;
+}*/
+/* line 116, ../sass/_overrides.scss */
+.clearfix:after, .filter-wrapper:after {
+  content: " ";
+  /* Older browser do not support empty content */
+  visibility: hidden;
+  display: block;
+  height: 0;
+  clear: both;
+}
+
+/* line 123, ../sass/_overrides.scss */
+.wrapper-black {
+  background-color: #000;
+}
+
+/* line 126, ../sass/_overrides.scss */
+.wrapper-black a, .slogan {
+  color: #fff;
+}
+
+/* line 129, ../sass/_overrides.scss */
+.wrap-width {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* line 134, ../sass/_overrides.scss */
+.header-content {
+  padding: 20px 0;
+}
+
+/* line 137, ../sass/_overrides.scss */
+#logo-slogan {
+  float: left;
+}
+
+/* line 140, ../sass/_overrides.scss */
+#login {
+  float: right;
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 0.938em;
+}
+
+/* line 145, ../sass/_overrides.scss */
+#logo-slogan, #login {
+  max-width: 50%;
+}
+
+/* line 148, ../sass/_overrides.scss */
+.logo-name {
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 1.875em;
+}
+
+/* line 152, ../sass/_overrides.scss */
+.slogan {
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 1.25em;
+}
+
+/* line 156, ../sass/_overrides.scss */
+#login .fa, .login-types .fa {
+  margin-right: 5px;
+}
+
+/* line 159, ../sass/_overrides.scss */
+.login-types {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 85px;
+  width: 114px;
+  z-index: 2;
+}
+
+/* line 167, ../sass/_overrides.scss */
+.login-types li {
+  list-style: none;
+  padding: 6px;
+  background-color: #FF9800;
+  color: #fff;
+  margin: 4px;
+}
+
+/* line 174, ../sass/_overrides.scss */
+.slider {
+  position: relative;
+}
+
+/* line 177, ../sass/_overrides.scss */
+.slider img {
+  width: 100%;
+}
+
+/* line 180, ../sass/_overrides.scss */
+.slider-content {
+  box-sizing: border-box;
+  left: 0;
+  line-height: 1.2;
+  padding: 0 10%;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+}
+
+/* line 191, ../sass/_overrides.scss */
+.video-content {
+  text-align: center;
+  font-family: "Ek Mukta", "sans-serif";
+  color: #fff;
+  bottom: 345px;
+  background: -moz-linear-gradient(left, transparent 0%, rgba(0, 0, 0, 0.4) 25%, rgba(0, 0, 0, 0.4) 75%, transparent 100%);
+  /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, transparent 0%, rgba(0, 0, 0, 0.4) 25%, rgba(0, 0, 0, 0.4) 75%, transparent 100%);
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 25%, rgba(0, 0, 0, 0.4) 75%, rgba(0, 0, 0, 0) 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#00000000',GradientType=1 );
+  /* IE6-9 */
+}
+
+/* line 202, ../sass/_overrides.scss */
+.search-div {
+  background-color: #fff;
+  box-shadow: 0px 1px 5px 0;
+  margin: 0 auto;
+  max-width: 780px;
+  text-align: center;
+  position: relative;
+  bottom: 55px;
+}
+
+/* line 211, ../sass/_overrides.scss */
+.search-input {
+  width: 625px;
+  height: 70px;
+  border-style: none;
+  text-align: center;
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 1.5em;
+  color: #969696;
+}
+
+/* line 221, ../sass/_overrides.scss */
+.search-btn {
+  border-style: none;
+  font-size: 1.5em;
+  color: #969696;
+  background-color: #fff;
+}
+
+/* line 227, ../sass/_overrides.scss */
+.title {
+  font-family: "Ek Mukta", "sans-serif";
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* line 232, ../sass/_overrides.scss */
+.left-sidebar {
+  float: left;
+  width: 300px;
+}
+
+/* line 236, ../sass/_overrides.scss */
+.right-sidebar {
+  float: right;
+  width: 300px;
+}
+
+/* line 240, ../sass/_overrides.scss */
+.center-content {
+  background-color: #fff;
+  margin: 0 320px;
+}
+
+/* line 244, ../sass/_overrides.scss */
+.content-container {
+  float: left;
+  width: 100%;
+}
+
+/* line 248, ../sass/_overrides.scss */
+.content-items {
+  margin-top: 30px;
+  background-color: #fff;
+}
+
+/* line 252, ../sass/_overrides.scss */
+.left-menu {
+  margin-top: 30px;
+  box-shadow: 0 1px 2px 0;
+  background-color: #ECECEC;
+}
+
+/* line 257, ../sass/_overrides.scss */
+.sidebar-topcontainer {
+  margin-top: 30px;
+  border: 3px solid transparent;
+  border-image: url("../images/border.jpg") 20% round;
+  background-color: #FFF;
+  text-align: center;
+}
+
+/* line 264, ../sass/_overrides.scss */
+.sidebar-botcontainer {
+  border-radius: 15px;
+  margin-top: 30px;
+  border: 1px solid #BDBDBD;
+  background-color: #EBEBEB;
+  text-align: left;
+}
+
+/* line 271, ../sass/_overrides.scss */
+.menu-items {
+  padding: 15px;
+}
+
+/* line 274, ../sass/_overrides.scss */
+.menu-items ul {
+  padding: 20px 0;
+}
+
+/* line 277, ../sass/_overrides.scss */
+.menu-items li {
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 1.125em;
+  list-style: none;
+}
+
+/* line 282, ../sass/_overrides.scss */
+.menu-items li span {
+  font-family: "Ek Mukta", "sans-serif";
+  font-weight: bold;
+}
+
+/* line 286, ../sass/_overrides.scss */
+.menu-title {
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 1.375em;
+  border-top: 2px solid #7C7C7C;
+  border-bottom: 2px solid #7C7C7C;
+}
+
+/* line 292, ../sass/_overrides.scss */
+.view-more {
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 0.938em;
+}
+
+/* line 296, ../sass/_overrides.scss */
+.content-box {
+  margin: 20px;
+  padding: 5px 0;
+}
+
+/* line 300, ../sass/_overrides.scss */
+.content-title {
+  border-bottom: 1px solid;
+}
+
+/* line 303, ../sass/_overrides.scss */
+.content-title .fa {
+  padding-right: 20px;
+}
+
+/* line 306, ../sass/_overrides.scss */
+.content-para {
+  margin: 15px 0;
+}
+
+/* line 309, ../sass/_overrides.scss */
+.content-lists {
+  margin: 20px;
+}
+
+/* line 312, ../sass/_overrides.scss */
+.box-title {
+  padding: 10px;
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 1.375em;
+  background-color: #006599;
+  color: #fff;
+  text-align: center;
+  border-bottom: 3px solid transparent;
+  border-image: url("../images/border.jpg") 20% round;
+}
+
+/* line 322, ../sass/_overrides.scss */
+.box-data, .notice-container {
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 1.375em;
+  margin: 20px;
+  line-height: 1.2;
+}
+
+/* line 328, ../sass/_overrides.scss */
+.notice-head {
+  padding: 10px;
+  border-radius: 15px 15px 0 0;
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 1.375em;
+  background-color: #fff;
+  color: #FFB131;
+  text-align: center;
+}
+
+/* line 337, ../sass/_overrides.scss */
+.notice-head .fa {
+  margin-right: 5px;
+}
+
+/* line 340, ../sass/_overrides.scss */
+.notice-data {
+  border-bottom: 1px solid;
+  margin-bottom: 20px;
+}
+
+/* line 344, ../sass/_overrides.scss */
+.notice-info {
+  margin: 10px 0;
+}
+
+/* line 347, ../sass/_overrides.scss */
+.notice-data:last-child {
+  border-bottom: none;
+}
+
+/* line 350, ../sass/_overrides.scss */
+.footer-block {
+  margin: 10px 320px;
+}
+
+/* line 353, ../sass/_overrides.scss */
+.footer-left, .footer-right {
+  color: #fff;
+  float: left;
+  width: 50%;
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 0.625em;
+  margin: 20px 0;
+}
+
+/* line 361, ../sass/_overrides.scss */
+.footer-right {
+  text-align: right;
+}
+
+/*CAP-IT Bootstrap*/
+/* line 365, ../sass/_overrides.scss */
+body {
+  margin: 0;
+}
+
+/* line 368, ../sass/_overrides.scss */
+#slick-views-slideshow-block-1-1-thumbnail {
+  display: none;
+}
+
+/* line 371, ../sass/_overrides.scss */
+#edit-keys {
+  border-style: none;
+  color: #969696;
+  font-family: "Ek Mukta","sans-serif";
+  font-size: 1.5em;
+  height: 55px;
+  text-align: center;
+  width: 625px;
+  box-shadow: none;
+  margin-left: 65px;
+  padding-top: 15px;
+}
+
+/* line 383, ../sass/_overrides.scss */
+.form-item.js-form-item.form-type-search {
+  float: left;
+}
+
+/* line 386, ../sass/_overrides.scss */
+.form-submit.btn-primary {
+  background: none;
+  border: none;
+  color: #969696;
+  margin: 16px 0px;
+  text-indent: -9999em;
+  font-size: 0;
+}
+
+/* line 394, ../sass/_overrides.scss */
+.form-submit.btn-primary span {
+  display: block;
+  font-size: 14px;
+  text-indent: 0;
+}
+
+/* line 399, ../sass/_overrides.scss */
+.left-menu h2.block-title {
+  border-bottom: 2px solid #7c7c7c;
+  border-top: 2px solid #7c7c7c;
+  font-family: "Ek Mukta","sans-serif";
+  font-size: 1.375em;
+}
+
+/* line 405, ../sass/_overrides.scss */
+.left-menu ul {
+  padding: 0;
+}
+
+/* line 408, ../sass/_overrides.scss */
+.left-menu li {
+  list-style: none;
+}
+
+/* line 411, ../sass/_overrides.scss */
+.region-content .block-iitinap-general, .region-content nav {
+  background-color: #fff;
+  margin: 30px 0;
+  padding: 15px;
+}
+
+/* line 416, ../sass/_overrides.scss */
+.region-content section h2, .region-content nav h2 {
+  border-bottom: 1px solid;
+  margin: 0;
+}
+
+/* line 420, ../sass/_overrides.scss */
+.region-sidebar-second .block-basiccart-cartblock {
+  margin-top: 30px;
+  border: 3px solid transparent;
+  border-image: url("../images/border.png") 20% round;
+  background-color: #FFF;
+  text-align: center;
+}
+
+/* line 427, ../sass/_overrides.scss */
+.block-basiccart-cartblock h2 {
+  margin: 0;
+  padding: 10px;
+  font-family: "Ek Mukta", "sans-serif";
+  font-size: 1.375em;
+  background-color: #006599;
+  color: #fff;
+  text-align: center;
+  border-bottom: 3px solid transparent;
+  border-image: url("../images/border.png") 20% round;
+}
+
+/* line 438, ../sass/_overrides.scss */
+.block-views-blockimportant-deadlines-block-1 {
+  background-color: #ebebeb;
+  border: 1px solid #bdbdbd;
+  border-radius: 15px;
+  margin-top: 30px;
+  text-align: left;
+}
+
+/* line 445, ../sass/_overrides.scss */
+.block-views-blockimportant-deadlines-block-1 h2 {
+  margin: 0;
+  background-color: #fff;
+  border-radius: 15px 15px 0 0;
+  color: #ffb131;
+  font-family: "Ek Mukta","sans-serif";
+  font-size: 1.375em;
+  padding: 10px;
+  text-align: center;
+}
+
+/* line 455, ../sass/_overrides.scss */
+.view-important-deadlines .view-content {
+  font-family: "Ek Mukta","sans-serif";
+  font-size: 1.375em;
+  line-height: 1.2;
+  margin: 20px;
+}
+
+/* line 461, ../sass/_overrides.scss */
+.view-important-deadlines .view-content .views-row {
+  border-bottom: 1px solid;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+
+/* line 466, ../sass/_overrides.scss */
+.view-important-deadlines .views-field-title {
+  font-weight: bold;
+}
+
+/* line 469, ../sass/_overrides.scss */
+.view-important-deadlines .views-row:last-child {
+  border-bottom: none;
+}
+
+/* line 472, ../sass/_overrides.scss */
+#block-capit-account-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 70px;
+  width: 114px;
+  z-index: 2;
+}
+
+/* line 480, ../sass/_overrides.scss */
+#block-capit-account-menu li {
+  float: none;
+  background-color: #ff9800;
+  color: #fff;
+  list-style: outside none none;
+  margin: 4px;
+  padding: 6px;
+  text-align: center;
+}
+
+/* line 489, ../sass/_overrides.scss */
+#block-capit-account-menu li a {
+  padding: 0;
+}
+
+/* line 492, ../sass/_overrides.scss */
+#block-capit-account-menu li a:hover {
+  background: none;
+  color: #000;
+}
+
+/* line 496, ../sass/_overrides.scss */
+video {
+  width: 100%;
+}
+
+/* line 499, ../sass/_overrides.scss */
+.video-content h3 {
+  font-size: 3.688em;
+}
+
+@media only screen and (max-width: 1023px) {
+  /* line 504, ../sass/_overrides.scss */
+  h1 {
+    font-size: 1.5em;
+  }
+
+  /* line 507, ../sass/_overrides.scss */
+  h2 {
+    font-size: 1em;
+  }
+
+  /* line 510, ../sass/_overrides.scss */
+  #logo-slogan, #login {
+    max-width: 100%;
+  }
+
+  /* line 513, ../sass/_overrides.scss */
+  .slogan {
+    font-size: 0.750em;
+  }
+
+  /* line 516, ../sass/_overrides.scss */
+  #login {
+    text-align: right;
+    font-size: 0.750em;
+  }
+
+  /* line 520, ../sass/_overrides.scss */
+  .login-types {
+    width: auto;
+  }
+
+  /* line 523, ../sass/_overrides.scss */
+  .login-types li {
+    text-align: left;
+  }
+
+  /* line 526, ../sass/_overrides.scss */
+  .video-content {
+    font-size: 1em;
+  }
+
+  /* line 529, ../sass/_overrides.scss */
+  .search-input {
+    width: auto;
+    height: auto;
+    padding: 10px;
+  }
+
+  /* line 534, ../sass/_overrides.scss */
+  .search-input, .search-btn {
+    font-size: 0.875em;
+  }
+
+  /* line 537, ../sass/_overrides.scss */
+  .search-div {
+    bottom: 35px;
+    margin: 0 20px;
+  }
+
+  /* line 541, ../sass/_overrides.scss */
+  .left-sidebar {
+    float: none;
+  }
+
+  /* line 544, ../sass/_overrides.scss */
+  .left-sidebar, .right-sidebar {
+    width: auto;
+  }
+
+  /* line 547, ../sass/_overrides.scss */
+  .content-container {
+    width: auto;
+  }
+
+  /* line 550, ../sass/_overrides.scss */
+  .center-content {
+    margin: 0;
+  }
+
+  /* line 553, ../sass/_overrides.scss */
+  .content-title .fa {
+    padding-right: 8px;
+  }
+
+  /* line 556, ../sass/_overrides.scss */
+  .footer-block {
+    margin: 0;
+  }
+
+  /* line 559, ../sass/_overrides.scss */
+  .footer-left, .footer-right {
+    float: none;
+    width: auto;
+  }
+
+  /*CAP-IT Bootstrap Responsive*/
+  /* line 564, ../sass/_overrides.scss */
+  #edit-keys {
+    font-size: 0.875em;
+    height: auto;
+    padding: 10px;
+    width: auto;
+    margin: 0;
+  }
+
+  /* line 571, ../sass/_overrides.scss */
+  .form-submit.btn-primary {
+    margin: 0;
+  }
+
+  /* line 574, ../sass/_overrides.scss */
+  .form-type-search.form-group {
+    margin: 0;
+  }
+
+  /* line 577, ../sass/_overrides.scss */
+  .form-item.js-form-item.form-type-search {
+    margin: 0;
+  }
+
+  /* line 580, ../sass/_overrides.scss */
+  .video-content h3 {
+    font-size: 1em;
+    margin: 0;
+  }
+}

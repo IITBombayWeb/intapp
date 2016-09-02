@@ -1,0 +1,7 @@
+workflow_mail.settings:
+  path: '/admin/structure/workflow_mail/settings'
+  defaults:
+    _form: '\Drupal\workflow_mail\Form\WorkflowMailSettingsForm'
+    _title: 'Workflow Mail Configuration'
+  requirements:
+    _permission: 'administer site configuration'
