@@ -1,0 +1,721 @@
+.clearfix:before, .clearfix:after {
+ content: " ";
+ display: table;
+}
+.clearfix:after {
+ clear: both;
+}
+
+// @todo these should be their own CSS files and only included when
+// specific Drupal libraries are used.
+@import "component/alert";
+@import "component/ajax";
+@import "component/field";
+@import "component/file";
+@import "component/filter";
+@import "component/form";
+@import "component/icon";
+@import "component/navbar";
+@import "component/node";
+@import "component/panel";
+@import "component/progress-bar";
+@import "component/table-drag";
+@import "component/tabs";
+@import "component/toolbar";
+
+// jQuery UI style overrides.
+@import "jquery-ui/autocomplete";
+
+ol, ul {
+  padding-left: 1.5em;
+  .popover &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Page header.
+.page-header {
+  margin-top: 0;
+}
+
+// Footer.
+.footer {
+  margin-top: 45px;
+  padding-top: 35px;
+  padding-bottom: 36px;
+  border-top: 1px solid #E5E5E5;
+}
+
+// Paragraphs.
+p:last-child,
+.form-group:last-child,
+.panel:last-child {
+  margin-bottom: 0;
+}
+
+// Help region.
+.region-help {
+  > .glyphicon {
+    font-size: $font-size-large;
+    float: left;
+    margin: -0.05em 0.5em 0 0;
+  }
+  .block {
+    overflow: hidden;
+  }
+}
+
+
+.help-block, .control-group .help-inline {
+  color: $gray-light;
+  font-size: 12px;
+  margin: 5px 0 10px;
+  padding: 0;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+// CAP-IT
+* {
+	margin: 0;
+	padding: 0;
+}
+html {
+	font-size: 100%;
+}
+body {
+	background: url("../images/bg.jpg") no-repeat center center fixed;
+	background-size: cover;
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 100%;
+	line-height: 1.5;
+}
+a {
+	text-decoration: none;
+	cursor: pointer;
+	color: #000;
+}
+a:hover, a:focus {
+	text-decoration: none;
+}
+button {
+	cursor: pointer;
+}
+h1 {
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 3.125em;
+}
+h2 {
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 2.5em;
+}
+/*.clearfix {
+	overflow: auto;
+}*/
+.clearfix:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
+.wrapper-black {
+	background-color: #000;
+}
+.wrapper-black a, .slogan{
+	color: #fff;
+}
+.wrap-width {
+	max-width: 1170px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+.header-content {
+	padding:20px 0;
+}
+#logo-slogan {
+	float: left;
+}
+#login {
+	float: right;
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 0.938em;
+}
+#logo-slogan,#login {
+	max-width: 50%;
+}
+.logo-name {
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 1.875em;
+}
+.slogan {
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 1.25em;
+}
+#login .fa,.login-types .fa {
+	margin-right: 5px;
+}
+.login-types {
+	display: none;
+	position: absolute;
+    right: 0;
+    top: 85px;
+    width: 114px;
+    z-index: 2;
+}
+.login-types li {
+	list-style: none;
+	padding: 6px;
+	background-color: #FF9800;
+	color: #fff;
+	margin: 4px;
+}
+.slider {
+	position: relative;
+}
+.slider img {
+	width: 100%;
+}
+.slider-content{
+	box-sizing: border-box;
+    left: 0;
+    line-height: 1.2;
+    padding: 0 10%;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+}
+.video-content {
+	text-align: center;
+	font-family: "Ek Mukta", "sans-serif";
+	color: #fff;
+	bottom: 345px;
+	background: -moz-linear-gradient(left, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 25%, rgba(0,0,0,0.4) 75%, rgba(0,0,0,0) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(left, rgba(0,0,0,0) 0%,rgba(0,0,0,0.4) 25%,rgba(0,0,0,0.4) 75%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to right, rgba(0,0,0,0) 0%,rgba(0,0,0,0.4) 25%,rgba(0,0,0,0.4) 75%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#00000000',GradientType=1 ); /* IE6-9 */
+}
+
+.search-div {
+	background-color: #fff;
+    box-shadow: 0px 1px 5px 0;
+    margin: 0 auto;
+    max-width: 780px;
+    text-align: center;
+    position: relative;
+    bottom: 55px;
+}
+.search-input {
+	width: 625px;
+	height: 70px;
+	border-style: none;
+	text-align: center;
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 1.5em;
+	color: #969696;
+
+}
+.search-btn {
+	border-style: none;
+	font-size: 1.5em;
+	color: #969696;
+	background-color: #fff;
+}
+.title {
+	font-family: "Ek Mukta", "sans-serif";
+	text-align: center;
+	line-height: 1.2;
+	margin-bottom: 20px;
+}
+.left-sidebar {
+	float: left;
+	width: 300px;
+}
+.right-sidebar {
+	float: right;
+	width: 300px;
+}
+.center-content {
+	background-color: #fff;
+	margin: 0 320px;
+}
+.content-container {
+	float: left;
+	width: 100%;
+}
+.content-items {
+	margin-top: 30px;
+	background-color: #fff;
+}
+.left-menu {
+	margin-top: 30px;
+	box-shadow: 0 1px 2px 0;
+	background-color: #ECECEC;
+}
+.sidebar-topcontainer {
+	margin-top: 30px;
+	border: 3px solid transparent;
+	border-image: url("../images/border.jpg") 20% round;
+	background-color: #FFF;
+	text-align: center;
+}
+.sidebar-botcontainer {
+	border-radius: 15px;
+	margin-top: 30px;
+	border:1px solid #BDBDBD;
+	background-color: #EBEBEB;
+	text-align: left;
+}
+.menu-items {
+	padding: 15px;
+}
+.menu-items ul {
+	padding: 20px 0;
+}
+.menu-items li {
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 1.125em;
+	list-style: none;
+}
+.menu-items li span {
+	font-family: "Ek Mukta", "sans-serif";
+	font-weight: bold;
+}
+.menu-title {
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 1.375em;
+	border-top:2px solid #7C7C7C;
+	border-bottom:2px solid #7C7C7C;
+}
+.view-more {
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 0.938em;
+}
+.content-box {
+	margin: 20px;
+	padding: 5px 0;
+}
+.content-title {
+	border-bottom: 1px solid;
+}
+.content-title .fa {
+	padding-right: 20px;
+}
+.content-para {
+	margin: 15px 0;
+}
+.content-lists {
+	margin: 20px;
+}
+.box-title {
+	padding: 10px;
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 1.375em;
+	background-color: #006599;
+	color: #fff;
+	text-align: center;
+	border-bottom: 3px solid transparent;
+	border-image: url("../images/border.jpg") 20% round;
+}
+.box-data,.notice-container {
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 1.375em;
+	margin: 20px;
+	line-height: 1.2;
+}
+.notice-head {
+	padding: 10px;
+	border-radius: 15px 15px 0 0;
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 1.375em;
+	background-color: #fff;
+	color: #FFB131;
+	text-align: center;
+}
+.notice-head .fa {
+	margin-right: 5px;
+}
+.notice-data {
+	border-bottom: 1px solid;
+	margin-bottom: 20px;
+}
+.notice-info {
+	margin: 10px 0;
+}
+.notice-data:last-child {
+	border-bottom: none;
+}
+.footer-block {
+	margin: 10px 320px;
+}
+.footer-left,.footer-right {
+	color: #fff;
+	float: left;
+	width: 50%;
+	font-family: "Ek Mukta", "sans-serif";
+	font-size: 0.625em;
+	margin: 20px 0;
+}
+.footer-right {
+	text-align: right;
+}
+/*CAP-IT Bootstrap*/
+body {
+	margin: 0;
+}
+#slick-views-slideshow-block-1-1-thumbnail {
+	display:none;
+}
+.path-frontpage #edit-keys{
+	border-style: none;
+    color: #969696;
+    font-family: "Ek Mukta","sans-serif";
+    font-size: 1.5em;
+    height: 55px;
+    text-align: center;
+    width: 625px;
+    box-shadow: none;
+    margin-left: 65px;
+    padding-top: 15px;
+}
+.form-item.js-form-item.form-type-search {
+	float:left;
+}
+.form-submit.btn-primary {
+	background: none;
+	border: none;
+	color: #969696;
+	margin: 16px 0px;
+	text-indent: -9999em;
+	font-size: 0;
+}
+.form-submit.btn-primary span {
+	display: block;
+    font-size: 14px;
+    text-indent: 0;
+}
+.left-menu h2.block-title {
+	border-bottom: 2px solid #7c7c7c;
+    border-top: 2px solid #7c7c7c;
+    font-family: "Ek Mukta","sans-serif";
+    font-size: 1.375em;
+}
+.left-menu ul {
+	padding: 0;
+}
+.left-menu li {
+	list-style: none;
+}
+.region-content .block-iitinap-general,.region-content nav {
+	background-color: #fff;
+	margin: 30px 0;
+    padding: 15px;
+}
+.region-content section h2,.region-content nav h2 {
+	border-bottom: 1px solid;
+	margin: 0;
+}
+.region-sidebar-second .block-basiccart-cartblock {
+	margin-top: 30px;
+	background-color: #2fd1aa;
+	text-align: center;
+	position: relative;
+}
+.block.block-basiccart.block-basiccart-cartblock.clearfix::before {
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-top: 40px solid #fff;
+    display: block;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+.block-basiccart-cartblock h2{
+	font-family: "Ek Mukta","sans-serif";
+    font-size: 1.375em;
+    margin: 0;
+    padding: 10px;
+    position: relative;
+    text-align: center;
+    z-index: 2;
+}
+.block-views-blockimportant-deadlines-block-1 {
+	background-color: #ebebeb;
+    border: 1px solid #bdbdbd;
+    margin-top: 30px;
+    text-align: left;
+}
+.block-views-blockimportant-deadlines-block-1 h2{
+	margin: 0;
+	background-color: #ffb131;
+    color: #fff;
+    font-family: "Ek Mukta","sans-serif";
+    font-size: 1.375em;
+    padding: 10px;
+    text-align: center;
+}
+.view-important-deadlines .view-content {
+	font-family: "Ek Mukta","sans-serif";
+    font-size: 1.375em;
+    line-height: 1.2;
+    margin: 20px;
+}
+.view-important-deadlines .view-content .views-row {
+	border-bottom: 1px solid;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+.view-important-deadlines .views-field-title {
+	font-weight: bold;
+}
+.view-important-deadlines .views-row:last-child {
+	border-bottom: none;
+}
+#block-capit-account-menu{
+	display: none;
+    position: absolute;
+    right: 0;
+    top: 70px;
+    width: 114px;
+    z-index: 5;
+}
+#block-capit-account-menu li {
+	float: none;
+    background-color: #ff9800;
+    color: #fff;
+    list-style: outside none none;
+    margin: 4px;
+    padding: 6px;
+    text-align: center;
+}
+#block-capit-account-menu li a{
+	padding: 0;
+}
+#block-capit-account-menu li a:hover{
+	background: none;
+	color: #000;
+}
+video {
+	width: 100%;
+}
+.video-content-title {
+	font-size: 3.688em;
+}
+.mob-menu-div {
+	display: none;
+}
+.footer {
+	border-top: none;
+}
+.page-header {
+	border-bottom: none;
+}
+.path-search h1.page-header {
+	display: none;
+}
+.path-search aside {
+	 margin-top: 190px;
+}
+.path-search .search-api-page-block-form {
+	margin-top: 100px;
+}
+article.search-result {
+	background-color: #fff;
+	margin-top: 38px;
+}
+article.search-result .field--type-addtocart {
+	position: relative;
+	bottom: 95px;
+	right: 20px;
+}
+article.search-result h2 {
+	margin-left: 20px;
+	font-size: 1.5em;
+}
+article.search-result .content {
+	margin-left: 20px;
+	padding-bottom: 15px;
+}
+article.search-result .content .field--name-field-institute,
+article.search-result .content .field--name-field-institute-link,
+article.search-result .content .field--name-field-departments,
+article.search-result .content .field--name-field-degree,
+article.search-result .content .field--name-field-course-duration {
+	display: table;
+	float: left;
+	margin-right: 2px;
+	padding-bottom: 15px;
+}
+.field.field--name-field-departments .field--label {
+	float: none;
+}
+.field.field--name-field-course-duration .field--item:after {
+	content: " months";
+}
+article.search-result .content .field--name-field-institute,
+article.search-result .content .field--name-field-institute-link,
+article.search-result .content .field--name-field-degree {
+	margin-right: 15px;
+}
+article.search-result .content .field--name-field-specialisation a {
+	font-size: 1.563em;
+}
+article.search-result .content .field--name-field-departments {
+	width: 11em;
+}
+.path-search .search-api-page-block-form {
+	background-color: #fff;
+    bottom: 55px;
+    box-shadow: 0 1px 5px 0;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 780px;
+    position: relative;
+    text-align: center;
+}
+.path-search .search-api-page-block-form #edit-keys{
+	border-style: none;
+    color: #969696;
+    font-family: "Ek Mukta","sans-serif";
+    font-size: 1.5em;
+    height: 55px;
+    text-align: center;
+    box-shadow: none;
+    margin-left: 65px;
+    padding-top: 15px;
+    width: 370px;
+}
+.video-banner-wrapper {
+	max-height: 470px;
+    overflow: hidden;
+}
+.addtocart-link-class .button {
+	background-color: #2fd1aa;
+	text-transform: uppercase;
+	border-radius: 0;
+    padding: 0 6px;
+}
+.views-view-grid .views-row .views-col {
+	width: auto !important;
+}
+.basiccart-cart-contents,.basiccart-cart-total-price-contents,.basiccart-cart-checkout-button-block {
+	margin: 0;
+	padding: 10px;
+}
+.basiccart-cart-checkout-button a {
+	background-color: #fff;
+    padding: 3px 5px;
+}
+@media only screen and (max-width: 1023px) {
+
+	h1 {
+		font-size: 1.7em;
+	}
+	h2 {
+		font-size: 1.5em;
+	}
+	#logo-slogan,#login {
+		max-width: 100%;
+	}
+	.slogan {
+		font-size: 0.750em;
+	}
+	#login {
+		text-align: right;
+		font-size: 0.750em;
+	}
+	.login-types {
+		width: auto;
+	}
+	.login-types li {
+		text-align: left;
+	}
+	.video-content {
+		font-size: 1em;
+	}
+	.search-input {
+		width: auto;
+		height: auto;
+		padding: 10px;
+	}
+	.search-input,.search-btn {
+		font-size: 0.875em; 
+	}
+	.search-div {
+		bottom: 35px;
+		margin: 0 20px;
+	}
+	.left-sidebar {
+		float: none;
+	}
+	.left-sidebar,.right-sidebar{
+		width: auto;
+	}
+	.content-container {
+		width: auto;
+	}
+	.center-content {
+		margin: 0;
+	}
+	.content-title .fa {
+	    padding-right: 8px;
+	}
+	.footer-block {
+		margin: 0;
+	}
+	.footer-left,.footer-right {
+		float: none;
+		width: auto;
+	}
+	/*CAP-IT Bootstrap Responsive*/
+	#edit-keys {
+		font-size: 0.875em;
+	    height: auto;
+	    padding: 10px;
+	    width: auto;
+	    margin: 0;
+	}
+	.form-submit.btn-primary {
+		margin: 6px;
+	}
+	.form-type-search.form-group {
+		margin: 0;
+	}
+	.form-item.js-form-item.form-type-search{
+		margin: 0;
+	}
+	.video-content-title {
+		font-size: 1.7em;
+		margin: 0;
+	}
+	.leftMobMenu {
+		display: none;
+	}
+	.mob-menu-div {
+		display: block;
+		background-color: #3e4156;
+	    display: block;
+	    margin: 0 15px;
+	    padding: 10px;
+	    text-align: center;
+	    cursor: pointer;
+	}
+	.mob-menu-div a{
+		color: #fff;
+	}
+	.mob-menu span {
+		margin-left: 5px;
+	}
+	.path-search .search-api-page-block-form #edit-keys {
+		font-size: 0.875em;
+	    padding: 10px 0 0 0;
+	    width: auto;
+	    height: auto;
+	    margin-left: 30px;
+	}
+}
