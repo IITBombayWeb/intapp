@@ -1,0 +1,36 @@
+uuid: 0855bc69-2e93-4822-a92a-c9611422a0c5
+langcode: en
+status: false
+dependencies:
+  module:
+    - facets
+    - statistics
+    - system
+  theme:
+    - capit
+id: capit_popularcontent
+theme: capit
+region: '-1'
+weight: -9
+provider: null
+plugin: statistics_popular_block
+settings:
+  id: statistics_popular_block
+  label: 'Most Popular'
+  provider: statistics
+  label_display: visible
+  top_day_num: 5
+  top_all_num: 5
+  top_last_num: 0
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

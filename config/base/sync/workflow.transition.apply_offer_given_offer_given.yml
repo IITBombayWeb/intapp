@@ -1,0 +1,10 @@
+uuid: ff66424c-d238-41ae-8287-0704586fe4dc
+langcode: en
+status: true
+dependencies: {  }
+id: apply_offer_given_offer_given
+label: 'Offer Given'
+module: null
+from_sid: apply_offer_given
+to_sid: apply_offer_given
+roles: {  }

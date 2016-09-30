@@ -1,0 +1,46 @@
+uuid: 68785115-7ab5-41e5-9ba6-37f9815e1ece
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:14da3193-3beb-4886-80b6-b8edc13dcc3a'
+  module:
+    - block_content
+    - facets
+    - system
+    - user
+  theme:
+    - capit
+id: capit_faqaskquestion
+theme: capit
+region: '-1'
+weight: -12
+provider: null
+plugin: 'block_content:14da3193-3beb-4886-80b6-b8edc13dcc3a'
+settings:
+  id: 'block_content:14da3193-3beb-4886-80b6-b8edc13dcc3a'
+  label: 'FAQ Ask Question'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: "/faq-page\r\n/faq-page/*"
+    negate: false
+    context_mapping: {  }
+  user_role:
+    id: user_role
+    roles:
+      student: student
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

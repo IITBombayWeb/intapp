@@ -1,0 +1,71 @@
+uuid: 54052b45-0269-4a2b-b2b3-d99e756c7914
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_employment_details
+    - profile.type.student_application_
+  module:
+    - tablefield
+id: profile.student_application_.field_employment_details
+field_name: field_employment_details
+entity_type: profile
+bundle: student_application_
+label: 'Employment details'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    rebuild:
+      cols: '6'
+      rows: '5'
+    value:
+      -
+        - 'Name and Address of the Organization'
+        - Designation
+        - From(Month)
+        - From(Year)
+        - To(Month)
+        - To(Year)
+      -
+        - ''
+        - ''
+        - ''
+        - ''
+        - ''
+        - ''
+      -
+        - ''
+        - ''
+        - ''
+        - ''
+        - ''
+        - ''
+      -
+        - ''
+        - ''
+        - ''
+        - ''
+        - ''
+        - ''
+      -
+        - ''
+        - ''
+        - ''
+        - ''
+        - ''
+        - ''
+    format: null
+default_value_callback: ''
+settings:
+  export: 0
+  restrict_rebuild: 1
+  restrict_import: 1
+  restrict_addrow: 1
+  lock_values: 1
+  cell_processing: '0'
+  empty_rules:
+    ignore_table_structure: 0
+    ignore_table_header: 0
+field_type: tablefield

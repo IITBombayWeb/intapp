@@ -1,0 +1,36 @@
+uuid: 1894c48f-1336-47c1-aef0-265ae6f36561
+langcode: en
+status: true
+dependencies:
+  module:
+    - basiccart
+    - facets
+    - user
+  theme:
+    - bartik
+id: basiccartblock
+theme: bartik
+region: sidebar_second
+weight: -12
+provider: null
+plugin: basiccart_cartblock
+settings:
+  id: basiccart_cartblock
+  label: 'Basic Cart Block'
+  provider: basiccart
+  label_display: visible
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  user_role:
+    id: user_role
+    roles:
+      anonymous: anonymous
+      student: student
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

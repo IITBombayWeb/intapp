@@ -1,0 +1,8 @@
+uuid: null
+langcode: en
+status: true
+dependencies: {  }
+id: search_api_page__search_programme
+name: 'search_api_page:search_programme'
+filter_key: null
+url_processor: query_string

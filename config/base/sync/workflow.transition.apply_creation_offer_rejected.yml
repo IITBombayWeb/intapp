@@ -1,0 +1,15 @@
+uuid: 9348ee6e-e04a-47fe-9c68-c30642470392
+langcode: en
+status: true
+dependencies: {  }
+id: apply_creation_offer_rejected
+label: null
+module: null
+from_sid: apply_creation
+to_sid: apply_offer_rejected
+roles:
+  workflow_author: 0
+  authenticated: 0
+  administrator: 0
+  student: 0
+  office: 0

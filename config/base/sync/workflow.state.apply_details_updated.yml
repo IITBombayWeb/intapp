@@ -1,0 +1,10 @@
+uuid: 4824cf4c-484e-4830-8762-96829909236d
+langcode: en
+status: 0
+dependencies: {  }
+id: apply_details_updated
+label: 'Dummy state'
+module: null
+wid: apply
+weight: '-1'
+sysid: 0

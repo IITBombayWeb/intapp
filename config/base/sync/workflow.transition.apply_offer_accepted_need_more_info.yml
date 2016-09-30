@@ -1,0 +1,15 @@
+uuid: 5b58da8a-d298-401b-8d34-85f67344f245
+langcode: en
+status: true
+dependencies: {  }
+id: apply_offer_accepted_need_more_info
+label: null
+module: null
+from_sid: apply_offer_accepted
+to_sid: apply_need_more_info
+roles:
+  workflow_author: 0
+  authenticated: 0
+  administrator: 0
+  student: 0
+  office: 0

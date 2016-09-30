@@ -1,0 +1,155 @@
+uuid: 689b209f-be0d-44d8-ae58-94422bd4da6f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.programme.add_to_cart
+    - field.field.node.programme.add_to_cart_price
+    - field.field.node.programme.field_course_duration
+    - field.field.node.programme.field_course_fees
+    - field.field.node.programme.field_degree
+    - field.field.node.programme.field_departments
+    - field.field.node.programme.field_description
+    - field.field.node.programme.field_e
+    - field.field.node.programme.field_enter_number_of_supporting
+    - field.field.node.programme.field_institute
+    - field.field.node.programme.field_institute_link
+    - field.field.node.programme.field_specialisation
+    - field.field.node.programme.field_supporting_documents
+    - field.field.node.programme.field_thumb
+    - image.style.thumbnail
+    - node.type.programme
+  module:
+    - basiccart
+    - image
+    - link
+    - path
+id: node.programme.default
+targetEntityType: node
+bundle: programme
+mode: default
+content:
+  add_to_cart:
+    type: addtocart
+    weight: 27
+    settings: {  }
+    third_party_settings: {  }
+  add_to_cart_price:
+    type: number
+    weight: 26
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+  field_course_duration:
+    weight: 15
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+  field_course_fees:
+    weight: 14
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_degree:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+  field_departments:
+    weight: 9
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+  field_description:
+    weight: 12
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+  field_e:
+    weight: 17
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+  field_enter_number_of_supporting:
+    weight: 16
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+  field_institute:
+    weight: 7
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+  field_institute_link:
+    weight: 8
+    settings:
+      placeholder_url: 'Enter URL'
+      placeholder_title: 'Enter Link Text'
+    third_party_settings: {  }
+    type: link_default
+  field_specialisation:
+    weight: 11
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_supporting_documents:
+    weight: 13
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+  field_thumb:
+    weight: 6
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+  path:
+    type: path
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 3
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 4
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

@@ -1,0 +1,15 @@
+uuid: 1689dd36-4698-479b-b90b-f582b3bbd288
+langcode: en
+status: true
+dependencies: {  }
+id: apply_offer_given_details_appended
+label: null
+module: null
+from_sid: apply_offer_given
+to_sid: apply_details_appended
+roles:
+  workflow_author: 0
+  authenticated: 0
+  administrator: 0
+  student: 0
+  office: 0

@@ -1,0 +1,24 @@
+uuid: c4e00bf7-288a-4ea5-9043-a216ff467b0e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.important_deadlines.body
+    - node.type.important_deadlines
+  module:
+    - text
+    - user
+id: node.important_deadlines.default
+targetEntityType: node
+bundle: important_deadlines
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+  links:
+    weight: 100
+hidden: {  }

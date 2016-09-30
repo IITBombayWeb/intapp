@@ -1,0 +1,22 @@
+uuid: 954bc45d-e204-4ccc-8ec5-82c4aba3b95b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: owSTLQUwW3opq0Lar9pR8zuenE0qGJI2jh092zjzZOs
+id: node.basiccart_total_price
+field_name: basiccart_total_price
+entity_type: node
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

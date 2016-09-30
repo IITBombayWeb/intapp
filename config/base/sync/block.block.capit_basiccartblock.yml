@@ -1,0 +1,36 @@
+uuid: 93ac0370-e863-4ade-83c1-e8a3dec6eb55
+langcode: en
+status: true
+dependencies:
+  module:
+    - basiccart
+    - facets
+    - user
+  theme:
+    - capit
+id: capit_basiccartblock
+theme: capit
+region: sidebar_second
+weight: -12
+provider: null
+plugin: basiccart_cartblock
+settings:
+  id: basiccart_cartblock
+  label: 'Basic Cart Block'
+  provider: basiccart
+  label_display: visible
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  user_role:
+    id: user_role
+    roles:
+      anonymous: anonymous
+      student: student
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

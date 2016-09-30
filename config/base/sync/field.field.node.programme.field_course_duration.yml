@@ -1,0 +1,21 @@
+uuid: ad76531b-a170-441a-b099-a9dbe7d25b77
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_course_duration
+    - node.type.programme
+  module:
+    - options
+id: node.programme.field_course_duration
+field_name: field_course_duration
+entity_type: node
+bundle: programme
+label: 'Course duration'
+description: 'Course duration (in months)'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_integer

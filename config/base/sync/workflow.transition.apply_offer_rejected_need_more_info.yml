@@ -1,0 +1,15 @@
+uuid: c8d27af5-d256-4006-b099-b484d91220f2
+langcode: en
+status: true
+dependencies: {  }
+id: apply_offer_rejected_need_more_info
+label: null
+module: null
+from_sid: apply_offer_rejected
+to_sid: apply_need_more_info
+roles:
+  workflow_author: 0
+  authenticated: 0
+  administrator: 0
+  student: 0
+  office: 0

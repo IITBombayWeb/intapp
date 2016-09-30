@@ -1,0 +1,64 @@
+uuid: 62fd7b73-56bd-418d-8e00-d425205d4c5d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.programme.add_to_cart
+    - field.field.node.programme.add_to_cart_price
+    - field.field.node.programme.field_course_duration
+    - field.field.node.programme.field_course_fees
+    - field.field.node.programme.field_degree
+    - field.field.node.programme.field_departments
+    - field.field.node.programme.field_description
+    - field.field.node.programme.field_e
+    - field.field.node.programme.field_enter_number_of_supporting
+    - field.field.node.programme.field_institute
+    - field.field.node.programme.field_institute_link
+    - field.field.node.programme.field_specialisation
+    - field.field.node.programme.field_supporting_documents
+    - field.field.node.programme.field_thumb
+    - node.type.programme
+  module:
+    - basiccart
+    - user
+id: node.programme.teaser
+targetEntityType: node
+bundle: programme
+mode: teaser
+content:
+  add_to_cart:
+    label: hidden
+    weight: 11
+    type: addtocart
+    settings: {  }
+    third_party_settings: {  }
+  add_to_cart_price:
+    label: inline
+    type: number_decimal
+    weight: 11
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+  flag_bookmark:
+    weight: 10
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_course_duration: true
+  field_course_fees: true
+  field_degree: true
+  field_departments: true
+  field_description: true
+  field_e: true
+  field_enter_number_of_supporting: true
+  field_institute: true
+  field_institute_link: true
+  field_specialisation: true
+  field_supporting_documents: true
+  field_thumb: true

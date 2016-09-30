@@ -1,0 +1,10 @@
+uuid: 2d602297-461a-44dd-b554-17d7cdd7e2d7
+langcode: en
+status: '1'
+dependencies: {  }
+id: apply_offer_rejected
+label: 'Offer Rejected'
+module: null
+wid: apply
+weight: '-2'
+sysid: 0
