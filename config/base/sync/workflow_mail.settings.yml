@@ -1,6 +1,0 @@
-send_mail_admin: 1
-mail_subject_admin: ''
-send_mail_user: 1
-mail_subject_user: ''
-send_test_mail: null
-send_to: null
