@@ -65,7 +65,7 @@ class GoogleLoginMenuLink extends MenuLinkDefault {
       return '';
     }
     else {
-      return $this->t('Google Login');
+      return $this->t('Login via Google');
     }
   }
 

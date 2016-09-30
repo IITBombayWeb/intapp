@@ -95,9 +95,11 @@
   <aside class="featured-top__inner section layout-container clearfix" role="complementary">
     {{ page.featured_top }}
   </aside>
+{% if site_slogan1 %}
     <div class="title">
-      <h1>Commom Application and Admission to Postgraduate Programs in IITs for International Students</h1>
+      <h1>{{ site_slogan1 }}</h1>
     </div>
+  {% endif %}
 </div>
 {% endif %}
 {# Main #}
