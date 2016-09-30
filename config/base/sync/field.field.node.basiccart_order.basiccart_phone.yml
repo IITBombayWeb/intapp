@@ -1,0 +1,23 @@
+uuid: 0052d40b-52d3-4825-8b01-4c9b4d326877
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.basiccart_phone
+    - node.type.basiccart_order
+  module:
+    - telephone
+_core:
+  default_config_hash: KeEEockCPVIqyvH-tp-thWSwyngQSdxYz9kbzwd6w8M
+id: node.basiccart_order.basiccart_phone
+field_name: basiccart_phone
+entity_type: node
+bundle: basiccart_order
+label: Phone
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: telephone

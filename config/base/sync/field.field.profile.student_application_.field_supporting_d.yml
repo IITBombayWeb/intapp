@@ -1,0 +1,31 @@
+uuid: 3c10a8b5-f6f5-4be9-9318-321259ff2f91
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_supporting_d
+    - profile.type.student_application_
+  module:
+    - file
+    - profile
+third_party_settings:
+  profile:
+    profile_private: true
+id: profile.student_application_.field_supporting_d
+field_name: field_supporting_d
+entity_type: profile
+bundle: student_application_
+label: 'Supporting Documents'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'txt pdf jpg png doc docx'
+  max_filesize: ''
+  description_field: false
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

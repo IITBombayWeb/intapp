@@ -1,0 +1,36 @@
+uuid: fcbc1b38-0f80-4f81-a357-59c64f05b5e5
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.landing-page-menu
+  module:
+    - facets
+    - system
+  theme:
+    - capit
+id: capit_landingpagemenu
+theme: capit
+region: content
+weight: -5
+provider: null
+plugin: 'system_menu_block:landing-page-menu'
+settings:
+  id: 'system_menu_block:landing-page-menu'
+  label: 'I want to know about...'
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

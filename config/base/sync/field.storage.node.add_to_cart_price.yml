@@ -1,0 +1,20 @@
+uuid: a0c6ede4-f476-4639-b3b5-c9e7c3ee00a3
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.add_to_cart_price
+field_name: add_to_cart_price
+entity_type: node
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

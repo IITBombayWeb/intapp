@@ -1,0 +1,41 @@
+uuid: a20eee8b-3801-4ae0-b656-ba4d3e787dc2
+langcode: en
+status: false
+dependencies:
+  module:
+    - facets
+    - faq_ask
+    - system
+    - user
+  theme:
+    - bartik
+id: faqunansweredquestion
+theme: bartik
+region: '-1'
+weight: -9
+provider: null
+plugin: faq_ask_unanswered
+settings:
+  id: faq_ask_unanswered
+  label: 'Unanswered Question'
+  provider: faq_ask
+  label_display: visible
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  user_role:
+    id: user_role
+    roles:
+      office: office
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+  request_path:
+    id: request_path
+    pages: "/faq-page\r\n/faq-page/*"
+    negate: false
+    context_mapping: {  }

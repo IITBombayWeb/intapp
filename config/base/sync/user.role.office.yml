@@ -1,0 +1,26 @@
+uuid: 1ec3d096-6a28-4b83-8a50-67b0581978c2
+langcode: en
+status: true
+dependencies: {  }
+id: office
+label: office
+weight: 4
+is_admin: null
+permissions:
+  5: 'access any apply workflow_transion overview'
+  6: 'access own apply workflow_transion overview'
+  7: 'access apply workflow_transition form'
+  8: 'create apply workflow_transition'
+  11: 'edit own apply workflow_transition'
+  13: 'revert own apply workflow_transition'
+  14: 'access user profiles'
+  19: 'access webprofiler'
+  20: 'view webprofiler toolbar'
+  21: 'excel import'
+  22: 'answer question'
+  23: 'ask question'
+  24: 'create faq content'
+  25: 'delete any faq content'
+  27: 'edit any faq content'
+  28: 'edit own faq content'
+  29: 'excel export'

@@ -1,0 +1,41 @@
+uuid: 907bd752-0ff6-47b0-9aff-579f0890556b
+langcode: en
+status: false
+dependencies:
+  module:
+    - facets
+    - faq_ask
+    - system
+    - user
+  theme:
+    - capit
+id: capit_faqunansweredquestion
+theme: capit
+region: '-1'
+weight: -6
+provider: null
+plugin: faq_ask_unanswered
+settings:
+  id: faq_ask_unanswered
+  label: 'Unanswered Question'
+  provider: faq_ask
+  label_display: visible
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  user_role:
+    id: user_role
+    roles:
+      office: office
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+  request_path:
+    id: request_path
+    pages: "/faq-page\r\n/faq-page/*"
+    negate: false
+    context_mapping: {  }

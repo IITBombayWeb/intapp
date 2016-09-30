@@ -1,0 +1,28 @@
+uuid: 383a47fc-594f-45a5-b2f1-293c571e0909
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_institute
+    - profile.type.office
+    - taxonomy.vocabulary.iit_institute
+id: profile.office.field_institute
+field_name: field_institute
+entity_type: profile
+bundle: office
+label: Institute
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      iit_institute: iit_institute
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,19 @@
+uuid: 32c21c1c-cc22-4b32-b9f1-31f2717c7ca4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_specialisation
+    - node.type.programme
+id: node.programme.field_specialisation
+field_name: field_specialisation
+entity_type: node
+bundle: programme
+label: Specialisation
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

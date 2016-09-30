@@ -1,0 +1,25 @@
+uuid: 9df33240-47a8-4305-88b8-10a9ad104f4b
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - business
+id: pagetitle
+theme: business
+region: content
+weight: -9
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  provider: core
+  label_display: '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: '/user/*'
+    negate: false
+    context_mapping: {  }

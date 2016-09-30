@@ -1,0 +1,27 @@
+uuid: f5aa1acf-3a8c-41ad-9f16-0735c31ef31b
+langcode: en
+status: true
+dependencies:
+  module:
+    - search_api_solr
+id: default_solr
+name: 'Default Solr'
+description: 'Default Solr server for Programme search'
+backend: search_api_solr
+backend_config:
+  scheme: http
+  host: localhost
+  port: '8983'
+  path: /solr
+  core: intappdev
+  http_user: admin
+  http_pass: ''
+  excerpt: false
+  retrieve_data: false
+  highlight_data: false
+  skip_schema_check: false
+  solr_version: ''
+  http_method: AUTO
+  site_hash: true
+  autocorrect_spell: true
+  autocorrect_suggest_words: true

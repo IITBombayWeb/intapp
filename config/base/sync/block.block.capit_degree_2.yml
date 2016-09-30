@@ -1,0 +1,34 @@
+uuid: b632dac9-6d6e-42e0-9b4b-656a039f8186
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.degree
+  module:
+    - facets
+    - system
+  theme:
+    - capit
+id: capit_degree_2
+theme: capit
+region: sidebar_first
+weight: -12
+provider: null
+plugin: 'facet_block:degree'
+settings:
+  id: 'facet_block:degree'
+  label: Degree
+  provider: facets
+  label_display: visible
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: "/search\r\n/search/*\r\n<front>"
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,29 @@
+uuid: 8bdbb20c-5abc-405d-8e23-cfeff3fdfc39
+langcode: en
+status: true
+dependencies: {  }
+id: student
+label: student
+weight: 3
+is_admin: null
+permissions:
+  0: 'view own unpublished content'
+  1: 'create application content'
+  2: 'delete own application content'
+  3: 'edit own application content'
+  4: 'view application revisions'
+  5: 'access any apply workflow_transion overview'
+  6: 'access own apply workflow_transion overview'
+  7: 'access apply workflow_transition form'
+  8: 'create apply workflow_transition'
+  9: 'edit own apply workflow_transition'
+  10: 'revert own apply workflow_transition'
+  15: 'access webprofiler'
+  16: 'view webprofiler toolbar'
+  17: 'add own student_application_ profile'
+  18: 'edit own student_application_ profile'
+  19: 'view own student_application_ profile'
+  20: 'view any student_application_ profile'
+  21: 'ask question'
+  22: 'create faq content'
+  23: 'edit own faq content'

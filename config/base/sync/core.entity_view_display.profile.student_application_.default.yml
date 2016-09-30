@@ -1,0 +1,225 @@
+uuid: 086cfb72-c46d-4560-97f0-5cf997a55d46
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.profile.student_application_.field_city
+    - field.field.profile.student_application_.field_city_school
+    - field.field.profile.student_application_.field_country
+    - field.field.profile.student_application_.field_country_school
+    - field.field.profile.student_application_.field_date_of_birth
+    - field.field.profile.student_application_.field_details_of_academic_record
+    - field.field.profile.student_application_.field_employment_details
+    - field.field.profile.student_application_.field_file
+    - field.field.profile.student_application_.field_first_name
+    - field.field.profile.student_application_.field_gender
+    - field.field.profile.student_application_.field_general_documents
+    - field.field.profile.student_application_.field_medium_of_instruction_
+    - field.field.profile.student_application_.field_mobile_num_com
+    - field.field.profile.student_application_.field_name_of_the_board_universi
+    - field.field.profile.student_application_.field_name_of_the_qualifying_exa
+    - field.field.profile.student_application_.field_performance_in_competitive
+    - field.field.profile.student_application_.field_permanent_address
+    - field.field.profile.student_application_.field_pin
+    - field.field.profile.student_application_.field_pincode_school
+    - field.field.profile.student_application_.field_proficiency_in_english
+    - field.field.profile.student_application_.field_research_professional_expe
+    - field.field.profile.student_application_.field_school
+    - field.field.profile.student_application_.field_state
+    - field.field.profile.student_application_.field_state_school
+    - field.field.profile.student_application_.field_supporting_d
+    - field.field.profile.student_application_.field_surname
+    - field.field.profile.student_application_.field_telephone_num_com
+    - field.field.profile.student_application_.field_year_of_passing
+    - profile.type.student_application_
+  module:
+    - datetime
+    - file
+    - options
+    - tablefield
+    - telephone
+id: profile.student_application_.default
+targetEntityType: profile
+bundle: student_application_
+mode: default
+content:
+  field_city:
+    weight: 5
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_city_school:
+    weight: 14
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_country:
+    weight: 7
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+  field_country_school:
+    weight: 16
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+  field_date_of_birth:
+    weight: 2
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+  field_details_of_academic_record:
+    weight: 28
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: tablefield
+  field_employment_details:
+    weight: 22
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: tablefield
+  field_first_name:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_gender:
+    weight: 3
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+  field_general_documents:
+    weight: 23
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: file_default
+  field_medium_of_instruction_:
+    weight: 17
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_mobile_num_com:
+    weight: 8
+    label: above
+    settings:
+      title: ''
+    third_party_settings: {  }
+    type: telephone_link
+  field_name_of_the_board_universi:
+    weight: 11
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_name_of_the_qualifying_exa:
+    weight: 10
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_performance_in_competitive:
+    weight: 18
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: tablefield
+  field_permanent_address:
+    weight: 4
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+  field_pin:
+    weight: 26
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_pincode_school:
+    weight: 25
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_proficiency_in_english:
+    weight: 19
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: tablefield
+  field_research_professional_expe:
+    weight: 21
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: tablefield
+  field_school:
+    weight: 13
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_state:
+    weight: 6
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_state_school:
+    weight: 15
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_supporting_d:
+    weight: 27
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: file_default
+  field_surname:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_telephone_num_com:
+    weight: 9
+    label: above
+    settings:
+      title: ''
+    third_party_settings: {  }
+    type: telephone_link
+  field_year_of_passing:
+    weight: 12
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+hidden:
+  field_file: true

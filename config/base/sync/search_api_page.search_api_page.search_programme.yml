@@ -1,0 +1,19 @@
+uuid: 106d909f-934b-4d44-b09f-9d0954a81ed6
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.default_solr_index
+id: search_programme
+label: Search
+path: search
+clean_url: true
+show_all_when_no_keys: true
+index: default_solr_index
+limit: 5
+searched_fields:
+  search_api_aggregation_1: search_api_aggregation_1
+style: view_modes
+view_mode_configuration:
+  'entity:node_programme': search_result
+show_search_form: true

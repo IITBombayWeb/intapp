@@ -1,0 +1,21 @@
+uuid: 0bf857cc-c0bd-415e-95e1-2dc0bd856cbe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.basiccart_address
+    - node.type.basiccart_order
+_core:
+  default_config_hash: 29_TQWN4fQ64UbQs-GJrYIPDUx-TAGT6leVRr5ZrTe4
+id: node.basiccart_order.basiccart_address
+field_name: basiccart_address
+entity_type: node
+bundle: basiccart_order
+label: Address
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

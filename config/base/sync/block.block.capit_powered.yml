@@ -1,0 +1,22 @@
+uuid: 75b4df2a-d2aa-45da-88a3-f041dcca115b
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - capit
+_core:
+  default_config_hash: jQQUUWN2Uxr5qZtc9zcJKBCxpKY8orN1u2HPqYYRQDI
+id: capit_powered
+theme: capit
+region: '-1'
+weight: -8
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  provider: system
+  label_display: '0'
+visibility: {  }
