@@ -1,0 +1,30 @@
+uuid: fceae2dc-8618-430f-a586-2a7a68f383b1
+langcode: en
+status: true
+dependencies: {  }
+id: Bombay_Import
+migration_tags: null
+migration_group: null
+label: 'Import Programme'
+source:
+  plugin: csv
+  path: 'sites/default/files/Dev Int App - Import - Bombay-Import.csv'
+  header_row_count: 1
+  keys:
+    - Id2
+process:
+  title: Title
+  field_institute: Institute
+  field_departments: Department
+  field_degree: Degree
+  field_specialisation: Specialisation
+  field_course_duration: 'Course Duration(In Months)'
+  type:
+    plugin: default_value
+    default_value: programme
+  uid:
+    plugin: default_value
+    default_value: 1
+destination:
+  plugin: 'entity:node'
+migration_dependencies: null

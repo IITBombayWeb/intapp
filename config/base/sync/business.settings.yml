@@ -1,0 +1,32 @@
+footer_copyright: '1'
+footer_credits: '1'
+business_color: orange
+slideshow_display: 0
+slide_title_1: 'What We Do'
+slide_title_2: 'Who We Are'
+slide_title_3: 'Our Service'
+slide_title_4: 'Our Mission'
+slide_title_5: 'Our Vision'
+slide_url_1: /node
+slide_url_2: /node
+slide_url_3: /node
+slide_url_4: /node
+slide_url_5: /node
+_core:
+  default_config_hash: Z546MZid0pMfGlgbikyRCw196WP5aRx7GrkD31ng4R4
+features:
+  node_user_picture: 1
+  comment_user_picture: 1
+  comment_user_verification: 1
+  favicon: 1
+logo:
+  use_default: 0
+  path: 'public://logo3_0_0.jpg'
+favicon:
+  use_default: 1
+  path: ''
+slide_image_1: {  }
+slide_image_2: {  }
+slide_image_3: {  }
+slide_image_4: {  }
+slide_image_5: {  }

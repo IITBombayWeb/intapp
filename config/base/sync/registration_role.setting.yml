@@ -1,0 +1,5 @@
+role_to_select:
+  student: student
+  administrator: 0
+  office: 0
+  developer: 0

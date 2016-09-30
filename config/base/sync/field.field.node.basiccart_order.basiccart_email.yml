@@ -1,0 +1,21 @@
+uuid: dea99c7f-242d-45a2-a557-5cc219c92bc6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.basiccart_email
+    - node.type.basiccart_order
+_core:
+  default_config_hash: Tb2SiesJ7u-6gGLKZcB9o4LVkpGJTlWuzmwahF1nL4I
+id: node.basiccart_order.basiccart_email
+field_name: basiccart_email
+entity_type: node
+bundle: basiccart_order
+label: Email
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

@@ -1,0 +1,19 @@
+uuid: 09cfea16-3c6f-44f4-9b27-65d3699e3a49
+langcode: en
+status: true
+dependencies:
+  module:
+    - basiccart
+    - node
+id: node.add_to_cart
+field_name: add_to_cart
+entity_type: node
+type: addtocart
+settings: {  }
+module: basiccart
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

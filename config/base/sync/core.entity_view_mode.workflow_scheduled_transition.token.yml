@@ -1,0 +1,10 @@
+uuid: baf87e76-618d-469e-8a81-dacdc184fa9a
+langcode: en
+status: true
+dependencies:
+  module:
+    - workflow
+id: workflow_scheduled_transition.token
+label: Token
+targetEntityType: workflow_scheduled_transition
+cache: true

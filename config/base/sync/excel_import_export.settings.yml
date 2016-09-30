@@ -1,0 +1,9 @@
+title: 'Excel Import/Export'
+description: ''
+custom_breadcrumbs: true
+enable_zip: 1
+export_location: 'private://export_files/'
+_core:
+  default_config_hash: CspJmpaOlITg0oAVeY4Xsoj-G6Hk5eZlnNU7Q1CMykg
+export_zip_locaton: 'private://export_zip/'
+export_file_location: 'private://export_files/'

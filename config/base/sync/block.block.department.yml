@@ -1,0 +1,34 @@
+uuid: 4e270411-b0b3-4bdc-a819-c1a3af2463df
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.department
+  module:
+    - facets
+    - system
+  theme:
+    - business
+id: department
+theme: business
+region: sidebar_first
+weight: -10
+provider: null
+plugin: 'facet_block:department'
+settings:
+  id: 'facet_block:department'
+  label: Department
+  provider: facets
+  label_display: visible
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: "/search-programme\r\n/search-programme/*"
+    negate: false
+    context_mapping: {  }

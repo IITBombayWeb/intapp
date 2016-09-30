@@ -1,0 +1,149 @@
+uuid: ac783761-806b-4994-99a0-89d0f7baf3b4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_course_duration
+    - field.storage.node.field_course_fees
+    - field.storage.node.field_degree
+    - field.storage.node.field_description
+    - field.storage.node.field_thumb
+    - field.storage.node.field_institute
+    - field.storage.node.field_departments
+    - search_api.server.default_solr
+  module:
+    - file
+    - taxonomy
+    - search_api
+    - node
+id: default_solr_index
+name: 'Default Solr Index'
+description: 'Default Solr Index for Programme index and sear'
+read_only: false
+field_settings:
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: string
+  field_course_duration:
+    label: 'Course duration (in months)'
+    datasource_id: 'entity:node'
+    property_path: field_course_duration
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_course_duration
+  field_course_fees:
+    label: 'Course fees'
+    datasource_id: 'entity:node'
+    property_path: field_course_fees
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_course_fees
+  field_degree:
+    label: Degree
+    datasource_id: 'entity:node'
+    property_path: field_degree
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_degree
+  field_description:
+    label: Description
+    datasource_id: 'entity:node'
+    property_path: field_description
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_description
+  uri:
+    label: 'Thumb » File » URI'
+    datasource_id: 'entity:node'
+    property_path: 'field_thumb:entity:uri'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_thumb
+      module:
+        - file
+  alt:
+    label: 'Thumb » Alternative text'
+    datasource_id: 'entity:node'
+    property_path: 'field_thumb:alt'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_thumb
+  name:
+    label: 'Institute » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_institute:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_institute
+      module:
+        - taxonomy
+  name_1:
+    label: 'Departments » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_departments:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_departments
+      module:
+        - taxonomy
+  search_api_aggregation_1:
+    label: 'Full text'
+    datasource_id: null
+    property_path: search_api_aggregation_1
+    type: text
+    indexed_locked: true
+processor_settings:
+  add_url:
+    plugin_id: add_url
+    settings:
+      weights:
+        preprocess_index: -30
+  aggregated_field:
+    plugin_id: aggregated_field
+    settings:
+      fields:
+        search_api_aggregation_1:
+          label: 'Full text'
+          type: union
+          fields:
+            - 'entity:node/field_course_duration'
+            - 'entity:node/field_course_fees'
+            - 'entity:node/field_degree'
+            - 'entity:node/field_departments'
+            - 'entity:node/field_description'
+            - 'entity:node/field_institute'
+            - 'entity:node/field_thumb'
+            - 'entity:node/title'
+            - 'entity:node/type'
+            - search_api_url
+      weights:
+        preprocess_index: -10
+options:
+  index_directly: true
+  cron_limit: 50
+datasource_settings:
+  'entity:node':
+    plugin_id: 'entity:node'
+    settings:
+      bundles:
+        default: false
+        selected:
+          - programme
+      languages:
+        default: true
+        selected: {  }
+tracker_settings:
+  default:
+    plugin_id: default
+    settings: {  }
+server: default_solr

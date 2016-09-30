@@ -1,0 +1,31 @@
+uuid: ff51b5a4-e194-4ec6-af95-e35fd0209b9c
+langcode: en
+status: true
+dependencies: {  }
+id: developer
+label: Developer
+weight: 5
+is_admin: null
+permissions:
+  - 'access devel information'
+  - 'switch users'
+  - 'access kint'
+  - 'view devel_node_access information'
+  - 'administer devel_generate'
+  - 'access content overview'
+  - 'create application content'
+  - 'delete own application content'
+  - 'edit own application content'
+  - 'view application revisions'
+  - 'create programme content'
+  - 'delete own programme content'
+  - 'view programme revisions'
+  - 'access toolbar'
+  - 'administer users'
+  - 'access user profiles'
+  - 'administer views'
+  - 'access webprofiler'
+  - 'view webprofiler toolbar'
+  - 'access any apply workflow_transion overview'
+  - 'access own apply workflow_transion overview'
+  - 'access apply workflow_transition form'

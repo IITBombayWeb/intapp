@@ -1,0 +1,10 @@
+uuid: 0fa47759-2f91-4268-bf58-52869cbfd9db
+langcode: en
+status: true
+dependencies:
+  module:
+    - workflow
+id: workflow_transition.token
+label: Token
+targetEntityType: workflow_transition
+cache: true

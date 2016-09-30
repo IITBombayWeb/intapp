@@ -1,0 +1,19 @@
+uuid: edcb04bf-db8a-4a1c-b40a-cd06141ece53
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_course_fees
+    - node.type.programme
+id: node.programme.field_course_fees
+field_name: field_course_fees
+entity_type: node
+bundle: programme
+label: 'Course fees'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

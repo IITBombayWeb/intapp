@@ -1,0 +1,20 @@
+uuid: 106fdb55-e8d7-44b5-856f-c977a8cd4e82
+langcode: en
+status: true
+dependencies:
+  theme:
+    - capit
+_core:
+  default_config_hash: 13GQpeITIJsp1kyPniXtWZfyFH87vb1xxJCHifL4UeE
+id: capit_local_actions
+theme: capit
+region: content
+weight: -11
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }

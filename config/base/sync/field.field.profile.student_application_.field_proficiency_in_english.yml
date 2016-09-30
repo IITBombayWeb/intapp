@@ -1,0 +1,46 @@
+uuid: 555798b5-3e5a-46ad-882f-a8560730ccab
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_proficiency_in_english
+    - profile.type.student_application_
+  module:
+    - tablefield
+id: profile.student_application_.field_proficiency_in_english
+field_name: field_proficiency_in_english
+entity_type: profile
+bundle: student_application_
+label: 'Proficiency in English (TOEFL / IELTS)'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    rebuild:
+      cols: '3'
+      rows: '2'
+    value:
+      0:
+        - 'Name of the Exam'
+        - Year
+        - Score
+      setrow: '2'
+      1:
+        - ''
+        - ''
+        - ''
+    format: null
+default_value_callback: ''
+settings:
+  export: 0
+  restrict_rebuild: 1
+  restrict_import: 1
+  restrict_addrow: 0
+  restrict_addcolumn: 0
+  lock_values: 1
+  cell_processing: '0'
+  empty_rules:
+    ignore_table_structure: 0
+    ignore_table_header: 0
+field_type: tablefield

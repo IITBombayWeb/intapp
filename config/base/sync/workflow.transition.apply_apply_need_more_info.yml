@@ -1,0 +1,15 @@
+uuid: 12f79cea-1c99-447f-b156-c2e3adeef19f
+langcode: en
+status: true
+dependencies: {  }
+id: apply_apply_need_more_info
+label: 'Need More Info'
+module: null
+from_sid: apply_apply
+to_sid: apply_need_more_info
+roles:
+  office: office
+  workflow_author: 0
+  authenticated: 0
+  administrator: 0
+  student: 0
