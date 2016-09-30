@@ -19,10 +19,10 @@ vendor
 ../sites/*/services*.yml
 
 # Excludes for installed Drupal site
-../sites/*/files/
-../sites/*/private/
-../sites/*/settings.local.php
-../sites/*/settings.php
+docroot/sites/*/files/
+docroot/sites/*/private/
+docroot/sites/*/settings.local.php
+docroot/sites/*/settings.php
 # Ignore SimpleTest multi-site environment.
 sites/simpletest
 
