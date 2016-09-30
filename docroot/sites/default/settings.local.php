@@ -106,9 +106,6 @@ $settings['rebuild_access'] = TRUE;
  */
 $settings['skip_permissions_hardening'] = TRUE;
 
-/*
-Database Configuration
-*/
 $databases['default']['default'] = array (
   'database' => 'intapp_dev',
   'username' => 'intapp_dev',

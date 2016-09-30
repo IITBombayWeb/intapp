@@ -732,6 +732,16 @@ $settings['container_yamls'][] = __DIR__ . '/services.yml';
 $settings['install_profile'] = 'standard';
 $config_directories['sync'] = '../config/base/sync';
 #$config_directories['sync'] = 'sites/default/files/config_aMQSHhyDHY9NIwDWujl890Yl1keKggCm-1qG-R1Vai1Db9RDh5rZ0uwMEasIRkDNTCckchS3nw/sync';
+/*$settings['cache']['default'] = 'cache.backend.memcache';
+$settings['memcache']['servers'] = ['127.0.0.1:11211' => 'default'];
+$settings['memcache']['bins'] = ['default' => 'default'];
+$settings['memcache']['key_prefix'] = ''; */
+/*
+$settings['cache']['default'] = 'cache.backend.memcache_storage';
+$settings['memcache_storage']['memcached_servers'] = [
+  '192.168.99.222:11211' => 'default',
+];
+$settings['memcache_storage']['key_prefix'] = 'iitinap'; */
 
 /**
  * Load local development override configuration, if available.
@@ -744,18 +754,8 @@ $config_directories['sync'] = '../config/base/sync';
  * Keep this code block at the end of this file to take full effect.
  */
 
-
 if (file_exists(__DIR__ . '/settings.local.php')) {
   include __DIR__ . '/settings.local.php';
 }
-/*$settings['cache']['default'] = 'cache.backend.memcache';
-$settings['memcache']['servers'] = ['127.0.0.1:11211' => 'default'];
-$settings['memcache']['bins'] = ['default' => 'default'];
-$settings['memcache']['key_prefix'] = ''; */
-/*
-$settings['cache']['default'] = 'cache.backend.memcache_storage';
-$settings['memcache_storage']['memcached_servers'] = [
-  '192.168.99.222:11211' => 'default',
-];
-$settings['memcache_storage']['key_prefix'] = 'iitinap'; */
+
 

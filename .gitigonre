@@ -16,13 +16,13 @@ vendor
 
 # Ignore configuration files that may contain sensitive information.
 #sites/*/settings*.php
-sites/*/services*.yml
+../sites/*/services*.yml
 
 # Excludes for installed Drupal site
-sites/*/files/
-sites/*/private/
-sites/*/settings.local.php
-
+../sites/*/files/
+../sites/*/private/
+../sites/*/settings.local.php
+../sites/*/settings.php
 # Ignore SimpleTest multi-site environment.
 sites/simpletest
 
