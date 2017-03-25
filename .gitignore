@@ -2,7 +2,7 @@
 # and it will cause files like your settings.php and user-uploaded files to be
 # excluded from Git version control. This is a common strategy to avoid
 # accidentally including private information in public repositories and patch
-# files..
+# files.
 #
 # Because .gitignore can be specific to your site, this file has a different
 # name; updating Drupal core will not override your custom .gitignore file.
