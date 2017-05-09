@@ -11,7 +11,7 @@
 # including Drupal core.
 # core
 
-# Core's dependencies are managed with Composer.
+## Core's dependencies are managed with Composer.
 vendor
 
 # Ignore configuration files that may contain sensitive information.
