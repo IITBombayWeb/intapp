@@ -1,4 +1,0 @@
-services:
-  phpexcel.wrapper:
-    class: Drupal\phpexcel\Wrapper
-    arguments: ['@config.factory']
