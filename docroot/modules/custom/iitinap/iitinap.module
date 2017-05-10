@@ -48,7 +48,7 @@ function iitinap_mail($key, &$message, $params) {
  }
 }
 
-/***
+/**
 * Implements hook_workflow().
 */
 
