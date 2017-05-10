@@ -1,0 +1,5 @@
+entity.node.application:
+  title: Edit Applicant
+  route_name: entity.node.application
+  base_route: entity.node.canonical
+  weight: 1
