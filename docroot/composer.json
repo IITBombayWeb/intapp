@@ -7,7 +7,8 @@
         "composer/installers": "^1.0.21",
         "wikimedia/composer-merge-plugin": "~1.3",
         "solarium/solarium": "^3.8",
-        "drupal/simple_fb_connect": "~3.0"
+        "drupal/simple_fb_connect": "~3.0",
+        "drupal/social_auth_google": "~1.0"
     },
     "replace": {
         "drupal/core": "~8.1",

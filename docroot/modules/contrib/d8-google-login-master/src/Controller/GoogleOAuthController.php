@@ -5,9 +5,11 @@
 namespace Drupal\google_oauth\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Url;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\user\Entity\User;
+
 use Google_Client;
 use Google_Service_Oauth2;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,14 +17,15 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class GoogleOAuthController extends ControllerBase {
   private $client;
 
-  public function __construct() {
-    $private_path = PrivateStream::basePath();
-    $config_file = $private_path . '/google-oauth-secret.json';
+	public function __construct() {
+		global $base_url;
+		$private_path = $base_url.'/sites/default';
+		$config_file = $private_path . '/google-oauth-secret.json';
 
-    if (!is_readable($config_file)) {
-      // Nag ?
-      return;
-    }
+		//if(!is_readable($config_file)) {
+		//	// Nag ?
+		//	return;
+		//}
 
     $this->client = new Google_Client();
     $this->client->setAuthConfigFile($config_file);
@@ -44,11 +47,14 @@ class GoogleOAuthController extends ControllerBase {
     return new TrustedRedirectResponse($this->client->createAuthUrl(), 301);
   }
 
-  /**
-   * Authenticate, save user details, return access token
-   */
-  public function authenticate() {
-    $code = filter_input(INPUT_GET, 'code');
+	/**
+	 *
+	/**
+	 * Authenticate, save user details, return access token
+	 */
+	public function authenticate() {
+		global $base_url;
+		$code = filter_input(INPUT_GET, 'code');
 
     if (empty($code) || !$this->client) {
       return new RedirectResponse('/');
@@ -60,6 +66,8 @@ class GoogleOAuthController extends ControllerBase {
     catch (\Exception $e) {
       return new RedirectResponse('/');
     }
+
+    $token = json_decode($this->client->getAccessToken());
 
     $plus = new Google_Service_Oauth2($this->client);
     $userinfo = $plus->userinfo->get();
@@ -82,6 +90,7 @@ class GoogleOAuthController extends ControllerBase {
 
         // hook_google_oauth_create_user_alter($user, $userinfo);
         \Drupal::moduleHandler()->alter('google_oauth_create_user', $user, $userinfo);
+        $user->addRole("student");        
         $user->save();
       }
       catch (\Exception $e) {
