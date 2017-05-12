@@ -184,8 +184,7 @@ class SimpleFbConnectUserManager {
       // list of arguments.
       $event = new GenericEvent($new_user, ['account' => $new_user, 'fbid' => $fbid]);
       $this->eventDispatcher->dispatch('simple_fb_connect.user_created', $event);
-      //$new_user = User::load();
-      $new_user->addRole("student");
+      
       $new_user->save(); 
       return $new_user;
     }
