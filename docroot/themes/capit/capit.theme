@@ -11,6 +11,7 @@ use Drupal\Core\Template\Attribute;
  */
 function capit_preprocess(&$vars) {
 	$site_config = \Drupal::config('system.site');
+	
 	$vars['site_slogan1'] = $site_config->get('slogan');
 
 }
@@ -18,4 +19,9 @@ function capit_preprocess_block(&$vars) {
 	if ($vars['plugin_id'] == 'search_api_page_form_block') {
     $vars['attributes']['class'][] = 'search-div';
   }
+}
+function capit_preprocess_page(&$variables) {
+  $utility = \Drupal\basiccart\Utility::get_cart();
+	$variables['cntcart'] = count($utility['cart']);
+	
 }

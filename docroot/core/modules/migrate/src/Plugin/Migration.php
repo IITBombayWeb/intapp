@@ -217,7 +217,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $migrationPluginManager;
 
   /**
-   *  The source plugin manager.
+   * The source plugin manager.
    *
    * @var \Drupal\migrate\Plugin\MigratePluginManager
    */
@@ -268,16 +268,16 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    *   The plugin definition.
    * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
    *   The migration plugin manager.
-   * @param \Drupal\migrate\Plugin\MigratePluginManager $source_plugin_manager
+   * @param \Drupal\migrate\Plugin\MigratePluginManagerInterface $source_plugin_manager
    *   The source migration plugin manager.
-   * @param \Drupal\migrate\Plugin\MigratePluginManager $process_plugin_manager
+   * @param \Drupal\migrate\Plugin\MigratePluginManagerInterface $process_plugin_manager
    *   The process migration plugin manager.
    * @param \Drupal\migrate\Plugin\MigrateDestinationPluginManager $destination_plugin_manager
    *   The destination migration plugin manager.
-   * @param \Drupal\migrate\Plugin\MigratePluginManager $idmap_plugin_manager
+   * @param \Drupal\migrate\Plugin\MigratePluginManagerInterface $idmap_plugin_manager
    *   The ID map migration plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManagerInterface $migration_plugin_manager, MigratePluginManager $source_plugin_manager, MigratePluginManager $process_plugin_manager, MigrateDestinationPluginManager $destination_plugin_manager, MigratePluginManager $idmap_plugin_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManagerInterface $migration_plugin_manager, MigratePluginManagerInterface $source_plugin_manager, MigratePluginManagerInterface $process_plugin_manager, MigrateDestinationPluginManager $destination_plugin_manager, MigratePluginManagerInterface $idmap_plugin_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->migrationPluginManager = $migration_plugin_manager;
     $this->sourcePluginManager = $source_plugin_manager;
@@ -416,7 +416,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function getDestinationPlugin($stub_being_requested = FALSE) {
     if ($stub_being_requested && !empty($this->destination['no_stub'])) {
-      throw new MigrateSkipRowException;
+      throw new MigrateSkipRowException();
     }
     if (!isset($this->destinationPlugin)) {
       $this->destinationPlugin = $this->destinationPluginManager->createInstance($this->destination['plugin'], $this->destination, $this);
@@ -662,7 +662,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function getMigrationDependencies() {
-  //  return $this->migration_dependencies + ['required' => [], 'optional' => []];
+    //return $this->migration_dependencies + ['required' => [], 'optional' => []];
     return ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
   }
 
@@ -704,13 +704,14 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function getTrackLastImported() {
-    $this->trackLastImported;
+    return $this->trackLastImported;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDestinationIds() {
-    $this->destinationIds;
+    return $this->destinationIds;
   }
+
 }
