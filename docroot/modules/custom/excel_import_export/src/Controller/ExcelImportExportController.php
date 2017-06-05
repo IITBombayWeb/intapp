@@ -37,6 +37,20 @@ class ExcelImportExportController extends ControllerBase {
     $filepath = $_GET['download'];
     if (isset($filepath)) {
       if (file_exists($filepath)) {
+        
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filepath));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filepath));
+        ob_clean();
+        flush();
+        readfile($filepath);
+
+       /*
         //Get file type and set it as Content Type
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         header('Content-Type: ' . finfo_file($finfo, $filepath));
@@ -56,6 +70,7 @@ class ExcelImportExportController extends ControllerBase {
         ob_clean();
         flush();
         readfile($filepath);
+        */
       }
       $markup = "<p>Please save excel file from pop!</p>";
       $markup .= "<p><b>Note</b>: If you not able to download please get file from " . $filepath . " in server.</p>";

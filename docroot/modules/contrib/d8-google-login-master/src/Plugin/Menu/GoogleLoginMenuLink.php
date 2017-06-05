@@ -65,16 +65,16 @@ class GoogleLoginMenuLink extends MenuLinkDefault {
       return '';
     }
     else {
-      return $this->t('Google Login');
+      return $this->t('Login via Google');
     }
   }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function isEnabled() {
-		return !$this->currentUser->isAuthenticated();
-	}
+  /**
+   * {@inheritdoc}
+   */
+  public function isEnabled() {
+    return !$this->currentUser->isAuthenticated();
+  }
 
   /**
    * {@inheritdoc}

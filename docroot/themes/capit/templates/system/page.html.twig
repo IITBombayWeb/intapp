@@ -58,18 +58,49 @@
 #}
 {% set container = theme.settings.fluid_container ? 'container-fluid' : 'container' %}
 <header>
-  <div class="wrapper-black">
-  <div class="container js-quickedit-main-content">
-    <div class="row">
+  <div class="header-wrp">
+  <div class="pge-wdt clearfix js-quickedit-main-content">
       {# Header #}
-      {% if page.header %}
-        {% block header %}
-          <div class="col-sm-12" role="heading">
-            {{ page.header }}
+      {%if page.header %}
+      {% block header %}
+        {{ page.header }}
+        {% endblock %}
+      {% endif %}        
+      {% if page.header_first %}
+      {% block header_first %}
+          <div class="logo-wrp">
+            {{ page.header_first }}
           </div>
         {% endblock %}
       {% endif %}
-    </div>
+      {% if page.header_second %}
+      {% block header_second %}
+          <div class="mnu-lst">
+              <div class="msg-pck">
+                  <a><img src="/themes/capit/images/packet-icon.png"><span class="circle" id="cnt">{{cntcart}}</span></a>
+                </div>
+                  {% if logged_in %}
+                      <div class="lgn-lst">
+                        <span class="dsk-lgn">Settings<i class="fa fa-caret-down"></i></span>
+                          <span class="mbl-lgn"><i class="fa fa-user"></i></span>
+                      </div>
+                  {% else %}
+                      <div class="lgn-lst">
+                        <span class="dsk-lgn">Login<i class="fa fa-caret-down"></i></span>
+                        <span class="mbl-lgn"><i class="fa fa-user"></i></span>
+                      </div>
+                  {% endif %}
+              {{ page.header_second }}
+               <div class="menu-icn">
+                    <a><i class="fa fa-bars"></i></a>
+                </div>
+          </div>
+        {% endblock %}
+      {% endif %}
+       {% if page.header_third %}
+      {% block header_third %}
+          {% endblock %}
+      {% endif %} 
   </div> 
   </div>
 </header>
@@ -80,8 +111,16 @@
   </aside>
 </div>
 {% endif %}
+  {% if page.content_top %}
+      <div class="content-top frm-hd">
+          <div class="pge-wdt clearfix">
+              {{ page.content_top }}
+          </div>
+      </div>
+  {% endif %}
 {% if page.featured_top %}
 <div class="featured-top">
+      <div class="pge-wdt clearfix">
   <div class="video-banner-wrapper slider">
   <video poster="" loop="" id="bgvid" autoplay="">
     <source type="video/webm" src="/themes/capit/videos/books.mp4">
@@ -92,26 +131,28 @@
     </div>
   </div>
 </div>
+
   <aside class="featured-top__inner section layout-container clearfix" role="complementary">
     {{ page.featured_top }}
   </aside>
+{% if site_slogan1 %}
     <div class="title">
-      <h1>Commom Application and Admission to Postgraduate Programs in IITs for International Students</h1>
+      <h1>{{ site_slogan1 }}</h1>
     </div>
+  {% endif %}
+      </div>
 </div>
 {% endif %}
 {# Main #}
 {% block main %}
-  <div role="main" class="main-container {{ container }} js-quickedit-main-content">
+  <div role="main" class="main-container pge-in-wdt js-quickedit-main-content">
     <div class="row">
+     <div class="main-inner">
       {# Sidebar First #}
       {% if page.sidebar_first %}
         {% block sidebar_first %}
-          <div class="mob-menu-div">
-              <a title="Menu" class="mob-menu"> <span class="glyphicon glyphicon-align-justify"></span> MENU</a>
-          </div>
           <aside class="col-sm-3 leftMobMenu" role="complementary">
-            <div class="left-menu well">
+            <div class="left-menu">
             	{{ page.sidebar_first }}
             </div>
           </aside>
@@ -172,6 +213,7 @@
           </aside>
         {% endblock %}
       {% endif %}
+      </div>
     </div>
   </div>
 {% endblock %}
@@ -179,19 +221,9 @@
 
   {% block footer %}
     <footer class="footer" role="contentinfo">
-    <div class="wrapper-black">
-      <div class="wrap-width">
-        <div class="footer-block clearfix">
-          <div class="footer-left">
-            &copy;Copyright IIT Bombay 2016
-          </div>
-          <div class="footer-right">
-            Powered by Drupal
-          </div>
-        </div>
-      </div>
-    </div>
+      <div class="pge-wdt clearfix">
       {{ page.footer }}
+      </div>
     </footer>
   {% endblock %}
 
