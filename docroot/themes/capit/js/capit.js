@@ -16,7 +16,7 @@ Drupal.behaviors.myBehavior = {
     // Change the Serach box placeholder text
     $('form').find("input[type=search]").each(function(ev) {
         if(!$(this).val()) { 
-            $(this).attr("placeholder", "Search programs,departments,institutes");
+            $(this).attr("placeholder", "Search programs, Departments, Institutes");
         }
     });
 
@@ -108,10 +108,25 @@ Drupal.behaviors.myBehavior = {
 };
 
 $(document).ready(function() {
-
+  
+msgpack_popup();
 //packet basic cart
+$('.menu-icn').click(function(e) {
+  $('body').removeClass('msg-pck-act');
+    if($('body').hasClass('menu-act')){
+        $('body').removeClass('menu-act');
+    }else{
+        $('body').addClass('menu-act');
+    }
+});
+
+$(this).find("ul.navbar-nav li:first-child").click(function(){
+    $('body').removeClass('menu-act');
+});
+
 
  $('.msg-pck').click(function(){
+   $('body').removeClass('menu-act');
     if($('body').hasClass('msg-pck-act')){
         $('body').removeClass('msg-pck-act');
     }else{
@@ -148,12 +163,33 @@ $(document).ready(function() {
     }
         $("section#block-capit-department-2").mCustomScrollbar ({
         scrollButtons:{enable:true},
-        theme: "dark-thick" ,
+        theme: "dark-thick",
     });
+
+    $("#block-capit-institute-2").mCustomScrollbar ({
+        scrollButtons:{enable:true},
+        theme: "dark-thick",
+    });
+
+
+});
+$(window).resize(function () {
+  msgpack_popup();
+})
+function msgpack_popup(){
+  $('.basic-cart-pck').css('top', $('.msg-pck > a').offset().top + 50);
+  if ($('.msg-pck > a').length > 0) {
+    $('.basic-cart-pck').css('right', ($(window).width() - $('.msg-pck > a').offset().left) - 170);
+  }
+}
+
+$(document).on('click', function(e) {
+    if ( ($(e.target).closest('.menu-icn').length) || ($(e.target).closest('.msg-pck').length)  ) {
+    }else if ( ! ($(e.target).closest('.user-menus').length) || ($(e.target).closest('.basic-cart-pck').length) ) {
+        $('body').removeClass('menu-act');
+        $('body').removeClass('msg-pck-act');
+    }
 });
 
-
-
-
-
 })(jQuery, Drupal);
+

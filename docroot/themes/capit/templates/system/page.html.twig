@@ -57,6 +57,7 @@
  */
 #}
 {% set container = theme.settings.fluid_container ? 'container-fluid' : 'container' %}
+<div id="page">
 <header>
   <div class="header-wrp">
   <div class="pge-wdt clearfix js-quickedit-main-content">
@@ -168,7 +169,7 @@
           page.sidebar_first is empty and page.sidebar_second is empty ? 'col-sm-12'
         ]
       %}
-      <section{{ content_attributes.addClass(content_classes) }}>
+      <section{{ content_attributes.addClass(content_classes,'container')}}>
 
         {# Highlighted #}
         {% if page.highlighted %}
@@ -226,4 +227,5 @@
       </div>
     </footer>
   {% endblock %}
+  </div>
 

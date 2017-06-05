@@ -15,6 +15,7 @@ regions:
   secondary_menu: 'Secondary menu'
   highlighted: Highlighted
   featured_top: 'Featured top'
+  featured_iner: 'Featured Inner'
   navigation: 'Navigation'
   content: 'Content'
   content_top: 'Content top'
