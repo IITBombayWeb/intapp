@@ -1,0 +1,380 @@
+<?php
+
+/**
+ * @file
+ * Contains custom_zip_download.module..
+ */
+
+use Drupal\profile\Entity\Profile;
+use Drupal\profile\Entity;
+use Drupal\file\Entity\File;
+use Dompdf\Dompdf;
+use Drupal\Core\Url;
+use Drupal\user\Entity\User;
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function custom_zip_download_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  
+  //dpm($form_id);
+  //dpm($form);
+  if ($form_id == 'profile_student_application__edit_form' || $form_id == 'profile_student_application__add_form') {
+    // Add a custom submit handler to save the array of types back to the config file.
+    $form['actions']['submit']['#submit'][] = 'custom_zip_download_form_application_submit';
+  }
+}
+
+/**
+ * Implements custom_zip_download_form_application_submit().
+ */
+function custom_zip_download_form_application_submit($form, \Drupal\Core\Form\FormStateInterface $form_state) {
+
+  //dpm($form_state->getValue('custom_form'));
+  //module_load_include('inc', 'basiccart');
+  //$application_id = basiccart_get_cart();
+  //$cart_cart = $application_id['cart'];
+  //dpm($cart_cart);
+  //dpm($form_state);
+  // dpm($form['custom_form']['#markup']);
+	/*$field = \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', 'user_picture');
+$default_image = $field->getSetting('default_image');
+$file = \Drupal::entityManager()->loadEntityByUuid('file', '104');
+$file->getFileUri();
+$picture=file_create_url($file->getFileUri());
+dpm($field);*/
+
+  $username = \Drupal::currentUser()->getUsername();
+  $account = \Drupal::currentUser()->id();
+  $current_date = format_date(time(), 'custom', 'dmY');
+  /* Image code */
+  $uid = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+  $user_fid = $uid->get('user_picture')->getValue();
+  $fid = $user_fid[0]['target_id'];
+  $file = \Drupal\file\Entity\File::load($fid);
+  $path = $file->uri->value;
+  $test = explode('//' , $path);
+ $path_array = $test[1];
+ $base_path = 'sites/default/files/'.$path_array;
+ $image = '<img src = "'.$base_path.'" alt="My Logo" width = "100" />';
+ $default_image = 'sites/default/files/pictures/Icon-user.png';
+ 
+  $first_name = $form_state->getValue('field_first_name')[0]['value'];
+  $sur_name = $form_state->getValue('field_surname')[0]['value'];
+  $gender = $form_state->getValue('field_gender')[0]['value'];
+  $nationality = $form_state->getValue('field_nationality')[0]['value'];
+  $dob = $form_state->getValue('field_date_of_birth')[0]['value'];
+  $field_permanent_address = $form_state->getValue('field_permanent_address')[0]['value'];
+
+  $fpa_city = $form_state->getValue('field_city')[0]['value'];
+  $fpa_state = $form_state->getValue('field_state')[0]['value'];
+  $fpa_country = $form_state->getValue('field_country')[0]['value'];
+  $fpa_pin = $form_state->getValue('field_pin')[0]['value'];
+  $fpa_mob_num = $form_state->getValue('field_mobile_num_com')[0]['value'];
+  $fpa_pho_num = $form_state->getValue('field_telephone_num_com')[0]['value'];
+  $email_id = $form_state->getValue('field_email_id')[0]['value'];
+
+  $qualify_exam = $form_state->getValue('field_name_of_the_qualifying_exa')[0]['value'];
+  $board_univ = $form_state->getValue('field_name_of_the_board_universi')[0]['value'];
+  $year_of_passing = $form_state->getValue('field_year_of_passing')[0]['value'];
+  $school_lst_stud = $form_state->getValue('field_school')[0]['value'];
+
+  $ed_city = $form_state->getValue('field_city_school')[0]['value'];
+  $ed_state = $form_state->getValue('field_state_school')[0]['value'];
+  $ed_pin = $form_state->getValue('field_pincode_school')[0]['value'];
+  $ed_country = $form_state->getValue('field_country_school')[0]['value'];
+  $ed_md_inst = $form_state->getValue('field_medium_of_instruction_')[0]['value'];
+
+  // Generate Programs Applied table.
+  $pgm_apply = $form['custom_form']['#$pgm_apply'];
+  $perform_pgm_apply_result = "<table>
+        <tr>
+          <td>Institute</td>
+          <td>Department</td>
+          <td>Degree</td>
+          <td>Specialisation</td>
+        </tr>";
+  for($i = 0; $i < count($pgm_apply); $i++) {
+    $perform_pgm_apply_result .= "<tr>";
+    foreach($pgm_apply[$i] as $key => $value) {
+      $perform_pgm_apply_result .= "<td>$value</td>";
+    }
+   $perform_pgm_apply_result .= "</tr>";
+  }
+  $perform_pgm_apply_result .= "</table>";
+
+  // Generate Performance Competitive table.
+  $perform_competitive = $form_state->getValue('field_performance_in_competitive');
+  $perform_competitive_result = "<table>";
+  $competitive_array = $perform_competitive[0]['tablefield']['table'];
+  for($i = 0; $i < count($competitive_array); $i++) {
+    $perform_competitive_result .= "<tr>";
+    foreach($competitive_array[$i] as $key => $value) {
+      $perform_competitive_result .= "<td>$value</td>";
+    }
+   $perform_competitive_result .= "</tr>";
+  }
+  $perform_competitive_result .= "</table>";
+
+  // Generate Academic Records table.
+  $academic_record = $form_state->getValue('field_details_of_academic_record');
+  $academic_record_result = "<table>";
+  $academic_record_array = $academic_record[0]['tablefield']['table'];
+  for($i = 0; $i < count($academic_record_array); $i++) {
+    $academic_record_result .= "<tr>";
+    foreach($academic_record_array[$i] as $key => $value) {
+      $academic_record_result .= "<td>$value</td>";
+    }
+   $academic_record_result .= "</tr>";
+  }
+  $academic_record_result .= "</table>";
+
+  // Generate Research Professional table.
+  $research_professional = $form_state->getValue('field_research_professional_expe');
+  $research_professional_result = "<table>";
+  $research_professional_array = $research_professional[0]['tablefield']['table'];
+  for($i = 0; $i < count($research_professional_array); $i++) {
+    $research_professional_result .= "<tr>";
+    foreach($research_professional_array[$i] as $key => $value) {
+      $research_professional_result .= "<td>$value</td>";
+    }
+   $research_professional_result .= "</tr>";
+  }
+  $research_professional_result .= "</table>";
+
+  // Generate Employment Details table.
+  $employment_details = $form_state->getValue('field_employment_details');
+  $employment_details_result = "<table>";
+  $employment_details_array = $employment_details[0]['tablefield']['table'];
+  for($i = 0; $i < count($employment_details_array); $i++) {
+    $employment_details_result .= "<tr>";
+    foreach($employment_details_array[$i] as $key => $value) {
+      $employment_details_result .= "<td>$value</td>";
+    }
+   $employment_details_result .= "</tr>";
+  }
+  $employment_details_result .= "</table>";
+  // Generate HTML View for PDF.
+  /*$html ="
+    <html>
+    <head>
+      <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 2px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        h3 {
+          margin: 5px 0px 5px 0px;
+          padding: 5px 0px 5px 0px;
+        }
+        img {
+          float: left;
+        }
+      </style>
+    </head>
+     <body>
+      <h1>Student Application Details</h1>
+      <table>
+        <tr>
+          <th>First/Given Name</th>
+          <th>Surname/Family Name</th>
+          <th>DOB</th>
+          <th>Gender</th>
+        </tr>
+        <tr>
+          <td>$first_name</td>
+          <td>$sur_name</td>
+          <td>10-05-1993</td>
+          <td>$gender</td>
+        </tr>
+      </table>
+      <h3>Personal Details</h3>
+      <table>
+        <tr>
+          <th>Permanent Address</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Country</th>
+          <th>PinCode</th>
+          <th>Mobile No</th>
+          <th>Phone No</th>
+        </tr>
+        <tr>
+          <td>$field_permanent_address</td>
+          <td>$fpa_city</td>
+          <td>$fpa_state</td>
+          <td>$fpa_country</td>
+          <td>$fpa_pin</td>
+          <td>$fpa_mob_num</td>
+          <td>$fpa_pho_num</td>
+        </tr>
+      </table>
+      <h3>Education Details</h3>
+      <table>
+        <tr>
+          <th>Name of the Qualifying Examination</th>
+          <th>Name of the Board/University and Country</th>
+          <th>Year of passing/appearing in above exam</th>
+          <th>School/Institution last studied</th>
+        </tr>
+        <tr>
+          <td>$qualify_exam</td>
+          <td>$board_univ</td>
+          <td>$year_of_passing</td>
+          <td>$school_lst_stud</td>
+        </tr>
+        </table>
+        <h3>Address</h3>
+        <table>
+        <tr>
+          <th>City</th>
+          <th>State</th>
+          <th>PinCode</th>
+          <th>Country</th>
+          <th>Medium of Instruction</th>
+        </tr>
+        <tr>
+          <td>$ed_city</td>
+          <td>$ed_state</td>
+          <td>$ed_pin</td>
+          <td>$ed_country</td>
+          <td>$ed_md_inst</td>
+        </tr>
+      </table>
+      <h3>Performance in Competitive Examination</h3>
+      $perform_competitive_result
+      <h3>Proficiency in English (TOEFL / IELTS)</h3>
+      $proficiency_english_result
+      <h3>Details of Academic Record (Secondary onwards)</h3>
+      $academic_record_result
+      <h3>Research/ Professional Experience, Papers published etc. (upload a separate pdf for details, if required)</h3>
+      $research_professional_result
+      <h3>Employment details</h3>
+      $employment_details_result
+     </body>
+    </html>";*/
+    
+    
+    $html = '<!DOCTYPE html>
+      <html>
+      <head>
+        <title></title>
+        <style>
+        body {
+            margin: 0 auto;
+            max-width: 1200px;
+            font-size: 14px;
+          }
+          .middle {
+            text-align: center;
+          }
+
+         table, td, th {
+              border: 1px solid black;
+          }
+          table {
+              border-collapse: collapse;
+          }
+          table tr:first-child td {
+            background-color: #D8D8D8;
+            text-align: left;
+          }
+          td { 
+              padding: 5px 10px;
+          }
+          .alm {
+            display:inline-block;
+          }
+          .width_75 {
+            width:75%;
+          }
+          .width_25 {
+            width:25%;
+          }
+          .width_50 {
+            width:50%;
+          }
+          .label {
+            display: inline-block;
+            width: 100px;
+            text-align: left;
+          }
+          .ml {
+            margin-left : 5px;
+          }
+      </style>
+      </head>
+      <body>
+      <div class="header middle">
+       <h2>International Student Application to PG Programs 2017</h2>
+      </div>
+      <div class="address-wrap">
+        <div class="addr-inner-wrap alm width_75">
+          <div class="addr-title"><h4>'.$first_name.' '.$sur_name.'</h4></div>
+           <div class=""><span class="label">Nationality:</span> <span class="ml">'.$nationality.'</span></div>
+           <div class="alm width_50"><span class="label">Mobile:</span> <span class="ml">'.$fpa_mob_num.'</span></div>
+          <div class="alm width_50"><span class="label">Email:</span> <span class="ml">'.$email_id.'</span></div>
+          <div><span class="label">Communication address:</span> <span class="ml">'.$field_permanent_address.','.$fpa_city.'-'.$fpa_pin.','.$fpa_state.','.$fpa_country.'</span></div>
+
+         </div>
+         <div class="prof-img alm width_25">'.$image.'</div>
+         <div class="alm width_25">'.$gender.'</div>
+         <div class="alm width_25">'.$dob.'</div>
+      </div>
+      <div class="main-container">
+      <h3>Programs Applied</h3>
+      '.$perform_pgm_apply_result.'
+      <h3>Performance in Competitive Examination</h3>
+      '.$perform_competitive_result.'
+      <h3>Details of Academic Record (Secondary onwards)</h3>
+      '.$academic_record_result.'
+      <h3>Research/ Professional Experience, Papers published etc. (upload a separate pdf for details, if required)</h3>
+      '.$research_professional_result.'
+      <h3>Employment details</h3>
+      '.$employment_details_result.'
+      </div>
+      <footer>
+        <div class="foot clearfix">
+          <div class="f-left">
+            <label class="label">First created</label> 13/08/2016 10:10:35
+          </div>
+          <div class="f-right">
+            <label class="label">Last modified</label> 13/08/2016 10:10:35
+          </div>
+        </div>
+      </footer>
+      </body>
+      </html>';
+      
+    
+
+    // Instantiate and use the dompdf class
+    $dompdf = new Dompdf();
+    $dompdf->loadHtml($html);
+  
+    // Setup the paper size and orientation
+    $dompdf->setPaper('A4', 'portrait');
+  
+    // Render the HTML as PDF
+    $dompdf->render();
+    $pdfoutput = $dompdf->output();
+    $filename = 'public://applications/'. $username . '_' . $account . '_' . $current_date . '.pdf';
+    if ($entity = $form_state->getFormObject()->getEntity()) {
+      $entity->set('field_application_path', $filename);
+      $entity->save();
+    }
+    $file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE);
+}
+

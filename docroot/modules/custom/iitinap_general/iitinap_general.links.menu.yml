@@ -1,0 +1,6 @@
+iitinap_general.admin:
+  title: 'Landing Page Settings'
+  description: 'Customize landing page content'
+  parent: system.admin_config_development
+  route_name: iitinap_general.config
+  weight: 100

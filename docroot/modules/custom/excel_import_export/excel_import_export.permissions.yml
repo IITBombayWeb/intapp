@@ -1,0 +1,9 @@
+excel import:
+  title: 'Excel import'
+  description: 'Import excel data to drupal content(Applications).'
+  restrict access: true
+
+excel export:
+  title: 'Excel export'
+  description: 'Export drupal content(Applications) to excel data.'
+  restrict access: true
