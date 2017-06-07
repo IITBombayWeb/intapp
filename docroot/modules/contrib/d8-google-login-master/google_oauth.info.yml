@@ -1,5 +1,0 @@
-name: Google OAuth
-description: Authenticate using Google OAuth
-type: module
-core: 8.x
-package: Authentication

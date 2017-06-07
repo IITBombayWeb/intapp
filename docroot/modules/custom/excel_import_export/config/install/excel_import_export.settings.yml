@@ -1,7 +1,0 @@
-title: 'Excel Import/Export'
-description: ''
-custom_breadcrumbs: TRUE
-
-enable_zip: 0
-export_zip_locaton: "public://export_zip/"
-export_file_location: "public://export_file/"
