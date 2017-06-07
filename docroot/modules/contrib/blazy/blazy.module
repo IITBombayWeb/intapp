@@ -7,6 +7,7 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\blazy\Blazy;
 
 /**
@@ -27,11 +28,6 @@ function template_preprocess_blazy(&$variables) {
  * Overrides variables for responsive-image.html.twig templates.
  */
 function blazy_preprocess_responsive_image(&$variables) {
-  // Do not proceed if picture element.
-  if (!$variables['output_image_tag']) {
-    return;
-  }
-
   $config = Blazy::getConfig();
 
   // Do not proceed if disabled globally, or not a Blazy formatter.
@@ -40,20 +36,7 @@ function blazy_preprocess_responsive_image(&$variables) {
   }
 
   // We are here either using Blazy, or core Responsive image formatters.
-  $srcset = $variables['attributes']['srcset'];
-  $srcset_values = $srcset->value();
-
-  $variables['attributes']['data-srcset'] = $srcset_values;
-  $variables['img_element']['#attributes']['class'][] = 'b-lazy b-responsive';
-  $variables['img_element']['#attributes']['data-srcset'] = $srcset_values;
-  $variables['img_element']['#attributes']['srcset'] = '';
-
-  $variables['img_element']['#attributes']['data-src'] = $variables['img_element']['#uri'];
-  if ($config['one_pixel']) {
-    $variables['img_element']['#uri'] = Blazy::PLACEHOLDER;
-  }
-
-  $variables['img_element']['#attached']['drupalSettings']['blazy'] = $config['blazy'];
+  Blazy::preprocessResponsiveImage($variables);
 }
 
 /**
@@ -69,13 +52,50 @@ function blazy_preprocess_field(array &$variables) {
 
   // Defines [data-blazy] attribute as required by the Blazy loader.
   $settings = $element['#blazy'];
-  if (!empty($settings['responsive_image_style'])) {
-    $settings['ratio'] = FALSE;
-  }
-
-  $settings['blazy_data']['ratio'] = !empty($settings['ratio']);
   $variables['attributes']['class'][] = 'blazy';
-  $variables['attributes']['data-blazy'] = Json::encode($settings['blazy_data']);
+  $variables['attributes']['data-blazy'] = empty($settings['blazy_data']) ? '' : Json::encode($settings['blazy_data']);
+  if (!empty($settings['media_switch'])) {
+    $switch = str_replace('_', '-', $settings['media_switch']);
+    $variables['attributes']['data-' . $switch . '-gallery'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function blazy_views_pre_render($view) {
+  if (!isset($view)) {
+    return;
+  }
+  \Drupal\blazy\BlazyViews::viewsPreRender($view);
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function blazy_field_formatter_info_alter(array &$info) {
+  // Supports optional Media Entity via VEM/VEF if available.
+  $common = [
+    'description' => t('Displays lazyloaded images, or iframes, for VEF/ ME.'),
+    'quickedit'   => ['editor' => 'disabled'],
+    'provider'    => 'blazy',
+  ];
+
+  if (function_exists('video_embed_media_media_bundle_insert')) {
+    $info['blazy_file'] = $common + [
+      'id'          => 'blazy_file',
+      'label'       => t('Blazy Image with Media'),
+      'class'       => 'Drupal\blazy\Plugin\Field\FieldFormatter\BlazyFileFormatter',
+      'field_types' => ['entity_reference', 'image'],
+    ];
+
+    $info['blazy_video'] = $common + [
+      'id'          => 'blazy_video',
+      'label'       => t('Blazy Video'),
+      'class'       => 'Drupal\blazy\Plugin\Field\FieldFormatter\BlazyVideoFormatter',
+      'field_types' => ['video_embed_field'],
+    ];
+  }
 }
 
 /**
@@ -83,6 +103,50 @@ function blazy_preprocess_field(array &$variables) {
  */
 function blazy_config_schema_info_alter(array &$definitions) {
   Blazy::configSchemaInfoAlter($definitions, 'blazy_base');
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function blazy_library_info_alter(&$libraries, $extension) {
+  if ($extension === 'blazy' && function_exists('libraries_get_path')) {
+    $libraries['blazy']['js'] = ['/' . libraries_get_path('blazy') . '/blazy.min.js' => ['weight' => -4]];
+  }
+}
+
+/**
+ * Implements hook_blazy_attach_alter().
+ */
+function blazy_blazy_attach_alter(array &$load, $attach = []) {
+  if (!empty($attach['colorbox'])) {
+    $dummy = [];
+    \Drupal::service('colorbox.attachment')->attach($dummy);
+    $load = isset($dummy['#attached']) ? NestedArray::mergeDeep($load, $dummy['#attached']) : $load;
+    $load['library'][] = 'blazy/colorbox';
+    unset($dummy);
+  }
+}
+
+/**
+ * Implements hook_blazy_lightboxes_alter().
+ */
+function blazy_blazy_lightboxes_alter(array &$lightboxes) {
+  if (is_file(DRUPAL_ROOT . '/libraries/photobox/photobox/jquery.photobox.js')) {
+    $lightboxes[] = 'photobox';
+  }
+}
+
+/**
+ * Implements hook_blazy_settings_alter().
+ */
+function blazy_blazy_settings_alter(array &$build, $items) {
+  $settings = &$build['settings'];
+
+  // Sniffs for Views to allow block__no_wrapper, views_no_wrapper, etc.
+  if (function_exists('views_get_current_view') && $view = views_get_current_view()) {
+    $settings['view_name'] = $view->storage->id();
+    $settings['current_view_mode'] = $view->current_display;
+  }
 }
 
 /**

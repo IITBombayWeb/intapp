@@ -29,7 +29,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
   /**
    * The entity storage used for facets.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface $facetStorage
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $facetStorage;
 
@@ -57,17 +57,12 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    /** @var \Drupal\facets\FacetManager\DefaultFacetManager $facet_manager */
-    $facet_manager = $container->get('facets.manager');
-    /** @var \Drupal\Core\Entity\EntityStorageInterface $facet_storage */
-    $facet_storage = $container->get('entity_type.manager')->getStorage('facets_facet');
-
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $facet_manager,
-      $facet_storage
+      $container->get('facets.manager'),
+      $container->get('entity_type.manager')->getStorage('facets_facet')
     );
   }
 
@@ -135,7 +130,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
   public function calculateDependencies() {
     // The ID saved in the configuration is of the format
     // 'base_plugin:facet_id'. We're splitting that to get to the facet ID.
-    $facet_mapping = $this->configuration['id'];
+    $facet_mapping = $this->getPluginId();
     $facet_id = explode(PluginBase::DERIVATIVE_SEPARATOR, $facet_mapping)[1];
 
     /** @var \Drupal\facets\FacetInterface $facet */

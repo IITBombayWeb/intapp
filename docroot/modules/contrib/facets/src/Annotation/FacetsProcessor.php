@@ -26,18 +26,18 @@ class FacetsProcessor extends Plugin {
   /**
    * The human-readable name of the processor plugin.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $label;
 
   /**
    * The processor description.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $description;
 
@@ -59,5 +59,12 @@ class FacetsProcessor extends Plugin {
    * @var int[]
    */
   public $stages;
+
+  /**
+   * Whether or not this processor is default enabled for new facets.
+   *
+   * @var bool
+   */
+  public $default_enabled;
 
 }

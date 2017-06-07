@@ -140,7 +140,6 @@ class WorkflowTransitionElement extends FormElement {
       $default_value = $transition->getToSid();
     }
     elseif ($entity) {
-
       // Normal situation: adding a new transition on an new/existing entity.
 
       // Get the scheduling info, only when updating an existing entity.
@@ -324,7 +323,7 @@ class WorkflowTransitionElement extends FormElement {
           '#open' => ($settings_fieldset == 2) ? FALSE : TRUE,
         );
       }
-      
+
       // This overrides BaseFieldDefinition. @todo: apply for form and widget.
       // The 'options' widget. May be removed later if 'Action buttons' are chosen.
       // The help text is not available for container. Let's add it to the
@@ -450,7 +449,7 @@ class WorkflowTransitionElement extends FormElement {
       // Make sure the '#type' is not set to the invalid 'buttons' value.
       // It will be replaced by action buttons, but sometimes, the select box
       // is still shown.
-      // @see workflowfield_form_alter().
+      // @see workflow_form_alter().
       $element['to_sid']['#type'] = 'select';
       $element['to_sid']['#access'] = FALSE;
     }

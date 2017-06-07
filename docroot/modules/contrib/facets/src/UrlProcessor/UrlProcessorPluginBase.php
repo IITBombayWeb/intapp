@@ -22,10 +22,17 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
   protected $filterKey = 'f';
 
   /**
-   * The current request object.
+   * The url separator variable.
    *
-   * @var Request
-   *  The current request object.
+   * @var string
+   *   The sepatator to use between field and value.
+   */
+  protected $separator;
+
+  /**
+   * The clone of the current request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
    */
   protected $request;
 
@@ -34,6 +41,13 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
    */
   public function getFilterKey() {
     return $this->filterKey;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSeparator() {
+    return $this->separator;
   }
 
   /**
@@ -47,10 +61,12 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
    *   The plugin implementation definition.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request object for the current request.
+   *
+   * @throws \Drupal\facets\Exception\InvalidProcessorException
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->request = $request;
+    $this->request = clone $request;
 
     if (!isset($configuration['facet'])) {
       throw new InvalidProcessorException("The url processor doesn't have the required 'facet' in the configuration array.");
@@ -63,15 +79,25 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
     $facet_source_config = $facet->getFacetSourceConfig();
 
     $this->filterKey = $facet_source_config->getFilterKey() ?: 'f';
+
+    // Set the separator to the predefined colon char but override if passed
+    // along as part of the plugin configuration.
+    $this->separator = ':';
+    if (isset($configuration['separator'])) {
+      $this->separator = $configuration['separator'];
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    /** @var \Symfony\Component\HttpFoundation\Request $request */
-    $request = $container->get('request_stack')->getMasterRequest();
-    return new static($configuration, $plugin_id, $plugin_definition, $request);
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('request_stack')->getMasterRequest()
+    );
   }
 
 }

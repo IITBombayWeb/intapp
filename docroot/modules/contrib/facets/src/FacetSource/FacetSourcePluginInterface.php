@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\FacetSource;
 
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\facets\FacetInterface;
 
@@ -14,7 +15,7 @@ use Drupal\facets\FacetInterface;
  *
  * @see plugin_api
  */
-interface FacetSourcePluginInterface extends PluginFormInterface {
+interface FacetSourcePluginInterface extends PluginFormInterface, DependentPluginInterface {
 
   /**
    * Fills the facet entities with results from the facet source.
@@ -22,7 +23,7 @@ interface FacetSourcePluginInterface extends PluginFormInterface {
    * @param \Drupal\facets\FacetInterface[] $facets
    *   The configured facets.
    */
-  public function fillFacetsWithResults($facets);
+  public function fillFacetsWithResults(array $facets);
 
   /**
    * Returns the allowed query types for a given facet for the facet source.
@@ -39,12 +40,19 @@ interface FacetSourcePluginInterface extends PluginFormInterface {
   public function getQueryTypesForFacet(FacetInterface $facet);
 
   /**
-   * Returns the path where a facet should link to.
+   * Returns the path of the facet source, used to build the facet url.
+   *
+   * @return string The path.
+   */
+  public function getPath();
+
+  /**
+   * Returns the number of results that were found for this search.
    *
    * @return string
    *   The path of the facet.
    */
-  public function getPath();
+  public function getCount();
 
   /**
    * Returns true if the Facet source is being rendered in the current request.

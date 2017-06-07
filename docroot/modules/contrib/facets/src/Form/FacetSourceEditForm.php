@@ -28,13 +28,10 @@ class FacetSourceEditForm extends EntityForm {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
-    $entity_type_manager = $container->get('entity_type.manager');
-
-    /** @var \Drupal\facets\UrlProcessor\UrlProcessorPluginManager $url_processor_plugin_manager */
-    $url_processor_plugin_manager = $container->get('plugin.manager.facets.url_processor');
-
-    return new static($entity_type_manager, $url_processor_plugin_manager);
+    return new static(
+      $container->get('entity_type.manager'),
+      $container->get('plugin.manager.facets.url_processor')
+    );
   }
 
   /**
@@ -52,7 +49,7 @@ class FacetSourceEditForm extends EntityForm {
 
     // Make sure we remove colons from the source id, those are disallowed in
     // the entity id.
-    $source_id = $this->getRequest()->get('source_id');
+    $source_id = $this->getRequest()->get('facets_facet_source');
     $source_id = str_replace(':', '__', $source_id);
 
     $facet_source = $facet_source_storage->load($source_id);
@@ -66,7 +63,7 @@ class FacetSourceEditForm extends EntityForm {
       $facet_source = new FacetSource(
         [
           'id' => $source_id,
-          'name' => $this->getRequest()->get('source_id'),
+          'name' => $this->getRequest()->get('facets_facet_source'),
         ],
         'facets_facet_source'
       );
@@ -92,6 +89,7 @@ class FacetSourceEditForm extends EntityForm {
     /** @var \Drupal\facets\FacetSourceInterface $facet_source */
     $facet_source = $this->getEntity();
 
+    $form['#tree'] = TRUE;
     $form['filter_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Filter key'),
@@ -119,8 +117,39 @@ class FacetSourceEditForm extends EntityForm {
         'The URL Processor defines the url structure used for this facet source.') . '<br />- ' . implode('<br>- ', $url_processors_description),
     ];
 
+    $breadcrumb_settings = $facet_source->getBreadcrumbSettings();
+    $form['breadcrumb'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Breadcrumb'),
+    ];
+    $form['breadcrumb']['active'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Append active facets to breadcrumb'),
+      '#default_value' => isset($breadcrumb_settings['active']) ? $breadcrumb_settings['active'] : FALSE,
+    ];
+    $form['breadcrumb']['group'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Group active items under same crumb (not implemented yet - now always grouping)'),
+      '#default_value' => isset($breadcrumb_settings['group']) ? $breadcrumb_settings['group'] : FALSE,
+      '#states' => [
+        'visible' => [
+          ':input[name="breadcrumb[active]"]' => ['checked' => TRUE],
+        ]
+      ]
+    ];
+
     // The parent's form build method will add a save button.
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+    $facet_source = $this->getEntity();
+    drupal_set_message($this->t('Facet source %name has been saved.', ['%name' => $facet_source->label()]));
+    $form_state->setRedirect('facets.overview');
   }
 
 }

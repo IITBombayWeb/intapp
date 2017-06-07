@@ -6,8 +6,9 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\search_api\Entity\Index;
-use Drupal\search_api\UncacheableDependencyTrait;
+use Drupal\search_api\ParseMode\ParseModePluginManager;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a filter for adding a fulltext search to the view.
@@ -18,22 +19,66 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
  */
 class SearchApiFulltext extends FilterPluginBase {
 
-  use UncacheableDependencyTrait;
   use SearchApiFilterTrait;
+
+  /**
+   * The parse mode manager.
+   *
+   * @var \Drupal\search_api\ParseMode\ParseModePluginManager|null
+   */
+  protected $parseModeManager;
 
   /**
    * {@inheritdoc}
    */
-  public function showOperatorForm(&$form, FormStateInterface $form_state) {
-    parent::showOperatorForm($form, $form_state);
-    $form['operator']['#description'] = $this->t('This operator only applies when using "Search keys" as the "Use as" setting.');
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    /** @var static $plugin */
+    $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+
+    $plugin->setParseModeManager($container->get('plugin.manager.search_api.parse_mode'));
+
+    return $plugin;
+  }
+
+  /**
+   * Retrieves the parse mode manager.
+   *
+   * @return \Drupal\search_api\ParseMode\ParseModePluginManager
+   *   The parse mode manager.
+   */
+  public function getParseModeManager() {
+    return $this->parseModeManager ?: \Drupal::service('plugin.manager.search_api.parse_mode');
+  }
+
+  /**
+   * Sets the parse mode manager.
+   *
+   * @param \Drupal\search_api\ParseMode\ParseModePluginManager $parse_mode_manager
+   *   The new parse mode manager.
+   *
+   * @return $this
+   */
+  public function setParseModeManager(ParseModePluginManager $parse_mode_manager) {
+    $this->parseModeManager = $parse_mode_manager;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function operatorForm(&$form, FormStateInterface $form_state) {
+    parent::operatorForm($form, $form_state);
+
+    if (!empty($form['operator'])) {
+      $form['operator']['#description'] = $this->t('Based on the parse mode set, some of these options might not work as expected. Please either use "Multiple terms" as the parse mode or make sure that the filter behaves as expected for multiple words.');
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function operatorOptions($which = 'title') {
-    $options = array();
+    $options = [];
     foreach ($this->operators() as $id => $info) {
       $options[$id] = $info[$which];
     }
@@ -53,23 +98,23 @@ class SearchApiFulltext extends FilterPluginBase {
    *   - values: The number of values the operator requires as input.
    */
   public function operators() {
-    return array(
-      'and' => array(
+    return [
+      'and' => [
         'title' => $this->t('Contains all of these words'),
         'short' => $this->t('and'),
         'values' => 1,
-      ),
-      'or' => array(
+      ],
+      'or' => [
         'title' => $this->t('Contains any of these words'),
         'short' => $this->t('or'),
         'values' => 1,
-      ),
-      'not' => array(
+      ],
+      'not' => [
         'title' => $this->t('Contains none of these words'),
         'short' => $this->t('not'),
         'values' => 1,
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -78,10 +123,11 @@ class SearchApiFulltext extends FilterPluginBase {
   public function defineOptions() {
     $options = parent::defineOptions();
 
+    $options['parse_mode'] = ['default' => 'terms'];
     $options['operator']['default'] = 'and';
 
     $options['min_length']['default'] = '';
-    $options['fields']['default'] = array();
+    $options['fields']['default'] = [];
 
     return $options;
   }
@@ -92,9 +138,28 @@ class SearchApiFulltext extends FilterPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
+    $form['parse_mode'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Parse mode'),
+      '#description' => $this->t('Choose how the search keys will be parsed.'),
+      '#options' => $this->getParseModeManager()->getInstancesOptions(),
+      '#default_value' => $this->options['parse_mode'],
+    ];
+    foreach ($this->getParseModeManager()->getInstances() as $key => $mode) {
+      if ($mode->getDescription()) {
+        $states['visible'][':input[name="options[parse_mode]"]']['value'] = $key;
+        $form["parse_mode_{$key}_description"] = [
+          '#type' => 'item',
+          '#title' => $mode->label(),
+          '#description' => $mode->getDescription(),
+          '#states' => $states,
+        ];
+      }
+    }
+
     $fields = $this->getFulltextFields();
     if (!empty($fields)) {
-      $form['fields'] = array(
+      $form['fields'] = [
         '#type' => 'select',
         '#title' => $this->t('Searched fields'),
         '#description' => $this->t('Select the fields that will be searched. If no fields are selected, all available fulltext fields will be searched.'),
@@ -102,25 +167,25 @@ class SearchApiFulltext extends FilterPluginBase {
         '#size' => min(4, count($fields)),
         '#multiple' => TRUE,
         '#default_value' => $this->options['fields'],
-      );
+      ];
     }
     else {
-      $form['fields'] = array(
+      $form['fields'] = [
         '#type' => 'value',
-        '#value' => array(),
-      );
+        '#value' => [],
+      ];
     }
     if (isset($form['expose'])) {
       $form['expose']['#weight'] = -5;
     }
 
-    $form['min_length'] = array(
+    $form['min_length'] = [
       '#title' => $this->t('Minimum keyword length'),
       '#description' => $this->t('Minimum length of each word in the search keys. Leave empty to allow all words.'),
       '#type' => 'number',
       '#min' => 1,
       '#default_value' => $this->options['min_length'],
-    );
+    ];
   }
 
   /**
@@ -129,12 +194,24 @@ class SearchApiFulltext extends FilterPluginBase {
   protected function valueForm(&$form, FormStateInterface $form_state) {
     parent::valueForm($form, $form_state);
 
-    $form['value'] = array(
+    $form['value'] = [
       '#type' => 'textfield',
       '#title' => !$form_state->get('exposed') ? $this->t('Value') : '',
       '#size' => 30,
       '#default_value' => $this->value,
-    );
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function exposedTranslate(&$form, $type) {
+    parent::exposedTranslate($form, $type);
+
+    // We use custom validation for "required", so don't want the Form API to
+    // interfere.
+    // @see ::validateExposed()
+    $form['#required'] = FALSE;
   }
 
   /**
@@ -146,11 +223,6 @@ class SearchApiFulltext extends FilterPluginBase {
       return;
     }
 
-    // We only need to validate if there is a minimum word length set.
-    if ($this->options['min_length'] < 2) {
-      return;
-    }
-
     $identifier = $this->options['expose']['identifier'];
     $input = &$form_state->getValue($identifier, '');
 
@@ -159,8 +231,19 @@ class SearchApiFulltext extends FilterPluginBase {
       $input = &$this->options['group_info']['group_items'][$input]['value'];
     }
 
-    // If there is no input, we're fine.
     if (!trim($input)) {
+      // No input was given by the user. If the filter was set to "required" and
+      // there is a query (not the case when an exposed filter block is
+      // displayed stand-alone), abort it.
+      if (!empty($this->options['expose']['required']) && $this->getQuery()) {
+        $this->getQuery()->abort();
+      }
+      // If the input is empty, there is nothing to validate: return early.
+      return;
+    }
+
+    // Only continue if there is a minimum word length set.
+    if ($this->options['min_length'] < 2) {
       return;
     }
 
@@ -193,6 +276,12 @@ class SearchApiFulltext extends FilterPluginBase {
     $fields = $fields ? $fields : array_keys($this->getFulltextFields());
     $query = $this->getQuery();
 
+    if ($this->options['parse_mode']) {
+      $parse_mode = $this->getParseModeManager()
+        ->createInstance($this->options['parse_mode']);
+      $query->setParseMode($parse_mode);
+    }
+
     // If something already specifically set different fields, we silently fall
     // back to mere filtering.
     $old = $query->getFulltextFields();
@@ -211,7 +300,7 @@ class SearchApiFulltext extends FilterPluginBase {
     // If the operator was set to OR or NOT, set OR as the conjunction. It is
     // also set for NOT since otherwise it would be "not all of these words".
     if ($this->operator != 'and') {
-      $query->setOption('conjunction', 'OR');
+      $query->getParseMode()->setConjunction('OR');
     }
 
     $query->setFulltextFields($fields);
@@ -243,11 +332,11 @@ class SearchApiFulltext extends FilterPluginBase {
           // If the conjunction or negation settings aren't the same, we have to
           // nest both old and new keys array.
           if (!empty($keys['#negation']) != !empty($old['#negation']) || $keys['#conjunction'] != $old['#conjunction']) {
-            $keys = array(
+            $keys = [
               '#conjunction' => 'AND',
               $old,
               $keys,
-            );
+            ];
           }
           // Otherwise, just add all individual words from the old keys to the
           // new ones.
@@ -277,7 +366,7 @@ class SearchApiFulltext extends FilterPluginBase {
    *   labels.
    */
   protected function getFulltextFields() {
-    $fields = array();
+    $fields = [];
     /** @var \Drupal\search_api\IndexInterface $index */
     $index = Index::load(substr($this->table, 17));
 

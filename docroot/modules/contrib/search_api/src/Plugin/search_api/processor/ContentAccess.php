@@ -3,18 +3,20 @@
 namespace Drupal\search_api\Plugin\search_api\processor;
 
 use Drupal\comment\CommentInterface;
-use Drupal\Core\Database\Database;
-use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Datasource\DatasourceInterface;
-use Drupal\search_api\SearchApiException;
 use Drupal\search_api\IndexInterface;
+use Drupal\search_api\Item\ItemInterface;
+use Drupal\search_api\LoggerTrait;
 use Drupal\search_api\Processor\ProcessorPluginBase;
+use Drupal\search_api\Processor\ProcessorProperty;
 use Drupal\search_api\Query\QueryInterface;
+use Drupal\search_api\SearchApiException;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,20 +28,29 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Content access"),
  *   description = @Translation("Adds content access checks for nodes and comments."),
  *   stages = {
+ *     "add_properties" = 0,
  *     "pre_index_save" = -10,
- *     "preprocess_index" = -30,
- *     "preprocess_query" = -30
- *   }
+ *     "preprocess_query" = -30,
+ *   },
  * )
  */
 class ContentAccess extends ProcessorPluginBase {
 
+  use LoggerTrait;
+
   /**
-   * The logger to use for logging messages.
+   * The database connection.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface|null
+   * @var \Drupal\Core\Database\Connection|null
    */
-  protected $logger;
+  protected $database;
+
+  /**
+   * The current_user service used by this plugin.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface|null
+   */
+  protected $currentUser;
 
   /**
    * {@inheritdoc}
@@ -48,31 +59,57 @@ class ContentAccess extends ProcessorPluginBase {
     /** @var static $processor */
     $processor = parent::create($container, $configuration, $plugin_id, $plugin_definition);
 
-    /** @var \Drupal\Core\Logger\LoggerChannelInterface $logger */
-    $logger = $container->get('logger.factory')->get('search_api');
-    $processor->setLogger($logger);
+    $processor->setLogger($container->get('logger.channel.search_api'));
+    $processor->setDatabase($container->get('database'));
+    $processor->setCurrentUser($container->get('current_user'));
 
     return $processor;
   }
 
   /**
-   * Retrieves the logger to use.
+   * Retrieves the database connection.
    *
-   * @return \Drupal\Core\Logger\LoggerChannelInterface
-   *   The logger to use.
+   * @return \Drupal\Core\Database\Connection
+   *   The database connection.
    */
-  public function getLogger() {
-    return $this->logger ?: \Drupal::service('logger.factory')->get('search_api');
+  public function getDatabase() {
+    return $this->database ?: \Drupal::database();
   }
 
   /**
-   * Sets the logger to use.
+   * Sets the database connection.
    *
-   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
-   *   The logger to use.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The new database connection.
+   *
+   * @return $this
    */
-  public function setLogger(LoggerChannelInterface $logger) {
-    $this->logger = $logger;
+  public function setDatabase(Connection $database) {
+    $this->database = $database;
+    return $this;
+  }
+
+  /**
+   * Retrieves the current user.
+   *
+   * @return \Drupal\Core\Session\AccountProxyInterface
+   *   The current user.
+   */
+  public function getCurrentUser() {
+    return $this->currentUser ?: \Drupal::currentUser();
+  }
+
+  /**
+   * Sets the current user.
+   *
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
+   *
+   * @return $this
+   */
+  public function setCurrentUser(AccountProxyInterface $current_user) {
+    $this->currentUser = $current_user;
+    return $this;
   }
 
   /**
@@ -80,7 +117,7 @@ class ContentAccess extends ProcessorPluginBase {
    */
   public static function supportsIndex(IndexInterface $index) {
     foreach ($index->getDatasources() as $datasource) {
-      if (in_array($datasource->getEntityTypeId(), array('node', 'comment'))) {
+      if (in_array($datasource->getEntityTypeId(), ['node', 'comment'])) {
         return TRUE;
       }
     }
@@ -90,13 +127,67 @@ class ContentAccess extends ProcessorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function alterPropertyDefinitions(array &$properties, DatasourceInterface $datasource = NULL) {
-    $definition = array(
-      'label' => $this->t('Node access information'),
-      'description' => $this->t('Data needed to apply node access.'),
-      'type' => 'string',
-    );
-    $properties['search_api_node_grants'] = new DataDefinition($definition);
+  public function getPropertyDefinitions(DatasourceInterface $datasource = NULL) {
+    $properties = [];
+
+    if (!$datasource) {
+      $definition = [
+        'label' => $this->t('Node access information'),
+        'description' => $this->t('Data needed to apply node access.'),
+        'type' => 'string',
+        'processor_id' => $this->getPluginId(),
+        'hidden' => TRUE,
+      ];
+      $properties['search_api_node_grants'] = new ProcessorProperty($definition);
+    }
+
+    return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addFieldValues(ItemInterface $item) {
+    static $anonymous_user;
+
+    if (!isset($anonymous_user)) {
+      // Load the anonymous user.
+      $anonymous_user = new AnonymousUserSession();
+    }
+
+    // Only run for node and comment items.
+    $entity_type_id = $item->getDatasource()->getEntityTypeId();
+    if (!in_array($entity_type_id, ['node', 'comment'])) {
+      return;
+    }
+
+    // Get the node object.
+    $node = $this->getNode($item->getOriginalObject());
+    if (!$node) {
+      // Apparently we were active for a wrong item.
+      return;
+    }
+
+    $fields = $item->getFields();
+    $fields = $this->getFieldsHelper()
+      ->filterForPropertyPath($fields, NULL, 'search_api_node_grants');
+    foreach ($fields as $field) {
+      // Collect grant information for the node.
+      if (!$node->access('view', $anonymous_user)) {
+        // If anonymous user has no permission we collect all grants with
+        // their realms in the item.
+        $sql = 'SELECT * FROM {node_access} WHERE (nid = 0 OR nid = :nid) AND grant_view = 1';
+        $args = [':nid' => $node->id()];
+        foreach ($this->getDatabase()->query($sql, $args) as $grant) {
+          $field->addValue("node_access_{$grant->realm}:{$grant->gid}");
+        }
+      }
+      else {
+        // Add the generic pseudo view grant if we are not using node access
+        // or the node is viewable by anonymous users.
+        $field->addValue('node_access__all');
+      }
+    }
   }
 
   /**
@@ -105,7 +196,7 @@ class ContentAccess extends ProcessorPluginBase {
   public function preIndexSave() {
     foreach ($this->index->getDatasources() as $datasource_id => $datasource) {
       $entity_type = $datasource->getEntityTypeId();
-      if (in_array($entity_type, array('node', 'comment'))) {
+      if (in_array($entity_type, ['node', 'comment'])) {
         $this->ensureField($datasource_id, 'status', 'boolean');
         if ($entity_type == 'node') {
           $this->ensureField($datasource_id, 'uid', 'integer');
@@ -115,54 +206,6 @@ class ContentAccess extends ProcessorPluginBase {
 
     $field = $this->ensureField(NULL, 'search_api_node_grants', 'string');
     $field->setHidden();
-    $this->index->addField($field);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preprocessIndexItems(array &$items) {
-    static $anonymous_user;
-
-    if (!isset($anonymous_user)) {
-      // Load the anonymous user.
-      $anonymous_user = new AnonymousUserSession();
-    }
-
-    // Annoyingly, this doc comment is needed for PHPStorm. See
-    // http://youtrack.jetbrains.com/issue/WI-23586
-    /** @var \Drupal\search_api\Item\ItemInterface $item */
-    foreach ($items as $item) {
-      // Only run for node and comment items.
-      if (!in_array($item->getDatasource()->getEntityTypeId(), array('node', 'comment'))) {
-        continue;
-      }
-
-      // Get the node object.
-      $node = $this->getNode($item->getOriginalObject());
-      if (!$node) {
-        // Apparently we were active for a wrong item.
-        continue;
-      }
-
-      foreach ($this->filterForPropertyPath($item->getFields(), 'search_api_node_grants') as $field) {
-        // Collect grant information for the node.
-        if (!$node->access('view', $anonymous_user)) {
-          // If anonymous user has no permission we collect all grants with
-          // their realms in the item.
-          $result = Database::getConnection()
-            ->query('SELECT * FROM {node_access} WHERE (nid = 0 OR nid = :nid) AND grant_view = 1', array(':nid' => $node->id()));
-          foreach ($result as $grant) {
-            $field->addValue("node_access_{$grant->realm}:{$grant->gid}");
-          }
-        }
-        else {
-          // Add the generic pseudo view grant if we are not using node access
-          // or the node is viewable by anonymous users.
-          $field->addValue('node_access__all');
-        }
-      }
-    }
   }
 
   /**
@@ -193,27 +236,27 @@ class ContentAccess extends ProcessorPluginBase {
    */
   public function preprocessSearchQuery(QueryInterface $query) {
     if (!$query->getOption('search_api_bypass_access')) {
-      $account = $query->getOption('search_api_access_account', \Drupal::currentUser());
+      $account = $query->getOption('search_api_access_account', $this->getCurrentUser());
       if (is_numeric($account)) {
         $account = User::load($account);
       }
-      if (is_object($account)) {
+      if ($account instanceof AccountInterface) {
         try {
           $this->addNodeAccess($query, $account);
         }
         catch (SearchApiException $e) {
-          watchdog_exception('search_api', $e);
+          $this->logException($e);
         }
       }
       else {
-        $account = $query->getOption('search_api_access_account', \Drupal::currentUser());
+        $account = $query->getOption('search_api_access_account', $this->getCurrentUser());
         if ($account instanceof AccountInterface) {
           $account = $account->id();
         }
         if (!is_scalar($account)) {
           $account = var_export($account, TRUE);
         }
-        $this->getLogger()->warning('An illegal user UID was given for node access: @uid.', array('@uid' => $account));
+        $this->getLogger()->warning('An illegal user UID was given for node access: @uid.', ['@uid' => $account]);
       }
     }
   }
@@ -237,11 +280,11 @@ class ContentAccess extends ProcessorPluginBase {
 
     // Gather the affected datasources, grouped by entity type, as well as the
     // unaffected ones.
-    $affected_datasources = array();
-    $unaffected_datasources = array();
+    $affected_datasources = [];
+    $unaffected_datasources = [];
     foreach ($this->index->getDatasources() as $datasource_id => $datasource) {
       $entity_type = $datasource->getEntityTypeId();
-      if (in_array($entity_type, array('node', 'comment'))) {
+      if (in_array($entity_type, ['node', 'comment'])) {
         $affected_datasources[$entity_type][] = $datasource_id;
       }
       else {
@@ -260,7 +303,7 @@ class ContentAccess extends ProcessorPluginBase {
     // If there are no "other" datasources, we don't need the nested OR,
     // however, and can add the inner conditions directly to the query.
     if ($unaffected_datasources) {
-      $outer_conditions = $query->createConditionGroup('OR', array('content_access'));
+      $outer_conditions = $query->createConditionGroup('OR', ['content_access']);
       $query->addConditionGroup($outer_conditions);
       foreach ($unaffected_datasources as $datasource_id) {
         $outer_conditions->addCondition('search_api_datasource', $datasource_id);
@@ -294,7 +337,7 @@ class ContentAccess extends ProcessorPluginBase {
     // Collect all the required fields that need to be part of the index.
     $unpublished_own = $account->hasPermission('view own unpublished content');
 
-    $enabled_conditions = $query->createConditionGroup('OR', array('content_access_enabled'));
+    $enabled_conditions = $query->createConditionGroup('OR', ['content_access_enabled']);
     foreach ($affected_datasources as $entity_type => $datasources) {
       foreach ($datasources as $datasource_id) {
         // If this is a comment datasource, or users cannot view their own
@@ -320,7 +363,7 @@ class ContentAccess extends ProcessorPluginBase {
       return;
     }
     $node_grants_field_id = $node_grants_field->getFieldIdentifier();
-    $grants_conditions = $query->createConditionGroup('OR', array('content_access_grants'));
+    $grants_conditions = $query->createConditionGroup('OR', ['content_access_grants']);
     $grants = node_access_grants('view', $account);
     foreach ($grants as $realm => $gids) {
       foreach ($gids as $gid) {

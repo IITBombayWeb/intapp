@@ -13,15 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
  * @FacetsUrlProcessor(
  *   id = "query_string",
  *   label = @Translation("Query string"),
- *   description = @Translation("Query string is the default Facets URL processor, and uses GET parameters, e.g. ?f[0]=brand:drupal&f[1]=color:blue")
+ *   description = @Translation("Query string is the default Facets URL processor, and uses GET parameters, for example ?f[0]=brand:drupal&f[1]=color:blue")
  * )
  */
 class QueryString extends UrlProcessorPluginBase {
-
-  /**
-   * A string that separates the filters in the query string.
-   */
-  const SEPARATOR = ':';
 
   /**
    * A string of how to represent the facet in the url.
@@ -58,6 +53,13 @@ class QueryString extends UrlProcessorPluginBase {
     // First get the current list of get parameters.
     $get_params = $this->request->query;
 
+    // When adding/removing a filter the number of pages may have changed,
+    // possibly resulting in an invalid page parameter.
+    if ($get_params->has('page')) {
+      $current_page = $get_params->get('page');
+      $get_params->remove('page');
+    }
+
     // Set the url alias from the the facet object.
     $this->urlAlias = $facet->getUrlAlias();
 
@@ -65,19 +67,19 @@ class QueryString extends UrlProcessorPluginBase {
     if ($facet->getFacetSource()->getPath()) {
       $request = Request::create($facet->getFacetSource()->getPath());
     }
-    $url = Url::createFromRequest($request);
-    $url->setOption('attributes', ['rel' => 'nofollow']);
 
     /** @var \Drupal\facets\Result\ResultInterface[] $results */
     foreach ($results as &$result) {
-      // Flag if children filter params need to be removed.
-      $remove_children = FALSE;
+      // Reset the URL for each result.
+      $url = Url::createFromRequest($request);
+      $url->setOption('attributes', ['rel' => 'nofollow']);
+
       // Sets the url for children.
       if ($children = $result->getChildren()) {
         $this->buildUrls($facet, $children);
       }
 
-      $filter_string = $this->urlAlias . self::SEPARATOR . $result->getRawValue();
+      $filter_string = $this->urlAlias . $this->getSeparator() . $result->getRawValue();
       $result_get_params = clone $get_params;
 
       $filter_params = $result_get_params->get($this->filterKey, [], TRUE);
@@ -85,23 +87,37 @@ class QueryString extends UrlProcessorPluginBase {
       if ($result->isActive()) {
         foreach ($filter_params as $key => $filter_param) {
           if ($filter_param == $filter_string) {
-            $remove_children = TRUE;
             unset($filter_params[$key]);
           }
-          elseif ($remove_children) {
-            unset($filter_params[$key]);
+        }
+        if ($facet->getEnableParentWhenChildGetsDisabled() && $facet->getUseHierarchy()) {
+          // Enable parent id again if exists.
+          $parent_ids = $facet->getHierarchyInstance()->getParentIds($result->getRawValue());
+          if (isset($parent_ids[0]) && $parent_ids[0]) {
+            $filter_params[] = $this->urlAlias . $this->getSeparator() . $parent_ids[0];
           }
         }
       }
       // If the value is not active, add the filter string.
       else {
         $filter_params[] = $filter_string;
+
+        if ($facet->getUseHierarchy()) {
+          // If hierarchy is active, unset parent trail and every child when
+          // building the enable-link to ensure those are not enabled anymore.
+          $parent_ids = $facet->getHierarchyInstance()->getParentIds($result->getRawValue());
+          $child_ids = $facet->getHierarchyInstance()->getNestedChildIds($result->getRawValue());
+          $parents_and_child_ids = array_merge($parent_ids, $child_ids);
+          foreach ($parents_and_child_ids as $id) {
+            $filter_params = array_diff($filter_params, [$this->urlAlias . $this->getSeparator() . $id]);
+          }
+        }
         // Exclude currently active results from the filter params if we are in
         // the show_only_one_result mode.
         if ($facet->getShowOnlyOneResult()) {
           foreach ($results as $result2) {
             if ($result2->isActive()) {
-              $active_filter_string = $this->urlAlias . self::SEPARATOR . $result2->getRawValue();
+              $active_filter_string = $this->urlAlias . $this->getSeparator() . $result2->getRawValue();
               foreach ($filter_params as $key2 => $filter_param2) {
                 if ($filter_param2 == $active_filter_string) {
                   unset($filter_params[$key2]);
@@ -112,14 +128,20 @@ class QueryString extends UrlProcessorPluginBase {
         }
       }
 
-      $result_get_params->set($this->filterKey, $filter_params);
+      $result_get_params->set($this->filterKey, array_values($filter_params));
 
-      $url = clone $url;
-      $url->setOption('query', $result_get_params->all());
+      $new_url = clone $url;
+      if ($result_get_params->all() !== [$this->filterKey => []]) {
+        $new_url->setOption('query', $result_get_params->all());
+      }
 
-      $result->setUrl($url);
+      $result->setUrl($new_url);
     }
 
+    // Restore page parameter again. See https://www.drupal.org/node/2726455.
+    if (isset($current_page)) {
+      $get_params->set('page', $current_page);
+    }
     return $results;
   }
 
@@ -153,13 +175,13 @@ class QueryString extends UrlProcessorPluginBase {
 
     // Explode the active params on the separator.
     foreach ($active_params as $param) {
-      $explosion = explode(self::SEPARATOR, $param);
+      $explosion = explode($this->getSeparator(), $param);
       $key = array_shift($explosion);
       $value = '';
       while (count($explosion) > 0) {
         $value .= array_shift($explosion);
         if (count($explosion) > 0) {
-          $value .= self::SEPARATOR;
+          $value .= $this->getSeparator();
         }
       }
       if (!isset($this->activeFilters[$key])) {

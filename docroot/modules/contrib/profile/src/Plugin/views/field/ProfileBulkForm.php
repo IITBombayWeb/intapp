@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\node\Plugin\views\field\NodeBulkForm.
- */
-
 namespace Drupal\profile\Plugin\views\field;
 
 use Drupal\system\Plugin\views\field\BulkForm;
@@ -20,7 +15,7 @@ class ProfileBulkForm extends BulkForm {
    * {@inheritdoc}
    */
   protected function emptySelectedMessage() {
-    return t('No profile selected.');
+    return $this->t('No profile selected.');
   }
 
 }

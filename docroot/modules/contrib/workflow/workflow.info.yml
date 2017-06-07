@@ -6,10 +6,12 @@ type: module
 # version: VERSION
 
 dependencies:
+  - field
+  - options
   - user
 
-# Information added by Drupal.org packaging script on 2016-05-15
-version: '8.x-1.0-beta5'
+# Information added by Drupal.org packaging script on 2016-11-06
+version: '8.x-1.0-beta6'
 core: '8.x'
 project: 'workflow'
-datestamp: 1463324661
+datestamp: 1478469453

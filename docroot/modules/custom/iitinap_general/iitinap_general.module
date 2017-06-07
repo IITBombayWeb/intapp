@@ -64,3 +64,13 @@ function get_usr_term_id($usr_id)  {
   return ;
 }
 
+function iitinap_general_ENTITY_TYPE_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+//  dpm($build);
+  /*if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
+    // Change its weight.
+    $build['an_additional_field']['#weight'] = -10;
+
+    // Add a #post_render callback to act on the rendered HTML of the entity.
+    $build['#post_render'][] = 'my_module_node_post_render';
+  }*/
+}

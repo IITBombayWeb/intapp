@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\slick\Plugin\Field\FieldFormatter\SlickFormatterTrait.
- */
-
 namespace Drupal\slick\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -17,14 +12,14 @@ trait SlickFormatterTrait {
   /**
    * The slick field formatter manager.
    *
-   * @var \Drupal\slick\SlickFormatterInterface.
+   * @var \Drupal\slick\SlickFormatterInterface
    */
   protected $formatter;
 
   /**
    * The slick field formatter manager.
    *
-   * @var \Drupal\slick\SlickManagerInterface.
+   * @var \Drupal\slick\SlickManagerInterface
    */
   protected $manager;
 
@@ -53,7 +48,8 @@ trait SlickFormatterTrait {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    return $this->admin()->settingsSummary($this);
+    // @todo: Remove second param post Blazy RC2+.
+    return $this->admin()->getSettingsSummary($this->getScopedFormElements(), $this);
   }
 
   /**

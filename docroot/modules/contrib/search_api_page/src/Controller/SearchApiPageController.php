@@ -67,7 +67,7 @@ class SearchApiPageController extends ControllerBase {
         'search id' => 'search_api_page:' . $search_api_page->id(),
       ]);
 
-      $query->setParseMode('direct');
+      //$query->setParseMode('direct');
 
       // Search for keys.
       if (!empty($keys)) {

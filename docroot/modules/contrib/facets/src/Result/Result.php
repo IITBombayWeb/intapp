@@ -11,20 +11,24 @@ class Result implements ResultInterface {
 
   /**
    * The facet value.
+   *
+   * @var string
    */
   protected $displayValue;
 
   /**
    * The raw facet value.
+   *
+   * @var string
    */
   protected $rawValue;
 
   /**
    * The facet count.
    *
-   * @var int
+   * @var int|null
    */
-  protected $count;
+  protected $count = NULL;
 
   /**
    * The Url object.
@@ -40,7 +44,11 @@ class Result implements ResultInterface {
    */
   protected $active = FALSE;
 
-
+  /**
+   * Children results.
+   *
+   * @var \Drupal\facets\Result\ResultInterface[]
+   */
   protected $children = [];
 
   /**
@@ -50,13 +58,13 @@ class Result implements ResultInterface {
    *   The raw value.
    * @param mixed $display_value
    *   The formatted value.
-   * @param int $count
-   *   The amount of items.
+   * @param int|null $count
+   *   The amount of items or NULL.
    */
   public function __construct($raw_value, $display_value, $count) {
     $this->rawValue = $raw_value;
     $this->displayValue = $display_value;
-    $this->count = $count;
+    $this->count = (int) $count;
   }
 
   /**
@@ -83,6 +91,13 @@ class Result implements ResultInterface {
   /**
    * {@inheritdoc}
    */
+  public function setCount($count) {
+    $this->count = $count;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getUrl() {
     return $this->url;
   }
@@ -92,13 +107,6 @@ class Result implements ResultInterface {
    */
   public function setUrl(Url $url) {
     $this->url = $url;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setCount($count) {
-    $this->count = $count;
   }
 
   /**
@@ -125,8 +133,8 @@ class Result implements ResultInterface {
   /**
    * {@inheritdoc}
    */
-  public function setChildren(ResultInterface $children) {
-    $this->children[] = $children;
+  public function setChildren(array $children) {
+    $this->children = $children;
   }
 
   /**
@@ -134,6 +142,21 @@ class Result implements ResultInterface {
    */
   public function getChildren() {
     return $this->children;
+  }
+
+  /**
+   * Returns true if the value has active children(selected).
+   *
+   * @return bool
+   *   A boolean indicating the active state of children.
+   */
+  public function hasActiveChildren() {
+    foreach ($this->getChildren() as $child) {
+      if ($child->isActive() || $child->hasActiveChildren()) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
 }

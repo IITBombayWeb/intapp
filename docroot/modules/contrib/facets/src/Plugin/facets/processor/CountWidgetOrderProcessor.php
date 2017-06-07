@@ -2,8 +2,8 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
-use Drupal\facets\Processor\WidgetOrderPluginBase;
-use Drupal\facets\Processor\WidgetOrderProcessorInterface;
+use Drupal\facets\Processor\SortProcessorPluginBase;
+use Drupal\facets\Processor\SortProcessorInterface;
 use Drupal\facets\Result\Result;
 
 /**
@@ -13,31 +13,18 @@ use Drupal\facets\Result\Result;
  *   id = "count_widget_order",
  *   label = @Translation("Sort by count"),
  *   description = @Translation("Sorts the widget results by count."),
+ *   default_enabled = TRUE,
  *   stages = {
- *     "build" = 50
+ *     "sort" = 30
  *   }
  * )
  */
-class CountWidgetOrderProcessor extends WidgetOrderPluginBase implements WidgetOrderProcessorInterface {
+class CountWidgetOrderProcessor extends SortProcessorPluginBase implements SortProcessorInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function sortResults(array $results, $order = 'ASC') {
-    if ($order === 'ASC') {
-      usort($results, 'self::sortCountAsc');
-    }
-    else {
-      usort($results, 'self::sortCountDesc');
-    }
-
-    return $results;
-  }
-
-  /**
-   * Sorts ascending.
-   */
-  protected static function sortCountAsc(Result $a, Result $b) {
+  public function sortResults(Result $a, Result $b) {
     if ($a->getCount() == $b->getCount()) {
       return 0;
     }
@@ -45,13 +32,10 @@ class CountWidgetOrderProcessor extends WidgetOrderPluginBase implements WidgetO
   }
 
   /**
-   * Sorts descending.
+   * {@inheritdoc}
    */
-  protected static function sortCountDesc(Result $a, Result $b) {
-    if ($a->getCount() == $b->getCount()) {
-      return 0;
-    }
-    return ($a->getCount() > $b->getCount()) ? -1 : 1;
+  public function defaultConfiguration() {
+    return ['sort' => 'DESC'];
   }
 
 }

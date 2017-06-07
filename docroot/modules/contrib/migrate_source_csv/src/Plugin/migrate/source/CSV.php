@@ -1,15 +1,10 @@
 <?php
-/**
- * @file
- * Contains \Drupal\migrate_source_csv\Plugin\migrate\source\CSV.
- */
 
 namespace Drupal\migrate_source_csv\Plugin\migrate\source;
 
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
-use Drupal\migrate_source_csv\CSVFileObject;
+use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
  * Source for CSV.
@@ -41,6 +36,20 @@ class CSV extends SourcePluginBase {
   protected $keys = [];
 
   /**
+   * The file class to read the file.
+   *
+   * @var string
+   */
+  protected $fileClass = '';
+
+  /**
+   * The file object that reads the CSV file.
+   *
+   * @var \SplFileObject
+   */
+  protected $file = NULL;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
@@ -56,10 +65,11 @@ class CSV extends SourcePluginBase {
       throw new MigrateException('You must declare "keys" as a unique array of fields in your source settings.');
     }
 
+    $this->fileClass = empty($configuration['file_class']) ? 'Drupal\migrate_source_csv\CSVFileObject' : $configuration['file_class'];
   }
 
   /**
-   * Return a string representing the source query.
+   * Return a string representing the source file path.
    *
    * @return string
    *   The file path.
@@ -73,36 +83,36 @@ class CSV extends SourcePluginBase {
    */
   public function initializeIterator() {
     // File handler using header-rows-respecting extension of SPLFileObject.
-    $file = new CSVFileObject($this->configuration['path']);
+    $this->file = new $this->fileClass($this->configuration['path']);
 
     // Set basics of CSV behavior based on configuration.
     $delimiter = !empty($this->configuration['delimiter']) ? $this->configuration['delimiter'] : ',';
     $enclosure = !empty($this->configuration['enclosure']) ? $this->configuration['enclosure'] : '"';
     $escape = !empty($this->configuration['escape']) ? $this->configuration['escape'] : '\\';
-    $file->setCsvControl($delimiter, $enclosure, $escape);
+    $this->file->setCsvControl($delimiter, $enclosure, $escape);
 
     // Figure out what CSV column(s) to use. Use either the header row(s) or
     // explicitly provided column name(s).
     if (!empty($this->configuration['header_row_count'])) {
-      $file->setHeaderRowCount($this->configuration['header_row_count']);
+      $this->file->setHeaderRowCount($this->configuration['header_row_count']);
 
       // Find the last header line.
-      $file->rewind();
-      $file->seek($file->getHeaderRowCount() - 1);
+      $this->file->rewind();
+      $this->file->seek($this->file->getHeaderRowCount() - 1);
 
-      $row = $file->current();
+      $row = $this->file->current();
       foreach ($row as $header) {
         $header = trim($header);
         $column_names[] = [$header => $header];
       }
-      $file->setColumnNames($column_names);
+      $this->file->setColumnNames($column_names);
     }
     // An explicit list of column name(s) will override any header row(s).
     if (!empty($this->configuration['column_names'])) {
-      $file->setColumnNames($this->configuration['column_names']);
+      $this->file->setColumnNames($this->configuration['column_names']);
     }
 
-    return $file;
+    return $this->file;
   }
 
   /**
@@ -110,8 +120,13 @@ class CSV extends SourcePluginBase {
    */
   public function getIDs() {
     $ids = [];
-    foreach ($this->configuration['keys'] as $key) {
-      $ids[$key]['type'] = 'string';
+    foreach ($this->configuration['keys'] as $delta => $value) {
+      if (is_array($value)) {
+        $ids[$delta] = $value;
+      }
+      else {
+        $ids[$value]['type'] = 'string';
+      }
     }
     return $ids;
   }

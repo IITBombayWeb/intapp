@@ -3,20 +3,23 @@
 namespace Drupal\search_api\Plugin\search_api\tracker;
 
 use Drupal\Core\Database\Connection;
+use Drupal\search_api\LoggerTrait;
 use Drupal\search_api\Tracker\TrackerPluginBase;
-use Drupal\search_api\Utility;
+use Drupal\search_api\Utility\Utility;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a tracker implementation which uses a FIFO-like processing order.
  *
- * @SearchApiTracker(
+ *  @SearchApiTracker(
  *   id = "default",
  *   label = @Translation("Default"),
  *   description = @Translation("Index tracker which uses first in/first out for processing pending items.")
  * )
  */
 class Basic extends TrackerPluginBase {
+
+  use LoggerTrait;
 
   /**
    * Status value that represents items which are indexed in their latest form.
@@ -79,8 +82,9 @@ class Basic extends TrackerPluginBase {
    *   A SELECT statement.
    */
   protected function createSelectStatement() {
-    return $this->getDatabaseConnection()->select('search_api_item', 'sai')
-      ->condition('index_id', $this->getIndex()->id());
+    $select = $this->getDatabaseConnection()->select('search_api_item', 'sai');
+    $select->condition('index_id', $this->getIndex()->id());
+    return $select;
   }
 
   /**
@@ -91,7 +95,7 @@ class Basic extends TrackerPluginBase {
    */
   protected function createInsertStatement() {
     return $this->getDatabaseConnection()->insert('search_api_item')
-      ->fields(array('index_id', 'datasource', 'item_id', 'changed', 'status'));
+      ->fields(['index_id', 'datasource', 'item_id', 'changed', 'status']);
   }
 
   /**
@@ -128,7 +132,7 @@ class Basic extends TrackerPluginBase {
    */
   protected function createRemainingItemsStatement($datasource_id = NULL) {
     $select = $this->createSelectStatement();
-    $select->fields('sai', array('item_id'));
+    $select->fields('sai', ['item_id']);
     if ($datasource_id) {
       $select->condition('datasource', $datasource_id);
     }
@@ -150,23 +154,37 @@ class Basic extends TrackerPluginBase {
       // Process the IDs in chunks so we don't create an overly large INSERT
       // statement.
       foreach (array_chunk($ids, 1000) as $ids_chunk) {
+        // We have to make sure we don't try to insert duplicate items.
+        $select = $this->createSelectStatement()
+          ->fields('sai', ['item_id']);
+        $select->condition('item_id', $ids_chunk, 'IN');
+        $existing = $select
+          ->execute()
+          ->fetchCol();
+        $existing = array_flip($existing);
+
         $insert = $this->createInsertStatement();
         foreach ($ids_chunk as $item_id) {
+          if (isset($existing[$item_id])) {
+            continue;
+          }
           list($datasource_id) = Utility::splitCombinedId($item_id);
-          $insert->values(array(
+          $insert->values([
             'index_id' => $index_id,
             'datasource' => $datasource_id,
             'item_id' => $item_id,
             'changed' => REQUEST_TIME,
             'status' => $this::STATUS_NOT_INDEXED,
-          ));
+          ]);
         }
-        $insert->execute();
+        if ($insert->count()) {
+          $insert->execute();
+        }
       }
     }
     catch (\Exception $e) {
-      watchdog_exception('search_api', $e);
-      $transaction->rollback();
+      $this->logException($e);
+      $transaction->rollBack();
     }
   }
 
@@ -178,10 +196,11 @@ class Basic extends TrackerPluginBase {
     try {
       // Process the IDs in chunks so we don't create an overly large UPDATE
       // statement.
-      $ids_chunks = ($ids !== NULL ? array_chunk($ids, 1000) : array(NULL));
+      $ids_chunks = ($ids !== NULL ? array_chunk($ids, 1000) : [NULL]);
       foreach ($ids_chunks as $ids_chunk) {
         $update = $this->createUpdateStatement();
-        $update->fields(array('changed' => REQUEST_TIME, 'status' => $this::STATUS_NOT_INDEXED));
+        // @todo Once we depend on Drupal 8.3+, replace REQUEST_TIME.
+        $update->fields(['changed' => REQUEST_TIME, 'status' => $this::STATUS_NOT_INDEXED]);
         if ($ids_chunk) {
           $update->condition('item_id', $ids_chunk, 'IN');
         }
@@ -189,8 +208,8 @@ class Basic extends TrackerPluginBase {
       }
     }
     catch (\Exception $e) {
-      watchdog_exception('search_api', $e);
-      $transaction->rollback();
+      $this->logException($e);
+      $transaction->rollBack();
     }
   }
 
@@ -201,15 +220,15 @@ class Basic extends TrackerPluginBase {
     $transaction = $this->getDatabaseConnection()->startTransaction();
     try {
       $update = $this->createUpdateStatement();
-      $update->fields(array('changed' => REQUEST_TIME, 'status' => $this::STATUS_NOT_INDEXED));
+      $update->fields(['changed' => REQUEST_TIME, 'status' => $this::STATUS_NOT_INDEXED]);
       if ($datasource_id) {
         $update->condition('datasource', $datasource_id);
       }
       $update->execute();
     }
     catch (\Exception $e) {
-      watchdog_exception('search_api', $e);
-      $transaction->rollback();
+      $this->logException($e);
+      $transaction->rollBack();
     }
   }
 
@@ -224,14 +243,14 @@ class Basic extends TrackerPluginBase {
       $ids_chunks = array_chunk($ids, 1000);
       foreach ($ids_chunks as $ids_chunk) {
         $update = $this->createUpdateStatement();
-        $update->fields(array('status' => $this::STATUS_INDEXED));
+        $update->fields(['status' => $this::STATUS_INDEXED]);
         $update->condition('item_id', $ids_chunk, 'IN');
         $update->execute();
       }
     }
     catch (\Exception $e) {
-      watchdog_exception('search_api', $e);
-      $transaction->rollback();
+      $this->logException($e);
+      $transaction->rollBack();
     }
   }
 
@@ -243,7 +262,7 @@ class Basic extends TrackerPluginBase {
     try {
       // Process the IDs in chunks so we don't create an overly large DELETE
       // statement.
-      $ids_chunks = ($ids !== NULL ? array_chunk($ids, 1000) : array(NULL));
+      $ids_chunks = ($ids !== NULL ? array_chunk($ids, 1000) : [NULL]);
       foreach ($ids_chunks as $ids_chunk) {
         $delete = $this->createDeleteStatement();
         if ($ids_chunk) {
@@ -253,8 +272,8 @@ class Basic extends TrackerPluginBase {
       }
     }
     catch (\Exception $e) {
-      watchdog_exception('search_api', $e);
-      $transaction->rollback();
+      $this->logException($e);
+      $transaction->rollBack();
     }
   }
 
@@ -271,8 +290,8 @@ class Basic extends TrackerPluginBase {
       $delete->execute();
     }
     catch (\Exception $e) {
-      watchdog_exception('search_api', $e);
-      $transaction->rollback();
+      $this->logException($e);
+      $transaction->rollBack();
     }
   }
 

@@ -18,6 +18,10 @@ use Drupal\workflow\Entity\WorkflowConfigTransition;
 use Drupal\workflow\Entity\WorkflowTransitionInterface;
 use Drupal\workflow\Controller\WorkflowTransitionListController;
 use Drupal\user\Entity\user;
+
+use Drupal\file\Entity\File;
+use Dompdf\Dompdf;
+
 /**
 * Implements hook_mail().
 */
@@ -178,19 +182,21 @@ $current_path = \Drupal::service('path.current')->getPath();
     	foreach($cart_cart as $nid => $node){
             $langcode = $node->language()->getId();
 			$degree = $node->getTranslation($langcode)->get('field_degree')->getValue()[0]['value'];
-            $depart = $node->getTranslation($langcode)->get('field_departments')->getValue()[0]['target_id'];
+      $depart = $node->getTranslation($langcode)->get('field_departments')->getValue()[0]['target_id'];
+      $specialisation = $node->getTranslation($langcode)->get('field_specialisation')->getValue()[0]['value'];
 			$departs = taxonomy_term_load($depart);
 			$departments = $departs->getTranslation($langcode)->get('name')->getValue()[0]['value'];
 			$in = $node->getTranslation($langcode)->get('field_institute')->getValue()[0]['target_id'];
 			$ins = taxonomy_term_load($in);
 			$institute = $ins->getTranslation($langcode)->get('name')->getValue()[0]['value'];
 			$title = $node->getTranslation($langcode)->get('title')->getValue();
-            $cart_data[$i] = $title[0]['value'];
+      $cart_data[$i] = $title[0]['value'];
 			$no_of_doc = $node->getTranslation($langcode)->get('field_enter_number_of_supporting')->getValue();
-            $no_doc[$i] = $no_of_doc[0]['value'];
-            $doc_name = $node->getTranslation($langcode)->get('field_e')->getValue();
-            $name_doc[$i] = $doc_name[0]['value'];
-            $data .= '<li><div class="programs"><h4 class="programs-apply">Program : </h4>' . $cart_data[$i] .', <h4 class="programs-apply">Degree : </h4>'
+      $no_doc[$i] = $no_of_doc[0]['value'];
+      $doc_name = $node->getTranslation($langcode)->get('field_e')->getValue();
+      $name_doc[$i] = $doc_name[0]['value'];
+      $pgm_apply[] = array($institute,$departments,$degree,$specialisation);
+      $data .= '<li><div class="programs"><h4 class="programs-apply">Program : </h4>' . $cart_data[$i] .', <h4 class="programs-apply">Degree : </h4>'
 			. $degree .',<h4 class="programs-apply">Departments : </h4>'
 			. $departments .',<h4 class="programs-apply">Institute : </h4>'
 			. $institute . "</br></div></li>";
@@ -222,6 +228,7 @@ $current_path = \Drupal::service('path.current')->getPath();
         $form['custom_form'] = array(
              '#type' => 'markup',
              '#markup' => '<ul>' . $data . '</ul>',
+             '#$pgm_apply' => $pgm_apply,
 			 '#prefix' => '<b>List of programs Applied</b>',
 			 '#weight' => -2,
         );
@@ -381,6 +388,7 @@ function iitnap_basiccart_alter_submit(array &$form, FormStateInterface $form_st
 }
 
 function form_submit(array &$form, FormStateInterface $form_state) {
+ //dpm("sdfsdf");
  if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest'){
 	$node = \Drupal::routeMatch()->getParameter('node');
 	$url = URL::fromUserInput('/node/'.$node);
@@ -478,9 +486,9 @@ function form_validate_data1($form, &$form_state){
   if(empty($form['field_permanent_address']['widget'][0]['value']['#value'])){
    $form_state->setError($form['field_permanent_address'],"Please enter permanent address");
   }
-  if(empty($form['field_general_documents']['widget']['#file_upload_delta'])){
-   $form_state->setError($form['field_general_documents'],"Please upload general document");
-  }
+  // if(empty($form['field_general_documents']['widget']['#file_upload_delta'])){
+  //  $form_state->setError($form['field_general_documents'],"Please upload general document");
+  // }
   if(empty($form['field_medium_of_instruction_']['widget'][0]['value']['#value'])){
    $form_state->setError($form['field_medium_of_instruction_'],"Please enter medium of instruction");
   }
@@ -531,8 +539,14 @@ function iitinap_node_view(array &$build, EntityInterface $node, EntityViewDispl
 ////						dpm($nodes);
 //}
 
-function application_save_submit(&$form, FormStateInterface $form_state) {
+function application_save_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
 
+//dpm($form_state['values']['field_application_path'][0]['value']);
+//dpm($form_state);
+  //$username = \Drupal::currentUser()->getUsername();
+  //$account = \Drupal::currentUser()->id();
+  //$current_date = format_date(time(), 'custom', 'dmY');
+  //$filename = 'public://applications/'. $username . '_' . $account . '_' . $current_date . '.pdf';
   $langcode = 'en';
   module_load_include('inc', 'basiccart');
   $application_id = basiccart_get_cart();
@@ -544,17 +558,256 @@ function application_save_submit(&$form, FormStateInterface $form_state) {
   for($i=0;$i<count($doc_key);$i++){
       $doc_data = $doc_data . $doc_key[$i] . ':' .  $doc_key[$i] . ',';
   }
+
+
   foreach ($applicationArray as $key => $value) {
+    ///23-05-17
+    
+
+
+  $username = \Drupal::currentUser()->getUsername();
+  $account = \Drupal::currentUser()->id();
+  $current_date = format_date(time(), 'custom', 'dmY hms');
+  /* Image code */
+  
+  $uid = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+  $user_fid = $uid->get('user_picture')->getValue();
+  $fid = $user_fid[0]['target_id'];
+  $file = \Drupal\file\Entity\File::load($fid);
+  $path = $file->uri->value;
+  $test = explode('//' , $path);
+ $path_array = $test[1];
+ $base_path = 'sites/default/files/'.$path_array;
+ $image = '<img src = "'.$base_path.'" alt="My Logo" />';
+ $default_image = 'sites/default/files/pictures/Icon-user.png';
+ 
+  $first_name = $form_state->getValue('field_first_name')[0]['value'];
+  $sur_name = $form_state->getValue('field_surname')[0]['value'];
+  
+  $gender = $form_state->getValue('field_gender')[0]['value'];
+  $nationality = $form_state->getValue('field_nationality')[0]['value'];
+  $dob = $form_state->getValue('field_date_of_birth')[0]['value'];
+  $field_permanent_address = $form_state->getValue('field_permanent_address')[0]['value'];
+
+  $fpa_city = $form_state->getValue('field_city')[0]['value'];
+  $fpa_state = $form_state->getValue('field_state')[0]['value'];
+  $fpa_country = $form_state->getValue('field_country')[0]['value'];
+  $fpa_pin = $form_state->getValue('field_pin')[0]['value'];
+  $fpa_mob_num = $form_state->getValue('field_mobile_num_com')[0]['value'];
+  $fpa_pho_num = $form_state->getValue('field_telephone_num_com')[0]['value'];
+  $email_id = $form_state->getValue('field_email_id')[0]['value'];
+
+  $qualify_exam = $form_state->getValue('field_name_of_the_qualifying_exa')[0]['value'];
+  $board_univ = $form_state->getValue('field_name_of_the_board_universi')[0]['value'];
+  $year_of_passing = $form_state->getValue('field_year_of_passing')[0]['value'];
+  $school_lst_stud = $form_state->getValue('field_school')[0]['value'];
+
+  $ed_city = $form_state->getValue('field_city_school')[0]['value'];
+  $ed_state = $form_state->getValue('field_state_school')[0]['value'];
+  $ed_pin = $form_state->getValue('field_pincode_school')[0]['value'];
+  $ed_country = $form_state->getValue('field_country_school')[0]['value'];
+  $ed_md_inst = $form_state->getValue('field_medium_of_instruction_')[0]['value'];
+
+  // Generate Programs Applied table.
+  $pgm_apply = $form['custom_form']['#$pgm_apply'];
+  $perform_pgm_apply_result = "<table>
+        <tr>
+          <td>Institute</td>
+          <td>Department</td>
+          <td>Degree</td>
+          <td>Specialisation</td>
+        </tr>";
+  for($i = 0; $i < count($pgm_apply); $i++) {
+    $perform_pgm_apply_result .= "<tr>";
+    foreach($pgm_apply[$i] as $keys => $values) {
+      $perform_pgm_apply_result .= "<td>$values</td>";
+    }
+   $perform_pgm_apply_result .= "</tr>";
+  }
+  $perform_pgm_apply_result .= "</table>";
+
+  // Generate Performance Competitive table.
+  $perform_competitive = $form_state->getValue('field_performance_in_competitive');
+  $perform_competitive_result = "<table>";
+  $competitive_array = $perform_competitive[0]['tablefield']['table'];
+  for($i = 0; $i < count($competitive_array); $i++) {
+    $perform_competitive_result .= "<tr>";
+    foreach($competitive_array[$i] as $key1 => $value1) {
+      $perform_competitive_result .= "<td>$value1</td>";
+    }
+   $perform_competitive_result .= "</tr>";
+  }
+  $perform_competitive_result .= "</table>";
+
+  // Generate Academic Records table.
+  $academic_record = $form_state->getValue('field_details_of_academic_record');
+  $academic_record_result = "<table>";
+  $academic_record_array = $academic_record[0]['tablefield']['table'];
+  for($i = 0; $i < count($academic_record_array); $i++) {
+    $academic_record_result .= "<tr>";
+    foreach($academic_record_array[$i] as $key2 => $value2) {
+      $academic_record_result .= "<td>$value2</td>";
+    }
+   $academic_record_result .= "</tr>";
+  }
+  $academic_record_result .= "</table>";
+
+  // Generate Research Professional table.
+  $research_professional = $form_state->getValue('field_research_professional_expe');
+  $research_professional_result = "<table>";
+  $research_professional_array = $research_professional[0]['tablefield']['table'];
+  for($i = 0; $i < count($research_professional_array); $i++) {
+    $research_professional_result .= "<tr>";
+    foreach($research_professional_array[$i] as $key3 => $value3) {
+      $research_professional_result .= "<td>$value3</td>";
+    }
+   $research_professional_result .= "</tr>";
+  }
+  $research_professional_result .= "</table>";
+
+  // Generate Employment Details table.
+  $employment_details = $form_state->getValue('field_employment_details');
+  $employment_details_result = "<table>";
+  $employment_details_array = $employment_details[0]['tablefield']['table'];
+  for($i = 0; $i < count($employment_details_array); $i++) {
+    $employment_details_result .= "<tr>";
+    foreach($employment_details_array[$i] as $key4 => $value4) {
+      $employment_details_result .= "<td>$value4</td>";
+    }
+   $employment_details_result .= "</tr>";
+  }
+  $employment_details_result .= "</table>";
+ 
+   
+    $html = '<!DOCTYPE html>
+      <html>
+      <head>
+        <title></title>
+        <style>
+        body {
+            margin: 0 auto;
+            max-width: 1200px;
+            font-size: 14px;
+          }
+          .middle {
+            text-align: center;
+          }
+
+         table, td, th {
+              border: 1px solid black;
+          }
+          table {
+              border-collapse: collapse;
+          }
+          table tr:first-child td {
+            background-color: #D8D8D8;
+            text-align: left;
+          }
+          td { 
+              padding: 5px 10px;
+          }
+          .alm {
+            display:inline-block;
+          }
+          .width_75 {
+            width:75%;
+          }
+          .width_25 {
+            width:25%;
+          }
+          .width_50 {
+            width:50%;
+          }
+          .label {
+            display: inline-block;
+            width: 100px;
+            text-align: left;
+          }
+          .ml {
+            margin-left : 5px;
+          }
+      </style>
+      </head>
+      <body>
+      <div class="header middle">
+       <h2>International Student Application to PG Programs 2017</h2>
+      </div>
+      <div class="address-wrap">
+        <div class="addr-inner-wrap alm width_75">
+          <div class="addr-title"><h4>'.$first_name.' '.$sur_name.'</h4></div>
+          
+           <div class="alm width_50"><span class="label">Mobile:</span> <span class="ml">'.$fpa_mob_num.'</span></div>
+          <div class="alm width_50"><span class="label">Email:</span> <span class="ml">'.$email_id.'</span></div>
+          <div><span class="label">Communication address:</span> <span class="ml">'.$field_permanent_address.','.$fpa_city.'-'.$fpa_pin.','.$fpa_state.','.$fpa_country.'</span></div>
+
+         </div>
+         <div class="prof-img alm width_25">'.$image.'</div>
+         <div class="alm width_25">'.$gender.'</div>
+         <div class="alm width_25">'.$dob.'</div>
+      </div>
+      <div class="main-container">
+      <h3>Programs Applied</h3>
+      '.$perform_pgm_apply_result.'
+      <h3>Performance in Competitive Examination</h3>
+      '.$perform_competitive_result.'
+      <h3>Details of Academic Record (Secondary onwards)</h3>
+      '.$academic_record_result.'
+      <h3>Research/ Professional Experience, Papers published etc. (upload a separate pdf for details, if required)</h3>
+      '.$research_professional_result.'
+      <h3>Employment details</h3>
+      '.$employment_details_result.'
+      </div>
+      <footer>
+        <div class="foot clearfix">
+          <div class="f-left">
+            <label class="label">First created</label> 13/08/2016 10:10:35
+          </div>
+          <div class="f-right">
+            <label class="label">Last modified</label> 13/08/2016 10:10:35
+          </div>
+        </div>
+      </footer>
+      </body>
+      </html>';
+      
+    
+
+    // Instantiate and use the dompdf class
+    $dompdf = new Dompdf();
+    $dompdf->loadHtml($html);
+  
+    // Setup the paper size and orientation
+    $dompdf->setPaper('A4', 'portrait');
+  
+    // Render the HTML as PDF
+    $dompdf->render();
+    $pdfoutput = $dompdf->output();
+    /*
+    $filename = 'public://applications/'. $username . '_' . $account . '_' . $current_date . '.pdf';
+    //if ($entity = $form_state->getFormObject()->getEntity()) {
+    //  $entity->set('field_application_path', $filename);
+     // $entity->save();
+   // }
+    $file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE); */
+    ////23-05-17
+       
+       
+       
+       
   // Get the Institute Id
   $institute_id = $value->getTranslation($langcode)->get('field_institute')->getValue()[0]['target_id'];
   // Get the Taxonomy details
   $institute_tid = taxonomy_term_load($institute_id);
   $institute_code = $institute_tid->getTranslation($langcode)->get('field_short_code')->getValue()[0]['value'];
+	//$application_path = $form_state->getValue('field_application_path');
+	//dpm($application_path);
+
   $created = date("Y").'-'.date("m");
     $node = Node::create([
+		  //'field_application_path' => $application_path,
       'type'        => 'application',
       'title'       => $value->getTranslation($langcode)->get('title')->getValue()[0]['value'],
-	  'field_documents_uploaded' => array(
+       'field_documents_uploaded' => array(
 			  'value' => $doc_data,
 		  ),
       'field_programme' => [
@@ -563,14 +816,19 @@ function application_save_submit(&$form, FormStateInterface $form_state) {
     ]);
     $node->save();
     $node_id = $node->id();
+    //pdf
+     $filename = 'public://applications/'. $username . '_' . $account . '_' .  $node_id . '.pdf';
+     $file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE);
+    //pdf
     $node = Node::load($node_id);
     $new_application_id = "$institute_code-$created-$node_id";
     $node->setTitle($new_application_id);
     $node->set("field_status", 'apply_apply');
+    $node->set("field_application_path",$filename);
     $node->save();
 
     // Sending Mail 
-    $mailConfig = \Drupal::config('workflow_mail.settings');
+  $mailConfig = \Drupal::config('workflow_mail.settings');
 	$send_mail_admin = $mailConfig->get('send_mail_admin');
 	$send_mail_user = $mailConfig->get('send_mail_user');
 	$mail_subject_admin = $mailConfig->get('mail_subject_admin');
@@ -588,6 +846,8 @@ function application_save_submit(&$form, FormStateInterface $form_state) {
     $to = $curr_user_mail;
     $module = 'iitinap';
     $pgm_id = $node->getTranslation($langcode)->get('field_programme')->getValue()[0]['target_id'];
+    //print_r($pgm_id);
+    //exit;
     $programme = node_load($pgm_id);
     $ownermail = $programme->getOwner()->getEmail();
     $degree  = $programme->getTranslation($langcode)->get('field_degree')->getValue()[0]['value'];
@@ -622,6 +882,10 @@ function application_save_submit(&$form, FormStateInterface $form_state) {
         drupal_set_message(t('Details send to Department'));
       }
     }
+    
+    
+    
+    
   }
   // empty the  cart 
   basiccart_empty_cart();
@@ -635,4 +899,26 @@ function iitinap_page_attachments(array &$attachments) {
 }
 function iitinap_field_views_data_views_data_alter(array &$data, \Drupal\field\FieldStorageConfigInterface $field){
   //dpm($data);
+}
+
+
+
+function iitinap_local_tasks_alter(&$local_tasks) {
+  unset($local_tasks['entity.comment.delete_form_tab']);
+  unset($local_tasks['devel.entities:block.devel_tab']);
+/*  devel.entities:block.devel_load_tab
+  devel.entities:block_content_type.devel_tab*/
+  // Change 'Results' route to display the results 'Table'.
+  $local_tasks['entity.webform.results']['route_name'] = 'entity.webform.results_table';
+  // Move the 'Table' sub task to be first.
+  $local_tasks['entity.webform.results_table']['weight'] = -100;
+  // OPTIONAL: Remove the 'Submissions' task.
+  unset($local_tasks['entity.webform.results_submissions']);
+
+  // Apply the same changes the Webform node local tasks.
+  if (\Drupal::moduleHandler()->moduleExists('webform_node')) {
+    $local_tasks['entity.node.webform.results']['route_name'] = 'entity.node.webform.results_table';
+    $local_tasks['entity.node.webform.results_table']['weight'] = -100;
+    unset($local_tasks['entity.node.webform.results_submissions']);
+  }
 }

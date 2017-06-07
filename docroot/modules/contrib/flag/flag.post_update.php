@@ -6,11 +6,13 @@
  */
 
 /**
- * Update the dependency information in views that depend on flag.
+ * Implements hook_post_update_NAME().
+ *
+ * Updates the dependency information in views that depend on flag.
  */
-function views_post_update_flag_relationship_dependencies() {
+function flag_post_update_flag_relationship_dependencies(&$sandbox) {
   // Load all views.
-  $views = \Drupal::entityManager()->getStorage('view')->loadMultiple();
+  $views = \Drupal::entityTypeManager()->getStorage('view')->loadMultiple();
 
   /* @var \Drupal\views\Entity\View[] $views */
   foreach ($views as $view) {

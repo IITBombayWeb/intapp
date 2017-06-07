@@ -22,9 +22,8 @@
     'slide--' ~ delta
   ]
 %}
-
-{% spaceless %}
-<div{{ attributes.addClass(classes) }}>
-  {{ item }}
-</div>
-{% endspaceless %}
+{% block slick_vanilla %}
+  <div{{ attributes.addClass(classes) }}>
+    {{ item }}
+  </div>
+{% endblock %}

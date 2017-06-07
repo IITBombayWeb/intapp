@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\slick\Plugin\Field\FieldFormatter\SlickTextFormatter.
- */
-
 namespace Drupal\slick\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Form\FormStateInterface;
@@ -18,11 +13,11 @@ use Drupal\slick\SlickManagerInterface;
 use Drupal\slick\SlickDefault;
 
 /**
- * Plugin implementation of the 'slick_text' formatter.
+ * Plugin implementation of the 'Slick Text' formatter.
  *
  * @FieldFormatter(
  *   id = "slick_text",
- *   label = @Translation("Slick carousel"),
+ *   label = @Translation("Slick Text"),
  *   field_types = {
  *     "text",
  *     "text_long",
@@ -32,6 +27,7 @@ use Drupal\slick\SlickDefault;
  * )
  */
 class SlickTextFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
+
   use SlickFormatterTrait;
 
   /**
@@ -107,7 +103,6 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
     $definition = $this->getScopedFormElements();
 
     $this->admin()->buildSettingsForm($element, $definition);
-    $element['layout']['#access'] = FALSE;
     return $element;
   }
 
@@ -117,6 +112,8 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
   public function getScopedFormElements() {
     return [
       'current_view_mode' => $this->viewMode,
+      'no_layouts'        => TRUE,
+      'plugin_id'         => $this->getPluginId(),
       'settings'          => $this->getSettings(),
     ];
   }

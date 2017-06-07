@@ -13,14 +13,6 @@ entity.facets_facet.add_form:
   requirements:
     _entity_create_access: 'facets_facet'
 
-entity.facets_facet.canonical:
-  path: '/admin/config/search/facets/{facets_facet}'
-  defaults:
-    _controller: '\Drupal\facets\Controller\FacetController::page'
-    _title_callback: '\Drupal\facets\Controller\FacetController::pageTitle'
-  requirements:
-    _entity_access: 'facets_facet.view'
-
 entity.facets_facet.edit_form:
   path: '/admin/config/search/facets/{facets_facet}/edit'
   defaults:
@@ -35,15 +27,22 @@ entity.facets_facet.delete_form:
   requirements:
     _entity_access: 'facets_facet.delete'
 
-entity.facets_facet.display_form:
-  path: '/admin/config/search/facets/{facets_facet}/display'
+entity.facets_facet.settings_form:
+  path: '/admin/config/search/facets/{facets_facet}/settings'
   defaults:
-    _entity_form: 'facets_facet.display'
+    _entity_form: 'facets_facet.settings'
+  requirements:
+    _entity_access: 'facets_facet.edit'
+
+entity.facets_facet.clone_form:
+  path: '/admin/config/search/facets/{facets_facet}/clone'
+  defaults:
+    _entity_form: 'facets_facet.clone'
   requirements:
     _entity_access: 'facets_facet.edit'
 
 entity.facets_facet_source.edit_form:
-  path: '/admin/config/search/facets/facet-sources/{source_id}/edit'
+  path: '/admin/config/search/facets/facet-sources/{facets_facet_source}/edit'
   defaults:
     _controller: '\Drupal\facets\Controller\FacetSourceController::facetSourceConfigForm'
     _title: 'Edit facet source configuration'

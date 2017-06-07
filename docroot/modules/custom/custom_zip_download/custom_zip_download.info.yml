@@ -1,0 +1,7 @@
+name: custom_zip_download
+type: module
+description: Download PDF Files into single ZIP.
+core: 8.x
+package: Custom
+dependencies:
+  - entity_print

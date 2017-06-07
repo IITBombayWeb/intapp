@@ -32,6 +32,7 @@
                 $(this).html(result.block);
               });
               $("#"+result.id).hide();
+              $("#cnt").html($('.basiccart-cart-contents').length);
               $("#"+result.id).html(result.text);
               $("#"+result.id).fadeIn('slow').delay(1000).hide(2000);
               $('#basiccart-ajax-progress-throbber_'+id_splited[1]).remove();

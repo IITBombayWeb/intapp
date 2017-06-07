@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\profile\Entity\ProfileType.
- */
-
 namespace Drupal\profile\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
@@ -171,9 +166,12 @@ class ProfileType extends ConfigEntityBundleBase implements ProfileTypeInterface
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    // @todo Setting ->setRebuildNeeded isn't enough. Investigate.
-    \Drupal::service('router.builder')->rebuild();
+    // Rebuild module data to generate bundle permissions and link tasks.
+    if (!$update) {
+      system_rebuild_module_data();
+      // @todo Setting ->setRebuildNeeded isn't enough. Investigate.
+      \Drupal::service('router.builder')->rebuild();
+    }
   }
-
 
 }

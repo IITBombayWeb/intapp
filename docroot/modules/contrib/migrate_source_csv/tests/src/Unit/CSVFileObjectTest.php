@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Code for CSVFileObjectTest.php.
- */
 
 namespace Drupal\Tests\migrate_source_csv\Unit;
 
@@ -13,7 +9,7 @@ use Drupal\migrate_source_csv\CSVFileObject;
  *
  * @group migrate_source_csv
  */
-class CSVFileObjectTest extends CSVUnitTestCase {
+class CSVFileObjectTest extends CSVUnitBase {
 
   /**
    * The CSV file object.
@@ -33,52 +29,33 @@ class CSVFileObjectTest extends CSVUnitTestCase {
   /**
    * Tests that the construction appropriately creates a CSVFileObject.
    *
-   * @test
-   *
    * @covers ::__construct
    */
-  public function create() {
+  public function testCreate() {
     $this->assertInstanceOf(CSVFileObject::class, $this->csvFileObject);
     $flags = CSVFileObject::READ_CSV | CSVFileObject::READ_AHEAD | CSVFileObject::DROP_NEW_LINE | CSVFileObject::SKIP_EMPTY;
     $this->assertSame($flags, $this->csvFileObject->getFlags());
   }
 
   /**
-   * Tests that the header row count is correctly set.
-   *
-   * @test
-   *
-   * @covers ::setHeaderRowCount
-   */
-  public function setHeaderRowCount() {
-    $expected = 2;
-    $this->csvFileObject->setHeaderRowCount($expected);
-
-    return $this->csvFileObject->getHeaderRowCount();
-  }
-
-  /**
    * Tests that the header row count is correctly returned.
    *
-   * @test
-   *
-   * @depends setHeaderRowCount
-   *
+   * @covers ::setHeaderRowCount
    * @covers ::getHeaderRowCount
    */
-  public function getHeaderRowCount($actual) {
+  public function testGetHeaderRowCount() {
     $expected = 2;
+    $this->csvFileObject->setHeaderRowCount($expected);
+    $actual = $this->csvFileObject->getHeaderRowCount();
     $this->assertEquals($expected, $actual);
   }
 
   /**
    * Tests that line count is correct.
    *
-   * @test
-   *
    * @covers ::count
    */
-  public function countLines() {
+  public function testCountLines() {
     $expected = 15;
     $this->csvFileObject->setHeaderRowCount(1);
     $actual = $this->csvFileObject->count();
@@ -89,14 +66,12 @@ class CSVFileObjectTest extends CSVUnitTestCase {
   /**
    * Tests that the current row is correctly returned.
    *
-   * @test
-   *
    * @covers ::current
    * @covers ::rewind
    * @covers ::getColumnNames
    * @covers ::setColumnNames
    */
-  public function current() {
+  public function testCurrent() {
     $column_names = [
       ['id' => 'Identifier'],
       ['first_name' => 'First Name'],
