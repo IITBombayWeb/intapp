@@ -1,0 +1,50 @@
+iitinap.create_application:
+ path: '/node/add/{node_type}/{programme}'
+ defaults:
+  _controller: '\Drupal\node\Controller\NodeController::add'
+  _title_callback: '\Drupal\node\Controller\NodeController::addPageTitle'
+ requirements:
+  _node_add_access: 'node:{node_type}'
+ options:
+  _node_operation_route: TRUE
+  parameters:
+   node_type:
+    with_config_overrides: TRUE
+iitinap.restrict_create_application:
+ path: '/node/add/application'
+ requirements:
+  _access: 'FALSE'
+iitinap.view_application:
+ path: '/view-application-list'
+ defaults:
+  _controller: 'Drupal\iitinap\Controller\CustomController::viewApplication'
+  _title: 'View Application'
+ requirements:
+  _permission: 'access content'
+iitinap.get_profile:
+ path: '/get-profile'
+ defaults:
+  _controller: 'Drupal\iitinap\Controller\CustomController::getProfile'
+  _title: 'Get Profile'
+ requirements:
+  _permission: 'access content'
+entity.node.application:
+ path: '/node/{node}/edit_application'
+ defaults:
+  _controller: 'Drupal\iitinap\Controller\CustomController::editProfile'
+ requirements:
+  _custom_access:  'Drupal\iitinap\Controller\CustomController::accessProfile'
+iitinap.form:
+ path: '/view_applicant'
+ defaults:
+  _form:  '\Drupal\iitinap\CustomForm'
+ requirements:
+  _permission: 'access content'
+iitinap.content:
+ path: '/view-apply'
+ defaults:
+  _controller: 'Drupal\iitinap\Controller\CustomController::content'
+  _title: 'View Application'
+ requirements:
+  _permission: 'access content'
+

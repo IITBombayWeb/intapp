@@ -1,0 +1,30 @@
+@media only screen and (max-width:770px) {
+.home{
+
+}
+.intro-column{
+    padding: 0;
+    margin:  0 20px;
+    margin-bottom: 30px;
+}
+.side-view{
+    display: none;
+}
+.footer ul li{
+    list-style-type: none;
+    display: inline-block;
+    padding: 10px 5px; 
+}
+.footer ul li a{
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
+}
+}
+@media screen and (min-width:771px) and (max-width:1048px) {
+
+}
+
+@media screen and (min-width:1049px) and (max-width:10300px) {
+
+}
