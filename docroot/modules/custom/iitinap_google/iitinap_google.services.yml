@@ -1,6 +1,0 @@
-services:
-  iitinap_google.event_subscriber:
-    class: Drupal\iitinap_google\EventSubscriber\SocialAuthSubscriber
-    arguments: []
-    tags:
-      - { name: 'event_subscriber' }
