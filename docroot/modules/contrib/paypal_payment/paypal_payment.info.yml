@@ -1,0 +1,14 @@
+name: 'PayPal Payment'
+description: 'Provides generic PayPal functionality.'
+type: module
+package: Payment
+# core: 8.x
+
+dependencies:
+  - payment
+
+# Information added by Drupal.org packaging script on 2017-04-04
+version: '8.x-1.x-dev'
+core: '8.x'
+project: 'paypal_payment'
+datestamp: 1491291186

@@ -1,0 +1,5 @@
+plugin.plugin_configuration.payment_method_configuration.paypal_payment_standard:
+  type: plugin.plugin_configuration.payment_method_configuration.payment_basic
+
+plugin.plugin_configuration.payment_method_configuration.paypal_payment_express:
+  type: plugin.plugin_configuration.payment_method_configuration.payment_basic

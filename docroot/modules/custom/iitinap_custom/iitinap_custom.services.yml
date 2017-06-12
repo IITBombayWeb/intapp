@@ -1,0 +1,7 @@
+services:
+  iitinap_custom.subscriber:
+    class: Drupal\iitinap_custom\EventSubscriber\MyModuleSubscriber
+    arguments:
+      - @simple_fb_connect.fb_factory
+    tags:
+      - {name: event_subscriber}

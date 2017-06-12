@@ -1,0 +1,22 @@
+paypal_payment.redirect.success:
+  path: '/paypal-payment/redirect/success/{payment}'
+  defaults:
+    _controller: 'Drupal\paypal_payment\Controller\Redirect::execute'
+    _title: 'PayPal Payment Redirect'
+  requirements:
+    _custom_access: '\Drupal\paypal_payment\Controller\Redirect::access'
+paypal_payment.redirect.cancel:
+  path: '/paypal-payment/redirect/cancel/{payment}'
+  defaults:
+    _controller: 'Drupal\paypal_payment\Controller\Redirect::cancel'
+    _title: 'PayPal Payment Redirect'
+  requirements:
+    _permission: 'access content'
+
+paypal_payment.webhook:
+  path: '/paypal-payment/webhook/{payment_method_id}'
+  defaults:
+    _controller: 'Drupal\paypal_payment\Controller\Webhook::execute'
+    _title: 'PayPal Payment Webhook'
+  requirements:
+    _custom_access: '\Drupal\paypal_payment\Controller\Webhook::access'
