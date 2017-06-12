@@ -60,48 +60,44 @@
 <div id="page" class="bg-colr">
 <header>
   <div class="header-wrp">
-  <div class="pge-wdt clearfix js-quickedit-main-content">
-      {# Header #}
-      {%if page.header %}
-      {% block header %}
-        {{ page.header }}
-        {% endblock %}
-      {% endif %}        
-      {% if page.header_first %}
-      {% block header_first %}
-          <div class="logo-wrp">
-            {{ page.header_first }}
-          </div>
-        {% endblock %}
-      {% endif %}
-      {% if page.header_second %}
+   <div class="pge-wdt clearfix js-quickedit-main-content">
+    {# Header #}
+    {%if page.header %}
+     {% block header %}
+       {{ page.header }}
+       {% endblock %}
+     {% endif %}        
+    {% if page.header_first %}
+     {% block header_first %}
+      <div class="logo-wrp clearfix">
+        {{ page.header_first }}
+       </div>
+      {% endblock %}
+     {% endif %}
+     {% if page.header_second %}
       {% block header_second %}
-          <div class="mnu-lst">
-              <div class="msg-pck">
-                  <a><img src="/themes/capit/images/packet-icon.png"><span class="circle" id="cnt">{{cntcart}}</span></a>
-                </div>
-                  {% if logged_in %}
-                      <div class="lgn-lst">
-                        <span class="dsk-lgn">Settings<i class="fa fa-caret-down"></i></span>
-                          <span class="mbl-lgn"><i class="fa fa-user"></i></span>
-                      </div>
-                  {% else %}
-                      <div class="lgn-lst">
-                        <span class="dsk-lgn">Login<i class="fa fa-caret-down"></i></span>
-                        <span class="mbl-lgn"><i class="fa fa-user"></i></span>
-                      </div>
-                  {% endif %}
-              {{ page.header_second }}
-               <div class="menu-icn">
-                    <a><i class="fa fa-bars"></i></a>
-                </div>
+       <div class="mnu-lst clearfix">
+         <div class="msg-pck">
+          <a><img src="/themes/capit/images/packet-icon.png"><span class="circle" id="cnt">{{cntcart}}</span></a>
+         </div>
+         {% if logged_in %}
+          <div class="lgn-lst">
+            <span class="dsk-lgn">Settings<i class="fa fa-caret-down"></i></span>
+            <span class="mbl-lgn"><i class="fa fa-user"></i></span>
           </div>
-        {% endblock %}
-      {% endif %}
-       {% if page.header_third %}
-      {% block header_third %}
-          {% endblock %}
-      {% endif %} 
+         {% else %}
+          <div class="lgn-lst">
+            <span class="dsk-lgn">Login<i class="fa fa-caret-down"></i></span>
+            <span class="mbl-lgn"><i class="fa fa-user"></i></span>
+          </div>
+         {% endif %}
+        {{ page.header_second }}
+         <div class="menu-icn">
+           <a><i class="fa fa-bars"></i></a>
+         </div>
+       </div>
+     {% endblock %}
+   {% endif %}
   </div> 
   </div>
 </header>
@@ -114,11 +110,11 @@
 {% endif %}
 <div class="banner-section">
   {% if page.content_top %}
-      <div class="content-top frm-hd srch-frm">
-          <div class="pge-wdt clearfix">
-              {{ page.content_top }}
-          </div>
-      </div>
+  <div class="content-top frm-hd srch-frm">
+   <div class="pge-wdt clearfix hd-in">
+    {{ page.content_top }}
+   </div>
+  </div>
   {% endif %}
 {% if page.featured_top %}
 <div class="featured-top">
@@ -158,35 +154,30 @@
         ]
       %}
       <section class="main-page">
-
         {# Highlighted #}
         {% if page.highlighted %}
           {% block highlighted %}
             <div class="highlighted">{{ page.highlighted }}</div>
           {% endblock %}
         {% endif %}
-
         {# Breadcrumbs #}
         {% if breadcrumb %}
           {% block breadcrumb %}
             {{ breadcrumb }}
           {% endblock %}
         {% endif %}
-
         {# Action Links #}
         {% if action_links %}
           {% block action_links %}
             <ul class="action-links">{{ action_links }}</ul>
           {% endblock %}
         {% endif %}
-
         {# Help #}
         {% if page.help %}
           {% block help %}
             {{ page.help }}
           {% endblock %}
         {% endif %}
-
         {# Content #}
         {% block content %}
           <a id="main-content"></a>
@@ -195,7 +186,6 @@
           </div>
         {% endblock %}
       </section>
-
       {# Sidebar Second #}
       {% if page.sidebar_second %}
         {% block sidebar_second %}
@@ -209,8 +199,6 @@
       </div>
   </div>
 {% endblock %}
-
-
   {% block footer %}
     <footer class="footer" role="contentinfo">
       <div class="pge-wdt clearfix">

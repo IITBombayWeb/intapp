@@ -10,7 +10,6 @@ regions:
   header: 'Header'
   header_first: 'Header first'
   header_second: 'Header second'
-  header_third: 'Header third'
   primary_menu: 'Primary menu'
   secondary_menu: 'Secondary menu'
   highlighted: Highlighted
