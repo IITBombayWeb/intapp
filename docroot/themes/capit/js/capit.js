@@ -12,6 +12,12 @@ Drupal.behaviors.myBehavior = {
     $( "section[class*='block-views-blockimportant-deadlines-block'] h2" ).find('span').remove();
     //Add Clock Icon
     $("section[class*='block-views-blockimportant-deadlines-block'] h2").prepend('<span class="fa fa-clock-o"></span> ');
+
+    if (window.chrome)
+       $("[type=video\\\/mp4]").each(function()
+       {
+         $(this).attr('src', $(this).attr('src').replace(".mp4", "_c.mp4"));
+       }); 
   }
 };
 
