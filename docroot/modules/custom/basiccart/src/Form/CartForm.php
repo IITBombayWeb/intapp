@@ -34,7 +34,7 @@ class CartForm extends FormBase {
     $form['cartcontents'] = array(
       // Make the returned array come back in tree form.
       '#tree' => TRUE,
-      '#prefix' => '<div class="basiccart-cart basiccart-grid">',
+      '#prefix' => '<div class="basiccart-cart apl-pck">',
       '#suffix' => '</div>',
     );
     // Cart elements.
@@ -55,7 +55,7 @@ class CartForm extends FormBase {
     // Total price.
     $form['total_price'] = array(
       '#markup' => $this->get_total_price_markup(),
-      '#prefix' => '<div class="basiccart-cart basiccart-grid">',
+      '#prefix' => '<div class="basiccart-cart basiccart-grid bascart-totl">',
       '#suffix' => '</div>',
      // '#theme' => 'cart_total_price',
     );
@@ -63,7 +63,7 @@ class CartForm extends FormBase {
     $form['buttons'] = array(
       // Make the returned array come back in tree form.
       '#tree' => TRUE,
-      '#prefix' => '<div class="row"><div class="basiccart-call-to-action cell">',
+      '#prefix' => '<div class="pck-btn"><div class="basiccart-call-to-action">',
       '#suffix' => '</div></div>',
     );
 
@@ -121,15 +121,15 @@ class CartForm extends FormBase {
     $total = $Utility::price_format($price->total);
     $config = $Utility::cart_settings();
     // Building the HTML.
-    $html  = '<div class="basiccart-cart-total-price-contents row">';
-    $html .= '  <div class="basiccart-total-price cell">' . t($config->get('total_price_label')) . ': <strong>' . $total . '</strong></div>';
+    $html  = '<div class="basiccart-cart-total-price-contents">';
+    $html .= '  <div class="basiccart-total-price">' . t($config->get('total_price_label')) . ': <strong>' . $total . '</strong></div>';
     $html .= '</div>';
     
     $vat_is_enabled = (int) $config->get('vat_state');
     if (!empty ($vat_is_enabled) && $vat_is_enabled) {
       $vat_value = $Utility::price_format($price->vat);
-      $html .= '<div class="basiccart-cart-total-vat-contents row">';
-      $html .= '  <div class="basiccart-total-vat cell">' . t('Total VAT') . ': <strong>' . $vat_value . '</strong></div>';
+      $html .= '<div class="basiccart-cart-total-vat-contents">';
+      $html .= '  <div class="basiccart-total-vat">' . t('Total VAT') . ': <strong>' . $vat_value . '</strong></div>';
       $html .= '</div>';
     }
     return $html;
@@ -151,12 +151,12 @@ class CartForm extends FormBase {
     $unit_price = Utility::price_format($unit_price);
     
     // Prefix.
-    $prefix  = '<div class="basiccart-cart-contents row">';
-    $prefix .= '  <div class="basiccart-delete-image cell">' . $delete_link . '</div>';
-    $prefix .= '  <div class="basiccart-cart-node-title cell">' . $link->toString() . '<br />';
+    $prefix  = '<div class="basiccart-cart-contents tb-rw">';
+    $prefix .= '  <div class="basiccart-cart-node-title tb-cel">' . $link->toString() . '<br />';
     $prefix .= '  </div>';
-    $prefix .= '  <div class="cell basiccart-cart-unit-price"><strong>' . $unit_price . '</strong></div>';
-    $prefix .= '  <div class="basiccart-cart-quantity cell">';
+    $prefix .= '  <div class="basiccart-cart-unit-price tb-cel"><strong>' . $unit_price . '</strong></div>';
+    $prefix .= '  <div class="basiccart-delete-image tb-cel">' . $delete_link . '</div>';
+    $prefix .= '  <div class="basiccart-cart-quantity tb-cel">';
     $prefix .= '    <div class="cell">';
     }else{
       $prefix = '';

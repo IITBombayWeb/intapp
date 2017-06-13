@@ -29,8 +29,6 @@ excel_import_export.download-export:
         _controller: 'Drupal\excel_import_export\Controller\ExcelImportExportController::excelExportDownloadSettings'
     requirements:
         _permission: 'excel export'
-    options:
-        no_cache: 'TRUE'
 
 excel_import_export.view-export-details:
     path: '/excel/import/details/{sid}'

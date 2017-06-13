@@ -39,7 +39,6 @@ class ZipDownload extends ActionBase {
     Header("Content-type: application/octet-stream");
     Header ("Content-disposition: attachment; filename=Applications.zip");
     print $zipTest->file();
-    exit;
   }
   /**
    * {@inheritdoc}

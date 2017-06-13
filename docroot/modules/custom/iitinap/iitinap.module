@@ -152,6 +152,81 @@ function iitinap_theme() {
 }
 
 function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
+      
+   if($form['#form_id'] == 'workflow-transition-field-status-form--2'){
+//Node id
+$node = \Drupal::routeMatch()->getParameter('node');
+if ($node) {
+  // You can get nid and anything else you need from the node object.
+  $curr_nid = $node->id();
+}
+
+$curr_state = $form['to_sid']['#default_value'];
+
+$query = \Drupal::database()->select('workflow_transition_history', 'wf');
+$query->addField('wf', 'comment');
+$query->condition('wf.to_sid', $curr_state);
+$query->condition('wf.from_sid', $curr_state,'!=');
+$query->condition('wf.entity_id', $curr_nid);
+$nidd = $query->execute()->fetchField();
+//dpm($nidd);
+
+$aa = WorkflowState::load($curr_state);
+$test =$aa->label;
+//dpm($test);
+
+ 
+//$defaultObj = $form["#default_value"];
+//dpm($form['to_sid']['#default_value']);
+ 
+     // $ss = WorkflowTransitionInterface::getComment();
+//$ss = $form['#default_value']->getFromState();
+
+
+//exit;
+     $form['to_sid']['#title'] = 'Change status to';
+     $form['comment']['#title'] ='Additional comments';
+     $form['actions']['submit']['#value']='Update application status';
+   // dpm($form->getFromSid());
+    //dpm($form['#default_value']->getFromState());
+    $aa = WorkflowState::load('apply_offer_given');
+//dpm( $aa->label);
+    //dpm( $aa );
+    //$field_label = $aa->field_name->getFieldDefinition()->getLabel();
+    //dpm( $field_label);
+      //dpm($form['#default_value']->entity->get('nid'));
+    //  dpm($form['comment']['#title']);
+  //  dpm($form->formBuilder()->get;
+  //$form['mail']['#title']->__toString());
+      
+      
+     $a = "Offer Given";
+     $b ="<br>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages";
+      
+      $form['field_current_status'] = array(
+       '#type' => 'item',
+       '#title' => t('Current status'),
+			 '#prefix' => '<div class="example-wrapper">',
+			 '#suffix' => '</div>',
+       '#markup' => t("<br>".$test),
+       '#weight' => '0',
+      );
+     $form['field_current_comment'] = array(
+       '#type' => 'item',
+       '#title' => t('Status description'),
+       '#markup' => t("<br>". $nidd ),
+       '#weight' => '0',
+      );
+ }   
+
+
+
+//dpm($form);   
+       if($form['#form_id'] == 'search_api_page_block_form'){
+	    $form['#prefix']="<div style = 'display:none'>";
+            $form['#suffix']="</div>";  
+       }
+       
  //global $user;
  //dpm($user->getRoles());
 /* $userCurrent = \Drupal::currentUser();
@@ -817,7 +892,8 @@ function application_save_submit(&$form, \Drupal\Core\Form\FormStateInterface $f
     $node->save();
     $node_id = $node->id();
     //pdf
-     $filename = 'public://applications/'. $username . '_' . $account . '_' .  $node_id . '.pdf';
+    // $filename = 'public://applications/'. $username . '_' . $account . '_' .  $node_id . '.pdf';
+     $filename = 'public://applications/'.$node_id . '.pdf';
      $file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE);
     //pdf
     $node = Node::load($node_id);

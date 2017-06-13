@@ -389,11 +389,11 @@ public static function price_format($price) {
     $cart_cart = isset($cart['cart']) ? $cart['cart'] : array();
     $output = '';
  if (empty($cart_cart)){
-  $output .= '<div class="basiccart-grid basic-cart-block">'.t($config->get('empty_cart')).'</div>';
+  $output .= '<div class="basiccart-grid basic-cart-block empt-cart ">'.t($config->get('empty_cart')).'</div>';
   } 
 else {
 
-  $output .= '<div class="basiccart-grid basic-cart-block">';
+  $output .= '<div class="basiccart-grid basic-cart-block test bscart-pop clearfix">';
   if(is_array($cart_cart) && count($cart_cart) >= 1){
     foreach($cart_cart as $nid => $node){
     $langcode = $node->language()->getId();
@@ -402,7 +402,12 @@ else {
       $url = new Url('entity.node.canonical',array("node"=>$nid));
 
       $link = new Link($title[0]['value'],$url);
-         $output .= '<div class="basiccart-cart-contents row">
+         $output .= '<div class="basicart-view clearfix"><div class="basiccart-cart-contents clearfix">
+          <div class="basiccart-delete-image cell">
+            <span class="basiccart-delete-image-image">
+            <a href="/cart/remove/'.$nid.'">X</a>
+            </span>
+          </div>
           <div class="basiccart-cart-node-title cell">'.$link->toString().'</div>';
          if($quantity_enabled) {
           $output .= '<div class="basiccart-cart-quantity cell">'.$cart['cart_quantity'][$nid].'</div>';
@@ -410,25 +415,25 @@ else {
          }
          
          $output .='<div class="basiccart-cart-unit-price cell">';
-       $output .= isset($price_value[0]) ? '<strong>'.$Utility->price_format($price_value[0]['value']).'</strong>' : '';
+       $output .= isset($price_value[0]) ? '<strong>'.$Utility->price_format($price_value[0]['value']).'</strong>' : $Utility->price_format(0);
        $output .='</div>
-        </div>';
+        </div></div>';
     }
 
-       $output .=  '<div class="basiccart-cart-total-price-contents row">
-        <div class="basiccart-total-price cell">
-            '.t($config->get('total_price_label')).':<strong>'.$Utility->price_format($total_price->total).'</strong>
-        </div>
-      </div>';
+      // $output .=  '<div class="basiccart-cart-total-price-contents">
+      //  <div class="basiccart-total-price cell">
+      //      '.t($config->get('total_price_label')).':<strong>'.$Utility->price_format($total_price->total).'</strong>
+      //  </div>
+      //</div>';
         if (!empty ($config->get('vat_state'))) {
-       $output .='<div class="basiccart-block-total-vat-contents row">
+       $output .='<div class="basiccart-block-total-vat-contents">
           <div class="basiccart-total-vat cell">'.t('Total VAT').': <strong>'.$Utility->price_format($total_price->vat).'</strong></div>
         </div>';
         }
       $url = new Url('basiccart.cart');
       //$link = new Link($this->t($config->get('view_cart_button')),$url);
       $link = "<a href='".$url->toString()."' class='button'>".t($config->get('view_cart_button'))."</a>";
-        $output .='<div class="basiccart-cart-checkout-button basiccart-cart-checkout-button-block row">
+        $output .='<div class="basiccart-cart-checkout-button basiccart-cart-checkout-button-block">
         '.$link.'
       </div>';
   }
