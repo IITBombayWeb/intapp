@@ -13,7 +13,6 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides a config importer.
@@ -50,14 +49,7 @@ class ConfigImporter implements ConfigImporterInterface {
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $currencyLocaleStorage;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
+  
   /**
    * The module handler.
    *
@@ -77,18 +69,15 @@ class ConfigImporter implements ConfigImporterInterface {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface
    *   The module handler.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   *   The event dispatcher.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager
    *   THe typed config manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config_manager, EntityTypeManagerInterface $entity_type_manager) {
+   public function __construct(ModuleHandlerInterface $module_handler, TypedConfigManagerInterface $typed_config_manager, EntityTypeManagerInterface $entity_type_manager) {
     $this->currencyResourceRepository = new ResourceRepository();
     $this->currencyStorage = $entity_type_manager->getStorage('currency');
     $this->currencyLocaleStorage = $entity_type_manager->getStorage('currency_locale');
-    $this->eventDispatcher = $event_dispatcher;
     $this->moduleHandler = $module_handler;
     $this->typedConfigManager = $typed_config_manager;
   }
