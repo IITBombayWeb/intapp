@@ -8,6 +8,7 @@ use Drupal\basiccart\Utility;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\user\Entity\user;
 
 class CartForm extends FormBase {
   /**
@@ -29,6 +30,20 @@ class CartForm extends FormBase {
 
     $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
 	
+    $user = \Drupal::currentUser();
+	
+	if($user ->id()){
+		$price = $Utility::get_total_price();
+    	$total = $Utility::price_format($price->total);
+		//if($total > 0) { 
+			$form['#action'] ='https://www.sandbox.paypal.com/cgi-bin/webscr';
+		//}else{
+		//	$form['#action'] ='/user/'.$user->id().'/student_application_';
+		//}
+	}else{
+	    $form['#action'] = '/user/login/?destination=get-profile';
+	}
+
     // And now the form.
     $form['cartcontents'] = array(
       // Make the returned array come back in tree form.
@@ -50,6 +65,82 @@ class CartForm extends FormBase {
         //'#theme' => 'basiccart_quantity',
       );
     }
+     // paypal.
+    $form['business'] = array(
+	  '#type' => 'textfield',
+      '#value' => 'smalathicse@gmail.com',
+      '#name' => "business",
+    );
+    $form['cmd'] = array(
+	  '#type' => 'textfield',
+      '#value' => '_cart',
+      '#name' => "cmd",
+    );
+    $form['upload'] = array(
+	  '#type' => 'textfield',
+      '#value' => '1',
+      '#name' => "upload",
+    );  
+	  $c = 1;
+    foreach ($cart['cart_quantity'] as $nid => $quantity) {
+    
+        $list = $this->get_cart_prefix_suffix($nid,$langcode);
+        $product = explode("_",$list);
+        
+        $amt = $this->convert_INR_to_USD(str_ireplace(" ","",str_ireplace(",",".",str_ireplace("INR","",$product[1]))),"INR","USD");
+		
+		$form['item_name_'.$c] = array(
+	      '#type' => 'textfield',
+          '#value' => html_entity_decode(strip_tags($product[0])),
+          '#name' => "item_name_".$c,
+        );
+	    $form['item_number_'.$c] = array(
+	      '#type' => 'textfield',
+          '#value' => $c,
+          '#name' => "item_number_".$c,
+        );
+	    $form['amount_'.$c] = array(
+	      '#type' => 'textfield',
+          '#value' => number_format($amt,2),
+          '#name' => "amount_".$c,
+        );
+        $c++;
+    }
+	$form['userid'] = array(
+	  '#type' => 'textfield',
+      '#value' => '1',
+      '#name' => "userid",
+    );
+	$form['cpp_header_image'] = array(
+	  '#type' => 'textfield',
+      '#value' => 'http://www.phpgang.com/wp-content/uploads/gang.jpg',
+      '#name' => "cpp_header_image",
+    );
+    $form['no_shipping'] = array(
+	  '#type' => 'textfield',
+      '#value' => '1',
+      '#name' => "no_shipping",
+    );
+	$form['currency_code'] = array(
+	  '#type' => 'textfield',
+      '#value' => 'USD',
+      '#name' => "currency_code",
+    );
+	$form['handling'] = array(
+	  '#type' => 'textfield',
+      '#value' => '0',
+      '#name' => "handling",
+    );
+	$form['cancel_return'] = array(
+	  '#type' => 'textfield',
+      '#value' => 'http://iitinapdev.unimity.com/cart',
+      '#name' => "cancel_return",
+    );
+	$form['return'] = array(
+	  '#type' => 'textfield',
+      '#value' => 'http://unimity.com',
+      '#name' => "return",
+    );
 	// Total price.
     $form['total_price'] = array(
       '#markup' => $this->get_total_price_markup(),
@@ -63,14 +154,12 @@ class CartForm extends FormBase {
       '#tree' => TRUE,
       '#prefix' => '<div class="row"><div class="basiccart-call-to-action cell">',
       '#suffix' => '</div></div>',
-    );				
-
+    );		
     $form['buttons']['update'] = array(
       '#type' => 'submit',
       '#value' =>  t($config->get('cart_update_button')),
       '#name' => "update",
     );
-  
     if($config->get('order_status')) {
        $form['buttons']['checkout'] = array(
           '#type' => 'submit',
@@ -160,6 +249,46 @@ class CartForm extends FormBase {
       $prefix = '';
     }
     return $prefix;
+  }
+ public function get_cart_prefix_suffix($nid,$langcode) {
+    $url = new Url('basiccart.cartremove', array("nid" => $nid));
+    $link = new Link('X',$url);
+    $delete_link = '<span class="basiccart-delete-image-image">'.$link->toString().'</span>';
+    $cart = Utility::get_cart($nid);
+     if(!empty($cart['cart'])) {
+    $unit_price = $cart['cart']->getTranslation($langcode)->get('add_to_cart_price')->getValue();  
+    $unit_price = isset($unit_price[0]['value']) ? $unit_price[0]['value'] : 0;
+    $title = $cart['cart']->getTranslation($langcode)->get('title')->getValue()[0]['value'];
+    // Price and currency.
+    $url = new Url('entity.node.canonical',array("node"=>$nid));
+    $link = new Link($title,$url);
+    $unit_price = isset($unit_price) ? $unit_price : 0;
+    $unit_price = Utility::price_format($unit_price);
+    
+    // Prefix.
+    $prefix  = $link->toString().'_'.$unit_price;
+    }else{
+      $prefix = '';
+    }
+    return $prefix;
+  }
+  public function convert_INR_to_USD($amount) {
+
+       $amount = urlencode($amount);
+       $from_Currency = urlencode($from);
+       $to_Currency = urlencode($to);
+       $url = 'http://finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s='. $from_Currency . $to_Currency .'=X';
+       $handle = @fopen($url, 'r');
+       if ($handle) {
+           $result = fgets($handle, 4096);
+           fclose($handle);
+           $allData = explode(',',$result); /* Get all the contents to an array */
+           $dollarValue = $allData[1]*$amount;
+           $usd = round($dollarValue , 2);
+       }else{
+           $usd = 0;
+       }
+       return $usd;
   }
 }
 

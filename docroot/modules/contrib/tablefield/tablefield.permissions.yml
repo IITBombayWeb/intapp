@@ -6,6 +6,9 @@ rebuild tablefield:
 
 import tablefield:
     title: 'Import into any tablefield'
-
+#permission for addrow.
+addrow tablefield:
+    title: 'To change row in tablefield'
+    
 configure tablefield:
   title: 'Allow changes in the global tablefield module configuration'

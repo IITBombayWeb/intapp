@@ -1,10 +1,14 @@
 global-styling:
   css:
     theme:
-      stylesheets/style.css: {}
+      # *stylesheets/style.css: {}
+      css/jquery.mCustomScrollbar.css: {}
+      stylesheets/main.css: {}
+      stylesheets/pages.css: {}
       css/font-awesome.min.css: {}
       //fonts.googleapis.com/css?family=Ek+Mukta:400,700: {type: external}
   js:
+    js/jquery.mCustomScrollbar.concat.min.js: {}
     js/capit.js: {}
 
 bootstrap-scripts:

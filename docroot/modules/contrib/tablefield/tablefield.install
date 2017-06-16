@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Installation options for TableField.
+ * Installation options for TableField
  */
 
 /**
@@ -18,31 +18,44 @@ function tablefield_uninstall() {
 }
 
 /**
+ * Implements hook_enable().
+ *
+ * Notify content module when this module is enabled.
+ */
+function tablefield_enable() {
+}
+
+/**
+ * Implements hook_disable().
+ *
+ * Notify content module when this module is disabled.
+ */
+function tablefield_disable() {
+}
+
+/**
  * Implements hook_update_dependencies().
  */
 function tablefield_update_dependencies() {
   // Ensure that format columns are only changed after Filter module has changed
   // the primary records.
-  $dependencies['text'][7000] = [
+  $dependencies['text'][7000] = array(
     'filter' => 7010,
-  ];
+  );
 
   return $dependencies;
 }
 
-/**
- *
- */
 function tablefield_repair_schema() {
-  $spec = [
+  $spec = array(
     'type' => 'varchar',
     'length' => 255,
     'not null' => FALSE,
-  ];
-  $fields = _update_7000_field_read_fields([
+  );
+  $fields = _update_7000_field_read_fields(array(
     'module' => 'tablefield',
     'storage_type' => 'field_sql_storage',
-  ]);
+  ));
   foreach ($fields as $field_name => $field) {
     if ($field['deleted']) {
       $table = "field_deleted_data_{$field['id']}";

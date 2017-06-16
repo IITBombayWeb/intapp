@@ -151,7 +151,82 @@ function iitinap_theme() {
   );
 }
 
+
+
 function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
+      
+  if($form['#form_id'] == 'workflow-transition-field-status-form--2'){
+              //dpm("test");
+       //Node id
+       $node = \Drupal::routeMatch()->getParameter('node');
+       if ($node) {
+	 // You can get nid and anything else you need from the node object.
+	 $curr_nid = $node->id();
+       }
+       $curr_state = $form['to_sid']['#default_value'];
+       $query = \Drupal::database()->select('workflow_transition_history', 'wf');
+       $query->addField('wf', 'comment');
+       $query->condition('wf.to_sid', $curr_state);
+       $query->condition('wf.from_sid', $curr_state,'!=');
+       $query->condition('wf.entity_id', $curr_nid);
+       $nidd = $query->execute()->fetchField();
+//dpm($nidd);
+
+$aa = WorkflowState::load($curr_state);
+$test =$aa->label;
+//dpm($test);
+$form['to_sid']['#options'][$curr_state]= 'Please Select';
+ 
+//$defaultObj = $form["#default_value"];
+//dpm($form['to_sid']['#default_value']);
+ 
+     // $ss = WorkflowTransitionInterface::getComment();
+//$ss = $form['#default_value']->getFromState();
+
+
+//exit;
+     $form['to_sid']['#title'] = 'Change status to';
+     $form['comment']['#title'] ='Additional comments';
+     $form['actions']['submit']['#value']='Update application status';
+   // dpm($form->getFromSid());
+    //dpm($form['#default_value']->getFromState());
+    $aa = WorkflowState::load('apply_offer_given');
+//dpm( $aa->label);
+    //dpm( $aa );
+    //$field_label = $aa->field_name->getFieldDefinition()->getLabel();
+    //dpm( $field_label);
+      //dpm($form['#default_value']->entity->get('nid'));
+    //  dpm($form['comment']['#title']);
+  //  dpm($form->formBuilder()->get;
+  //$form['mail']['#title']->__toString());
+      
+     if(!empty($test)){
+    
+      $form['field_current_status'] = array(
+       '#type' => 'item',
+       '#title' => t('Current status'),
+			 '#prefix' => '<div class="example-wrapper">',
+			 '#suffix' => '</div>',
+       '#markup' => t("<br>".$test),
+       '#weight' => '0',
+      );
+     $form['field_current_comment'] = array(
+       '#type' => 'item',
+       '#title' => t('Status description'),
+       '#markup' => t("<br>". $nidd ),
+       '#weight' => '0',
+      );
+     }
+ }   
+
+
+
+//dpm($form);   
+       if($form['#form_id'] == 'search_api_page_block_form'){
+	    $form['#prefix']="<div style = 'display:none'>";
+            $form['#suffix']="</div>";  
+       }
+       
  //global $user;
  //dpm($user->getRoles());
 /* $userCurrent = \Drupal::currentUser();
@@ -375,6 +450,7 @@ if($form_id == 'basiccart_cart_form') {
   }
 }
 
+
 function iitnap_basiccart_alter_submit(array &$form, FormStateInterface $form_state) {   
   $user = \Drupal::currentUser();
   if($user ->id()){
@@ -394,6 +470,18 @@ function form_submit(array &$form, FormStateInterface $form_state) {
     $form_state->setRedirectUrl($url);
  }
 }
+function iitinap_menu_local_tasks_alter(&$data, $route_name) {
+//dpm($data['tabs'][0]['entity.node.workflow_history']['#link']);
+ $data['tabs'][0]['entity.node.workflow_history']['#link']['title'] = "History";
+ 
+}
+
+/*
+function iitinap_menu_local_tasks_alter(&$data, $route_name) {
+	
+	dpm($data);
+}
+*/
 
 /**
  *Implements form_validation() for registration.
