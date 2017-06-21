@@ -36,11 +36,23 @@ class CartController extends ControllerBase
     $cart = $utility::get_cart();
     $config= $utility::cart_settings(); 
     $request = \Drupal::request();
-
+  
+ 
+   if(isset($_GET['cc']) || isset($_POST['cc']) || isset($_REQUEST['currency_code']) || isset($_REQUEST['cc'])){
+      
+      echo $item_number = $_GET['item_number']; 
+      echo $txn_id = $_GET['tx'];
+      echo $payment_gross = $_GET['amt'];
+      echo $currency_code = $_GET['cc'];
+      echo $payment_status = $_GET['st'];
+      exit;
+    }
+    
+    
     if ($route = $request->attributes->get(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_OBJECT)) {
       $route->setDefault('_title', t($config->get('cart_page_title')));
     }
-
+    
     return !empty($cart['cart']) ? \Drupal::formBuilder()->getForm('\Drupal\basiccart\Form\CartForm') : array('#type' => 'markup','#markup' => t($config->get('empty_cart')),);
 
   } 

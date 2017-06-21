@@ -26,7 +26,6 @@ use Dompdf\Dompdf;
 * Implements hook_mail().
 */
 function iitinap_mail($key, &$message, $params) {
- //dpm(\Drupal::currentUser());
  $options = array(
    'langcode' => $message['langcode'],
  );
@@ -57,19 +56,6 @@ function iitinap_mail($key, &$message, $params) {
 */
 
 function iitinap_workflow($op, WorkflowTransitionInterface $transition, UserInterface $user) {
-	//dpm(\Drupal::config('system.site')->get('mail'));
-	//$userCurrent = \Drupal::currentUser();
-	//dpm($userCurrent->id());
-    //$curuser = User::load($userCurrent->id());
-    //dpm($curuser);
-    //dpm($user->get('mail')->value);
-	/*$roles = $curuser->getRoles();
-	foreach($roles as $role){
-	  if($role == 'office'){
-	   $data = user_load_by_name($role)->getEmail();
-	   dpm($data);
-	  }
-	}*/
   $mailConfig = \Drupal::config('workflow_mail.settings');
   $send_mail_admin = $mailConfig->get('send_mail_admin');
   $send_mail_user = $mailConfig->get('send_mail_user');
@@ -151,12 +137,13 @@ function iitinap_theme() {
   );
 }
 
-
+/**
+ * Implements hook_form_alter().
+ */
 
 function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
       
   if($form['#form_id'] == 'workflow-transition-field-status-form--2'){
-              //dpm("test");
        //Node id
        $node = \Drupal::routeMatch()->getParameter('node');
        if ($node) {
@@ -164,123 +151,86 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
 	 $curr_nid = $node->id();
        }
        $curr_state = $form['to_sid']['#default_value'];
+       //Get Current workflow State
        $query = \Drupal::database()->select('workflow_transition_history', 'wf');
        $query->addField('wf', 'comment');
        $query->condition('wf.to_sid', $curr_state);
        $query->condition('wf.from_sid', $curr_state,'!=');
        $query->condition('wf.entity_id', $curr_nid);
-       $nidd = $query->execute()->fetchField();
-//dpm($nidd);
-
-$aa = WorkflowState::load($curr_state);
-$test =$aa->label;
-//dpm($test);
-$form['to_sid']['#options'][$curr_state]= 'Please Select';
- 
-//$defaultObj = $form["#default_value"];
-//dpm($form['to_sid']['#default_value']);
- 
-     // $ss = WorkflowTransitionInterface::getComment();
-//$ss = $form['#default_value']->getFromState();
-
-
-//exit;
-     $form['to_sid']['#title'] = 'Change status to';
-     $form['comment']['#title'] ='Additional comments';
-     $form['actions']['submit']['#value']='Update application status';
-   // dpm($form->getFromSid());
-    //dpm($form['#default_value']->getFromState());
-    $aa = WorkflowState::load('apply_offer_given');
-//dpm( $aa->label);
-    //dpm( $aa );
-    //$field_label = $aa->field_name->getFieldDefinition()->getLabel();
-    //dpm( $field_label);
-      //dpm($form['#default_value']->entity->get('nid'));
-    //  dpm($form['comment']['#title']);
-  //  dpm($form->formBuilder()->get;
-  //$form['mail']['#title']->__toString());
-      
-     if(!empty($test)){
-    
-      $form['field_current_status'] = array(
-       '#type' => 'item',
-       '#title' => t('Current status'),
-			 '#prefix' => '<div class="example-wrapper">',
-			 '#suffix' => '</div>',
-       '#markup' => t("<br>".$test),
-       '#weight' => '0',
-      );
-     $form['field_current_comment'] = array(
-       '#type' => 'item',
-       '#title' => t('Status description'),
-       '#markup' => t("<br>". $nidd ),
-       '#weight' => '0',
-      );
-     }
+       $cur_wf_nid = $query->execute()->fetchField();
+       $wf_curr_st = WorkflowState::load($curr_state);
+       $wf_curr_st_lab =$wf_curr_st->label;
+       //From Field tile alter
+       $form['to_sid']['#options'][$curr_state]= 'Please Select';
+       $form['to_sid']['#title'] = 'Change status to';
+       $form['comment']['#title'] ='Additional comments';
+       $form['actions']['submit']['#value']='Update application status';
+     
+       if(!empty($wf_curr_st_lab)){
+	      $form['field_current_status'] = array(
+		      '#type' => 'item',
+		      '#title' => t('Current status'),
+		      '#prefix' => '<div class="example-wrapper">',
+		      '#suffix' => '</div>',
+		      '#markup' => t("<br>".$wf_curr_st_lab),
+		      '#weight' => '0',
+		     );
+	      $form['field_current_comment'] = array(
+		      '#type' => 'item',
+		      '#title' => t('Status description'),
+		      '#markup' => t("<br>". $cur_wf_nid),
+		      '#weight' => '0',
+		     );
+       }
  }   
-
-
-
-//dpm($form);   
+  
        if($form['#form_id'] == 'search_api_page_block_form'){
 	    $form['#prefix']="<div style = 'display:none'>";
             $form['#suffix']="</div>";  
        }
        
- //global $user;
- //dpm($user->getRoles());
-/* $userCurrent = \Drupal::currentUser();
-    $user = User::load($userCurrent->id());
-	$roles = $user->getRoles();
-	foreach($roles as $role){
-	  if($role == 'office'){
-	   $data = user_load_by_name($role)->getEmail();
-	   dpm($data);
-	  }
-	}*/
-$current_path = \Drupal::service('path.current')->getPath();
-	  if((strpos($form_id, 'transition-field-status-form')) && ($current_path == '/view-my-application-list' || strpos($current_path, 'view-application-lists'))) {
-		unset($form['comment']);
-		unset($form['to_sid']['#title']);
-	  }
+       $current_path = \Drupal::service('path.current')->getPath();
+       if((strpos($form_id, 'transition-field-status-form')) && ($current_path == '/view-my-application-list' || strpos($current_path, 'view-application-lists'))) {
+	     unset($form['comment']);
+	     unset($form['to_sid']['#title']);
+       }
       module_load_include('inc', 'basiccart');
       $application_id = basiccart_get_cart();
       if ((isset($application_id['cart']) && is_array($application_id['cart']) && ($form['#form_id'] == 'profile_student_application__edit_form' || $form['#form_id'] == 'profile_student_application__add_form'))) {
 	  
-        $form['actions']['submit']['#submit'][] = "application_save_submit";
+       $form['actions']['submit']['#submit'][] = "application_save_submit";
           $cart = $application_id;
-    $cart_cart = $cart['cart'];
-      $cart_data = array();
-    $i=0;
-	
-    if(is_array($cart_cart) && count($cart_cart) >= 1){
-    	foreach($cart_cart as $nid => $node){
-            $langcode = $node->language()->getId();
-			$degree = $node->getTranslation($langcode)->get('field_degree')->getValue()[0]['value'];
-      $depart = $node->getTranslation($langcode)->get('field_departments')->getValue()[0]['target_id'];
-      $specialisation = $node->getTranslation($langcode)->get('field_specialisation')->getValue()[0]['value'];
-			$departs = taxonomy_term_load($depart);
-			$departments = $departs->getTranslation($langcode)->get('name')->getValue()[0]['value'];
-			$in = $node->getTranslation($langcode)->get('field_institute')->getValue()[0]['target_id'];
-			$ins = taxonomy_term_load($in);
-			$institute = $ins->getTranslation($langcode)->get('name')->getValue()[0]['value'];
-			$title = $node->getTranslation($langcode)->get('title')->getValue();
-      $cart_data[$i] = $title[0]['value'];
-			$no_of_doc = $node->getTranslation($langcode)->get('field_enter_number_of_supporting')->getValue();
-      $no_doc[$i] = $no_of_doc[0]['value'];
-      $doc_name = $node->getTranslation($langcode)->get('field_e')->getValue();
-      $name_doc[$i] = $doc_name[0]['value'];
-      $pgm_apply[] = array($institute,$departments,$degree,$specialisation);
-      $data .= '<li><div class="programs"><h4 class="programs-apply">Program : </h4>' . $cart_data[$i] .', <h4 class="programs-apply">Degree : </h4>'
-			. $degree .',<h4 class="programs-apply">Departments : </h4>'
-			. $departments .',<h4 class="programs-apply">Institute : </h4>'
-			. $institute . "</br></div></li>";
-            $i++;
-        }
-    }
+          $cart_cart = $cart['cart'];
+	  $cart_data = array();
+          $i=0;
+       if(is_array($cart_cart) && count($cart_cart) >= 1){
+	      foreach($cart_cart as $nid => $node){
+		    $langcode = $node->language()->getId();
+		    $degree = $node->getTranslation($langcode)->get('field_degree')->getValue()[0]['value'];
+		    $depart = $node->getTranslation($langcode)->get('field_departments')->getValue()[0]['target_id'];
+		    $specialisation = $node->getTranslation($langcode)->get('field_specialisation')->getValue()[0]['value'];
+		    $departs = taxonomy_term_load($depart);
+		    $departments = $departs->getTranslation($langcode)->get('name')->getValue()[0]['value'];
+		    $in = $node->getTranslation($langcode)->get('field_institute')->getValue()[0]['target_id'];
+		    $ins = taxonomy_term_load($in);
+		    $institute = $ins->getTranslation($langcode)->get('name')->getValue()[0]['value'];
+		    $title = $node->getTranslation($langcode)->get('title')->getValue();
+		    $cart_data[$i] = $title[0]['value'];
+		    $no_of_doc = $node->getTranslation($langcode)->get('field_enter_number_of_supporting')->getValue();
+		    $no_doc[$i] = $no_of_doc[0]['value'];
+		    $doc_name = $node->getTranslation($langcode)->get('field_e')->getValue();
+		    $name_doc[$i] = $doc_name[0]['value'];
+		    $pgm_apply[] = array($institute,$departments,$degree,$specialisation);
+		    $data .= '<li><div class="programs"><h4 class="programs-apply">Program : </h4>' . $cart_data[$i] .', <h4 class="programs-apply">Degree : </h4>'
+			      . $degree .',<h4 class="programs-apply">Departments : </h4>'
+			      . $departments .',<h4 class="programs-apply">Institute : </h4>'
+			      . $institute . "</br></div></li>";
+		    $i++;
+	      }
+       }
 	$j=0;
-    $count = 0;
-    $m=0;
+        $count = 0;
+        $m=0;
         for($k=0;$k<count($no_doc);$k++){
             $name[$j] = explode(',',$name_doc[$k]);
             $count = $count + $no_doc[$k];
@@ -299,37 +249,36 @@ $current_path = \Drupal::service('path.current')->getPath();
          }
 		  $cardinality = count($document);
 		   
-		if(!empty($data)){
-        $form['custom_form'] = array(
-             '#type' => 'markup',
-             '#markup' => '<ul>' . $data . '</ul>',
-             '#$pgm_apply' => $pgm_apply,
-			 '#prefix' => '<b>List of programs Applied</b>',
-			 '#weight' => -2,
-        );
-		}
-		$form['custom_title'] = array(
-		  '#weight' => -1,
-		  '#prefix' => '<h3 class="applicant"><b>Applicant Details</b></h3>'  
-		);
-		if($count!=0){
-		$form['document_checkbox'] = array(
-            '#type' => 'checkboxes',
-            '#title' => 'programme supporting specific documents:',
-            '#weight' => 31,
-            '#options' => $sup_doc,
-			'#suffix' => '<h5><b>please select the files which you uploaded the following above</h5></b><br>',
-        );
-		$form['field_supporting_d']['#suffix'] = '<h5><b>Note : Please upload minimum ' . $cardinality . ' files</b></h5>';
+       if(!empty($data)){
+	      $form['custom_form'] = array(
+		   '#type' => 'markup',
+		   '#markup' => '<ul>' . $data . '</ul>',
+		   '#$pgm_apply' => $pgm_apply,
+		   '#prefix' => '<b>List of programs Applied</b>',
+		   '#weight' => -2,
+	      );
+       }
+	      $form['custom_title'] = array(
+		'#weight' => -1,
+		'#prefix' => '<h3 class="applicant"><b>Applicant Details</b></h3>'  
+	      );
+       if($count!=0){
+	      $form['document_checkbox'] = array(
+		     '#type' => 'checkboxes',
+		     '#title' => 'programme supporting specific documents:',
+		     '#weight' => 31,
+		     '#options' => $sup_doc,
+		     '#suffix' => '<h5><b>please select the files which you uploaded the following above</h5></b><br>',
+	      );
+	      $form['field_supporting_d']['#suffix'] = '<h5><b>Note : Please upload minimum ' . $cardinality . ' files</b></h5>';
 		}
         else{
             $form['field_supporting_d']['#type'] = 'hidden';
         }
-        $form['actions']['submit']['#value']="Apply";
-		
-		   $form['#validate'][] = 'form_validate_data1';
-		   //$form['field_supporting_d']['widget']['#file_upload_description']['#cardinality']=$cardinality;
-		   $form['field_supporting_d']['#no_doc'] = $cardinality;
+        $form['actions']['submit']['#value']="Apply";	
+        $form['#validate'][] = 'form_validate_data1';
+        //$form['field_supporting_d']['widget']['#file_upload_description']['#cardinality']=$cardinality;
+        $form['field_supporting_d']['#no_doc'] = $cardinality;
         $form['actions']['submit']['#submit'][]='custom_form_submit';
         unset($form['actions']['set_default']);
       }
@@ -338,21 +287,7 @@ $current_path = \Drupal::service('path.current')->getPath();
 	if (isset($application_id) && isset($programme_id) && ($form['#form_id'] == 'profile_student_application_edit_form')){
 		$form['actions']['submit']['#submit'][] = "application_save_submit";
 	}
-//    if($current_path == '/view-application-lists/11'){
-//  $option = array(
-//	'apply_apply' => 'Apply',
-//	'apply_need_more_info' => 'Need More Info',
-//    'apply_details_appended' => 'Details Appended',
-//	'apply_downloaded_for_department_processing' => 'Downloaded for department Processing',
-//	'apply_application_rejected' => 'Application Rejected',
-//	'apply_offer_given' => 'Offer Given',
-//	'apply_offer_accepted' => 'Offer Accepted',
-//	'apply_offer_rejected' => 'Offer Rejected',
-//  );
-//  $form['header']['node_bulk_form']['action']['#options'] = $option;
-//  $form['header']['node_bulk_form']['actions']['submit']['#submit'][] = 'workflow_form_submit';
-//  
-//}  
+
 if ($form['#form_id'] == 'node_application_edit_form') {
    
    //workflow_url_get_entity(node::load($node_id(2)));
@@ -1004,5 +939,17 @@ function iitinap_local_tasks_alter(&$local_tasks) {
     $local_tasks['entity.node.webform.results']['route_name'] = 'entity.node.webform.results_table';
     $local_tasks['entity.node.webform.results_table']['weight'] = -100;
     unset($local_tasks['entity.node.webform.results_submissions']);
+  }
+}
+/*
+ * hook_form_views_exposed_form_alter for search page plcaeholder.
+ */
+
+function iitinap_form_views_exposed_form_alter(array &$form, FormStateInterface $form_state, $form_id) {    
+ //You need to verify the id
+ switch ($form['#id']) {
+    case 'views-exposed-form-solr-s-page-1':
+      //Setting placeholder
+           $form['aggregated_field']['#attributes']['placeholder'] = t('Search Programs,Departments,Institutes');
   }
 }

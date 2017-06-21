@@ -35,13 +35,17 @@ function form_validate_program($form, &$form_state){
   $roles = $user->getRoles();
   if(in_array('office', $roles)) {
     $term = get_usr_term_id($user->id());
+    //dpm($term);
     if (isset ($term) && !empty ($term))  {
       $node = Node::load($nid);
       $langcode = $node->language()->getId();
       $ins_term_id = $node->getTranslation($langcode)->get('field_institute')->getValue()[0]['target_id'];
+     // dpm($ins_term_id);
+      /*
       if ($term != $ins_term_id)  {
         $form_state->setError($form['field_institute'], "You don't have access to modify this content");
       }
+      */
     }
   }
 }

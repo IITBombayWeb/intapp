@@ -35,20 +35,20 @@ class CartForm extends FormBase {
 	if($user ->id()){
 		$price = $Utility::get_total_price();
     	$total = $Utility::price_format($price->total);
-		//if($total > 0) { 
+		if($price->total > 0) { 
 			$form['#action'] ='https://www.sandbox.paypal.com/cgi-bin/webscr';
-		//}else{
-		//	$form['#action'] ='/user/'.$user->id().'/student_application_';
-		//}
+		}else{
+			$form['#action'] ='/user/'.$user->id().'/student_application_';
+		}
 	}else{
 	    $form['#action'] = '/user/login/?destination=get-profile';
 	}
-
+	  
     // And now the form.
     $form['cartcontents'] = array(
       // Make the returned array come back in tree form.
       '#tree' => TRUE,
-      '#prefix' => '<div class="basiccart-cart basiccart-grid">',
+      '#prefix' => '<div class="basiccart-cart apl-pck">',
       '#suffix' => '</div>',
     );
     // Cart elements.
@@ -68,7 +68,7 @@ class CartForm extends FormBase {
      // paypal.
     $form['business'] = array(
 	  '#type' => 'textfield',
-      '#value' => 'smalathicse@gmail.com',
+      '#value' => 'malathi.s@unimity.com',
       '#name' => "business",
     );
     $form['cmd'] = array(
@@ -101,14 +101,14 @@ class CartForm extends FormBase {
         );
 	    $form['amount_'.$c] = array(
 	      '#type' => 'textfield',
-          '#value' => number_format($amt,2),
+          '#value' => '1',
           '#name' => "amount_".$c,
         );
         $c++;
     }
 	$form['userid'] = array(
 	  '#type' => 'textfield',
-      '#value' => '1',
+      '#value' => ($_GET['cc'] || $_REQUEST['cc'])?$_GET['cc'].'_'.$_REQUEST['cc']:'1',
       '#name' => "userid",
     );
 	$form['cpp_header_image'] = array(
@@ -133,12 +133,12 @@ class CartForm extends FormBase {
     );
 	$form['cancel_return'] = array(
 	  '#type' => 'textfield',
-      '#value' => 'http://iitinapdev.unimity.com/cart',
+      '#value' => 'http://iitinapdev.unimity.com/resume/myform',
       '#name' => "cancel_return",
     );
 	$form['return'] = array(
 	  '#type' => 'textfield',
-      '#value' => 'http://unimity.com',
+      '#value' => 'http://iitinapdev.unimity.com/resume/myform',
       '#name' => "return",
     );
 	// Total price.
@@ -152,7 +152,7 @@ class CartForm extends FormBase {
     $form['buttons'] = array(
       // Make the returned array come back in tree form.
       '#tree' => TRUE,
-      '#prefix' => '<div class="row"><div class="basiccart-call-to-action cell">',
+      '#prefix' => '<div class="pck-btn"><div class="basiccart-call-to-action">',
       '#suffix' => '</div></div>',
     );		
     $form['buttons']['update'] = array(
@@ -208,15 +208,15 @@ class CartForm extends FormBase {
     $total = $Utility::price_format($price->total);
     $config = $Utility::cart_settings();
     // Building the HTML.
-    $html  = '<div class="basiccart-cart-total-price-contents row">';
-    $html .= '  <div class="basiccart-total-price cell">' . t($config->get('total_price_label')) . ': <strong>' . $total . '</strong></div>';
+    $html  = '<div class="basiccart-cart-total-price-contents">';
+    $html .= '  <div class="basiccart-total-price">' . t($config->get('total_price_label')) . ': <strong>' . $total . '</strong></div>';
     $html .= '</div>';
     
     $vat_is_enabled = (int) $config->get('vat_state');
     if (!empty ($vat_is_enabled) && $vat_is_enabled) {
       $vat_value = $Utility::price_format($price->vat);
-      $html .= '<div class="basiccart-cart-total-vat-contents row">';
-      $html .= '  <div class="basiccart-total-vat cell">' . t('Total VAT') . ': <strong>' . $vat_value . '</strong></div>';
+      $html .= '<div class="basiccart-cart-total-vat-contents">';
+      $html .= '  <div class="basiccart-total-vat">' . t('Total VAT') . ': <strong>' . $vat_value . '</strong></div>';
       $html .= '</div>';
     }
     return $html;
@@ -238,12 +238,12 @@ class CartForm extends FormBase {
     $unit_price = Utility::price_format($unit_price);
     
     // Prefix.
-    $prefix  = '<div class="basiccart-cart-contents row">';
-    $prefix .= '  <div class="basiccart-delete-image cell">' . $delete_link . '</div>';
-    $prefix .= '  <div class="basiccart-cart-node-title cell">' . $link->toString() . '<br />';
+    $prefix  = '<div class="basiccart-cart-contents tb-rw">';
+    $prefix .= '  <div class="basiccart-cart-node-title tb-cel">' . $link->toString() . '<br />';
     $prefix .= '  </div>';
-    $prefix .= '  <div class="cell basiccart-cart-unit-price"><strong>' . $unit_price . '</strong></div>';
-    $prefix .= '  <div class="basiccart-cart-quantity cell">';
+    $prefix .= '  <div class="basiccart-cart-unit-price tb-cel"><strong>' . $unit_price . '</strong></div>';
+    $prefix .= '  <div class="basiccart-delete-image tb-cel">' . $delete_link . '</div>';
+    $prefix .= '  <div class="basiccart-cart-quantity tb-cel">';
     $prefix .= '    <div class="cell">';
     }else{
       $prefix = '';
@@ -272,7 +272,7 @@ class CartForm extends FormBase {
     }
     return $prefix;
   }
-  public function convert_INR_to_USD($amount) {
+  public function convert_INR_to_USD($amount,$from,$to) {
 
        $amount = urlencode($amount);
        $from_Currency = urlencode($from);
@@ -284,7 +284,7 @@ class CartForm extends FormBase {
            fclose($handle);
            $allData = explode(',',$result); /* Get all the contents to an array */
            $dollarValue = $allData[1]*$amount;
-           $usd = round($dollarValue , 2);
+           $usd = (float)$dollarValue;
        }else{
            $usd = 0;
        }
