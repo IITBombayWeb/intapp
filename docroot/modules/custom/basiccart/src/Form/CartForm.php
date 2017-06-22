@@ -131,6 +131,7 @@ class CartForm extends FormBase {
       '#value' => '0',
       '#name' => "handling",
     );
+	/*
 	$form['cancel_return'] = array(
 	  '#type' => 'textfield',
       '#value' => 'http://intapp.iitb.ac.in/resume/myform',
@@ -141,6 +142,7 @@ class CartForm extends FormBase {
       '#value' => 'http://intapp.iitb.ac.in/resume/myform',
       '#name' => "return",
     );
+    */
 	// Total price.
     $form['total_price'] = array(
       '#markup' => $this->get_total_price_markup(),
