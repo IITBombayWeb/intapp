@@ -717,6 +717,8 @@ ul li {
   }
   .banner-section .srch-frm {
     position: absolute;
+    top: 0;
+    padding: 0;
   }
   .featured-inn {
     position: absolute;

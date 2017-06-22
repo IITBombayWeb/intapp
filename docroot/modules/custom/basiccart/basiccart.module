@@ -67,7 +67,7 @@ function basiccart_entity_insert(EntityInterface $node) {
 }
 
 /**
-* Implements hook_form_alter().
+* Implements hook_form_alter() iitinap
 */
 
 function basiccart_form_alter(&$form,FormStateInterface $form_state, $form_id) {

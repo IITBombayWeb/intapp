@@ -45,7 +45,7 @@ class CartController extends ControllerBase
       echo $payment_gross = $_GET['amt'];
       echo $currency_code = $_GET['cc'];
       echo $payment_status = $_GET['st'];
-      exit;
+      //exit;
     }
     
     

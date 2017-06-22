@@ -86,6 +86,16 @@ public static function get_total_price() {
   }
 
   $total_price = 0;
+/* for single applicaton wise price
+foreach ($cart['cart'] as $nid => $node) {
+     $langcode = $node->language()->getId();
+
+     $value = $node->getTranslation($langcode)->get('add_to_cart_price')->getValue();
+    if (isset($cart['cart_quantity'][$nid]) && isset($value[0]['value'])) {
+      $total_price += $cart['cart_quantity'][$nid] * $value[0]['value'];
+    }
+*/
+
   foreach ($cart['cart'] as $nid => $node) {	  
 	$node_load = node::load($nid);
 	$iit_name = $node_load->getTranslation('en')->get('field_institute')->getValue()[0]['target_id'];
@@ -397,7 +407,7 @@ public static function price_format($price) {
     $cart_cart = isset($cart['cart']) ? $cart['cart'] : array();
     $output = '';
  if (empty($cart_cart)){
-  //$output .= '<div class="basiccart-grid basic-cart-block empt-cart ">'.t($config->get('empty_cart')).'</div>';
+  $output .= '<div class="basiccart-grid basic-cart-block empt-cart ">'.t($config->get('empty_cart')).'</div>';
   } 
 else {
 
@@ -421,11 +431,10 @@ else {
           $output .= '<div class="basiccart-cart-quantity cell">'.$cart['cart_quantity'][$nid].'</div>';
           $output .= '<div class="basiccart-cart-x cell">x</div>';
          }
-         
-         $output .='<div class="basiccart-cart-unit-price cell">';
-       $output .= isset($price_value[0]) ? '<strong>'.$Utility->price_format($price_value[0]['value']).'</strong>' : $Utility->price_format(0);
-       $output .='</div>
-        </div></div>';
+         //Block cart price removed
+         //$output .='<div class="basiccart-cart-unit-price cell">';
+      // $output .= isset($price_value[0]) ? '<strong>'.$Utility->price_format($price_value[0]['value']).'</strong>' : $Utility->price_format(0);
+       $output .='</div></div>';
     }
 
       // $output .=  '<div class="basiccart-cart-total-price-contents">

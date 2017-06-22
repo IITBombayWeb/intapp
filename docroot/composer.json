@@ -9,7 +9,8 @@
         "drupal/search_api_solr": "^1.0@RC",
         "dompdf/dompdf": "0.7.0-beta3",
         "drupal/simple_fb_connect": "~3.0",
-        "drupal/currency": "^3.1"
+        "drupal/currency": "^3.1",
+        "drupal/social_auth_google": "~1.0"
     },
     "replace": {
         "drupal/core": "~8.3"

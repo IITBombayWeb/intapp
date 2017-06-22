@@ -144,7 +144,7 @@ class CartForm extends FormBase {
 	// Total price.
     $form['total_price'] = array(
       '#markup' => $this->get_total_price_markup(),
-      '#prefix' => '<div class="basiccart-cart basiccart-grid">',
+      '#prefix' => '<div class="basiccart-cart basiccart-grid bascart-totl">',
       '#suffix' => '</div>',
      // '#theme' => 'cart_total_price',
     );
@@ -241,7 +241,7 @@ class CartForm extends FormBase {
     $prefix  = '<div class="basiccart-cart-contents tb-rw">';
     $prefix .= '  <div class="basiccart-cart-node-title tb-cel">' . $link->toString() . '<br />';
     $prefix .= '  </div>';
-    $prefix .= '  <div class="basiccart-cart-unit-price tb-cel"><strong>' . $unit_price . '</strong></div>';
+    //$prefix .= '  <div class="basiccart-cart-unit-price tb-cel"><strong>' . $unit_price . '</strong></div>';
     $prefix .= '  <div class="basiccart-delete-image tb-cel">' . $delete_link . '</div>';
     $prefix .= '  <div class="basiccart-cart-quantity tb-cel">';
     $prefix .= '    <div class="cell">';
