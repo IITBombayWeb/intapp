@@ -38,12 +38,13 @@ class thankyoupage extends FormBase {
 public function buildForm(array $form, FormStateInterface $form_state) {
  
      // pdt tokens
-     /*
+     if(!empty($_GET['tx'])){
    $pp_hostname = "www.sandbox.paypal.com"; // Change to www.sandbox.paypal.com to test against sandbox
 // read the post from PayPal system and add 'cmd'
+
 $req = 'cmd=_notify-synch';
  
-$tx_token = '3KT99121HB8193538';
+$tx_token = $_GET['tx'];
 $auth_token = "GfqCw6b45-T-AZYVEMwCwy0IB4gNCO8QXVvHd0irgnbk4hhB80Xm437MddW";
 $req .= "&tx=$tx_token&at=$auth_token";
  
@@ -66,7 +67,7 @@ dpm('hai');
 dpm($res);
 dpm('hai');
 }
-*/
+     }
      //
   
   
