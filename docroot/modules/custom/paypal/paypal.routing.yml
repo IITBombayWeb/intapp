@@ -1,0 +1,28 @@
+paypal.form:
+ path: '/paypal/myform'
+ defaults:
+   _title: 'Application form'
+   _form: '\Drupal\paypal\Form\ResumeForm'
+ requirements:
+   _permission: 'access content'
+paypal.success:
+ path: '/paypal/success'
+ defaults:
+   _title: 'Success form'
+   _form: '\Drupal\paypal\Form\PaymentSuccess'
+ requirements:
+   _permission: 'access content'
+paypal.thankyou:
+ path: '/paypal/thankyou'
+ defaults:
+   _title: 'Thankyou'
+   _form: '\Drupal\paypal\Form\thankyoupage'
+ requirements:
+   _permission: 'access content'
+paypal.payment_before:
+ path: '/paypal/IitInapdev'
+ defaults:
+   _title: 'Before Data insert'
+   _form: '\Drupal\paypal\Form\payment_before_insert'
+ requirements:
+   _permission: 'access content'

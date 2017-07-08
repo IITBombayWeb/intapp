@@ -1,0 +1,6 @@
+paypal:
+ version: 1.x
+ js: 
+  js/paypal.js: {}
+  dependencies:
+    - core/jquery

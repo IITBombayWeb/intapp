@@ -1,0 +1,103 @@
+<?php
+
+function paypal_schema() {
+  $schema['paypal'] = array(
+    'fields' => array(
+      'id'=>array(
+        'type'=>'serial',
+        'not null' => TRUE,
+      ),
+      'candidate_name'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'candidate_mail'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+       'candidate_number'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+       'candidate_dob'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+       'candidate_gender'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+       'candidate_confirmation'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+       'candidate_copy'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+       
+    ),
+    'primary key' => array('id'),
+  );
+ 
+  $schema['paypal_payment_status'] = array(
+    'fields' => array(
+        'id'=>array(
+        'type'=>'serial',
+        'not null' => TRUE,
+      ),
+      'user_id'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'orders_id'=>array(
+        'type' => 'varchar',
+        'length' => 240,
+        'not null' => TRUE,
+      ),
+      'before_amount'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'after_amount'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+       'currency_code'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+       'custom_id'=>array(
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+      ),
+       'transaction_id'=>array(
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => TRUE,
+      ),
+       'payment_status'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+       
+    ),
+    'primary key' => array('id'),
+  );
+ 
+  return $schema;
+}
+

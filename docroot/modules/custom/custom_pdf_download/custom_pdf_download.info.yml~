@@ -1,7 +1,0 @@
-name: custom_pdf_download
-type: module
-description: Download PDF Files .
-core: 8.x
-package: Custom
-dependencies:
-  - entity_print

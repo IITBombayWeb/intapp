@@ -73,7 +73,10 @@ basiccart.settings:
    label: 'Language'
   added_to_cart_message:
    type: string
-   label: 'Added to cart message'          
+   label: 'Added to cart message'
+  naga:
+   type: string
+   label: 'Language'
         
     
     

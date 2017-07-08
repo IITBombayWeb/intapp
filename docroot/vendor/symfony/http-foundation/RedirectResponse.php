@@ -35,6 +35,9 @@ class RedirectResponse extends Response
     public function __construct($url, $status = 302, $headers = array())
     {
         parent::__construct('', $status, $headers);
+         if (empty($url)) {
+  	    $url = '/';
+	}
 
         $this->setTargetUrl($url);
 

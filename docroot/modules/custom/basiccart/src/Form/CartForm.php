@@ -27,23 +27,11 @@ class CartForm extends FormBase {
     $Utility = new Utility();  
     $cart = $Utility::get_cart();
     $config = $Utility::cart_settings();  
-
     $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-	
     $user = \Drupal::currentUser();
 	
-	if($user ->id()){
-		$price = $Utility::get_total_price();
-    	$total = $Utility::price_format($price->total);
-		if($price->total > 0) { 
-			$form['#action'] ='https://www.sandbox.paypal.com/cgi-bin/webscr';
-		}else{
-			$form['#action'] ='/user/'.$user->id().'/student_application_';
-		}
-	}else{
-	    $form['#action'] = '/user/login/?destination=get-profile';
-	}
-	  
+    $form['#action'] ='/user/'.$user->id().'/student_application_';
+ 
     // And now the form.
     $form['cartcontents'] = array(
       // Make the returned array come back in tree form.
@@ -65,84 +53,7 @@ class CartForm extends FormBase {
         //'#theme' => 'basiccart_quantity',
       );
     }
-     // paypal.
-    $form['business'] = array(
-	  '#type' => 'textfield',
-      '#value' => 'malathi.s@unimity.com',
-      '#name' => "business",
-    );
-    $form['cmd'] = array(
-	  '#type' => 'textfield',
-      '#value' => '_cart',
-      '#name' => "cmd",
-    );
-    $form['upload'] = array(
-	  '#type' => 'textfield',
-      '#value' => '1',
-      '#name' => "upload",
-    );  
-	  $c = 1;
-    foreach ($cart['cart_quantity'] as $nid => $quantity) {
-    
-        $list = $this->get_cart_prefix_suffix($nid,$langcode);
-        $product = explode("_",$list);
-        
-        $amt = $this->convert_INR_to_USD(str_ireplace(" ","",str_ireplace(",",".",str_ireplace("INR","",$product[1]))),"INR","USD");
-		
-		$form['item_name_'.$c] = array(
-	      '#type' => 'textfield',
-          '#value' => html_entity_decode(strip_tags($product[0])),
-          '#name' => "item_name_".$c,
-        );
-	    $form['item_number_'.$c] = array(
-	      '#type' => 'textfield',
-          '#value' => $c,
-          '#name' => "item_number_".$c,
-        );
-	    $form['amount_'.$c] = array(
-	      '#type' => 'textfield',
-          '#value' => '1',
-          '#name' => "amount_".$c,
-        );
-        $c++;
-    }
-	$form['userid'] = array(
-	  '#type' => 'textfield',
-      '#value' => ($_GET['cc'] || $_REQUEST['cc'])?$_GET['cc'].'_'.$_REQUEST['cc']:'1',
-      '#name' => "userid",
-    );
-	$form['cpp_header_image'] = array(
-	  '#type' => 'textfield',
-      '#value' => 'http://www.phpgang.com/wp-content/uploads/gang.jpg',
-      '#name' => "cpp_header_image",
-    );
-    $form['no_shipping'] = array(
-	  '#type' => 'textfield',
-      '#value' => '1',
-      '#name' => "no_shipping",
-    );
-	$form['currency_code'] = array(
-	  '#type' => 'textfield',
-      '#value' => 'USD',
-      '#name' => "currency_code",
-    );
-	$form['handling'] = array(
-	  '#type' => 'textfield',
-      '#value' => '0',
-      '#name' => "handling",
-    );
-	/*
-	$form['cancel_return'] = array(
-	  '#type' => 'textfield',
-      '#value' => 'http://intapp.iitb.ac.in/resume/myform',
-      '#name' => "cancel_return",
-    );
-	$form['return'] = array(
-	  '#type' => 'textfield',
-      '#value' => 'http://intapp.iitb.ac.in/resume/myform',
-      '#name' => "return",
-    );
-    */
+  
 	// Total price.
     $form['total_price'] = array(
       '#markup' => $this->get_total_price_markup(),
@@ -150,6 +61,7 @@ class CartForm extends FormBase {
       '#suffix' => '</div>',
      // '#theme' => 'cart_total_price',
     );
+    
     // Buttons.
     $form['buttons'] = array(
       // Make the returned array come back in tree form.
@@ -169,9 +81,7 @@ class CartForm extends FormBase {
           '#name' => "checkout",
        );
     }
-
     return $form;
-
   }
 
   /**

@@ -431,9 +431,9 @@ else {
           $output .= '<div class="basiccart-cart-quantity cell">'.$cart['cart_quantity'][$nid].'</div>';
           $output .= '<div class="basiccart-cart-x cell">x</div>';
          }
-         //Block cart price removed
-         //$output .='<div class="basiccart-cart-unit-price cell">';
-      // $output .= isset($price_value[0]) ? '<strong>'.$Utility->price_format($price_value[0]['value']).'</strong>' : $Utility->price_format(0);
+      // Block cart amount removed
+        // $output .='<div class="basiccart-cart-unit-price cell">';
+       //$output .= isset($price_value[0]) ? '<strong>'.$Utility->price_format($price_value[0]['value']).'</strong>' : $Utility->price_format(0);
        $output .='</div></div>';
     }
 
