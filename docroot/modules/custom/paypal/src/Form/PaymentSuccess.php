@@ -262,7 +262,7 @@ class PaymentSuccess extends FormBase {
     $paypal_email = 'malathi.s@unimity.com';
     $return_url = 'http://dev-intapp.iitb.ac.in/paypal/thankyou';
     $cancel_url = 'http://dev-intapp.iitb.ac.in/paypal/success';
-    $notify_url = 'http://dev-intapp.iitb.ac.in/paypal/thankyou';
+    $notify_url = 'http://dev-intapp.iitb.ac.in/paypal/ipn_notification';
     $cart_mthd ='_cart';
     $upload = 1;
     $no_note = 0;

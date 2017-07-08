@@ -63,9 +63,8 @@ curl_close($ch);
 if(!$res){
     //HTTP ERROR
 }else{
-dpm('hai');
+
 dpm($res);
-dpm('hai');
 }
      }
      //

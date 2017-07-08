@@ -26,3 +26,10 @@ paypal.payment_before:
    _form: '\Drupal\paypal\Form\payment_before_insert'
  requirements:
    _permission: 'access content'
+paypal.process:
+ path: '/paypal/ipn_notification'
+ defaults:
+   _title: 'IPN Notification'
+   _form: '\Drupal\paypal\Form\ProcessPage'
+ requirements:
+   _permission: 'access content'
