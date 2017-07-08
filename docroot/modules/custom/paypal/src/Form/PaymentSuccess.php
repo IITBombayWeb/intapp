@@ -260,9 +260,9 @@ class PaymentSuccess extends FormBase {
   
    if ((isset($application_id['cart']) && is_array($application_id['cart']))) {
     $paypal_email = 'malathi.s@unimity.com';
-    $return_url = 'http://iitinapdev.unimity.com/paypal/thankyou';
-    $cancel_url = 'http://iitinapdev.unimity.com/paypal/success';
-    $notify_url = 'http://iitinapdev.unimity.com/paypal/thankyou';
+    $return_url = 'http://dev-intapp.iitb.ac.in/paypal/thankyou';
+    $cancel_url = 'http://dev-intapp.iitb.ac.in/paypal/success';
+    $notify_url = 'http://dev-intapp.iitb.ac.in/paypal/thankyou';
     $cart_mthd ='_cart';
     $upload = 1;
     $no_note = 0;
