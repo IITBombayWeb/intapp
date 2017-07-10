@@ -20,41 +20,19 @@ class ProcessPage extends FormBase {
  * {@inheritdoc}
  */
 public function buildForm(array $form, FormStateInterface $form_state) {
-
-  $url = 'https://www.paypal.com/cgi-bin/webscr';
-$postdata = '';
-foreach($_POST as $i => $v) {
-	$postdata .= $i.'='.urlencode($v).'&';
-}
-$postdata .= 'cmd=_notify-validate';
-
-$web = parse_url($url);
-if ($web['scheme'] == 'https') { 
-	$web['port'] = 443;  
-	$ssl = 'ssl://'; 
-} else { 
-	$web['port'] = 80;
-	$ssl = ''; 
-}
-$fp = @fsockopen($ssl.$web['host'], $web['port'], $errnum, $errstr, 30);
-
-if (!$fp) { 
-	echo $errnum.': '.$errstr;
-} else {
-	fputs($fp, "POST ".$web['path']." HTTP/1.1\r\n");
-	fputs($fp, "Host: ".$web['host']."\r\n");
-	fputs($fp, "Content-type: application/x-www-form-urlencoded\r\n");
-	fputs($fp, "Content-length: ".strlen($postdata)."\r\n");
-	fputs($fp, "Connection: close\r\n\r\n");
-	fputs($fp, $postdata . "\r\n\r\n");
-
-	while(!feof($fp)) { 
-		$info[] = @fgets($fp, 1024); 
-	}
-	fclose($fp);
-	$info = implode(',', $info);
-	if (eregi('VERIFIED', $info)) { 
-		 \Drupal::database()->insert('paypal_payment_status')
+   
+   module_load_include('inc', 'paypal');
+    $ipn = new PaypalIPN();
+  // Use the sandbox endpoint during testing.
+  $ipn->useSandbox();
+  $verified = $ipn->verifyIPN();
+  if ($verified) {
+    /*
+     * Process IPN
+     * A list of variables is available here:
+     * https://developer.paypal.com/webapps/developer/docs/classic/ipn/integration-guide/IPNandPDTVariables/
+     */
+     \Drupal::database()->insert('paypal_payment_status')
 					->fields([
 						'user_id',
 						'orders_id',
@@ -77,13 +55,17 @@ if (!$fp) {
 					    
 					))
 					->execute();
-	} else {
-		// invalid, log error or something
-	}
-    }
- 
-    return $form;
+       
   }
+    // Reply with an empty 200 response to indicate to paypal the IPN was received correctly.
+  header("HTTP/1.1 200 OK");
+
+
+return $form;
+  
+}
+
+
 
   /**
    * {@inheritdoc}
