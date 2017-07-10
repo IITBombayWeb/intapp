@@ -23,6 +23,12 @@ class ProcessPage extends FormBase {
  * {@inheritdoc}
  */
 public function buildForm(array $form, FormStateInterface $form_state) {
+  
+   \Drupal::logger('paypal')->notice('@type: deleted %title.',
+        array(
+            '@type' => 'paypal',
+            '%title' => 'test',
+        ));
    
       $ipn = new PaypalIPN();
      // Use the sandbox endpoint during testing.
