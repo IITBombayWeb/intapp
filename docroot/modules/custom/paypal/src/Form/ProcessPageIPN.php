@@ -22,15 +22,18 @@ class ProcessPageIPN extends FormBase {
  */
 public function buildForm(array $form, FormStateInterface $form_state) {
   
-   \Drupal::logger('paypal')->notice('@type: deleted %title.',
-        array(
-            '@type' => 'paypal',
-            '%title' => 'test',
-        ));
+  
    
      $ipn = new PaypalIPN();
      // Use the sandbox endpoint during testing.
-     $ipn->useSandbox();
+     $a = $ipn->useSandbox();
+     
+     
+      \Drupal::logger('paypal')->notice('@type: deleted %title.',
+        array(
+            '@type' => $a,
+            '%title' => 'test',
+        ));
      $verified = $ipn->verifyIPN();
      if ($verified) {
     /*
