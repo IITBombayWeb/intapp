@@ -3,10 +3,13 @@
  * @file
  * Contains \Drupal\paypal\Form\ResumeForm.
  */
-namespace Drupal\paypal\Form;
+namespace Drupal\paypal;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+
+
+use Drupal\paypal\PaypalIPN;
 
 class ProcessPage extends FormBase {
   /**
@@ -21,12 +24,11 @@ class ProcessPage extends FormBase {
  */
 public function buildForm(array $form, FormStateInterface $form_state) {
    
-   module_load_include('inc', 'paypal');
-    $ipn = new PaypalIPN();
-  // Use the sandbox endpoint during testing.
-  $ipn->useSandbox();
-  $verified = $ipn->verifyIPN();
-  if ($verified) {
+      $ipn = new PaypalIPN();
+     // Use the sandbox endpoint during testing.
+     $ipn->useSandbox();
+     $verified = $ipn->verifyIPN();
+     if ($verified) {
     /*
      * Process IPN
      * A list of variables is available here:

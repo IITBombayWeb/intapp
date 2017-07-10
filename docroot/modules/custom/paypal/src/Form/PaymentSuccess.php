@@ -249,7 +249,7 @@ class PaymentSuccess extends FormBase {
   
   //paypal Custom value
   
-  // module_load_include('inc', 'basiccart');
+	      module_load_include('inc', 'basiccart');
 	      $application_id = basiccart_get_cart();
 	      $applicationArray = $application_id['cart'];
 		foreach ($applicationArray as $key => $value) {
@@ -262,8 +262,8 @@ class PaymentSuccess extends FormBase {
     $paypal_email = 'malathi.s@unimity.com';
     $return_url = 'http://dev-intapp.iitb.ac.in/paypal/thankyou';
     $cancel_url = 'http://dev-intapp.iitb.ac.in/paypal/success';
-    //$notify_url = 'http://dev-intapp.iitb.ac.in/paypal/ipn_notification';
-    $notify_url = 'http://dev-intapp.iitb.ac.in/paypal/success';
+    $notify_url = 'http://dev-intapp.iitb.ac.in/paypal/ipn_notification';
+   // $notify_url = 'http://dev-intapp.iitb.ac.in/paypal/success';
     $cart_mthd ='_cart';
     $upload = 1;
     $no_note = 0;
@@ -293,158 +293,161 @@ class PaymentSuccess extends FormBase {
 		     $list_of_iits[]=$iit_name;
 	      }
               $filtr_iits = array_unique($list_of_iits);
-if (!isset($_POST["txn_id"]) && !isset($_POST["txn_type"])){
-	    $querystring = '';
-	    // Firstly Append paypal account to querystring
-	    $querystring .= "?business=".urlencode($paypal_email)."&";
-	    $c = 1;
-	    foreach($filtr_iits as $key => $tax_term){
-		   $tax_term_load = taxonomy_term_load($tax_term);
-		   $institute_price = $tax_term_load->getTranslation('en')->get('field_iit_app_price')->getValue()[0]['value'];
-		   $iit = $tax_term_load->getTranslation('en')->get('name')->getValue()[0]['value'];
-		      $institute_price1 = urlencode(stripslashes($institute_price));
-		      $iit1 = urlencode(stripslashes($iit));
-		      $querystring .= "item_name_".$c."=$iit1&";
-		      $querystring .= "amount_".$c."=$institute_price1&";
-		      $c++;
-	    }
-	    $querystring .= "cmd=".urlencode($cart_mthd)."&";
-	    $querystring .= "upload=".urlencode($upload)."&";
-	    $querystring .= "no_shipping=".urlencode($no_shipping)."&";
-	    $querystring .= "currency_code=".urlencode($currency_code)."&";
-	    $querystring .= "handling=".urlencode($handling)."&";
-	    $querystring .= "custom=".urlencode($unique_id)."&";
-	    // Append paypal return addresses
-	    $querystring .= "return=".urlencode(stripslashes($return_url))."&";
-	    $querystring .= "cancel_return=".urlencode(stripslashes($cancel_url))."&";
-	    $querystring .= "notify_url=".urlencode($notify_url);
-	    
-	     \Drupal::database()->insert('paypal_payment_status')
-					->fields([
-						'user_id',
-						'orders_id',
-						'before_amount',
-						'after_amount',
-						'currency_code',
-						'custom_id',
-						'transaction_id',
-						'payment_status',
-					])
-					->values(array(
-						$user-> id(),
-						$commaList,
-						$total.".00",
-						0,
-						$currency_code,
-						$unique_id,
-						'processing',
-						'pending',
-					    
-					))
-					->execute();
-
-	    header('location:https://www.sandbox.paypal.com/cgi-bin/webscr'.$querystring);	
-	    exit;
-     }else{
+         //if (!isset($_POST["txn_id"]) && !isset($_POST["txn_type"])){
+		    $querystring = '';
+		    // Firstly Append paypal account to querystring
+		    $querystring .= "?business=".urlencode($paypal_email)."&";
+		    $c = 1;
+		    foreach($filtr_iits as $key => $tax_term){
+			   $tax_term_load = taxonomy_term_load($tax_term);
+			   $institute_price = $tax_term_load->getTranslation('en')->get('field_iit_app_price')->getValue()[0]['value'];
+			   $iit = $tax_term_load->getTranslation('en')->get('name')->getValue()[0]['value'];
+			      $institute_price1 = urlencode(stripslashes($institute_price));
+			      $iit1 = urlencode(stripslashes($iit));
+			      $querystring .= "item_name_".$c."=$iit1&";
+			      $querystring .= "amount_".$c."=$institute_price1&";
+			      $c++;
+		    }
+		    $querystring .= "cmd=".urlencode($cart_mthd)."&";
+		    $querystring .= "upload=".urlencode($upload)."&";
+		    $querystring .= "no_shipping=".urlencode($no_shipping)."&";
+		    $querystring .= "currency_code=".urlencode($currency_code)."&";
+		    $querystring .= "handling=".urlencode($handling)."&";
+		    $querystring .= "custom=".urlencode($unique_id)."&";
+		    // Append paypal return addresses
+		    $querystring .= "return=".urlencode(stripslashes($return_url))."&";
+		    $querystring .= "cancel_return=".urlencode(stripslashes($cancel_url))."&";
+		    $querystring .= "notify_url=".urlencode($notify_url);
+		    
+		     \Drupal::database()->insert('paypal_payment_status')
+						->fields([
+							'user_id',
+							'orders_id',
+							'before_amount',
+							'after_amount',
+							'currency_code',
+							'custom_id',
+							'transaction_id',
+							'payment_status',
+						])
+						->values(array(
+							$user-> id(),
+							$commaList,
+							$total.".00",
+							0,
+							$currency_code,
+							$unique_id,
+							'processing',
+							'pending',
+						    
+						))
+						->execute();
+	
+		    header('location:https://www.sandbox.paypal.com/cgi-bin/webscr'.$querystring);	
+		    exit;
+	   /* }else{
       
-     {
-      
-	// Response from Paypal
-
-	// read the post from PayPal system and add 'cmd'
-	$req = 'cmd=_notify-validate';
-	foreach ($_POST as $key => $value) {
-		$value = urlencode(stripslashes($value));
-		$value = preg_replace('/(.*[^%^0^D])(%0A)(.*)/i','${1}%0D%0A${3}',$value);// IPN fix
-		$req .= "&$key=$value";
-	}
-	
-	// assign posted variables to local variables
-	$data['item_name']			= $_POST['item_name'];
-	$data['item_number'] 		= $_POST['item_number'];
-	$data['payment_status'] 	= $_POST['payment_status'];
-	$data['payment_amount'] 	= $_POST['mc_gross'];
-	$data['payment_currency']	= $_POST['mc_currency'];
-	$data['txn_id']			= $_POST['txn_id'];
-	$data['receiver_email'] 	= $_POST['receiver_email'];
-	$data['payer_email'] 		= $_POST['payer_email'];
-	$data['custom'] 		= $_POST['custom'];
-		
-	// post back to PayPal system to validate
-	$header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
-	$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-	$header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
-	
-	$fp = fsockopen ('ssl://www.sandbox.paypal.com', 443, $errno, $errstr, 30);
-	
-	if (!$fp) {
-		// HTTP ERROR
-		
-	} else {
-		fputs($fp, $header . $req);
-		while (!feof($fp)) {
-			$res = fgets ($fp, 1024);
-			if (strcmp($res, "VERIFIED") == 0) {
-				
-				 \Drupal::database()->insert('paypal_payment_status')
-					->fields([
-						'user_id',
-						'orders_id',
-						'before_amount',
-						'after_amount',
-						'currency_code',
-						'custom_id',
-						'transaction_id',
-						'payment_status',
-					])
-					->values(array(
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-					    
-					))
-					->execute();
-				/*
-				$valid_txnid = check_txnid($data['txn_id']);
-				$valid_price = check_price($data['payment_amount'], $data['item_number']);
-				// PAYMENT VALIDATED & VERIFIED!
-				if ($valid_txnid && $valid_price) {
-					
-					$orderid = updatePayments($data);
-					
-					if ($orderid) {
-						// Payment has been made & successfully inserted into the Database
-					} else {
-						// Error inserting into DB
-						// E-mail admin or alert user
-						// mail('user@domain.com', 'PAYPAL POST - INSERT INTO DB WENT WRONG', print_r($data, true));
-					}
-				} else {
-					// Payment made but data has been changed
-					// E-mail admin or alert user
-				}
-				
-				*/
-			
-			} else if (strcmp ($res, "INVALID") == 0) {
-			
-				// PAYMENT INVALID & INVESTIGATE MANUALY!
-				// E-mail admin or alert user
-				
-				// Used for debugging
-				//@mail("user@domain.com", "PAYPAL DEBUGGING", "Invalid Response<br />data = <pre>".print_r($post, true)."</pre>");
-			}
+		//  {
+		   
+		     // Response from Paypal
+	     
+		     // read the post from PayPal system and add 'cmd'
+		     /
+		     $req = 'cmd=_notify-validate';
+		     foreach ($_POST as $key => $value) {
+			     $value = urlencode(stripslashes($value));
+			     $value = preg_replace('/(.*[^%^0^D])(%0A)(.*)/i','${1}%0D%0A${3}',$value);// IPN fix
+			     $req .= "&$key=$value";
+		     }
+		     
+		     // assign posted variables to local variables
+		     $data['item_name']		= $_POST['item_name'];
+		     $data['item_number'] 	= $_POST['item_number'];
+		     $data['payment_status'] 	= $_POST['payment_status'];
+		     $data['payment_amount'] 	= $_POST['mc_gross'];
+		     $data['payment_currency']	= $_POST['mc_currency'];
+		     $data['txn_id']		= $_POST['txn_id'];
+		     $data['receiver_email'] 	= $_POST['receiver_email'];
+		     $data['payer_email'] 	= $_POST['payer_email'];
+		     $data['custom'] 		= $_POST['custom'];
+			     
+		     // post back to PayPal system to validate
+		     $header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
+		     $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
+		     $header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
+		     
+		     $fp = fsockopen ('ssl://www.sandbox.paypal.com', 443, $errno, $errstr, 30);
+		     
+		     if (!$fp) {
+			     // HTTP ERROR
+			     
+		     } else {
+			     fputs($fp, $header . $req);
+			     while (!feof($fp)) {
+				     $res = fgets ($fp, 1024);
+				     if (strcmp($res, "VERIFIED") == 0) {
+					     
+					      \Drupal::database()->insert('paypal_payment_status')
+						     ->fields([
+							     'user_id',
+							     'orders_id',
+							     'before_amount',
+							     'after_amount',
+							     'currency_code',
+							     'custom_id',
+							     'transaction_id',
+							     'payment_status',
+						     ])
+						     ->values(array(
+							     'test',
+							     'test',
+							     'test',
+							     'test',
+							     'test',
+							     'test',
+							     'test',
+							     'test',
+							 
+						     ))
+						     ->execute();
+					     /*
+					     $valid_txnid = check_txnid($data['txn_id']);
+					     $valid_price = check_price($data['payment_amount'], $data['item_number']);
+					     // PAYMENT VALIDATED & VERIFIED!
+					     if ($valid_txnid && $valid_price) {
+						     
+						     $orderid = updatePayments($data);
+						     
+						     if ($orderid) {
+							     // Payment has been made & successfully inserted into the Database
+						     } else {
+							     // Error inserting into DB
+							     // E-mail admin or alert user
+							     // mail('user@domain.com', 'PAYPAL POST - INSERT INTO DB WENT WRONG', print_r($data, true));
+						     }
+					     } else {
+						     // Payment made but data has been changed
+						     // E-mail admin or alert user
+					     }
+					     
+					     */
+				     /*
+				     } else if (strcmp ($res, "INVALID") == 0) {
+				     
+					     // PAYMENT INVALID & INVESTIGATE MANUALY!
+					     // E-mail admin or alert user
+					     
+					     // Used for debugging
+					     //@mail("user@domain.com", "PAYPAL DEBUGGING", "Invalid Response<br />data = <pre>".print_r($post, true)."</pre>");
+				     }
+			     }
+		     fclose ($fp);
+		     }
+		   }
+		   
+		   */
+		 // }
 		}
-	fclose ($fp);
-	}
-      }
-     }
-   }
   }
     
 function application_save_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
