@@ -30,6 +30,6 @@ paypal.process:
  path: '/paypal/ipn_notification'
  defaults:
    _title: 'IPN Notification'
-   _form: '\Drupal\paypal\Form\ProcessPage'
+   _form: '\Drupal\paypal\Form\ProcessPageIPN'
  requirements:
    _permission: 'access content'
