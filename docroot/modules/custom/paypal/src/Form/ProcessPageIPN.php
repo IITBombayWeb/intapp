@@ -28,7 +28,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
             '%title' => 'test',
         ));
    
-      $ipn = new PaypalIPN();
+     $ipn = new PaypalIPN();
      // Use the sandbox endpoint during testing.
      $ipn->useSandbox();
      $verified = $ipn->verifyIPN();
