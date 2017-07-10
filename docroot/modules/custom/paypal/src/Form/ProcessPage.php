@@ -3,13 +3,13 @@
  * @file
  * Contains \Drupal\paypal\Form\ResumeForm.
  */
-namespace Drupal\paypal;
+//namespace Drupal\paypal;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 
-use Drupal\paypal\PaypalIPN;
+//use Drupal\paypal\PaypalIPN;
 
 class ProcessPage extends FormBase {
   /**
