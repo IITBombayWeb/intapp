@@ -42,6 +42,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
  
  
   if(isset($_GET['tx']) && !empty($_GET['tx'])) {
+   /*
     function pdt_token($tx){
       $pp_hostname = "www.sandbox.paypal.com"; // Change to www.sandbox.paypal.com to test against sandbox
       // read the post from PayPal system and add 'cmd'
@@ -76,9 +77,14 @@ public function buildForm(array $form, FormStateInterface $form_state) {
 	}
 	return $status;
     }
-     $tx = $_GET['tx'];
-     $tx_status = pdt_token($tx);
+    */
+    // $tx = $_GET['tx'];
+    // $tx_status = pdt_token($tx);
   }
+  $tx = $_GET['tx'];
+  module_load_include('inc', 'paypal');
+  $tx_status = pdt_token($tx);
+  dpm($tx_status);
   //dpm($tx_status);
   module_load_include('inc', 'basiccart');
   $application_id = basiccart_get_cart();
@@ -90,7 +96,16 @@ public function buildForm(array $form, FormStateInterface $form_state) {
     
 
 
-    if(isset($_GET['tx']) && !empty($_GET['tx'])) {
+    if(isset($_GET['tx']) && !empty($_GET['tx']) && isset($_GET['cm']) && !empty($_GET['cm'])  ) {
+        /*
+	 $query = \Drupal::database()->select('paypal_payment_status', 'pay_st');
+	 $query->fields('pay_st', ['user_id','before_amount', 'after_amount', 'custom_id','transaction_id','payment_status']);
+	 $query->condition('custom_id', $_GET['cm']);
+	 $result = $query->execute()->fetchAssoc();
+     if( ($result['custom_id'] == $_GET['cm']) && ($result['payment_status'] == 'pending') ){   
+						 
+      */
+           
 	   // get response
 	 if($tx_status == 'SUCCESS') {
 	      //status Update
@@ -139,7 +154,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
 	       //drupal_set_message("Successfully applied to " . count($applicationArray) . " programmes.");
 	       drupal_set_message("Thank you! 
                     Your transaction is successful.Successfully applied to " . count($applicationArray) . " programmes. Please note your transaction ID : ".$_GET['tx']." for future reference");
-
 	    } else if ($tx_status == 'FAIL'){
 		drupal_set_message("Please Try again Later  ");
 	      
@@ -209,7 +223,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
 						}
 					      */
        } else {
-	     drupal_set_message("Please Try again Later  ");
+	     drupal_set_message("Please Try again Later ");
 	}
     return $form;
   }
