@@ -36,9 +36,9 @@ class thankyoupage extends FormBase {
  * {@inheritdoc}
  */
 public function buildForm(array $form, FormStateInterface $form_state) {
- 	 // pdt tokens   			 
- if(!empty($_GET['tx'])){
-   
+  // pdt tokens   			 
+ //if(!empty($_GET['tx'])){
+  if(isset($_GET['tx']) && !empty($_GET['tx'])) {
     function pdt_token($tx){
       $pp_hostname = "www.sandbox.paypal.com"; // Change to www.sandbox.paypal.com to test against sandbox
       // read the post from PayPal system and add 'cmd'
@@ -74,13 +74,10 @@ public function buildForm(array $form, FormStateInterface $form_state) {
 	return $status;
     }
      $tx = $_GET['tx'];
-    $a = pdt_token($tx);
-    dpm($a);
+     $tx_status = pdt_token($tx);
   }
+  dpm($tx_status);
           // str_replace($a,'Lorem',$a);
-
-			
-  
           module_load_include('inc', 'basiccart');
           $application_id = basiccart_get_cart();
           //dpm($application_id['cart']);
@@ -89,10 +86,11 @@ public function buildForm(array $form, FormStateInterface $form_state) {
               $iit[] =$key;
               }
               $commaList = implode(',', $iit);
-         //sunday
-/* 
+        
+/*
          if(isset($_GET['tx']) && !empty($_GET['tx'])) {
 		// get response
+		
               if(isset($_GET['cm']) && !empty($_GET['tx'])){
 
                }
@@ -104,7 +102,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
             drupal_set_message("Invalid Transaction Please Contact Admin for any assistance.");
 	 }
 */
-        //sunday
+      
 
           if($_GET['tx'] && $_GET['amt'] && $_GET['st'] && $_GET['cm']) {
 		  $query = \Drupal::database()->select('paypal_payment_status', 'pay_st');
@@ -156,9 +154,9 @@ public function buildForm(array $form, FormStateInterface $form_state) {
 	      $node->set("field_application_path",$filename);
 	      $node->save();
           }
-           basiccart_empty_cart();
-           drupal_set_message("Successfully applied to " . count($applicationArray) . " programmes.");
-        } else {
+             basiccart_empty_cart();
+             drupal_set_message("Successfully applied to " . count($applicationArray) . " programmes.");
+          } else {
             drupal_set_message("Please Try again Later  ");
           }
 	  
