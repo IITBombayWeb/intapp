@@ -86,8 +86,7 @@ class ConformPayment extends FormBase {
 	      
 	      
 	      $form['welcome'] = array(
-		     
-		     '#markup' => '<h4><b>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book </b></h4>',
+		     '#markup' => '<h3><b> Do you want to procced payment</b></h3>',
 		     '#prefix' => '<div class="basiccart-cart basiccart-grid bascart-totl">',
 		     '#suffix' => '</div>',
 		     // '#theme' => 'cart_total_price',
