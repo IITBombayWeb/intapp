@@ -1,7 +1,6 @@
 paypal.conform:
  path: '/paypal/conform'
  defaults:
-   _title: 'Payment conformation'
    _form: '\Drupal\paypal\Form\ConformPayment'
  requirements:
    _permission: 'access content'

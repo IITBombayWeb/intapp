@@ -86,7 +86,7 @@ class ConformPayment extends FormBase {
 	      
 	      
 	      $form['welcome'] = array(
-		     '#markup' => '<h3><b> Do you want to procced payment</b></h3>',
+		     '#markup' => '<h3><b> Do you want to procced payment?</b></h3>',
 		     '#prefix' => '<div class="basiccart-cart basiccart-grid bascart-totl">',
 		     '#suffix' => '</div>',
 		     // '#theme' => 'cart_total_price',
