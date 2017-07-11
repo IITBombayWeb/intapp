@@ -38,6 +38,9 @@ class thankyoupage extends FormBase {
 public function buildForm(array $form, FormStateInterface $form_state) {
   // pdt tokens   			 
  //if(!empty($_GET['tx'])){
+ if(isset($_GET['tx']) && !empty($_GET['tx']) && isset($_GET['cc']) && !empty($_GET['cc']) && isset($_GET['amt']) && !empty($_GET['amt']) && isset($_GET['cm']) && !empty($_GET['cm']) && isset($_GET['tx']) && !empty($_GET['tx']) ) {
+ 
+ 
   if(isset($_GET['tx']) && !empty($_GET['tx'])) {
     function pdt_token($tx){
       $pp_hostname = "www.sandbox.paypal.com"; // Change to www.sandbox.paypal.com to test against sandbox
@@ -143,66 +146,68 @@ public function buildForm(array $form, FormStateInterface $form_state) {
 		drupal_set_message("Invalid Transaction Please Contact Admin for any assistance.");
 	    }
 
-      
-        /*   //////////////////
-          if($_GET['tx'] && $_GET['amt'] && $_GET['st'] && $_GET['cm']) {
-		  $query = \Drupal::database()->select('paypal_payment_status', 'pay_st');
-                  $query->fields('pay_st', ['before_amount', 'after_amount', 'custom_id','transaction_id','payment_status']);
-                  $query->condition('custom_id', $_GET['cm']);
-                  $result = $query->execute()->fetchAssoc();
-                  
-          if( ($result['custom_id'] == $_GET['cm']) && ($result['payment_status'] == 'pending') &&  ($result['transaction_id'] == 0) ){   
-            
-                 $query = \Drupal::database()->update('paypal_payment_status');
-                  $query->fields([ 
-                    'after_amount' => $_GET['amt'],
-                    'transaction_id'=> $_GET['tx'],
-                    'payment_status'=> $_GET['st'],
-                  ]);
-                  $query->condition('custom_id', $_GET['cm']);
-                  $query->execute();
-                  
-                 
-                 // dpm($result);
-            //if($result['custom_id'] == $_GET['cm'] && )
-              $langcode = 'en';      
-              $applicationArray = $application_id['cart'];
-              foreach ($applicationArray as $key => $value) {
-              $username = \Drupal::currentUser()->getUsername();
-	      $account = \Drupal::currentUser()->id();
-              $institute_id = $value->getTranslation($langcode)->get('field_institute')->getValue()[0]['target_id'];
-	      // Get the Taxonomy details
-	      $institute_tid = taxonomy_term_load($institute_id);
-	      $institute_code = $institute_tid->getTranslation($langcode)->get('field_short_code')->getValue()[0]['value'];
-	      $created = date("Y").'-'.date("m");
-	      $node = Node::create([
-			    //'field_application_path' => $application_path,
-			    'type'        => 'application',
-			    'title'       => $value->getTranslation($langcode)->get('title')->getValue()[0]['value'],
-			    'field_documents_uploaded' => array('value' => $doc_data,),
-			    'field_programme' => ['target_id' => $key,],
-		     ]);
-	      $node->save();
-	      $node_id = $node->id();
-	      //pdf
-	      $filename = 'public://applications/'. $username . '_' . $account . '_' .  $node_id . '.pdf';
-	      //$filename = 'public://applications/'. $status1 . '_' . $account . '_' .  $node_id . '.pdf';
-	      $file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE);
-	      $node = Node::load($node_id);
-	      $new_application_id = "$institute_code-$created-$node_id";
-	      $node->setTitle($new_application_id);
-	      $node->set("field_status", 'apply_apply');
-	      $node->set("field_application_path",$filename);
-	      $node->save();
-          }
-             basiccart_empty_cart();
-             drupal_set_message("Successfully applied to " . count($applicationArray) . " programmes.");
-          } else {
-            drupal_set_message("Please Try again Later  ");
-          }  
-      }
-    */
-   
+						
+						  /*   //////////////////
+						    if($_GET['tx'] && $_GET['amt'] && $_GET['st'] && $_GET['cm']) {
+							    $query = \Drupal::database()->select('paypal_payment_status', 'pay_st');
+							    $query->fields('pay_st', ['before_amount', 'after_amount', 'custom_id','transaction_id','payment_status']);
+							    $query->condition('custom_id', $_GET['cm']);
+							    $result = $query->execute()->fetchAssoc();
+							    
+						    if( ($result['custom_id'] == $_GET['cm']) && ($result['payment_status'] == 'pending') &&  ($result['transaction_id'] == 0) ){   
+						      
+							   $query = \Drupal::database()->update('paypal_payment_status');
+							    $query->fields([ 
+							      'after_amount' => $_GET['amt'],
+							      'transaction_id'=> $_GET['tx'],
+							      'payment_status'=> $_GET['st'],
+							    ]);
+							    $query->condition('custom_id', $_GET['cm']);
+							    $query->execute();
+							    
+							   
+							   // dpm($result);
+						      //if($result['custom_id'] == $_GET['cm'] && )
+							$langcode = 'en';      
+							$applicationArray = $application_id['cart'];
+							foreach ($applicationArray as $key => $value) {
+							$username = \Drupal::currentUser()->getUsername();
+							$account = \Drupal::currentUser()->id();
+							$institute_id = $value->getTranslation($langcode)->get('field_institute')->getValue()[0]['target_id'];
+							// Get the Taxonomy details
+							$institute_tid = taxonomy_term_load($institute_id);
+							$institute_code = $institute_tid->getTranslation($langcode)->get('field_short_code')->getValue()[0]['value'];
+							$created = date("Y").'-'.date("m");
+							$node = Node::create([
+								      //'field_application_path' => $application_path,
+								      'type'        => 'application',
+								      'title'       => $value->getTranslation($langcode)->get('title')->getValue()[0]['value'],
+								      'field_documents_uploaded' => array('value' => $doc_data,),
+								      'field_programme' => ['target_id' => $key,],
+							       ]);
+							$node->save();
+							$node_id = $node->id();
+							//pdf
+							$filename = 'public://applications/'. $username . '_' . $account . '_' .  $node_id . '.pdf';
+							//$filename = 'public://applications/'. $status1 . '_' . $account . '_' .  $node_id . '.pdf';
+							$file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE);
+							$node = Node::load($node_id);
+							$new_application_id = "$institute_code-$created-$node_id";
+							$node->setTitle($new_application_id);
+							$node->set("field_status", 'apply_apply');
+							$node->set("field_application_path",$filename);
+							$node->save();
+						    }
+						       basiccart_empty_cart();
+						       drupal_set_message("Successfully applied to " . count($applicationArray) . " programmes.");
+						    } else {
+						      drupal_set_message("Please Try again Later  ");
+						    }  
+						}
+					      */
+       } else {
+	     drupal_set_message("Please Try again Later  ");
+	}
     return $form;
   }
 
