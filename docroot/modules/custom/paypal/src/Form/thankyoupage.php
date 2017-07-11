@@ -36,9 +36,9 @@ class thankyoupage extends FormBase {
  * {@inheritdoc}
  */
 public function buildForm(array $form, FormStateInterface $form_state) {
- 
-     // pdt tokens
-     if(!empty($_GET['tx'])){
+ 	 // pdt tokens
+    			 
+ if(!empty($_GET['tx'])){
    $pp_hostname = "www.sandbox.paypal.com"; // Change to www.sandbox.paypal.com to test against sandbox
 // read the post from PayPal system and add 'cmd'
 
@@ -67,16 +67,10 @@ if(!$res){
 dpm($res);
 }
      }
-     //
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+          // str_replace($a,'Lorem',$a);
+
+			
   
           module_load_include('inc', 'basiccart');
           $application_id = basiccart_get_cart();
@@ -86,7 +80,23 @@ dpm($res);
               $iit[] =$key;
               }
               $commaList = implode(',', $iit);
-          
+         //sunday
+/* 
+         if(isset($_GET['tx']) && !empty($_GET['tx'])) {
+		// get response
+              if(isset($_GET['cm']) && !empty($_GET['tx'])){
+
+               }
+                
+            if( ($result['custom_id'] == $_GET['cm']) && ($result['payment_status'] == 'pending')){
+               
+              }
+         }else{
+            drupal_set_message("Invalid Transaction Please Contact Admin for any assistance.");
+	 }
+*/
+        //sunday
+
           if($_GET['tx'] && $_GET['amt'] && $_GET['st'] && $_GET['cm']) {
 		  $query = \Drupal::database()->select('paypal_payment_status', 'pay_st');
                   $query->fields('pay_st', ['before_amount', 'after_amount', 'custom_id','transaction_id','payment_status']);
@@ -142,8 +152,10 @@ dpm($res);
         } else {
             drupal_set_message("Please Try again Later  ");
           }
+	  
+	  
        
-       }
+      }
     
    
     return $form;

@@ -1,51 +1,6 @@
 <?php
 
 function paypal_schema() {
-  $schema['paypal'] = array(
-    'fields' => array(
-      'id'=>array(
-        'type'=>'serial',
-        'not null' => TRUE,
-      ),
-      'candidate_name'=>array(
-        'type' => 'varchar',
-        'length' => 40,
-        'not null' => TRUE,
-      ),
-      'candidate_mail'=>array(
-        'type' => 'varchar',
-        'length' => 40,
-        'not null' => TRUE,
-      ),
-       'candidate_number'=>array(
-        'type' => 'varchar',
-        'length' => 40,
-        'not null' => TRUE,
-      ),
-       'candidate_dob'=>array(
-        'type' => 'varchar',
-        'length' => 40,
-        'not null' => TRUE,
-      ),
-       'candidate_gender'=>array(
-        'type' => 'varchar',
-        'length' => 40,
-        'not null' => TRUE,
-      ),
-       'candidate_confirmation'=>array(
-        'type' => 'varchar',
-        'length' => 40,
-        'not null' => TRUE,
-      ),
-       'candidate_copy'=>array(
-        'type' => 'varchar',
-        'length' => 40,
-        'not null' => TRUE,
-      ),
-       
-    ),
-    'primary key' => array('id'),
-  );
  
   $schema['paypal_payment_status'] = array(
     'fields' => array(

@@ -1,15 +1,8 @@
-paypal.form:
- path: '/paypal/myform'
+paypal.conform:
+ path: '/paypal/conform'
  defaults:
-   _title: 'Application form'
-   _form: '\Drupal\paypal\Form\ResumeForm'
- requirements:
-   _permission: 'access content'
-paypal.success:
- path: '/paypal/success'
- defaults:
-   _title: 'Success form'
-   _form: '\Drupal\paypal\Form\PaymentSuccess'
+   _title: 'Payment conformation'
+   _form: '\Drupal\paypal\Form\ConformPayment'
  requirements:
    _permission: 'access content'
 paypal.thankyou:
@@ -19,17 +12,17 @@ paypal.thankyou:
    _form: '\Drupal\paypal\Form\thankyoupage'
  requirements:
    _permission: 'access content'
-paypal.payment_before:
- path: '/paypal/IitInapdev'
- defaults:
-   _title: 'Before Data insert'
-   _form: '\Drupal\paypal\Form\payment_before_insert'
- requirements:
-   _permission: 'access content'
 paypal.process:
  path: '/paypal/ipn_notification'
  defaults:
    _title: 'IPN Notification'
-   _form: '\Drupal\paypal\Form\ProcessPageIPN'
+   _form: '\Drupal\paypal\Form\ProcessPage'
  requirements:
    _permission: 'access content'
+paypal.settings_file:
+ path: 'admin/config/paypal/settings'
+ defaults:
+  _form: '\Drupal\paypal\Form\PaypalSettingsForm'
+  _title: 'Paypal Config Settings'
+ requirements:
+  _permission: 'access content'

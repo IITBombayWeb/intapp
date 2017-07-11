@@ -4,6 +4,7 @@
  * Contains js for the accordion example.
  */
 
+/*
 
 (function ($) {
   $(function () {
@@ -35,3 +36,4 @@
       });
   })
 })(jQuery);
+*/

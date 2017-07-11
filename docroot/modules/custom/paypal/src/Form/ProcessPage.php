@@ -7,9 +7,9 @@ namespace Drupal\paypal\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\paypal\PaypalIPN;
+//use Drupal\paypal\PaypalIPN;
 
-class ProcessPageIPN extends FormBase {
+class ProcessPage extends FormBase {
   /**
    * {@inheritdoc}
    */
@@ -22,7 +22,7 @@ class ProcessPageIPN extends FormBase {
  */
 public function buildForm(array $form, FormStateInterface $form_state) {
   
-  
+  /*
    
      $ipn = new PaypalIPN();
      // Use the sandbox endpoint during testing.
@@ -41,6 +41,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
      * A list of variables is available here:
      * https://developer.paypal.com/webapps/developer/docs/classic/ipn/integration-guide/IPNandPDTVariables/
      */
+    /*
      \Drupal::database()->insert('paypal_payment_status')
 					->fields([
 						'user_id',
@@ -69,23 +70,19 @@ public function buildForm(array $form, FormStateInterface $form_state) {
     // Reply with an empty 200 response to indicate to paypal the IPN was received correctly.
   header("HTTP/1.1 200 OK");
 
-
-return $form;
-  
+*/
+return $form;  
 }
+/**
+ * {@inheritdoc}
+ */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    
+  }
 
-
-
-  /**
-   * {@inheritdoc}
-   */
-    public function validateForm(array &$form, FormStateInterface $form_state) {
-      
-    }
-
-  /**
-   * {@inheritdoc}
-   */
+/**
+ * {@inheritdoc}
+ */
   public function submitForm(array &$form, FormStateInterface $form_state) {
   
    }

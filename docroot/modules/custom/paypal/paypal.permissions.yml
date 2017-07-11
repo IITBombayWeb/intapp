@@ -1,0 +1,4 @@
+paypal settings_form:
+ title: 'Paypal settings file'
+ description: 'Create Paypal related configuration'
+ restrict access: false
