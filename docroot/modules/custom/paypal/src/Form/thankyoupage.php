@@ -136,7 +136,10 @@ public function buildForm(array $form, FormStateInterface $form_state) {
 		$node->save();
 	       }
 	       basiccart_empty_cart();
-	       drupal_set_message("Successfully applied to " . count($applicationArray) . " programmes.");
+	       //drupal_set_message("Successfully applied to " . count($applicationArray) . " programmes.");
+	       drupal_set_message("<h6>Thank you!</h6><br>
+                    Your transaction is successful.Successfully applied to " . count($applicationArray) . " programmes. Please note your transaction ID : ".$_GET['tx']." for future reference");
+
 	    } else if ($tx_status == 'FAIL'){
 		drupal_set_message("Please Try again Later  ");
 	      
