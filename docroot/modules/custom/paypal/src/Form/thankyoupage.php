@@ -63,9 +63,41 @@ curl_close($ch);
 if(!$res){
     //HTTP ERROR
 }else{
-
-dpm($res);
-}
+     // parse the data
+    $lines = explode("\n", trim($res));
+    $keyarray = array();
+    if (strcmp ($lines[0], "SUCCESS") == 0) {
+        for ($i = 1; $i < count($lines); $i++) {
+            $temp = explode("=", $lines[$i],2);
+            $keyarray[urldecode($temp[0])] = urldecode($temp[1]);
+        }
+    // check the payment_status is Completed
+    // check that txn_id has not been previously processed
+    // check that receiver_email is your Primary PayPal email
+    // check that payment_amount/payment_currency are correct
+    // process payment
+    $firstname = $keyarray['first_name'];
+    $lastname = $keyarray['last_name'];
+    $itemname = $keyarray['item_name'];
+    $amount = $keyarray['payment_gross'];
+     
+    echo ("<p><h3>Thank you for your purchase!</h3></p>");
+     
+    echo ("<b>Payment Details</b><br>\n");
+    echo ("<li>Name: $firstname $lastname</li>\n");
+    echo ("<li>Item: $itemname</li>\n");
+    echo ("<li>Amount: $amount</li>\n");
+   dpm($lines[0]);
+    }
+    else if (strcmp ($lines[0], "FAIL") == 0) {
+        dpm($lines[0]);
+	// log for manual investigation
+    }
+     }
+     
+     
+     
+     
      }
 
           // str_replace($a,'Lorem',$a);
