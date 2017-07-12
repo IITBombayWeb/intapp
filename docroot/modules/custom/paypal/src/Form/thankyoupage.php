@@ -97,7 +97,8 @@ class thankyoupage extends FormBase {
 			  $node->set("field_status", 'apply_apply');
 			  $node->set("field_application_path",$filename);
 			  $node->save();
-			  // Sending Mail 
+			  // Sending Mail
+			  /*
 			    $mailConfig = \Drupal::config('workflow_mail.settings');
 			    $send_mail_admin = $mailConfig->get('send_mail_admin');
 			    $send_mail_user = $mailConfig->get('send_mail_user');
@@ -149,7 +150,8 @@ class thankyoupage extends FormBase {
 				   if ($response['result'] === true) {
 				     drupal_set_message(t('Details send to Department'));
 				   }
-			    }			  
+			    }
+			    */
 		        }
 			basiccart_empty_cart();
 			drupal_set_message("Thank you! 
@@ -160,12 +162,12 @@ class thankyoupage extends FormBase {
 		  } 
 	     } elseif ($tx_status == 'FAIL') {
 		   drupal_set_message("Invalid Transaction Please Contact Admin for any assistance.");
+		    throw new AccessDeniedHttpException();
 	      } 
 	  } else {
-	   dpm('u r not a same user'); 
+	    throw new AccessDeniedHttpException();
 	  }	  						
     } else {
-	     drupal_set_message("Get elements Empty ");
 	     throw new AccessDeniedHttpException();
     }
     return $form;
