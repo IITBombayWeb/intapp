@@ -7,7 +7,6 @@ paypal.conform:
 paypal.thankyou:
  path: '/paypal/thankyou'
  defaults:
-   _title: 'Thankyou'
    _form: '\Drupal\paypal\Form\thankyoupage'
  requirements:
    _permission: 'access content'
