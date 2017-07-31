@@ -1,0 +1,32 @@
+uuid: 3ab94d31-d856-4528-bf19-f2bb11260372
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.department
+  module:
+    - block_class
+    - facets
+    - system
+  theme:
+    - capit
+third_party_settings:
+  block_class:
+    classes: 'dmb cm-blk srch-blk'
+id: departmentsolr
+theme: capit
+region: sidebar_first
+weight: -11
+provider: null
+plugin: 'facet_block:department'
+settings:
+  id: 'facet_block:department'
+  label: Department
+  provider: facets
+  label_display: visible
+visibility:
+  request_path:
+    id: request_path
+    pages: /search
+    negate: false
+    context_mapping: {  }

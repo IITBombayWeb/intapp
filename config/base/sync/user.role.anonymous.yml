@@ -9,11 +9,11 @@ label: 'Anonymous user'
 weight: 0
 is_admin: false
 permissions:
-  - 'access content'
-  - 'use text format restricted_html'
   - 'access comments'
+  - 'access content'
   - 'access site-wide contact form'
-  - 'search content'
-  - 'view search api pages'
-  - 'view faq page'
   - 'basiccart use_cart'
+  - 'search content'
+  - 'use text format restricted_html'
+  - 'view faq page'
+  - 'view search api pages'

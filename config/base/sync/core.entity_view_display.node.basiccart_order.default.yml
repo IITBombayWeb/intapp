@@ -29,6 +29,7 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
   basiccart_city:
     weight: 4
     label: above
@@ -36,18 +37,21 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
   basiccart_email:
     weight: 0
     label: above
     settings: {  }
     third_party_settings: {  }
     type: basic_string
+    region: content
   basiccart_message:
     weight: 1
     label: above
     settings: {  }
     third_party_settings: {  }
     type: basic_string
+    region: content
   basiccart_phone:
     weight: 2
     label: above
@@ -55,6 +59,7 @@ content:
       title: ''
     third_party_settings: {  }
     type: telephone_link
+    region: content
   basiccart_total_price:
     weight: 6
     label: above
@@ -65,6 +70,7 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     type: number_decimal
+    region: content
   basiccart_vat:
     weight: 7
     label: above
@@ -75,6 +81,7 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     type: number_decimal
+    region: content
   basiccart_zipcode:
     weight: 5
     label: above
@@ -82,5 +89,9 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
 hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
   links: true

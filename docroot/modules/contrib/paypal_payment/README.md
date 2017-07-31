@@ -1,1 +1,0 @@
-# PayPal for Payment

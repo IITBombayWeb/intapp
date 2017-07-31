@@ -1,0 +1,29 @@
+uuid: cb52536e-909d-4cab-8593-1379a5b8e6b1
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:08604d07-41a5-40a0-8e37-5ec2e57808ea'
+  module:
+    - block_class
+    - block_content
+  theme:
+    - capit
+third_party_settings:
+  block_class:
+    classes: 'ins-count ft-cm'
+id: iitscount
+theme: capit
+region: featured_iner
+weight: -14
+provider: null
+plugin: 'block_content:08604d07-41a5-40a0-8e37-5ec2e57808ea'
+settings:
+  id: 'block_content:08604d07-41a5-40a0-8e37-5ec2e57808ea'
+  label: 'iits Count'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

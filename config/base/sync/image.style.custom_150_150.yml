@@ -1,0 +1,14 @@
+uuid: 0b642e90-463a-44db-bd75-df1b424f097c
+langcode: en
+status: true
+dependencies: {  }
+name: custom_150_150
+label: 'custom 150*150'
+effects:
+  2c20f844-9527-47f3-bd7a-b536f5dd9115:
+    uuid: 2c20f844-9527-47f3-bd7a-b536f5dd9115
+    id: image_resize
+    weight: 1
+    data:
+      width: 130
+      height: 130

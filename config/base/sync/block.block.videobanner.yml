@@ -1,0 +1,35 @@
+uuid: 5735a8cc-f1ae-47df-b8fe-a6c939999a8b
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:6a6bbef5-fa39-466b-8973-658225f0d5d3'
+  module:
+    - block_class
+    - block_content
+    - system
+  theme:
+    - capit
+third_party_settings:
+  block_class:
+    classes: banner
+id: videobanner
+theme: capit
+region: featured_top
+weight: 0
+provider: null
+plugin: 'block_content:6a6bbef5-fa39-466b-8973-658225f0d5d3'
+settings:
+  id: 'block_content:6a6bbef5-fa39-466b-8973-658225f0d5d3'
+  label: 'Video Banner'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

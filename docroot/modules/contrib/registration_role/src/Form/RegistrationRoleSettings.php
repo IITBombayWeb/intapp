@@ -1,19 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\registration_role\Form\RegistrationRoleSettings.
- */
-
 namespace Drupal\registration_role\Form;
 
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\ConfigFormBase;
-use Drupal\user\UserStorageInterface;
-use Drupal\user\Entity\User;
-use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Config\Context\ContextInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -72,12 +62,10 @@ class RegistrationRoleSettings extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $saved_role = $form_state->getValue('role_to_select');
     $this->config('registration_role.setting')
-        ->set('role_to_select', $saved_role)
-        ->save();
+      ->set('role_to_select', $saved_role)
+      ->save();
 
     parent::submitForm($form, $form_state);
   }
 
 }
-
-?>

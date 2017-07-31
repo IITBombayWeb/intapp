@@ -1,47 +1,100 @@
-uuid: ac783761-806b-4994-99a0-89d0f7baf3b4
+uuid: 4819a5af-c91c-4e63-9e3b-ddd3cfca9e5d
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_course_duration
-    - field.storage.node.field_course_fees
+    - field.storage.node.field_tags
     - field.storage.node.field_degree
-    - field.storage.node.field_description
-    - field.storage.node.field_thumb
-    - field.storage.node.field_institute
-    - field.storage.node.field_departments
-    - search_api.server.default_solr
+    - search_api.server.default_solr_server
+    - core.entity_view_mode.node.search_index
   module:
-    - file
     - taxonomy
+    - user
     - search_api
     - node
+_core:
+  default_config_hash: bojueKzSMLU0cTZKsz402wpsob2yIo1Ee9e9AHsPxL4
 id: default_solr_index
-name: 'Default Solr Index'
-description: 'Default Solr Index for Programme index and sear'
+name: 'Default Solr content index'
+description: 'Default content index created by the Solr Search Defaults module'
 read_only: false
 field_settings:
+  rendered_item:
+    label: 'Rendered item'
+    property_path: rendered_item
+    type: text
+    configuration:
+      roles:
+        anonymous: anonymous
+      view_mode:
+        'entity:node':
+          article: search_index
+          page: search_index
+  node_grants:
+    label: 'Node access information'
+    property_path: search_api_node_grants
+    type: string
+    indexed_locked: true
+    type_locked: true
+    hidden: true
   title:
     label: Title
     datasource_id: 'entity:node'
     property_path: title
-    type: string
-  field_course_duration:
-    label: 'Course duration (in months)'
+    type: text
+    boost: !!float 8
+  created:
+    label: 'Authored on'
     datasource_id: 'entity:node'
-    property_path: field_course_duration
+    property_path: created
+    type: date
+  changed:
+    label: Changed
+    datasource_id: 'entity:node'
+    property_path: changed
+    type: date
+  status:
+    label: 'Publishing status'
+    datasource_id: 'entity:node'
+    property_path: status
+    type: boolean
+    indexed_locked: true
+    type_locked: true
+  sticky:
+    label: 'Sticky at top of lists'
+    datasource_id: 'entity:node'
+    property_path: sticky
+    type: boolean
+  field_tags:
+    label: Tags
+    datasource_id: 'entity:node'
+    property_path: 'field_tags:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_tags
+      module:
+        - taxonomy
+  author:
+    label: 'Author name'
+    datasource_id: 'entity:node'
+    property_path: 'uid:entity:name'
+    type: string
+    dependencies:
+      module:
+        - user
+  uid:
+    label: 'Author ID'
+    datasource_id: 'entity:node'
+    property_path: uid
     type: integer
-    dependencies:
-      config:
-        - field.storage.node.field_course_duration
-  field_course_fees:
-    label: 'Course fees'
+    indexed_locked: true
+    type_locked: true
+  type:
+    label: 'Content type'
     datasource_id: 'entity:node'
-    property_path: field_course_fees
+    property_path: type
     type: string
-    dependencies:
-      config:
-        - field.storage.node.field_course_fees
   field_degree:
     label: Degree
     datasource_id: 'entity:node'
@@ -50,100 +103,32 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_degree
-  field_description:
-    label: Description
-    datasource_id: 'entity:node'
-    property_path: field_description
-    type: text
-    dependencies:
-      config:
-        - field.storage.node.field_description
-  uri:
-    label: 'Thumb » File » URI'
-    datasource_id: 'entity:node'
-    property_path: 'field_thumb:entity:uri'
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_thumb
-      module:
-        - file
-  alt:
-    label: 'Thumb » Alternative text'
-    datasource_id: 'entity:node'
-    property_path: 'field_thumb:alt'
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_thumb
-  name:
-    label: 'Institute » Taxonomy term » Name'
-    datasource_id: 'entity:node'
-    property_path: 'field_institute:entity:name'
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_institute
-      module:
-        - taxonomy
-  name_1:
-    label: 'Departments » Taxonomy term » Name'
-    datasource_id: 'entity:node'
-    property_path: 'field_departments:entity:name'
-    type: string
-    dependencies:
-      config:
-        - field.storage.node.field_departments
-      module:
-        - taxonomy
-  search_api_aggregation_1:
-    label: 'Full text'
-    datasource_id: null
-    property_path: search_api_aggregation_1
-    type: text
-    indexed_locked: true
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
 processor_settings:
   add_url:
-    plugin_id: add_url
-    settings:
-      weights:
-        preprocess_index: -30
+    weights:
+      preprocess_index: -30
   aggregated_field:
-    plugin_id: aggregated_field
-    settings:
-      fields:
-        search_api_aggregation_1:
-          label: 'Full text'
-          type: union
-          fields:
-            - 'entity:node/field_course_duration'
-            - 'entity:node/field_course_fees'
-            - 'entity:node/field_degree'
-            - 'entity:node/field_departments'
-            - 'entity:node/field_description'
-            - 'entity:node/field_institute'
-            - 'entity:node/field_thumb'
-            - 'entity:node/title'
-            - 'entity:node/type'
-            - search_api_url
-      weights:
-        preprocess_index: -10
+    weights:
+      add_properties: 20
+  rendered_item:
+    weights:
+      add_properties: 0
+      pre_index_save: -10
+  content_access:
+    weights:
+      preprocess_index: -6
+      preprocess_query: -4
+tracker_settings:
+  default: {  }
 options:
   index_directly: true
   cron_limit: 50
-datasource_settings:
-  'entity:node':
-    plugin_id: 'entity:node'
-    settings:
-      bundles:
-        default: false
-        selected:
-          - programme
-      languages:
-        default: true
-        selected: {  }
-tracker_settings:
-  default:
-    plugin_id: default
-    settings: {  }
-server: default_solr
+server: default_solr_server

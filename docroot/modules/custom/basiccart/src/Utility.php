@@ -398,7 +398,7 @@ public static function price_format($price) {
   }
 
 
-  public function get_cart_content() {
+  public function get_cart_content($status = 'add') {
     $Utility  = $this;
     $config = $Utility->cart_settings();
     $cart = $Utility->get_cart();
@@ -407,11 +407,12 @@ public static function price_format($price) {
     $cart_cart = isset($cart['cart']) ? $cart['cart'] : array();
     $output = '';
  if (empty($cart_cart)){
-  $output .= '<div class="basiccart-grid basic-cart-block empt-cart ">'.t($config->get('empty_cart')).'</div>';
+  $output .= '<div class="basiccart-grid basic-cart-block empt-cart">'.t($config->get('empty_cart')).'</div>';
   } 
 else {
-
-  $output .= '<div class="basiccart-grid basic-cart-block test bscart-pop clearfix">';
+ // if ($status == 'add' || count($cart_cart) == 1) {
+    $output .= '<div class="basiccart-grid basic-cart-block test bscart-pop clearfix">';
+  //}
   if(is_array($cart_cart) && count($cart_cart) >= 1){
     foreach($cart_cart as $nid => $node){
     $langcode = $node->language()->getId();
@@ -454,7 +455,9 @@ else {
         '.$link.'
       </div>';
   }
-  $output .= '</div>';
+ // if ($status == 'add' || count($cart_cart) == 1) {
+    $output .= '</div>';
+ // }
 }
 
 

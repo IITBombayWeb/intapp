@@ -79,7 +79,7 @@ class CartController extends ControllerBase
     $response->status = TRUE;
     $response->text = '<p class="messages messages--status">'.t($config->get('added_to_cart_message')).'</p>';
     $response->id = 'ajax-addtocart-message-'.$nid;
-    $response->block = $utility->get_cart_content();
+    $response->block = $utility->get_cart_content('update');
     return new JsonResponse($response);
   }
 

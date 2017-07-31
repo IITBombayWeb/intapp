@@ -1,34 +1,31 @@
-uuid: 107fdca1-f004-4e47-84d5-e6d732700d81
+uuid: 2decd154-e0c2-40e0-ac2b-fbaaaa039423
 langcode: en
 status: true
 dependencies:
   config:
     - system.menu.landing-page-menu
   module:
-    - facets
+    - block_class
     - system
   theme:
-    - bartik
+    - capit
+third_party_settings:
+  block_class:
+    classes: knw-abt
 id: landingpagemenu
-theme: bartik
-region: content
-weight: -5
+theme: capit
+region: sidebar_second
+weight: -12
 provider: null
 plugin: 'system_menu_block:landing-page-menu'
 settings:
   id: 'system_menu_block:landing-page-menu'
-  label: 'I want to know about...'
+  label: 'I want to know about'
   provider: system
   label_display: visible
   level: 1
   depth: 0
 visibility:
-  other_facet:
-    id: other_facet
-    facets: ''
-    facet_value: ''
-    negate: false
-    context_mapping: {  }
   request_path:
     id: request_path
     pages: '<front>'

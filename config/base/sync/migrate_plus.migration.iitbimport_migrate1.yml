@@ -1,0 +1,34 @@
+uuid: cfa5aae0-e733-4c29-b8a7-8ee506298053
+langcode: en
+status: true
+dependencies: {  }
+id: iitbimport_migrate1
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: null
+label: 'Import articles'
+source:
+  plugin: csv
+  path: sites/default/files/iitbimport.csv
+  header_row_count: 1
+  keys:
+    - Id1
+process:
+  title: Title
+  field_institute: Institute
+  field_departments: Department
+  field_degree: Degree
+  field_specialisation: Specialisation
+  field_course_duration: Course_Duration
+  field_course_fees: null
+  type:
+    plugin: default_value
+    default_value: test
+  uid:
+    plugin: default_value
+    default_value: 1
+destination:
+  plugin: 'entity:node'
+migration_dependencies: null

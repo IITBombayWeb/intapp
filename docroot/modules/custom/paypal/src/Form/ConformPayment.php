@@ -102,6 +102,8 @@ class ConformPayment extends FormBase {
               $form['actions']['cancel'] = array(
                       '#type' => 'button',
                       '#value' => $this->t('Cancel'),
+		      '#submit' => array('cancel_submit'),
+		      '#attributes' => array('class' => array('paypal_submit')),
               );
       
           return $form;
@@ -132,7 +134,6 @@ class ConformPayment extends FormBase {
 	$iits[] =$key;
 	}
        $commaList = implode(',', $iits);
-         
   
    if ((isset($application_id['cart']) && is_array($application_id['cart']))) {
       $paypal_email = \Drupal::config('paypal.settings_file')->get('email');
@@ -156,6 +157,7 @@ class ConformPayment extends FormBase {
 	      $config = $Utility::cart_settings();  
 	      $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();   
 	      $user = \Drupal::currentUser();
+	      $time = time();
               $unique_id = md5(uniqid(rand(), true)); 
               foreach ($cart['cart_quantity'] as $pgm_nid => $node) {
                      $order_id[]=$pgm_nid;
@@ -190,16 +192,18 @@ class ConformPayment extends FormBase {
 	    $querystring .= "cancel_return=".urlencode(stripslashes($cancel_url))."&";
 	    $querystring .= "notify_url=".urlencode($notify_url);
 	    
-	     \Drupal::database()->insert('paypal_payment_status')
+	    $insert_id = \Drupal::database()->insert('paypal_payment_status')
 					->fields([
 						'user_id',
-						'orders_id',
+						'programme_id',
 						'before_amount',
 						'after_amount',
 						'currency_code',
 						'custom_id',
 						'transaction_id',
 						'payment_status',
+						'created',
+						'updated',
 					])
 					->values(array(
 						$user-> id(),
@@ -209,17 +213,41 @@ class ConformPayment extends FormBase {
 						$currency_code,
 						$unique_id,
 						'processing',
-						'pending',  
+						'pending',
+						$time,
+						$time,
 					))
 					->execute();
+	    //Most Popular application
+	  /*
+	    foreach ($iits as $key => $value){			
+	      $application_list = \Drupal::database()->insert('applications_list')
+					->fields([
+						'user_id',
+						'orders_id',
+						'application_id',
+						'created',
+					])
+					->values(array(
+						$user-> id(),
+						$insert_id,
+						$value,
+						$time,
+					))
+					->execute();							
+	    }			
+	    */			
+	    
+	    \Drupal::logger('paypal')->notice($insert_id);
 
 	    header('location:https://www.sandbox.paypal.com/cgi-bin/webscr'.$querystring);	
 	    exit;
+	    
     }
   }
     
-function application_save_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
-
+function cancel_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  exit;
      }
 }
 

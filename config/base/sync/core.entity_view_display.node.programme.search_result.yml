@@ -35,46 +35,41 @@ content:
     type: addtocart
     settings: {  }
     third_party_settings: {  }
-  add_to_cart_price:
-    label: inline
-    type: number_decimal
-    weight: 6
-    settings:
-      thousand_separator: ''
-      decimal_separator: .
-      scale: 2
-      prefix_suffix: true
-    third_party_settings: {  }
+    region: content
   field_course_duration:
     type: list_default
     weight: 4
     label: inline
     settings: {  }
     third_party_settings: {  }
+    region: content
   field_degree:
     weight: 3
     label: inline
     settings: {  }
     third_party_settings: {  }
     type: list_default
+    region: content
   field_departments:
     weight: 2
     label: inline
     settings:
-      link: true
+      link: false
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
   field_institute_link:
     type: link
     weight: 1
     label: inline
     settings:
       trim_length: null
-      rel: nofollow
-      target: _blank
       url_only: false
       url_plain: false
+      rel: '0'
+      target: '0'
     third_party_settings: {  }
+    region: content
   field_specialisation:
     type: string
     weight: 0
@@ -82,7 +77,12 @@ content:
     settings:
       link_to_entity: true
     third_party_settings: {  }
+    region: content
 hidden:
+  add_to_cart_price: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
   field_course_fees: true
   field_description: true
   field_e: true

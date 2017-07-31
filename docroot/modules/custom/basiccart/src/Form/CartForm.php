@@ -29,8 +29,11 @@ class CartForm extends FormBase {
     $config = $Utility::cart_settings();  
     $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     $user = \Drupal::currentUser();
-	
-    $form['#action'] ='/user/'.$user->id().'/student_application_';
+      if ($user->id()) { 
+	  $form['#action'] ='/user/'.$user->id().'/student_application_';
+       } else {
+	  $form['#action'] = '/user/login/?destination=get-profile';
+      }
  
     // And now the form.
     $form['cartcontents'] = array(

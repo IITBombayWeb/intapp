@@ -35,7 +35,7 @@ class RedirectResponse extends Response
     public function __construct($url, $status = 302, $headers = array())
     {
         parent::__construct('', $status, $headers);
-         if (empty($url)) {
+          if (empty($url)) {
   	    $url = '/';
 	}
 
@@ -86,7 +86,7 @@ class RedirectResponse extends Response
 <html>
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="refresh" content="1;url=%1$s" />
+        <meta http-equiv="refresh" content="0;url=%1$s" />
 
         <title>Redirecting to %1$s</title>
     </head>
