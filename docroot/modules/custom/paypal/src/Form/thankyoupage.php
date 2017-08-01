@@ -207,6 +207,7 @@ class thankyoupage extends FormBase {
 			$employment_details_result .= "</table>";
 			
 			// HTML Structure for Application pdf.
+			//<div class="prof-img alm width_25">'.$image.'</div>
 			$html = '<!DOCTYPE html>
 			       <html>
 				 <head>
@@ -266,7 +267,7 @@ class thankyoupage extends FormBase {
 					     <div class="alm width_50"><span class="label">Email:</span> <span class="ml">'.$email_id.'</span></div>
 					     <div><span class="label">Communication address:</span> <span class="ml">'.$field_permanent_address.','.$fpa_city.'-'.$fpa_pin.','.$fpa_state.','.$fpa_country.'</span></div>  
 					</div>
-					<div class="prof-img alm width_25">'.$image.'</div>
+					
 					<div class="alm width_25"><span class="label">Gender:</span>'.$gender.'</div>
 					<div class="alm width_25"><span class="label">Date of Birth:</span>'.$dob.'</div>
 				      </div>
