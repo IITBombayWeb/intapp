@@ -102,7 +102,7 @@ class ConformPayment extends FormBase {
               $form['actions']['cancel'] = array(
                       '#type' => 'button',
                       '#value' => $this->t('Cancel'),
-		      '#submit' => array('cancel_submit'),
+		      '#submit' => array([$this, 'cancel_submit']),
 		      '#attributes' => array('class' => array('paypal_submit')),
               );
       
@@ -114,9 +114,6 @@ class ConformPayment extends FormBase {
    * {@inheritdoc}
    */
     public function validateForm(array &$form, FormStateInterface $form_state) {
-      
-      
-      
     
     }
 
@@ -246,9 +243,11 @@ class ConformPayment extends FormBase {
     }
   }
     
-function cancel_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
-  exit;
-     }
+ function cancel_submit(array &$form, FormStateInterface $form_state) {
+    $user = \Drupal::currentUser()->id();
+    $url = URL::fromUserInput('/user/'.$user.'/student_application_');
+    $form_state->setRedirectUrl($url); 
+  }
 }
 
 /*
