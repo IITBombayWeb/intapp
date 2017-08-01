@@ -52,11 +52,11 @@ class thankyoupage extends FormBase {
 	 //dpm($result);
 	  if ($result['user_id'] == $user && $result['custom_id'] == $_GET['cm'] ) {
 	    //condition for pdt token check
-	    /*
+	    
 	     $tx = $_GET['tx'];
 	     module_load_include('inc', 'paypal');
 	     $tx_status = pdt_token($tx);
-	     if ($tx_status == 'SUCCESS'){ */
+	     if ($tx_status == 'SUCCESS'){ 
 		  if ($result['payment_status'] == 'pending' && $result['before_amount'] == $_GET['amt']){
 		      $time = time();
 		      $query = \Drupal::database()->update('paypal_payment_status');
@@ -76,8 +76,8 @@ class thankyoupage extends FormBase {
 			$langcode = 'en';      
 			//$applicationArray = $application_id['cart'];
 			
-			
-			//PDF Generate Code  july 18
+			  $user = \Drupal::currentUser()->getUsername();
+			  $username = str_replace(" ","_",$user);
 			  $username = \Drupal::currentUser()->getUsername();
 			  $account = \Drupal::currentUser()->id();
 			  $query = \Drupal::entityQuery('profile')
@@ -404,9 +404,9 @@ class thankyoupage extends FormBase {
 		    //drupal_set_message("Your transaction has been completed. Please note your transaction ID : ".$_GET['tx']." for future reference. Please Contact Admin for any assistance.");
 		      $notify_msg = "Your transaction has been completed. Please Contact Admin for any assistance.";
 		  } 
-	  /*  } elseif ($tx_status == 'FAIL') {
+	    } elseif ($tx_status == 'FAIL') {
 		   drupal_set_message("Invalid Transaction Please Contact Admin for any assistance.");
-	      }*/  
+	      } 
 	  } else {
 	   throw new AccessDeniedHttpException();
 	  }	  						
