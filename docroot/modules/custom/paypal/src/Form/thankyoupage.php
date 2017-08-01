@@ -76,8 +76,9 @@ class thankyoupage extends FormBase {
 			$langcode = 'en';      
 			//$applicationArray = $application_id['cart'];
 			
-			  $user = \Drupal::currentUser()->getUsername();
-			  $username = str_replace(" ","_",$user);
+			
+			//PDF Generate Code  july 18
+			  $username = \Drupal::currentUser()->getUsername();
 			  $account = \Drupal::currentUser()->id();
 			  $query = \Drupal::entityQuery('profile')
 			     ->condition('status', 1)
