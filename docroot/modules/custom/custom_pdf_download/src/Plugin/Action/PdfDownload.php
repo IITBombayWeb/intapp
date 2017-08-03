@@ -35,7 +35,7 @@ class PdfDownload extends ActionBase
             $application_path = $get_path[0]['value'];
             $filename         = explode('/', $application_path);
             $filename         = end($filename);
-        }
+        }/*
         $uid        = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
         $user_fid   = $uid->get('user_picture')->getValue();
         $fid        = $user_fid[0]['target_id'];
@@ -44,9 +44,11 @@ class PdfDownload extends ActionBase
         $test       = explode('//', $path);
         $path_array = $test[1];
         $base_path  = 'sites/default/files/' . $path_array;
+        */
         // echo $base_path;die;
        // $filename   = '2.pdf';
         //echo $base_url.'/'.$base_path.'application/'.$filename;die;
+        $base_path  = 'sites/default/files/';
         $content    = file_get_contents($base_url . '/' . $base_path . 'applications/' . $filename);
         header('Content-type: application/pdf');
         header('Content-Disposition: attachment; filename=' . $filename);
