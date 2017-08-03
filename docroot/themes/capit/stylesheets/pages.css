@@ -471,7 +471,7 @@ h2{
     -webkit-transition-property: box-shadow, transform;
     transition-property: box-shadow, transform;
 }
-.search-result:hover {
+.search-result.pct-hvr:hover {
 	box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5),0 -10px 10px -10px rgba(0, 0, 0, 0.5);
     -webkit-transform: scale(1.02);
     transform: scale(1.02);
@@ -709,6 +709,17 @@ a.basiccart-get-quantity:hover {
 	background-color: #1A7DC1;
 	border-color: #1A7DC1;
 }
+.btn-default:hover{
+	color: #FFF;
+	background-color: #1A7DC1;
+	border-color: #1A7DC1;
+}
+.btn-default:focus{
+	color: #FFF;
+	background-color: #1A7DC1;
+	border-color: #1A7DC1;
+}
+
 .icon glyphicon glyphicon-remove {
 	top:3px;
 }

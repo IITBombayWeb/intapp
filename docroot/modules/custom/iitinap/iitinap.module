@@ -543,10 +543,11 @@ function iitinap_field_views_data_views_data_alter(array &$data, \Drupal\field\F
  * Implements hook_ENTITY_TYPE_view() for node entities.
  */
 function iitinap_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
-       global $base_url;
-       if($node->getType() == "application"){
-        // Custom code
+       $user = \Drupal::currentUser()->getRoles();
+       if($user[1] == 'office'){
+	      unset($build['add_to_cart']);
        }
+      
 }
 
 /*
@@ -589,5 +590,39 @@ function iitinap_form_views_exposed_form_alter(array &$form, FormStateInterface 
        }
 }
 
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+    // Alter login form and add own custom submit handler.
+    $form['#submit'][] = '_iitinap_user_login_form_submit';
+}
 
-
+/**
+ * Custom submit handler for login form.
+ */
+function _iitinap_user_login_form_submit($form, FormStateInterface $form_state) {
+   
+      
+	      $user = \Drupal::currentUser()->getRoles();
+		     if($user[1] == 'office'){
+			    $account = \Drupal::currentUser()->id();
+			    $query = \Drupal::entityQuery('profile')
+				   ->condition('status', 1)
+				   ->condition('uid', $account );
+			    $nids = $query->execute();
+			    $nid_key=array_keys($nids);
+			    $profile = Profile::load($nid_key[0]);
+			    $ins_id = $profile->get('field_institute')->getValue()[0][target_id];
+			    $url = URL::fromUserInput('/view-application-lists/'.$ins_id);
+			    $form_state->setRedirectUrl($url);
+		     }else if($user[1] == 'student'){
+			 $url = URL::fromUserInput('/user/'.$account);
+		         $form_state->setRedirectUrl($url);
+		     } else{
+			    
+			    }
+		     return;
+   // $form_state->setRedirect('/homepage');
+    
+}

@@ -100,7 +100,7 @@ class ConformPayment extends FormBase {
                       '#attributes' => array('class' => array('paypal_submit')),
               );
               $form['actions']['cancel'] = array(
-                      '#type' => 'button',
+                      '#type' => 'submit',
                       '#value' => $this->t('Cancel'),
 		      '#submit' => array([$this, 'cancel_submit']),
 		      '#attributes' => array('class' => array('paypal_submit')),
@@ -114,6 +114,9 @@ class ConformPayment extends FormBase {
    * {@inheritdoc}
    */
     public function validateForm(array &$form, FormStateInterface $form_state) {
+      
+      
+      
     
     }
 

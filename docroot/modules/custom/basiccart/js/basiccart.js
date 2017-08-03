@@ -15,9 +15,12 @@
    // $a = $(".basic-cart-block").length;
    // $("#forquantitydynamictext_1008").hide();
     //alert($a);
+    $(".search-result").addClass('pct-hvr');
     $(".basiccart-cart-node-title").each(function(){
       $('#forquantitydynamictext_'+$(this).find('a').attr('href').split('/node/')[1]).addClass('sent-pckt');
       $('#forquantitydynamictext_'+$(this).find('a').attr('href').split('/node/')[1]).removeAttr("href");
+      //$('#forquantitydynamictext_'+$(this).find('a').attr('href').split('/node/')[1]).closest('article').parent().addClass('testing');
+      $('#forquantitydynamictext_'+$(this).find('a').attr('href').split('/node/')[1]).closest('article').removeClass('pct-hvr');
       
     });
     
@@ -42,6 +45,8 @@
         var basiccart_throbber = '<div id="basiccart-ajax-progress-throbber_'+id_splited[1]+'" class="basiccart-ajax-progress-throbber ajax-progress ajax-progress-throbber"><div class="basiccart-throbber throbber">&nbsp;</div></div>';
          
          $('#forquantitydynamictext_'+id_splited[1]).after(basiccart_throbber);
+         //$('#forquantitydynamictext_'+id_splited[1]).closest('article').parent().addClass('testing');
+         $('#forquantitydynamictext_'+id_splited[1]).closest('article').removeClass('pct-hvr');
          //alert("hi");
          $.ajax({url: this.href+quantity, success: function(result){
               $(".basiccart-grid").each(function(){
