@@ -18,14 +18,12 @@ use Drupal\workflow\Entity\WorkflowConfigTransition;
 use Drupal\workflow\Entity\WorkflowTransitionInterface;
 use Drupal\workflow\Controller\WorkflowTransitionListController;
 use Drupal\user\Entity\user;
-
 use Drupal\file\Entity\File;
 use Dompdf\Dompdf;
-///naga june 29
 use Drupal\basiccart\Controller\CartController;
 use Drupal\basiccart\Utility;
 use Drupal\basiccart\Form\CartForm;
-///naga june 29
+
 
 /**
 * Implements hook_mail().
@@ -189,9 +187,6 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
 	      }
        }
        
-       
-       
-       //naga 
        if ($form['#form_id'] == 'search_api_page_block_form'){
 	    $form['#prefix']="<div style = 'display:none'>";
             $form['#suffix']="</div>";  
@@ -206,16 +201,6 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
        $application_id = basiccart_get_cart();
        if ((isset($application_id['cart']) && is_array($application_id['cart']) && ($form['#form_id'] == 'profile_student_application__edit_form' || $form['#form_id'] == 'profile_student_application__add_form'))) {
 	      $cartform = new CartForm();
-	     /*
-	      // Total price.
-	      $form['total_price'] = array(
-		     '#markup' => $cartform->get_total_price_markup(),
-		     '#markup' => 'welcome',
-		     '#prefix' => '<div class="basiccart-cart basiccart-grid bascart-totl">',
-		     '#suffix' => '</div>',
-		     // '#theme' => 'cart_total_price',
-	      );
-	      */
        //Custom Submit 	  
        $form['actions']['submit']['#submit'][] = "application_save_submit";
           $cart = $application_id;
@@ -401,89 +386,183 @@ function form_validate_data2($form, &$form_state){
 /**
  *Implements form_validation() for application.
  */
+
 function form_validate_data1($form, &$form_state) {
        
    if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest') {
+       
        if($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
 	  $form_state->setError($form['document_checkbox'],"Please select all files");
        }
+       
        if($form['field_supporting_d']['#type']!='hidden'){
 	if($form['field_supporting_d']['widget']['#file_upload_delta']<$form['field_supporting_d']['#no_doc']) {
 	    $form_state->setError($form['field_supporting_d'],"Please upload all files");
 	    }
        }
-       /*
+  
+       //First Name
        $field_first_name = $form['field_first_name']['widget'][0]['value']['#value'];
-       if(empty($field_first_name)){
-	$form_state->setError($form['field_first_name'],"Please fill your name");
+       if(!empty($field_first_name)){
+	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_first_name)){
+	     	 $form_state->setError($form['field_first_name']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed.");
+	      }
        }
+       //Sure Name
        $field_surname = $form['field_surname']['widget'][0]['value']['#value'];
-       if(empty($field_surname)){
-	$form_state->setError($form['field_surname'],"Please fill  surname");
-	//$form_state->setErrorByName('field_surname',t("Please fill  surname"));
+       if(!empty($field_surname)){
+	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_surname)){
+	     	 $form_state->setError($form['field_surname']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed.");
+	      }
        }
-       if(preg_match('/[^a-z-0-9]/i', $field_first_name)){
-	 $form_state->setError($field_first_name,"Special characters are not allowed");
+       
+       //Date of Birth
+       if(!empty($form['field_date_of_birth']['widget'][0]['value']['#value']['date'])){
+         $Date_of_birth = date(strtotime($form['field_date_of_birth']['widget'][0]['value']['#value']['date']));
+         $cur_date = date('Y-m-d', strtotime("-18 year"));
+         $restrict_date = date(strtotime($cur_date));
+	      if(!($Date_of_birth < $restrict_date)){
+	          $form_state->setError($form['field_date_of_birth']['widget'][0]['value'],"DOB should be above 18 years.");
+	      }
        }
-       if(preg_match('/[^a-z-0-9]/i', $field_surname)){
-	 $form_state->setError($field_surname,"Special characters are not allowed");
-       }
-       if($form['field_gender']['widget']['#value']=='_none'){
-	$form_state->setError($form['field_gender'],"Please select gender");
-       }
-       if(empty($form['field_date_of_birth']['widget'][0]['value']['#value']['date'])){
-	$form_state->setError($form['field_date_of_birth'],"Please select date of birth");
-       }
+       
+       //Mobile No
        $field_mobile_num_com = $form['field_mobile_num_com']['widget'][0]['value']['#value'];
-       if(empty($field_mobile_num_com)){
-	$form_state->setError($form['field_mobile_num_com'],"Please enter mobile number");
+       if(!empty($field_mobile_num_com)){
+          if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_mobile_num_com)){
+	      $form_state->setError($form['field_mobile_num_com']['widget'][0]['value'],"Please Enter Valid Mobile Number.");
+          }
        }
+       //Telephone no
        $field_telephone_num_com = $form['field_telephone_num_com']['widget'][0]['value']['#value'];
-       if(empty($field_telephone_num_com)){
-	$form_state->setError($form['field_telephone_num_com'],"Please enter phone number");
+       if(!empty($field_telephone_num_com)){
+           if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_telephone_num_com)){
+	        $form_state->setError($form['field_telephone_num_com']['widget'][0]['value'],"Please Enter Valid Phone Number.");
+           }
        }
-       if(!is_numeric($field_mobile_num_com)){
-	  $form_state->setError($form['field_mobile_num_com'],"Please enter valid number");
+       //city
+       $city = $form['field_city']['widget'][0]['value']['#value'];
+       if(!empty($city)){
+          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$city)){
+	      $form_state->setError($form['field_city']['widget'][0]['value'],"Please Enter Valid City Name.");
+          }
        }
-       if(!is_numeric($field_telephone_num_com)){
-	  $form_state->setError($form['field_telephone_num_com'],"Please enter valid number");
+       //school city
+       $city_school= $form['field_city_school']['widget'][0]['value']['#value'];
+       if(!empty($city_school)){
+          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$city_school)){
+	      $form_state->setError($form['field_city_school']['widget'][0]['value'],"Please Enter Valid City Name.");
+          }
        }
-       if(empty($form['field_pin']['widget'][0]['value']['#value'])){
-	 $form_state->setError($form['field_pin'],"Please enter pincode");
+       //State
+       $state = $form['field_state']['widget'][0]['value']['#value'];
+       if(!empty($state)){
+          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$state)){
+	      $form_state->setError($form['field_state']['widget'][0]['value'],"Please Enter Valid State Name. ");
+          }
        }
-	if(empty($form['field_pincode_school']['widget'][0]['value']['#value'])){
-	 $form_state->setError($form['field_pincode_school'],"Please enter pincode for school");
+       //State School
+       $state_school = $form['field_state_school']['widget'][0]['value']['#value'];
+       if(!empty($state_school)){
+          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$state_school)){
+	      $form_state->setError($form['field_state_school']['widget'][0]['value'],"Please Enter Valid State Name.");
+          }
        }
-       if(empty($form['field_state']['widget'][0]['value']['#value'])){
-	$form_state->setError($form['field_state'],"Please enter state");
+       //Pincode
+       if(!is_numeric($form['field_pin']['widget'][0]['value']['#value'])){
+	 $form_state->setError($form['field_pin']['widget'][0]['value'],"Please Enter Valid Pincode.");
        }
-       if(empty($form['field_state_school']['widget'][0]['value']['#value'])){
-	$form_state->setError($form['field_state_school'],"Please enter state for school");
+       //Pincode School
+       if(!is_numeric($form['field_pincode_school']['widget'][0]['value']['#value'])){
+	 $form_state->setError($form['field_pincode_school']['widget'][0]['value'],"Please Enter Valid  Pincode.");
        }
-       if($form['field_year_of_passing']['widget']['#value']=='_none'){
-	$form_state->setError($form['field_year_of_passing'],"Please select year of passing");
+       
+       //Name of the Qualifying Examination
+       $Qulify_exam = $form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'];
+       if(!empty($form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'])){
+            if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/",$Qulify_exam)){
+	      $form_state->setError($form['field_name_of_the_qualifying_exa']['widget'][0]['value'],"Please Enter Name of the Qualifying Examination.");
+	    }
        }
-       if(empty($form['field_city']['widget'][0]['value']['#value'])){
-	$form_state->setError($form['field_city'],"Please enter city");
+       
+       // Name of the Board/University and Country
+       $board_uni = $form['field_name_of_the_board_universi']['widget'][0]['value']['#value'];
+       if(!empty($form['field_name_of_the_board_universi']['widget'][0]['value']['#value'])){
+	       if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/",$board_uni)){
+	 $form_state->setError($form['field_name_of_the_board_universi']['widget'][0]['value'],"Please Enter Name of the Board/University and Country.");
        }
-       if(empty($form['field_city_school']['widget'][0]['value']['#value'])){
-	$form_state->setError($form['field_city_school'],"Please enter city for school");
+       
+       // School/Institution Last Studied
+       $school = $form['field_school']['widget'][0]['value']['#value'];
+       if(!empty($form['field_school']['widget'][0]['value']['#value'])){
+	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.|\&)?([A-Za-z])+))*$/",$school)){
+	         $form_state->setError($form['field_school']['widget'][0]['value'],"Please Enter School/Institution Last Studied.");
+	      }
        }
-       if(empty($form['field_permanent_address']['widget'][0]['value']['#value'])){
-	$form_state->setError($form['field_permanent_address'],"Please enter permanent address");
+       
+       //Medium of Instruction
+       $medium_ins = $form['field_medium_of_instruction_']['widget'][0]['value']['#value'];
+        if(!empty($form['field_medium_of_instruction_']['widget'][0]['value']['#value'])){
+	        if(!preg_match("/^[A-Za-z]+((\s)?([A-Za-z])+)*$/",$medium_ins)){
+		     $form_state->setError($form['field_medium_of_instruction_']['widget'][0]['value'],"Please Enter Medium of Instruction.");
+	         }
+	      }
        }
        // if(empty($form['field_general_documents']['widget']['#file_upload_delta'])){
        //  $form_state->setError($form['field_general_documents'],"Please upload general document");
        // }
-       if(empty($form['field_medium_of_instruction_']['widget'][0]['value']['#value'])){
-	$form_state->setError($form['field_medium_of_instruction_'],"Please enter medium of instruction");
+       
+        // Performance in Competitive Examination (such as GRE, GMAT) 
+       $comp_per = $form['field_performance_in_competitive']['widget'][0]['#value']['tablefield']['table'];
+       foreach ($comp_per as $cp_clm_key => $cp_clm_value){   
+           foreach ($cp_clm_value as $cp_row_key => $cp_row_value){
+	      if(empty($cp_row_value)){
+	           $form_state->setError($form['field_performance_in_competitive']['widget'][0]['tablefield']['table'][$cp_clm_key][$cp_row_key],"Please Fill Performance in Competitive Examination.");
+	      }
+          }   
        }
-       if(empty($form['field_name_of_the_board_universi']['widget'][0]['value']['#value'])){
-	$form_state->setError($form['field_name_of_the_board_universi'],"Please enter name of the board");
+       
+       // Proficiency in English (TOEFL / IELTS)
+       $eng_prof = $form['field_proficiency_in_english']['widget'][0]['#value']['tablefield']['table'];
+       foreach ($eng_prof as $cp_clm_key => $cp_clm_value){   
+           foreach ($cp_clm_value as $cp_row_key => $cp_row_value){
+	      if(empty($cp_row_value)){
+	           $form_state->setError($form['field_proficiency_in_english']['widget'][0]['tablefield']['table'][$cp_clm_key][$cp_row_key],"Please Fill Proficiency in English.");
+	      }
+          }   
        }
-       */
+    
+       // Details of Academic Record (Secondary onwards) 
+       $academic_rec = $form['field_details_of_academic_record']['widget'][0]['#value']['tablefield']['table'];
+       foreach ($academic_rec as $ac_clm_key => $ac_clm_value){   
+           foreach ($ac_clm_value as $ac_row_key => $ac_row_value){
+	      if(empty($ac_row_value)){
+	           $form_state->setError($form['field_details_of_academic_record']['widget'][0]['tablefield']['table'][$ac_clm_key][$ac_row_key],"Please Fill Details of Academic Record.");
+	      }
+          }   
+       }
+      
+       // Research/ Professional Experience, Papers published etc. (upload a separate pdf for details, if required)
+	$research_exp = $form['field_research_professional_expe']['widget'][0]['#value']['tablefield']['table'];
+       foreach ($research_exp as $res_clm_key => $res_clm_value){   
+           foreach ($res_clm_value as $res_row_key => $res_row_value){
+	      if(empty($res_row_value)){
+	           $form_state->setError($form['field_research_professional_expe']['widget'][0]['tablefield']['table'][$res_clm_key][$res_row_key]," Please Fill Research/ Professional Experience, Papers published etc.");
+	      }
+          }   
+       }
+       // Employment Details
+	 $emp_det = $form['field_employment_details']['widget'][0]['#value']['tablefield']['table'];
+       foreach ($emp_det as $emp_clm_key => $emp_clm_value){   
+           foreach ($emp_clm_value as $emp_row_key => $emp_row_value){
+	      if(empty($emp_row_value)){
+	           $form_state->setError($form['field_employment_details']['widget'][0]['tablefield']['table'][$emp_clm_key][$emp_row_key]," Please Fill Employment Details.");
+	      }
+          }   
+       }
+      
     }
- }
+ } 
  
  /*
  * Implements hook_alter_submit().
