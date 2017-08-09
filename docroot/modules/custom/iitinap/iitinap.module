@@ -372,7 +372,7 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
        if ( $current_path =='/user/register') {
 	      $form['#validate'][] = 'form_validate_data2';
        }*/
-       if ($form['#form_id'] == 'user_register_form') {
+       if ($form['#form_id'] == 'user_register_form' || $form['#form_id'] == 'user_form') {
 	      $form['pass_condition'] = array(
 		     '#type' => 'markup',
 		     '#markup' => '<div class="password_chk"><h4 class="programs-apply">Password has following Requirement(s):</h4><br>
