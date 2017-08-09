@@ -368,9 +368,24 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
 	      $form['buttons']['update']['#value'] = t('Apply');
 	      $form['#submit'][] = 'iitnap_basiccart_alter_submit'; 
 	      $form['actions']['submit']['#submit'][] = 'form_submit';
-       }
+       }/*
        if ( $current_path =='/user/register') {
 	      $form['#validate'][] = 'form_validate_data2';
+       }*/
+       if ($form['#form_id'] == 'user_register_form') {
+	      $form['pass_condition'] = array(
+		     '#type' => 'markup',
+		     '#markup' => '<div class="password_chk"><h4 class="programs-apply">Password has following Requirement(s):</h4><br>
+			&#8226;  Password must contain at least one Digit.<br>
+			&#8226;  Password must contain at least one Uppercase character.<br>
+			&#8226;  Password must contain at least one Lowercase character.<br>
+			&#8226;  Password must contain at least one Special character.<br>
+			&#8226;  Password must be at least 6 characters in length.<br><br><br>',
+		     '#suffix' => '</div>',
+	      );
+	      
+	      //if ( $current_path =='/user/register') {
+           $form['#validate'][] = 'form_validate_data2';
        }
 }
 
@@ -379,8 +394,21 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
  *Implements form_validation() for registration.
  */
 function form_validate_data2($form, &$form_state){
+              $email = filter_var($form['account']['mail']['#value'], FILTER_VALIDATE_EMAIL);
+       if(!($email)){
+	      $form_state->setError($form['account']['mail'],"Invalid Email Format");
+       }
        if (preg_match('/[^a-z-0-9_-]/i', $form['account']['name']['#value'])) {
-	 $form_state->setError($form['account']['name'],"Please use - or _ character to split username");
+	      $form_state->setError($form['account']['name'],"Please use - or _ character to split username");
+       }
+       $password = $form['account']['pass']['#value']['pass1'];
+       $uppercase = preg_match('@[A-Z]@', $password);
+       $lowercase = preg_match('@[a-z]@', $password);
+       $number    = preg_match('@[0-9]@', $password);
+       $special   = preg_match('@[\W]+@', $password); 
+       if(!$uppercase || !$lowercase || !$number || strlen($password) < 6 || !$special) {
+           $form_state->setError($form['account']['pass']['pass1'],"Password Should Match with below Requirement(s)");
+           $form_state->setError($form['account']['pass']['pass2'],"Password Should Match with below Requirement(s)"); 
        }
 }
 /**
@@ -531,7 +559,7 @@ function form_validate_data1($form, &$form_state) {
 	      }
           }   
        }
-    
+       /*
        // Details of Academic Record (Secondary onwards) 
        $academic_rec = $form['field_details_of_academic_record']['widget'][0]['#value']['tablefield']['table'];
        foreach ($academic_rec as $ac_clm_key => $ac_clm_value){   
@@ -559,7 +587,7 @@ function form_validate_data1($form, &$form_state) {
 	           $form_state->setError($form['field_employment_details']['widget'][0]['tablefield']['table'][$emp_clm_key][$emp_row_key]," Please Fill Employment Details.");
 	      }
           }   
-       }
+       }*/
       
     }
  } 
@@ -633,7 +661,9 @@ function iitinap_node_view(array &$build, EntityInterface $node, EntityViewDispl
  * Implements hook_menu_local_tasks_alter().
  */
 function iitinap_menu_local_tasks_alter(&$data, $route_name) {
+       $data['tabs'][0]['entity.profile.user_profile_form:profile.type.student_application_']['#link']['title'] = "Edit Applicant Details";
        $data['tabs'][0]['entity.node.workflow_history']['#link']['title'] = "History";
+       $data['tabs'][0]['entity.user.edit_form']['#link']['title'] = "Account Details";
 }
 
 /**
@@ -665,7 +695,7 @@ function iitinap_form_views_exposed_form_alter(array &$form, FormStateInterface 
        switch ($form['#id']) {
 	  case 'views-exposed-form-solr-s-page-1':
 	    //Setting placeholder
-		 $form['aggregated_field']['#attributes']['placeholder'] = t('Search Programs,Departments,Institutes');
+		 $form['aggregated_field']['#attributes']['placeholder'] = t('Search Programs, Departments, Institutes');
        }
 }
 
