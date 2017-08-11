@@ -78,7 +78,8 @@ class thankyoupage extends FormBase {
 			
 			
 			//PDF Generate Code  july 18
-			  $username = \Drupal::currentUser()->getUsername();
+			  $user = \Drupal::currentUser()->getUsername();
+			  $username = str_replace(" ","_",$user);
 			  $account = \Drupal::currentUser()->id();
 			  $query = \Drupal::entityQuery('profile')
 			     ->condition('status', 1)
