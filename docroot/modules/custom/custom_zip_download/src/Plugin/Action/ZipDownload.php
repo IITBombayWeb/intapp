@@ -46,7 +46,7 @@ class ZipDownload extends ActionBase {
     # close zip
     $zip->close();
     # send the file to the browser as a download
-    header('Content-disposition: attachment; filename=Resumes.zip');
+    header('Content-disposition: attachment; filename=Applications.zip');
     header('Content-type: application/zip');
     readfile($tmp_file);
     exit;
