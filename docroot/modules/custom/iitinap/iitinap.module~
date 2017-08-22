@@ -51,6 +51,11 @@ function iitinap_mail($key, &$message, $params) {
 		     $message['subject'] = t($subject, $options);
 		     $message['body'][] = $params['message'];
 	     break;
+             case 'create_user':
+		     $message['from'] = \Drupal::config('system.site')->get('mail');
+		     $message['subject'] = t('Welcome to the site!'.\Drupal::config('system.site')->get('name'));
+		     $message['body'][] = $params['message'];
+             break;
        }
  }
 
@@ -733,5 +738,39 @@ function _iitinap_user_login_form_submit($form, FormStateInterface $form_state) 
 			    }
 		     return;
    // $form_state->setRedirect('/homepage');
+    
+}
+/*
+ * hook_user_insert(). 
+ */
+function iitinap_user_insert($account) {
+  $config = \Drupal::config('system.site');
+  $site_name= $config->get('name');
+  $mailManager = \Drupal::service('plugin.manager.mail');
+  $module = 'iitinap';
+  $key = 'create_user';
+  $to = $account->getEmail();
+  $params['message'] = 'Hi '.$account->getUsername().',<br> Thanks for registering '.$site_name.' You can use Further login in the site using below Credentials.<br><p></p><table cellpadding = "3" cellspacing = "3" ><tr><td>Username</td><td>:<b>'.$account->getUsername().'</b></td></tr><tr><td>Password</td><td>:'.$account->getPassword().'</td></tr></table><br> Regards,<br>'.$site_name;
+  $langcode = $account->getPreferredLangcode();
+  $send = true;
+
+  $result = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
+  if ($result['result'] !== true) {
+    drupal_set_message(t('There was a problem sending your message and it was not sent.'), 'error');
+  }
+  else {
+    drupal_set_message(t('User has been Created.'));
+  }
+
+}
+
+/*
+ * hook_mail_alter(). 
+ */
+function iitinap_mail_alter(&$message) {
+     if($message[id] == 'user_register_no_approval_required'){
+       $message['send'] = FALSE;
+      return; 
+     }
     
 }
