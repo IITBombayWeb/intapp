@@ -750,7 +750,7 @@ function iitinap_user_insert($account) {
   $module = 'iitinap';
   $key = 'create_user';
   $to = $account->getEmail();
-  $params['message'] = 'Hi '.$account->getUsername().',<br> Thanks for registering '.$site_name.' You can use Further login in the site using below Credentials.<br><p></p><table cellpadding = "3" cellspacing = "3" ><tr><td>Username</td><td>:<b>'.$account->getUsername().'</b></td></tr><tr><td>Password</td><td>:Your Password'</td></tr></table><br> Regards,<br>'.$site_name;
+  $params['message'] = 'Hi '.$account->getUsername().',<br> Thanks for registering '.$site_name.' You can use Further login in the site using below Credentials.<br><p></p><table cellpadding = "3" cellspacing = "3" ><tr><td>Username</td><td>:<b>'.$account->getUsername().'</b></td></tr><tr><td>Password</td><td>:Your Password</td></tr></table><br> Regards,<br>'.$site_name;
   $langcode = $account->getPreferredLangcode();
   $send = true;
 
