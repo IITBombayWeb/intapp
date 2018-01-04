@@ -51,9 +51,6 @@ class CartForm extends FormBase {
         "#suffix" =>    '</div></div></div>',
         "#prefix" => $this->get_quantity_prefix_suffix($nid,$langcode),
         '#default_value' => $quantity,
-        // TO DO  
-       //'#url' => $cart['cart'][$nid]->urlInfo('canonical'),
-        //'#theme' => 'basiccart_quantity',
       );
     }
   
@@ -62,7 +59,6 @@ class CartForm extends FormBase {
       '#markup' => $this->get_total_price_markup(),
       '#prefix' => '<div class="basiccart-cart basiccart-grid bascart-totl">',
       '#suffix' => '</div>',
-     // '#theme' => 'cart_total_price',
     );
     
     // Buttons.

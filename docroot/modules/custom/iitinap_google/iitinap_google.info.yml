@@ -1,7 +1,0 @@
-name: IITinap Google
-description: 'EventSubscriber google module for Social Auth.'
-package: Social
-type: module
-core: 8.x
-dependencies:
-  - social_auth

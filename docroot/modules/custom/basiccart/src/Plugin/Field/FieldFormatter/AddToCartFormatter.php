@@ -33,7 +33,6 @@ class AddtoCartFormatter extends FormatterBase {
       'absolute' => TRUE
       ];
       $url = Url::fromRoute('basiccart.cartadd',["nid"=>$entity->id()],$option);
-     // print_r($url->toString()); die;
       $link = '<a id="forquantitydynamictext_'.$entity->id().'" class="basiccart-get-quantity button use-basiccart-ajax" href="'.$url->toString().'">'.$this->t($config->get('add_to_cart_button')).'</a>';
     $link_options = [
       'attributes' => [
@@ -46,8 +45,6 @@ class AddtoCartFormatter extends FormatterBase {
     ];
     $url->setOptions($link_options);
 
-
-  //$link = new Link($this->t($config->get('add_to_cart_button')),$url);
       foreach ($items as $delta => $item) {
         $elements[$delta] = ['#type' => 'container',
         '#attributes' => ['class' => 'ajax-addtocart-wrapper' ,'id' => 'ajax-addtocart-message-'.$entity->id()],

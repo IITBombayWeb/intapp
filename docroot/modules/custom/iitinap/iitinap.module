@@ -90,7 +90,6 @@ function iitinap_workflow($op, WorkflowTransitionInterface $transition, UserInte
 	 $depart  = $node->getTranslation($langcode)->get('field_departments')->getValue()[0]['target_id'];
 	 $departs = taxonomy_term_load($depart);
 	 $departments = $departs->getTranslation($langcode)->get('name')->getValue()[0]['value'];
-	 //$application_name =  $departments = $departs->getTranslation('en')->get('name')->getValue()[0]['value']; 
 	 $term = $node->field_institute;
 	 $tax = $term->target_id;
 	 $ins = taxonomy_term_load($tax);
@@ -149,8 +148,7 @@ function iitinap_theme() {
  */
 
 function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
-
-       //naga 
+       
        if ($form['#form_id'] == 'workflow-transition-field-status-form--2') {	     
 	    //Node id
 	    $node = \Drupal::routeMatch()->getParameter('node');
@@ -284,7 +282,6 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
        }
 	      $form['actions']['submit']['#value']="Apply";	
 	      $form['#validate'][] = 'form_validate_data1';
-	      //$form['field_supporting_d']['widget']['#file_upload_description']['#cardinality']=$cardinality;
 	      $form['field_supporting_d']['#no_doc'] = $cardinality;
 	      $form['actions']['submit']['#submit'][]='custom_form_submit';
 	      unset($form['actions']['set_default']);
@@ -292,7 +289,6 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
        $session = \Drupal::service('user.private_tempstore')->get('hello_world');
        $application_id =  $session->get('application_id');
        if (isset($application_id) && isset($programme_id) && ($form['#form_id'] == 'profile_student_application_edit_form')) {
-	     // $form['#submit'][] = "application_save_submit";
 	      $form['actions']['submit']['#submit'][] = "application_save_submit";
        }
 
@@ -373,10 +369,7 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
 	      $form['buttons']['update']['#value'] = t('Apply');
 	      $form['#submit'][] = 'iitnap_basiccart_alter_submit'; 
 	      $form['actions']['submit']['#submit'][] = 'form_submit';
-       }/*
-       if ( $current_path =='/user/register') {
-	      $form['#validate'][] = 'form_validate_data2';
-       }*/
+       }
        if ($form['#form_id'] == 'user_register_form' || $form['#form_id'] == 'user_form') {
 	      $form['pass_condition'] = array(
 		     '#type' => 'markup',
@@ -389,8 +382,7 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
 		     '#suffix' => '</div>',
 	      );
 	      
-	      //if ( $current_path =='/user/register') {
-           $form['#validate'][] = 'form_validate_data2';
+	           $form['#validate'][] = 'form_validate_data2';
        }
 }
 
@@ -399,6 +391,7 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
  *Implements form_validation() for registration.
  */
 function form_validate_data2($form, &$form_state){
+       /*
               $email = filter_var($form['account']['mail']['#value'], FILTER_VALIDATE_EMAIL);
        if(!($email)){
 	      $form_state->setError($form['account']['mail'],"Invalid Email Format");
@@ -415,6 +408,7 @@ function form_validate_data2($form, &$form_state){
            $form_state->setError($form['account']['pass']['pass1'],"Password Should Match with below Requirement(s)");
            $form_state->setError($form['account']['pass']['pass2'],"Password Should Match with below Requirement(s)"); 
        }
+       */
 }
 /**
  *Implements form_validation() for application.
@@ -632,8 +626,7 @@ function application_save_submit(&$form, \Drupal\Core\Form\FormStateInterface $f
 			  $url = URL::fromUserInput('/user/'.$user);
 			  $form_state->setRedirectUrl($url);
 		     }else{
-			  //$application_id['cart'];
-			  $form_state->setRedirect('paypal.conform');
+			  $form_state->setRedirect('paypal.confirm');
 		     }       
 	      return;     
  }
@@ -641,14 +634,13 @@ function application_save_submit(&$form, \Drupal\Core\Form\FormStateInterface $f
  * hook_page_attachments
  */
 function iitinap_page_attachments(array &$attachments) {
-  //dpm($attachments);
-  $attachments['#attached']['library'][] = 'iitinap/iitinap';
+    $attachments['#attached']['library'][] = 'iitinap/iitinap';
 }
 /**
  * Implements field_views_data_views_data_alter().
  */
 function iitinap_field_views_data_views_data_alter(array &$data, \Drupal\field\FieldStorageConfigInterface $field){
-  //dpm($data);
+  
 }
 
 /**
@@ -677,8 +669,6 @@ function iitinap_menu_local_tasks_alter(&$data, $route_name) {
 function iitinap_local_tasks_alter(&$local_tasks) {
        unset($local_tasks['entity.comment.delete_form_tab']);
        unset($local_tasks['devel.entities:block.devel_tab']);
-	    /*  devel.entities:block.devel_load_tab
-       devel.entities:block_content_type.devel_tab*/
        // Change 'Results' route to display the results 'Table'.
        $local_tasks['entity.webform.results']['route_name'] = 'entity.webform.results_table';
        // Move the 'Table' sub task to be first.
@@ -737,13 +727,11 @@ function _iitinap_user_login_form_submit($form, FormStateInterface $form_state) 
 			    
 			    }
 		     return;
-   // $form_state->setRedirect('/homepage');
-    
+  
 }
-/*
- * hook_user_insert(). 
- */
+
 function iitinap_user_insert($account) {
+
   $config = \Drupal::config('system.site');
   $site_name= $config->get('name');
   $mailManager = \Drupal::service('plugin.manager.mail');
@@ -764,13 +752,21 @@ function iitinap_user_insert($account) {
 
 }
 
-/*
- * hook_mail_alter(). 
- */
+
 function iitinap_mail_alter(&$message) {
      if($message[id] == 'user_register_no_approval_required'){
        $message['send'] = FALSE;
-      return; 
+       return; 
      }
     
+}
+
+
+function iitinap_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+       /*
+    if($entity->getEntityTypeId() == 'user'){
+       $user_name = str_replace(" ","_",$entity->getUsername());
+       $entity->setUsername($user_name);
+    }
+    */
 }

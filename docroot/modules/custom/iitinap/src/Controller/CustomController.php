@@ -55,8 +55,6 @@ class CustomController extends ControllerBase
         $profile = Profile::load($nids[0]);
         $langcode = $profile->language()->getId();
         $term = $profile->getTranslation($langcode)->get('field_institute')->getValue()[0]['target_id']; 
-        //$load = taxonomy_term_load($term); 
-        //$url = $load->getTranslation($langcode)->get('name')->getValue()[0]['value'];
         return new RedirectResponse(URL::fromUserInput('/view-application-lists/'. $term)->toString());
       } 
      }else{
@@ -81,8 +79,7 @@ class CustomController extends ControllerBase
      $nodes = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->load($node);
-      //dpm($nodes->get('nid')->value);
-    $type = $nodes->getTranslation('en')->get('type')->getValue()[0]['target_id'];
+       $type = $nodes->getTranslation('en')->get('type')->getValue()[0]['target_id'];
     if($type == 'application') {
     $user = \Drupal::currentUser();
     $roles = $user->getRoles();
@@ -92,7 +89,6 @@ class CustomController extends ControllerBase
         ->condition('uid', $user->id());
       $nids = $query->execute();
    	$result = db_select('workflow_transition_history', 't_alias')->fields('t_alias', array('hid', 'comment'))->condition('entity_id', $nodes->get('nid')->value )->condition('to_sid', 'apply_need_more_info')->execute()->fetchAll();
-      //dpm($nodes->get('nid')->value);
       $nids = array_values($nids);
       if(isset($nids[0])) {
         $profile = Profile::load($nids[0]);
@@ -126,29 +122,19 @@ class CustomController extends ControllerBase
     $nodes = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->loadMultiple($nids);
-      //dpm($nodes);
-      //dpm($nids);
-      $i =0;
+        $i =0;
       foreach($nids as $nid){
-        //dpm($nodes[$nid]);
          $langcode = $nodes[$nid]->language()->getId();
         $value = $nodes[$nid]->getTranslation('en')->get('field_programme')->getValue()[0]['target_id'];
      
         $term1 = Node::load($value);
            if(isset($term1)){
-        //dpm($term1);
         $data = array();
         $data .= $term1->getTranslation('en')->get('title')->getValue()[0]['value'];
         $programme = array();
-        //dpm($data);
         $programme .= $data;
-        //dpm($programme[$i]);
-        //$i++;
-
-        //dpm($data);
-           }
+            }
       }
-      //dpm($programme);
       $row = array();
     $row = array(0=> array(
                            'a'=>'a',

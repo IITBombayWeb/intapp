@@ -23,9 +23,7 @@ class CartBlock extends BlockBase {
   public function build() {
     $utility = new Utility();
   	$config = $utility::cart_settings();
-     return array(
-      //'#theme' => 'basiccart_cart_template',
-      //'#basiccart' => array(),	
+     return array(	
       '#type' => 'markup',
       '#title' => $config->get('cart_block_title'),
       '#markup' => $utility->get_cart_content(),

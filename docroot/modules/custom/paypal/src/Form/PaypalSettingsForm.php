@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\xai\Form\SettingsForm.
+ * Contains Drupal\paypal\Form\SettingsForm.
  */
 
 namespace Drupal\paypal\Form;
@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Class SettingsForm.
  *
- * @package Drupal\xai\Form
+ * @package Drupal\paypal\Form
  */
 class PaypalSettingsForm extends ConfigFormBase {
 
@@ -73,6 +73,19 @@ class PaypalSettingsForm extends ConfigFormBase {
         '#description' => t("Please Enter the Currency Code ."),
         '#default_value' => $config->get('cc'),
     );
+    $form['Paypal']['paypal_hostname'] = array(
+        '#title' => t('Paypal Hostname For PDT  '),
+        '#type' => 'textfield',
+        '#description' => t("Paypal Hostname name For PDT Verification ."),
+        '#default_value' => $config->get('hostname'),
+    );
+    $form['Paypal']['paypal_auth_token'] = array(
+        '#title' => t('Paypal Authentication Token For PDT '),
+        '#type' => 'textfield',
+        '#description' => t("Paypal Authentication Token For PDT Verification ."),
+        '#default_value' => $config->get('auth_token'),
+    );
+    
     return parent::buildForm($form, $form_state);
   }
 
@@ -94,6 +107,8 @@ class PaypalSettingsForm extends ConfigFormBase {
       ->set('cancel', $form_state->getValue('paypal_cancel'))
       ->set('notify', $form_state->getValue('paypal_notify'))
       ->set('cc', $form_state->getValue('paypal_cc'))
+      ->set('hostname', $form_state->getValue('paypal_hostname'))
+      ->set('auth_token', $form_state->getValue('paypal_auth_token'))
       ->save();
        parent::submitForm($form, $form_state);
 

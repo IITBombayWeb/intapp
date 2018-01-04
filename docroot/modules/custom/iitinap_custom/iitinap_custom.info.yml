@@ -1,7 +1,0 @@
-name: IITInap Custom
-description: 'Using this module interaction with Simple FB Connect.'
-package: Custom
-type: module
-core: 8.x
-dependencies:
-  - simple_fb_connect

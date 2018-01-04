@@ -4,33 +4,3 @@
  * @file
  * Contains custom_pdf_download.module..
  */
-
-use Drupal\profile\Entity\Profile;
-use Drupal\profile\Entity;
-use Drupal\file\Entity\File;
-use Dompdf\Dompdf;
-use Drupal\Core\Url;
-use Drupal\user\Entity\User;
-
-
-/**
- * Implements hook_form_alter().
- */
-function custom_pdf_download_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  
-  //dpm($form_id);
-  //dpm($form);
-  if ($form_id == 'profile_student_application__edit_form' || $form_id == 'profile_student_application__add_form') {
-    // Add a custom submit handler to save the array of types back to the config file.
-    $form['actions']['submit']['#submit'][] = 'custom_pdf_download_form_application_submit';
-  }
-}
-
-/**
- * Implements custom_pdf_download_form_application_submit().
- */
-function custom_pdf_download_form_application_submit($form, \Drupal\Core\Form\FormStateInterface $form_state) {
-
- 
-}
-

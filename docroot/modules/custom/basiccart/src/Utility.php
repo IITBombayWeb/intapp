@@ -110,7 +110,6 @@ foreach ($cart['cart'] as $nid => $node) {
     }
    $value = 0;
   }
-  //dpm($total_price);
   $return['price'] = $total_price;
   
   // Checking whether to apply the VAT or not.
@@ -122,8 +121,6 @@ foreach ($cart['cart'] as $nid => $node) {
     // Adding VAT and total price to the return array.
     $return['vat'] = $vat_value;
   }
- // dpm($a);
-  //dpm($b);
   $return['total'] = $total_price;
   return (object) $return;
 }
@@ -141,7 +138,7 @@ public static function remove_from_cart($nid = NULL) {
     unset($_SESSION['basiccart']['cart_quantity'][$nid]);
   }
   self::cart_updated_message();
-  //drupal_goto('cart');
+ 
 }
 
 /**
@@ -410,9 +407,9 @@ public static function price_format($price) {
   $output .= '<div class="basiccart-grid basic-cart-block empt-cart">'.t($config->get('empty_cart')).'</div>';
   } 
 else {
- // if ($status == 'add' || count($cart_cart) == 1) {
+
     $output .= '<div class="basiccart-grid basic-cart-block test bscart-pop clearfix">';
-  //}
+
   if(is_array($cart_cart) && count($cart_cart) >= 1){
     foreach($cart_cart as $nid => $node){
     $langcode = $node->language()->getId();
@@ -432,32 +429,21 @@ else {
           $output .= '<div class="basiccart-cart-quantity cell">'.$cart['cart_quantity'][$nid].'</div>';
           $output .= '<div class="basiccart-cart-x cell">x</div>';
          }
-      // Block cart amount removed
-        // $output .='<div class="basiccart-cart-unit-price cell">';
-       //$output .= isset($price_value[0]) ? '<strong>'.$Utility->price_format($price_value[0]['value']).'</strong>' : $Utility->price_format(0);
        $output .='</div></div>';
     }
-
-      // $output .=  '<div class="basiccart-cart-total-price-contents">
-      //  <div class="basiccart-total-price cell">
-      //      '.t($config->get('total_price_label')).':<strong>'.$Utility->price_format($total_price->total).'</strong>
-      //  </div>
-      //</div>';
-        if (!empty ($config->get('vat_state'))) {
+    if (!empty ($config->get('vat_state'))) {
        $output .='<div class="basiccart-block-total-vat-contents">
           <div class="basiccart-total-vat cell">'.t('Total VAT').': <strong>'.$Utility->price_format($total_price->vat).'</strong></div>
         </div>';
         }
       $url = new Url('basiccart.cart');
-      //$link = new Link($this->t($config->get('view_cart_button')),$url);
       $link = "<a href='".$url->toString()."' class='button'>".t($config->get('view_cart_button'))."</a>";
         $output .='<div class="basiccart-cart-checkout-button basiccart-cart-checkout-button-block">
         '.$link.'
       </div>';
   }
- // if ($status == 'add' || count($cart_cart) == 1) {
     $output .= '</div>';
- // }
+
 }
 
 
