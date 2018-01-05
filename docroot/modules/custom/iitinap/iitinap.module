@@ -626,8 +626,9 @@ function application_save_submit(&$form, \Drupal\Core\Form\FormStateInterface $f
 			  $url = URL::fromUserInput('/user/'.$user);
 			  $form_state->setRedirectUrl($url);
 		     }else{
-		     	exit;
-			  $form_state->setRedirect('paypal.confirm');
+
+			  print_r($form_state->setRedirect('paypal.confirm'));
+			  exit;
 		     }       
 	      return;     
  }
