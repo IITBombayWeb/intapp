@@ -168,6 +168,7 @@ class ConfirmPayment extends FormBase {
           $time,
         ])
         ->execute();
+        print_r("paypal test")
       header('location:https://' . $paypal_url . '/cgi-bin/webscr' . $querystring);
       exit;
 
