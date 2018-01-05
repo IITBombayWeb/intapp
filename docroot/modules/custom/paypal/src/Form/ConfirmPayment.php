@@ -25,7 +25,6 @@ class ConfirmPayment extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    
     module_load_include('inc', 'basiccart');
     $application_id = basiccart_get_cart();
     $applicationArray = $application_id['cart'];
@@ -168,7 +167,6 @@ class ConfirmPayment extends FormBase {
           $time,
         ])
         ->execute();
-        print_r("paypal test")
       header('location:https://' . $paypal_url . '/cgi-bin/webscr' . $querystring);
       exit;
 
