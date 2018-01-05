@@ -25,6 +25,7 @@ class ConfirmPayment extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+print_r("paypal exit");
     exit;
     module_load_include('inc', 'basiccart');
     $application_id = basiccart_get_cart();
