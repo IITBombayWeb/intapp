@@ -26,6 +26,8 @@ class Thankyoupage extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    print_r("welcome");
+    exit;
     $user = \Drupal::currentUser()->id();
     if (isset($_GET['tx']) && !empty($_GET['tx']) && isset($_GET['cc']) && !empty($_GET['cc']) && isset($_GET['amt']) && !empty($_GET['amt']) && isset($_GET['cm']) && !empty($_GET['cm']) && isset($_GET['tx']) && !empty($_GET['tx'])) {
       $query = \Drupal::database()->select('paypal_payment_status', 'pay_st');
