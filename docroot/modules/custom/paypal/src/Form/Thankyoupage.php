@@ -36,11 +36,11 @@ class Thankyoupage extends FormBase {
       $result = $query->execute()->fetchAssoc();
       if ($result['user_id'] == $user && $result['custom_id'] == $_GET['cm']) {
         // Condition for pdt token check.
-       /* $tx = $_GET['tx'];
+        $tx = $_GET['tx'];
         module_load_include('inc', 'paypal');
         $tx_status = pdt_token($tx);
         if ($tx_status == 'SUCCESS') {
-        */
+        
           if ($result['payment_status'] == 'pending' && $result['before_amount'] == $_GET['amt']) {
             $time = time();
             $query = \Drupal::database()->update('paypal_payment_status');
@@ -379,10 +379,10 @@ class Thankyoupage extends FormBase {
             // Application Already created.
             $notify_msg = "Your transaction has been completed. Please Contact Admin for any assistance.";
           }
-        /* }
+        }
         elseif ($tx_status == 'FAIL') {
           drupal_set_message("Invalid Transaction Please Contact Admin for any assistance.");
-        }*/
+        }
       }
       else {
         throw new AccessDeniedHttpException();
