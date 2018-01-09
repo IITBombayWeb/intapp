@@ -3,20 +3,20 @@ paypal.confirm:
  defaults:
    _form: '\Drupal\paypal\Form\ConfirmPayment'
  requirements:
-   _permission: 'access content'
+   _role: 'authenticated user'
 paypal.thankyou:
  path: '/paypal/thankyou'
  defaults:
    _form: '\Drupal\paypal\Form\Thankyoupage'
  requirements:
-   _permission: 'access content'
+   _role: 'authenticated user'
 paypal.process:
  path: '/paypal/ipn_notification'
  defaults:
    _title: 'IPN Notification'
    _form: '\Drupal\paypal\Form\ProcessPage'
  requirements:
-   _permission: 'access content'
+   _role: 'authenticated user'
 paypal.settings_file:
  path: 'admin/config/paypal/settings'
  defaults:
