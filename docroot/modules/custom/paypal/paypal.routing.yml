@@ -23,4 +23,5 @@ paypal.settings_file:
   _form: '\Drupal\paypal\Form\PaypalSettingsForm'
   _title: 'Paypal Config Settings'
  requirements:
-  _permission: 'access content'
+  _role: 'administrator'
+  
