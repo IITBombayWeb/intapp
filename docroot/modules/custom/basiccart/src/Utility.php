@@ -102,6 +102,7 @@ foreach ($cart['cart'] as $nid => $node) {
     $list_of_iits[]=$iit_name;
   }
   $filtr_iits = array_unique($list_of_iits);
+  if (is_array($filtr_iits)) {
   foreach($filtr_iits as $key => $tax_term){
      $tax_term_load = taxonomy_term_load($tax_term);
      $institute_price = $tax_term_load->getTranslation('en')->get('field_iit_app_price')->getValue()[0]['value'];
@@ -110,6 +111,7 @@ foreach ($cart['cart'] as $nid => $node) {
     }
    $value = 0;
   }
+}
   $return['price'] = $total_price;
   
   // Checking whether to apply the VAT or not.
