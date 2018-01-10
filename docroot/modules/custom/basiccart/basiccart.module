@@ -308,12 +308,25 @@ function basiccart_tokens($type, $tokens, array $data, array $options, Bubbleabl
 function basiccart_token_info() {
 	
   $info = array();
-
+   //applying patch
   // Add any new tokens.
-  $info['tokens']['basiccart_order']['products'] = 'Listing of ordered products.';
-  $info['tokens']['basiccart_order']['basiccart_total_price'] = 'Total Price of the Order';
-  $info['tokens']['basiccart_order']['basiccart_vat'] = 'VAT value of the order.';
-  $info['tokens']['basiccart_order']['basiccart_email'] = 'Email defined with the order.';
+  $info['tokens']['basic_cart_order']['products'] = [
+   'name' => t('Products'),
+    'description' => t('Listing of ordered products.')
+  ];
+  $info['tokens']['basic_cart_order']['basic_cart_total_price'] = [
+    'name' => t('Basic cart total price'),
+    'description' => t('Total price of the order'),
+  ];
+  $info['tokens']['basic_cart_order']['basic_cart_vat'] = [
+    'name' => t('Basic cart VAT'),
+    'description' => t('VAT value of the order.'),
+  ];
+  $info['tokens']['basic_cart_order']['basic_cart_email'] = [
+    'name' => t('Basic cart email'),
+    'description' => t('Email defined with the order.'),
+  ];
+
 
   // Return them.
   return $info;
