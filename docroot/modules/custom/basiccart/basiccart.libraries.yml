@@ -7,6 +7,4 @@ basiccart:
   js/basiccart.js: {}
  dependencies:
   - core/jquery
-  - core/jquery.ui
-  - core/drupal    
-  - core/drupalSettings   
+     
