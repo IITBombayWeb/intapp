@@ -243,6 +243,7 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
 	      $count = $count + $no_doc[$k];
 	      $j++;
        }
+       if (is_array($name)){
        foreach ($name as $key => $value) {
 	      foreach ($value as $key1 => $val) {
 		     if (!empty($val)) {            
@@ -250,6 +251,7 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
 		     }
 	      }
        }
+   }
        $document = (array_values(array_unique($push)));
        for ($i=0;$i<count($document);$i++) {
 	      $sup_doc[$document[$i]] = $document[$i];
