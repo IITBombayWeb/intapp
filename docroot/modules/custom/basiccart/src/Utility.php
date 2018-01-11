@@ -101,6 +101,7 @@ foreach ($cart['cart'] as $nid => $node) {
 	$iit_name = $node_load->getTranslation('en')->get('field_institute')->getValue()[0]['target_id'];
     $list_of_iits[]=$iit_name;
   }
+  if(is_array($list_of_iits)){
   $filtr_iits = array_unique($list_of_iits);
   if (is_array($filtr_iits)) {
   foreach($filtr_iits as $key => $tax_term){
@@ -111,6 +112,7 @@ foreach ($cart['cart'] as $nid => $node) {
     }
    $value = 0;
   }
+}
 }
   $return['price'] = $total_price;
   
