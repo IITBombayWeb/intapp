@@ -33,9 +33,6 @@ class MigrationEditForm extends MigrationFormBase {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = t('Update Migration');
 
-    // Add the group parameter to the delete URL.
-    $this->addGroupParameter($actions['delete']['#url'], $this->getEntity()->get('migration_group'));
-
     return $actions;
   }
 
@@ -47,7 +44,7 @@ class MigrationEditForm extends MigrationFormBase {
    *   The migration's parent group.
    */
   protected function addGroupParameter(Url $url, $migration_group) {
-    $route_parameters = $url->getRouteParameters() + array('migration_group' => $migration_group);
+    $route_parameters = $url->getRouteParameters() + ['migration_group' => $migration_group];
     $url->setRouteParameters($route_parameters);
   }
 

@@ -7,6 +7,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\facets\Annotation\FacetsProcessor;
 
 /**
  * Manages processor plugins.
@@ -24,7 +25,7 @@ class ProcessorPluginManager extends DefaultPluginManager {
    * {@inheritdoc}
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TranslationInterface $translation) {
-    parent::__construct('Plugin/facets/processor', $namespaces, $module_handler, 'Drupal\facets\Processor\ProcessorInterface', 'Drupal\facets\Annotation\FacetsProcessor');
+    parent::__construct('Plugin/facets/processor', $namespaces, $module_handler, ProcessorInterface::class, FacetsProcessor::class);
     $this->setCacheBackend($cache_backend, 'facets_processors');
     $this->setStringTranslation($translation);
   }
@@ -42,17 +43,20 @@ class ProcessorPluginManager extends DefaultPluginManager {
    *   - label: The translated label for this stage.
    */
   public function getProcessingStages() {
-    return array(
-      ProcessorInterface::STAGE_PRE_QUERY => array(
+    return [
+      ProcessorInterface::STAGE_PRE_QUERY => [
         'label' => $this->t('Pre query stage'),
-      ),
-      ProcessorInterface::STAGE_POST_QUERY => array(
+      ],
+      ProcessorInterface::STAGE_POST_QUERY => [
         'label' => $this->t('Post query stage'),
-      ),
-      ProcessorInterface::STAGE_BUILD => array(
+      ],
+      ProcessorInterface::STAGE_BUILD => [
         'label' => $this->t('Build stage'),
-      ),
-    );
+      ],
+      ProcessorInterface::STAGE_SORT => [
+        'label' => $this->t('Sort stage'),
+      ],
+    ];
   }
 
 }

@@ -2,33 +2,15 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
-use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\widget\CheckboxWidget;
-use Drupal\facets\Result\Result;
-use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Unit test for widget.
  *
  * @group facets
  */
-class CheckboxWidgetTest extends UnitTestCase {
-
-  /**
-   * The processor to be tested.
-   *
-   * @var \Drupal\facets\Plugin\facets\widget\CheckboxWidget
-   */
-  protected $widget;
-
-  /**
-   * An array containing the results before the processor has ran.
-   *
-   * @var \Drupal\facets\Result\Result[]
-   */
-  protected $originalResults;
+class CheckboxWidgetTest extends WidgetTestBase {
 
   /**
    * Creates a new processor object for use in the tests.
@@ -36,48 +18,52 @@ class CheckboxWidgetTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    /** @var \Drupal\facets\Result\Result[] $original_results */
-    $original_results = [
-      new Result('llama', 'Llama', 10),
-      new Result('badger', 'Badger', 20),
-      new Result('duck', 'Duck', 15),
-      new Result('alpaca', 'Alpaca', 9),
-    ];
-
-    foreach ($original_results as $original_result) {
-      $original_result->setUrl(new Url('test'));
-    }
-    $this->originalResults = $original_results;
-
-    $form_builder = $this->getMockBuilder('\Drupal\Core\Form\FormBuilder')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $form_builder->expects($this->once())
-      ->method('getForm')
-      ->willReturn('build');
-
-    $string_translation = $this->getMockBuilder('\Drupal\Core\StringTranslation\TranslationManager')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $container_builder = new ContainerBuilder();
-    $container_builder->set('form_builder', $form_builder);
-    $container_builder->set('string_translation', $string_translation);
-    \Drupal::setContainer($container_builder);
-
-    $this->widget = new CheckboxWidget();
+    $this->widget = new CheckboxWidget(['show_numbers' => TRUE]);
   }
 
   /**
-   * Tests widget with default settings.
+   * Tests widget without filters.
    */
-  public function testDefaultSettings() {
-    $facet = new Facet([], 'facet');
+  public function testNoFilterResults() {
+    $facet = $this->facet;
     $facet->setResults($this->originalResults);
-    $facet->setFieldIdentifier('test_field');
 
-    $built_form = $this->widget->build($facet);
-    $this->assertEquals('build', $built_form);
+    $output = $this->widget->build($facet);
+
+    $this->assertInternalType('array', $output);
+    $this->assertCount(4, $output['#items']);
+
+    $this->assertEquals(['js-facets-checkbox-links'], $output['#attributes']['class']);
+
+    $expected_links = [
+      $this->buildLinkAssertion('Llama', 'llama', $facet, 10),
+      $this->buildLinkAssertion('Badger', 'badger', $facet, 20),
+      $this->buildLinkAssertion('Duck', 'duck', $facet, 15),
+      $this->buildLinkAssertion('Alpaca', 'alpaca', $facet, 9),
+    ];
+    foreach ($expected_links as $index => $value) {
+      $this->assertInternalType('array', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]['#title']);
+      $this->assertInternalType('array', $output['#items'][$index]['#title']);
+      $this->assertEquals('link', $output['#items'][$index]['#type']);
+      $this->assertEquals(['facet-item'], $output['#items'][$index]['#wrapper_attributes']['class']);
+    }
+  }
+
+  /**
+   * Tests default configuration.
+   */
+  public function testDefaultConfiguration() {
+    $default_config = $this->widget->defaultConfiguration();
+    $expected = [
+      'show_numbers' => FALSE,
+      'soft_limit' => 0,
+      'soft_limit_settings' => [
+        'show_less_label' => 'Show less',
+        'show_more_label' => 'Show more',
+      ],
+    ];
+    $this->assertEquals($expected, $default_config);
   }
 
 }

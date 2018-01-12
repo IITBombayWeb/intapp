@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\workflow\Entity\Workflow;
 
 /**
  * Implements hook_help().
@@ -52,7 +51,7 @@ function workflow_ui_help($route_name, RouteMatchInterface $route_match) {
         'participate in workflows' on <a href=':url'>the Permissions page</a>.
         On that page, uncheck the 'Authenticated user' role temporarily to
         view the permissions of each separate role.</i>",
-        array(':url' => $url->toString()));
+        [':url' => $url->toString()]);
 
     case 'entity.workflow_label.collection':
       return t('You can add labels to transitions if you don\'t like the
@@ -63,59 +62,32 @@ function workflow_ui_help($route_name, RouteMatchInterface $route_match) {
         the workflow, it could say "move to the editing department for grammar
         review".');
   }
+  return [];
 }
 
 /**
  * Helper function to determine Workflow from Workflow UI URL.
+ *
+ * @deprecated : @see workflow_url_get_workflow .
  */
 function workflow_ui_url_get_workflow($url = '' ) {
-  /* @var $workflows \Drupal\workflow\Entity\Workflow[] */
-  static $workflows = array();
-
-  // For some reason, $_SERVER is not allowed as default.
-  $url = ($url == '') ? $_SERVER['REQUEST_URI'] : $url;
-
-  // The URL may have prefixes: /
-  // ex.1: /en/admin/config/workflow/workflow/eerste/states
-  // ex.2: /admin/config/workflow/workflow/eerste/states
-  $base_url = '/config/workflow/workflow/';
-  $string = substr($url, strpos($url, $base_url) + strlen($base_url));
-  $wid = explode('/', $string)[0];
-  if (!isset($workflows[$wid])) {
-    $workflows[$wid] = Workflow::load($wid);
-  }
-
-  return $workflows[$wid];
+  return workflow_url_get_workflow($url);
 }
-
 
 /**
  * Helper function to determine the title of the page.
  *
- * Used in file workflow_ui.routing.yml.
+ * @deprecated : @see workflow_url_get_title .
  */
 function workflow_ui_url_get_title() {
-  $label = '';
-
-  // Get the Workflow from the page.
-  /* @var $workflow \Drupal\workflow\Entity\Workflow */
-  if ($workflow = workflow_ui_url_get_workflow()) {
-    $label = $workflow->label();
-  }
-
-  $title = t('Edit @entity %label', ['@entity' => 'Workflow', '%label' => $label]);
-  return $title;
+  return workflow_url_get_title();
 }
 
 /**
  * Helper function to determine Workflow from Workflow UI URL.
+ *
+ * @deprecated : @see workflow_url_get_form_type .
  */
 function workflow_ui_url_get_form_type($url = '' ) {
-  // For some reason, $_SERVER is not alowed as default.
-  $url = ($url == '') ? $_SERVER['REQUEST_URI'] : $url;
-
-  $base_url = '/config/workflow/workflow/';
-  $string = substr($url, strpos($url, $base_url) + strlen($base_url));
-  $type = explode('/', $string)[1];
-  return $type;
+  return workflow_url_get_form_type($url);
 }

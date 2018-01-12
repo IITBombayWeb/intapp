@@ -25,8 +25,6 @@ class AddtoCartWithQuantityFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $config = \Drupal::config('basiccart.settings');
-   // $id			= $config->get('quantity_status') ? '\Drupal\basiccart\Form\AddToCartWithQuantity' : '\Drupal\basiccart\Form\AddToCart';
-   // $id     = '\Drupal\basiccart\Form\AddToCartWithQuantity';
     $entity = $items->getEntity();
     $config = \Drupal::config('basiccart.settings');
     $elements = array();
@@ -36,8 +34,7 @@ class AddtoCartWithQuantityFormatter extends FormatterBase {
     'absolute' => TRUE
     ];
     $url = Url::fromRoute('basiccart.cartadd',["nid"=>$entity->id()],$option);
-   // print_r($url->toString()); die;
-    $link = '<a id="forquantitydynamictext_'.$entity->id().'" class="basiccart-get-quantity button use-basiccart-ajax" href="'.$url->toString().'">'.$this->t($config->get('add_to_cart_button')).'</a>';
+     $link = '<a id="forquantitydynamictext_'.$entity->id().'" class="basiccart-get-quantity button use-basiccart-ajax" href="'.$url->toString().'">'.$this->t($config->get('add_to_cart_button')).'</a>';
   $link_options = [
     'attributes' => [
       'class' => [
@@ -50,7 +47,6 @@ class AddtoCartWithQuantityFormatter extends FormatterBase {
   $url->setOptions($link_options);
 
 $quantity_content = $config->get('quantity_status') ? '<div id="quantity-wrapper_'.$entity->id().'" class="addtocart-quantity-wrapper-container"></div>' : '';
-//$link = new Link($this->t($config->get('add_to_cart_button')),$url);
     foreach ($items as $delta => $item) {
       $elements[$delta] = ['#type' => 'container',
       '#attributes' => ['class' => 'ajax-addtocart-wrapper' ,'id' => 'ajax-addtocart-message-'.$entity->id()],
@@ -60,18 +56,8 @@ $quantity_content = $config->get('quantity_status') ? '<div id="quantity-wrapper
     }
    
      $elements['#attached']['library'][] = 'core/drupal.ajax';
-   // print_r($elements); die;
-    return $elements;
-    /*$unit_price = $entity->getTranslation($langcode)->get('add_to_cart_price')->getValue();
-    $unit_price = $unit_price ? $unit_price[0]['value'] : 0;
-    if(empty($unit_price)) {
-      $form = array();
-      drupal_set_message(t('No price configured for this product'),'warning');
-    }else{
-       $form = \Drupal::formBuilder()->getForm($id,$entity->id(),$entity->getEntityTypeId(),$langcode);
-    }
+     return $elements;
    
-    return $form; */
   }
 
 }

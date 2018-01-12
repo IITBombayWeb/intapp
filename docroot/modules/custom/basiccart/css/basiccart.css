@@ -189,6 +189,8 @@
 }
 .addtocart-link-class {
   margin: 5px 0 10px;
+  float:right;
+  margin-top: 15px;
 }
 a.basiccart-get-quantity {
   border-radius: 5px;

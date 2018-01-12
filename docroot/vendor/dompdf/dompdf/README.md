@@ -1,23 +1,36 @@
 Dompdf
 ======
 
-[![Build Status](https://travis-ci.org/dompdf/dompdf.png?branch=develop)](https://travis-ci.org/dompdf/dompdf) [![Latest Stable Version](https://poser.pugx.org/dompdf/dompdf/v/stable.png)](https://packagist.org/packages/dompdf/dompdf) [![Total Downloads](https://poser.pugx.org/dompdf/dompdf/downloads.png)](https://packagist.org/packages/dompdf/dompdf) [![Latest Unstable Version](https://poser.pugx.org/dompdf/dompdf/v/unstable.png)](https://packagist.org/packages/dompdf/dompdf) [![License](https://poser.pugx.org/dompdf/dompdf/license.png)](https://packagist.org/packages/dompdf/dompdf)
+[![Build Status](https://travis-ci.org/dompdf/dompdf.png?branch=master)](https://travis-ci.org/dompdf/dompdf)
+[![Latest Stable Version](https://poser.pugx.org/dompdf/dompdf/v/stable.png)](https://packagist.org/packages/dompdf/dompdf)
+[![Total Downloads](https://poser.pugx.org/dompdf/dompdf/downloads.png)](https://packagist.org/packages/dompdf/dompdf)
+[![Latest Unstable Version](https://poser.pugx.org/dompdf/dompdf/v/unstable.png)](https://packagist.org/packages/dompdf/dompdf)
+[![License](https://poser.pugx.org/dompdf/dompdf/license.png)](https://packagist.org/packages/dompdf/dompdf)
+ 
+**Dompdf is an HTML to PDF converter**
 
-**Dompdf is an HTML to PDF converter**.
-At its heart, dompdf is (mostly) [CSS 2.1](http://www.w3.org/TR/CSS2/) compliant
+At its heart, dompdf is (mostly) a [CSS 2.1](http://www.w3.org/TR/CSS2/) compliant
 HTML layout and rendering engine written in PHP. It is a style-driven renderer:
 it will download and read external stylesheets, inline style tags, and the style
 attributes of individual HTML elements. It also supports most presentational
 HTML attributes.
 
+*This document applies to the latest stable code which may not reflect the current 
+release. For released code please
+[navigate to the appropriate tag](https://github.com/dompdf/dompdf/tags).*
+
 ----
 
-**Check out the [demo](http://pxd.me/dompdf/www/examples.php) and ask any
+**Check out the [demo](https://dompdf.net/examples.php) and ask any
 question on [StackOverflow](http://stackoverflow.com/questions/tagged/dompdf) or
 on the [Google Groups](http://groups.google.com/group/dompdf).**
 
 Follow us on [![Twitter](http://twitter-badges.s3.amazonaws.com/twitter-a.png)](http://www.twitter.com/dompdf) or 
 [![Follow us on Google+](https://ssl.gstatic.com/images/icons/gplus-16.png)](https://plus.google.com/108710008521858993320?prsrc=3).
+
+---
+
+
 
 ## Features
 
@@ -35,7 +48,7 @@ Follow us on [![Twitter](http://twitter-badges.s3.amazonaws.com/twitter-a.png)](
  
 ## Requirements
 
- * PHP version 5.3.0 or higher
+ * PHP version 5.4.0 or higher
  * DOM extension
  * GD extension
  * MBString extension
@@ -71,10 +84,11 @@ DejaVu Sans, DejaVu Serif, and DejaVu Sans Mono.
 
 ### Install with composer
 
-To install with [Composer](https://getcomposer.org/), simply require the latest version of this package.
+To install with [Composer](https://getcomposer.org/), simply require the
+latest version of this package.
 
 ```bash
-composer require dompdf/dompdf:0.7.x@beta
+composer require dompdf/dompdf
 ```
 
 Make sure that the autoload file from Composer is loaded.
@@ -95,7 +109,8 @@ will reside
  * Or download a nightly (the latest, unreleased code) from
    http://eclecticgeek.com/dompdf
 
-Require dompdf, libraries, and helper functions in your PHP:
+Use the packaged release autoloader to load dompdf, libraries,
+and helper functions in your PHP:
 
 ```php
 // include autoloader
@@ -108,21 +123,27 @@ From the command line, switch to the directory where dompdf will reside and run
 the following commands:
 
 ```sh
-git clone https://github.com/dompdf/dompdf.git .
+git clone https://github.com/dompdf/dompdf.git
+cd dompdf
+
 git clone https://github.com/PhenX/php-font-lib.git lib/php-font-lib
 cd lib/php-font-lib
-git checkout 0.4
+git checkout 0.5.1
 cd ..
+
 git clone https://github.com/PhenX/php-svg-lib.git php-svg-lib
 cd php-svg-lib
-git checkout v0.1
+git checkout v0.3
 ```
 
 Require dompdf, libraries, and helper functions in your PHP:
 
 ```php
-// include autoloader
-require_once 'dompdf/autoload.inc.php';
+require_once 'dompdf/lib/html5lib/Parser.php';
+require_once 'dompdf/lib/php-font-lib/src/FontLib/Autoloader.php';
+require_once 'dompdf/lib/php-svg-lib/src/autoload.php';
+require_once 'dompdf/src/Autoloader.php';
+Dompdf\Autoloader::register();
 ```
 
 ## Quick Start
@@ -143,12 +164,34 @@ $dompdf->setPaper('A4', 'landscape');
 // Render the HTML as PDF
 $dompdf->render();
 
-// Get the generated PDF file contents
-$pdf = $dompdf->output();
- 
 // Output the generated PDF to Browser
 $dompdf->stream();
 ```
+
+### Setting Options
+
+Set options during dompdf instantiation:
+
+```php
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+$options = new Options();
+$options->set('defaultFont', 'Courier');
+$dompdf = new Dompdf($options);
+```
+
+or at run time
+
+```php
+use Dompdf\Dompdf;
+
+$dompdf = new Dompdf();
+$dompdf->set_option('defaultFont', 'Courier');
+```
+
+See [Dompdf\Options](src/Options.php) for a list of available options.
+
 
 ## Limitations (Known Issues)
 

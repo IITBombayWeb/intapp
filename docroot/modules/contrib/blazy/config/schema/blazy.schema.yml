@@ -20,7 +20,7 @@ blazy.settings:
           label: 'Load invisible'
         offset:
           type: integer
-          label: 'Offset'
+          label: Offset
         saveViewportOffsetDelay:
           type: integer
           label: 'Save viewport offset delay'
@@ -31,11 +31,19 @@ blazy_base:
   mapping:
     caption:
       type: sequence
-      label: 'Captions'
+      label: Captions
       sequence:
         - type: string
-          label: 'Caption'
+          label: Caption
 
 field.formatter.settings.blazy:
   type: blazy_base
   label: 'Blazy image display format settings'
+
+field.formatter.settings.blazy_file:
+  type: blazy_base
+  label: 'Blazy image with ME display format settings'
+
+field.formatter.settings.blazy_video:
+  type: blazy_base
+  label: 'Blazy image with VEF display format settings'

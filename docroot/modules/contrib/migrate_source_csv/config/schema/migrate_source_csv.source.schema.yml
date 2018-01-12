@@ -17,3 +17,15 @@ migrate.source.csv:
     column_names:
       type: sequence
       label: 'Numeric key 0-based index of the columns in source CSV file'
+    file_class:
+      type: string
+      label: 'Full class name that includes namespace for an alternative CSV reader'
+    delimiter:
+      type: string
+      label: 'The field delimiter (one character only)'
+    enclosure:
+      type: string
+      label: 'The field enclosure character (one character only)'
+    escape:
+      type: string
+      label: 'The field escape character (one character only)'

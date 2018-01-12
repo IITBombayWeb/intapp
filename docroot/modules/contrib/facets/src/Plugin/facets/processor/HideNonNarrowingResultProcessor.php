@@ -11,8 +11,8 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  *
  * @FacetsProcessor(
  *   id = "hide_non_narrowing_result_processor",
- *   label = @Translation("Hide non narrowing results"),
- *   description = @Translation("Do not display items that do not narrow results."),
+ *   label = @Translation("Hide non-narrowing results"),
+ *   description = @Translation("Only display items that will narrow the results."),
  *   stages = {
  *     "build" = 40
  *   }
@@ -34,7 +34,7 @@ class HideNonNarrowingResultProcessor extends ProcessorPluginBase implements Bui
 
     /** @var \Drupal\facets\Result\ResultInterface $result */
     foreach ($results as $id => $result) {
-      if ($result->getCount() == $result_count && !$result->isActive()) {
+      if ((($result->getCount() == $result_count) || ($result->getCount() == 0)) && !$result->isActive()) {
         unset($results[$id]);
       }
     }

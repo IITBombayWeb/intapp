@@ -23,19 +23,10 @@ use Drupal\facets\Result\Result;
 class SearchApiString extends QueryTypePluginBase {
 
   /**
-   * The backend's native query object.
-   *
-   * @var \Drupal\search_api\Query\QueryInterface
-   */
-  protected $query;
-
-  /**
    * {@inheritdoc}
    */
   public function execute() {
     $query = $this->query;
-
-    $unfiltered_results = [];
 
     // Only alter the query when there's an actual query object to alter.
     if (!empty($query)) {
@@ -43,46 +34,27 @@ class SearchApiString extends QueryTypePluginBase {
       $field_identifier = $this->facet->getFieldIdentifier();
       $exclude = $this->facet->getExclude();
 
-      // Copy the query object so we can do an unfiltered query. We need to have
-      // this unfiltered results to make sure that the count of a facet is
-      // correct. The unfiltered results get returned to the facet manager, the
-      // facet manager will save it on facet::unfiltered_results.
-      $unfiltered_query = $query;
-      $unfiltered_options = &$unfiltered_query->getOptions();
-      $unfiltered_options['search_api_facets'][$field_identifier] = array(
-        'field' => $field_identifier,
-        'limit' => 50,
-        'operator' => 'and',
-        'min_count' => 0,
-        'missing' => FALSE,
-      );
-      $unfiltered_results = $unfiltered_query
-        ->execute()
-        ->getExtraData('search_api_facets');
-
       // Set the options for the actual query.
       $options = &$query->getOptions();
-      $options['search_api_facets'][$field_identifier] = array(
+      $options['search_api_facets'][$field_identifier] = [
         'field' => $field_identifier,
-        'limit' => 50,
-        'operator' => 'and',
-        'min_count' => 0,
+        'limit' => $this->facet->getHardLimit(),
+        'operator' => $this->facet->getQueryOperator(),
+        'min_count' => $this->facet->getMinCount(),
         'missing' => FALSE,
-      );
+      ];
 
       // Add the filter to the query if there are active values.
       $active_items = $this->facet->getActiveItems();
 
       if (count($active_items)) {
-        $filter = $query->createConditionGroup($operator);
+        $filter = $query->createConditionGroup($operator, ['facet:' . $field_identifier]);
         foreach ($active_items as $value) {
           $filter->addCondition($this->facet->getFieldIdentifier(), $value, $exclude ? '<>' : '=');
         }
         $query->addConditionGroup($filter);
       }
     }
-
-    return $unfiltered_results;
   }
 
   /**
@@ -92,27 +64,18 @@ class SearchApiString extends QueryTypePluginBase {
     $query_operator = $this->facet->getQueryOperator();
 
     if (!empty($this->results)) {
-      $facet_results = array();
-      foreach ($this->results as $key => $result) {
-        if ($result['count'] || $query_operator == 'OR') {
+      $facet_results = [];
+      foreach ($this->results as $result) {
+        if ($result['count'] || $query_operator == 'or') {
           $count = $result['count'];
-          if ($query_operator === 'OR') {
-            $unfiltered_results = $this->facet->getUnfilteredResults();
-            $field_identifier = $this->facet->getFieldIdentifier();
-
-            foreach ($unfiltered_results[$field_identifier] as $unfiltered_result) {
-              if ($unfiltered_result['filter'] === $result['filter']) {
-                $count = $unfiltered_result['count'];
-              }
-            }
-          }
-
-          $result = new Result(trim($result['filter'], '"'), trim($result['filter'], '"'), $count);
+          $result_filter = trim($result['filter'], '"');
+          $result = new Result($this->facet, $result_filter, $result_filter, $count);
           $facet_results[] = $result;
         }
       }
       $this->facet->setResults($facet_results);
     }
+
     return $this->facet;
   }
 

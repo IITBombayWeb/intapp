@@ -595,7 +595,7 @@ ul li {
 }
 .page {
   font-size: 16px;
-  color: #666;
+  color: #444;
   line-height: 2em;
 }
 .faq-question a{
@@ -609,6 +609,18 @@ ul li {
   color: #555;
   line-height: 2em;
 }
+.path-contact .cnt-pg input[class*="form-control"] {
+  width: 100%;
+  border-radius: 0;
+}
+.path-contact .cnt-pg textarea[class*="form-control"] {
+  width: 100% ;
+  border-radius: 0;
+  height: 120px;
+}
+.path-contact .cnt-pg input[type="checkbox"] {
+  left: 0;
+}
 @media only screen and (min-width: 479px) {
   .featured-inn .ft-cm {
     float: left;
@@ -617,8 +629,8 @@ ul li {
     margin: 0 10px 20px;
   }
 }
-@media only screen and (min-width: 640px) {
-  .featured-inn .ins-count:hover:before {
+@media only screen and (min-width: 568px) {
+    .featured-inn .ins-count:hover:before {
     height: 240px;
   }
   .featured-inn .deg-cont:hover:before {
@@ -629,7 +641,7 @@ ul li {
   }
   .featured-inn .mst-vw-cnt:hover:before {
     height: 240px;
-  }  
+  }
 }
 @media only screen and (min-width: 768px) {
   .layout-sidebar-first .cm-pg .sd-b, .layout-sidebar-second .cm-pg .sd-b {
@@ -705,6 +717,8 @@ ul li {
   }
   .banner-section .srch-frm {
     position: absolute;
+    top: 0;
+    padding: 0;
   }
   .featured-inn {
     position: absolute;
@@ -745,6 +759,18 @@ ul li {
   }
   .featured-inn .mst-vw-cnt:hover:before {
     height: 185px;
+  }
+  .path-contact .cnt-pg input[class*="form-control"] {
+  width: 500px;
+  border-radius: 0;
+  }
+  .path-contact .cnt-pg textarea[class*="form-control"] {
+    width: 500px;
+    border-radius: 0;
+    height: 150px;
+  }
+  .path-contact .cnt-pg input[type="checkbox"] {
+    left: 0;
   }
 }
 @media only screen and (min-width: 920px) {

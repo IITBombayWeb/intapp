@@ -7,7 +7,7 @@ article.node--view-mode-search-result {
 }
 
 article .field--type-addtocart a {
- float : right;
+ float : none;
 }
 
 .slick-slide img {

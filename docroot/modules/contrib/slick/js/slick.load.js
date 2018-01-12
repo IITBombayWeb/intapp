@@ -8,96 +8,70 @@
   'use strict';
 
   /**
-   * Attaches slick behavior to HTML element identified by CSS selector .slick.
+   * Slick utility functions.
    *
-   * @type {Drupal~behavior}
+   * @param {int} i
+   *   The index of the current element.
+   * @param {HTMLElement} elm
+   *   The slick HTML element.
    */
-  Drupal.behaviors.slick = {
-    attach: function (context) {
-      var me = this;
-      $('.slick:not(.unslick)', context).once('slick').each(function () {
-        var that = this;
-        var t = $('> .slick__slider', that);
-        var a = $('> .slick__arrow', that);
-        var o = $.extend({}, drupalSettings.slick, t.data('slick'));
-        var r = $('.slide--0 .media--ratio', t);
+  function doSlick(i, elm) {
+    var t = $('> .slick__slider', elm).length ? $('> .slick__slider', elm) : $(elm);
+    var a = $('> .slick__arrow', elm);
+    var o = t.data('slick') ? $.extend({}, drupalSettings.slick, t.data('slick')) : drupalSettings.slick;
+    var r = $.type(o.responsive) === 'array' && o.responsive.length ? o.responsive : false;
+    var b;
 
-        // Fixed for broken slick with Blazy, aspect ratio, hidden containers.
-        if (r.length && r.is(':hidden')) {
-          r.removeClass('media--ratio').addClass('js-media--ratio');
+    // Populate defaults + globals into each breakpoint.
+    if (r) {
+      for (b in r) {
+        if (r.hasOwnProperty(b) && r[b].settings !== 'unslick') {
+          r[b].settings = $.extend({}, drupalSettings.slick, globals(o), r[b].settings);
         }
+      }
+    }
 
-        // Build the Slick.
-        me.beforeSlick(t, a, o);
-        t.slick(me.globals(t, a, o));
-        me.afterSlick(t, o);
-      });
-    },
+    // Update the slick settings object.
+    t.data('slick', o);
+    o = t.data('slick');
 
     /**
      * The event must be bound prior to slick being called.
-     *
-     * @param {HTMLElement} t
-     *   The slick HTML element.
-     * @param {HTMLElement} a
-     *   The slick arrow HTML element.
-     * @param {object} o
-     *   The slick options object.
      */
-    beforeSlick: function (t, a, o) {
-      var me = this;
-      var breakpoint;
+    function beforeSlick() {
+      if (o.randomize && !t.hasClass('slick-initiliazed')) {
+        randomize();
+      }
 
-      me.randomize(t, o);
-
-      t.on('init.slick', function (e, slick) {
-        // Populate defaults + globals into each breakpoint.
-        var sets = slick.options.responsive || null;
-        if (sets && sets.length > -1) {
-          for (breakpoint in sets) {
-            if (sets.hasOwnProperty(breakpoint)
-              && sets[breakpoint].settings !== 'unslick') {
-              slick.breakpointSettings[sets[breakpoint].breakpoint] = $.extend(
-                {},
-                drupalSettings.slick,
-                me.globals(t, a, o),
-                sets[breakpoint].settings);
-            }
-          }
-        }
+      t.on('setPosition.sl', function (e, slick) {
+        setPosition(slick);
       });
 
-      t.on('setPosition.slick', function (e, slick) {
-        me.setPosition(t, a, slick);
-      });
+      $('.media--loading', t).closest('.slide__content').addClass('is-loading');
 
-      if (o.lazyLoad === 'blazy' && typeof Drupal.blazy !== 'undefined') {
-        t.on('beforeChange.slick', function () {
-          var $src = $('.media--loading .b-lazy', t);
+      // Blazy integration.
+      if (o.lazyLoad === 'blazy' && Drupal.blazy) {
+        t.on('beforeChange.sl', function () {
+          // .b-lazy can be attached to IMG, or DIV as CSS background.
+          var $src = $('.b-lazy:not(.b-loaded)', t);
 
-          // Enforces lazyload ahead to smoothen the UX.
           if ($src.length) {
+            // Enforces lazyload ahead to smoothen the UX.
             Drupal.blazy.init.load($src);
           }
         });
       }
-    },
+    }
 
     /**
      * The event must be bound after slick being called.
-     *
-     * @param {HTMLElement} t
-     *   The slick HTML element.
-     * @param {object} o
-     *   The slick options object.
      */
-    afterSlick: function (t, o) {
-      var me = this;
+    function afterSlick() {
       var slick = t.slick('getSlick');
-      var $ratio = $('.js-media--ratio', t);
+      var media = t.find('.media--player').length;
 
       // Arrow down jumper.
-      t.parent().on('click.slick.load', '.slick-down', function (e) {
+      t.parent().on('click.sl', '.slick-down', function (e) {
         e.preventDefault();
         var b = $(this);
         $('html, body').stop().animate({
@@ -106,103 +80,120 @@
       });
 
       if (o.mouseWheel) {
-        t.on('mousewheel.slick.load', function (e, delta) {
+        t.on('mousewheel.sl', function (e, delta) {
           e.preventDefault();
-          return (delta < 0) ? t.slick('slickNext') : t.slick('slickPrev');
+          return t.slick(delta < 0 ? 'slickNext' : 'slickPrev');
         });
-      }
-
-      // Fixed for broken slick with Blazy, aspect ratio, hidden containers.
-      if ($ratio.length) {
-        // t[0].slick.refresh();
-        t.trigger('resize');
-        $ratio.addClass('media--ratio').removeClass('js-media--ratio');
       }
 
       t.on('lazyLoaded lazyLoadError', function (e, slick, img) {
-        $(img).closest('.media').removeClass('media--loading').addClass('media--loaded');
+        setBackground(img);
       });
 
-      t.trigger('afterSlick', [me, slick, slick.currentSlide]);
-    },
+      // Turns off any video if any change to the slider.
+      if (media) {
+        t.on('afterChange.sl', closeOut);
+        t.on('click.sl', '.media__icon--close', closeOut);
+        t.on('click.sl', '.media__icon--play', pause);
+      }
+    }
+
+    /**
+     * Turns images into CSS background if so configured.
+     *
+     * @param {HTMLElement} img
+     *   The image HTML element.
+     */
+    function setBackground(img) {
+      var $img = $(img);
+      var $bg = $img.closest('.media--background');
+      var p = $img.closest('.slide') || $img.closest('.unslick');
+
+      $img.parentsUntil(p).removeClass(function (index, css) {
+        return (css.match(/(\S+)loading/g) || []).join(' ');
+      });
+
+      if ($bg.length) {
+        $bg.css('background-image', 'url(' + $img.attr('src') + ')');
+        $bg.find('> img').remove();
+        $bg.removeAttr('data-lazy');
+      }
+    }
 
     /**
      * Randomize slide orders, for ads/products rotation within cached blocks.
-     *
-     * @param {HTMLElement} t
-     *   The slick HTML element.
-     * @param {object} o
-     *   The slick options object.
      */
-    randomize: function (t, o) {
-      if (o.randomize && !t.hasClass('slick-initiliazed')) {
-        t.children().sort(function () {
-          return 0.5 - Math.random();
-        })
-        .each(function () {
-          t.append(this);
-        });
-      }
-    },
+    function randomize() {
+      t.children().sort(function () {
+        return 0.5 - Math.random();
+      })
+      .each(function () {
+        t.append(this);
+      });
+    }
 
     /**
-     * Fixed for known issues with the slick-current and arrows.
+     * Updates arrows visibility based on available options.
      *
-     * Still kept after v1.5.8 (8/4) as 'slick-current' fails with asNavFor:
-     *   - Create asNavFor with the total <= slidesToShow and centerMode.
-     *   - Drag the main large display, or click its arrows, thumbnail
-     *     slick-current class is not updated/ synched, always stucked at 0.
-     *
-     * @param {HTMLElement} t
-     *   The slick HTML object.
-     * @param {HTMLElement} a
-     *   The slick arrow HTML object.
-     * @param {object} slick
+     * @param {Object} slick
      *   The slick instance object.
      *
-     * @todo drop if any core fix after v1.5.8 (8/4).
-     *
-     * @return {string}
+     * @return {String}
      *   The visibility of slick arrows controlled by CSS class visually-hidden.
      */
-    setPosition: function (t, a, slick) {
+    function setPosition(slick) {
+      var less = slick.slideCount <= o.slidesToShow;
+      var hide = less || o.arrows === false;
+
       // Be sure the most complex slicks are taken care of as well, e.g.:
       // asNavFor with the main display containing nested slicks.
       if (t.attr('id') === slick.$slider.attr('id')) {
-        var o = slick.options;
-        // Must take care for asNavFor instances, with/without slick-wrapper,
-        // with/without block__no_wrapper/ views_view_no_wrapper, etc.
-        var w = t.parent().parent('.slick-wrapper').length
-          ? t.parent().parent('.slick-wrapper') : t.parent('.slick');
-
-        $('.slick-slide', w).removeClass('slick-current');
-        $('[data-slick-index="' + slick.currentSlide + '"]', w).addClass('slick-current');
-
         // Removes padding rules, if no value is provided to allow non-inline.
         if (!o.centerPadding || o.centerPadding === '0') {
           slick.$list.css('padding', '');
         }
 
+        // @todo: Remove temp fix for when total <= slidesToShow at 1.6.1+.
+        // Ensures the fix doesn't break responsive options.
+        // @see https://github.com/kenwheeler/slick/issues/262
+        if (less && slick.$slideTrack.width() <= slick.$slider.width()) {
+          slick.$slideTrack.css({left: '', transform: ''});
+        }
+
         // Do not remove arrows, to allow responsive have different options.
-        return slick.slideCount <= o.slidesToShow || o.arrows === false
-          ? a.addClass('visually-hidden') : a.removeClass('visually-hidden');
+        return a[hide ? 'addClass' : 'removeClass']('visually-hidden');
       }
-    },
+    }
+
+    /**
+     * Trigger the media close.
+     */
+    function closeOut() {
+      // Clean up any pause marker at slider container.
+      t.removeClass('is-paused');
+
+      if (t.find('.is-playing').length) {
+        t.find('.is-playing').removeClass('is-playing').find('.media__icon--close').click();
+      }
+    }
+
+    /**
+     * Trigger pause on slick instance when media playing a video.
+     */
+    function pause() {
+      t.addClass('is-paused').slick('slickPause');
+    }
 
     /**
      * Declare global options explicitly to copy into responsive settings.
      *
-     * @param {HTMLElement} t
-     *   The slick HTML element.
-     * @param {HTMLElement} a
-     *   The slick arrow HTML element.
-     * @param {object} o
+     * @param {Object} o
      *   The slick options object.
      *
-     * @return {object}
+     * @return {Object}
      *   The global options common for both main and responsive displays.
      */
-    globals: function (t, a, o) {
+    function globals(o) {
       return {
         slide: o.slide,
         lazyLoad: o.lazyLoad,
@@ -215,13 +206,38 @@
         appendArrows: a,
         customPaging: function (slick, i) {
           var tn = slick.$slides.eq(i).find('[data-thumb]') || null;
-          var alt = Drupal.t(tn.attr('alt')) || '';
-          var img = '<img alt="' + alt + '" src="' + tn.data('thumb') + '">';
+          var img = '<img alt="' + Drupal.t(tn.attr('alt')) + '" src="' + tn.data('thumb') + '">';
           var dotsThumb = tn.length && o.dotsClass.indexOf('thumbnail') > 0 ?
             '<div class="slick-dots__thumbnail">' + img + '</div>' : '';
           return slick.defaults.customPaging(slick, i).add(dotsThumb);
         }
       };
+    }
+
+    // Build the Slick.
+    beforeSlick();
+    t.slick(globals(o));
+    afterSlick();
+
+    // Destroy Slick if it is an enforced unslick.
+    // This allows Slick lazyload to run, but prevents further complication.
+    // Should use lazyLoaded event, but images are not always there.
+    if (t.hasClass('unslick')) {
+      t.slick('unslick');
+    }
+
+    // Add helper class for arrow visibility as they are outside slider.
+    $(elm).addClass('slick--initialized');
+  }
+
+  /**
+   * Attaches slick behavior to HTML element identified by CSS selector .slick.
+   *
+   * @type {Drupal~behavior}
+   */
+  Drupal.behaviors.slick = {
+    attach: function (context) {
+      $('.slick', context).once('slick').each(doSlick);
     }
   };
 

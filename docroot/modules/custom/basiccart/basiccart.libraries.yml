@@ -5,8 +5,6 @@ basiccart:
    css/basiccart.css: {}
  js: 
   js/basiccart.js: {}
-  dependencies:
-    - core/jquery
-    - core/jquery.ui
-    - core/drupal    
-    - core/drupalSettings   
+ dependencies:
+  - core/jquery
+     

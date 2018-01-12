@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\migrate_source_csv\CSVFileObject.php.
- */
 
 namespace Drupal\migrate_source_csv;
 

@@ -5,12 +5,7 @@
  * Defines a Workflow field, widget and formatter. (copied from list field).
  */
 
-use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\workflow\Entity\Workflow;
-use Drupal\workflow\Entity\WorkflowState;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -78,47 +73,9 @@ function workflow_field_widget_info_alter(&$info) {
 }
 
 /**
- * {@inheritdoc}
- *
- * @see callback_allowed_values_function()
- *
- * deprecated: workflowfield_options_list --> workflow_state_allowed_values
- */
-function workflow_state_allowed_values(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL, &$cacheable = TRUE, AccountInterface $user = NULL) {
-//function callback_allowed_values_function(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL, &$cacheable = TRUE) {
-// N.B. the parameter $user is added by Workflow module.
-  $allowed_options = array();
-
-  $user = workflow_current_user($user); // @todo #2287057: OK?
-  $field_name = $definition->getName();
-
-  if ($entity) {
-    // Get the allowed new states for the entity's current state.
-    // TODO D8-port: overwrite getValue().
-    // $sid = $value = $this->getValue();
-    $sid = workflow_node_current_state($entity, $field_name);
-    $state = WorkflowState::load($sid);
-    $allowed_options = ($state) ? $state->getOptions($entity, $field_name, $user, FALSE) : [];
-  }
-  else {
-    // Create an empty State. This triggers to show all possible states for the Workflow.
-    $wid = $definition->getSetting('workflow_type');
-    if ($workflow = Workflow::load($wid)) {
-      // There is no entity, E.g., on the Rules action "Set a data value".
-      /* @var $state Drupal\workflow\Entity\WorkflowState */
-      $state = WorkflowState::create(['wid' => $wid, 'id' => '']);
-      $allowed_options = $state->getOptions(NULL, '', $user, FALSE);
-    }
-  }
-
-  return $allowed_options;
-}
-
-
-/**
  * Creates a form element to show the current value of a Workflow state.
  *
- * @param EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity this field is on.
  * @param string $field_name
  *   The field_name
@@ -130,14 +87,18 @@ function workflow_state_allowed_values(FieldStorageDefinitionInterface $definiti
  *   If state 0 is given, return an empty form element.
  */
 function workflow_state_formatter($entity, $field_name, $current_sid = '') {
-  $element = array();
+  $element = [];
 
   if (!$current_sid) {
     $current_sid = workflow_node_current_state($entity, $field_name);
   }
-  // Add the 'current value' formatter for this field.
-  // $list_display = $instance['display']['default'];
-  $list_display['type'] = 'list_default';
+  // If user creates a node, and only 1 option is available, the formatter
+  // is shown with key, not value, because creation state does not count.
+  // In this case, hide the formatter.
+  $state = \Drupal\workflow\Entity\WorkflowState::load($current_sid);
+  if ($state->isCreationState()) {
+    return $element;
+  }
   // Clone the entity and restore old value, in case you want to show an
   // executed transition.
   if ($entity->$field_name->value != $current_sid) {
@@ -145,9 +106,12 @@ function workflow_state_formatter($entity, $field_name, $current_sid = '') {
     $entity->$field_name->value = $current_sid;
   }
   // Generate a renderable array for the field. Use default language determination ($langcode = NULL).
+  // First, add the 'current value' formatter for this field.
+  // $list_display = $instance['display']['default'];
+  $list_display['type'] = 'list_default';
   $element = $entity->$field_name->view($list_display);
 
-  // TODO D8: make weight better (even better: hook_field_extra_fields).
+  // @todo D8: make weight better (even better: hook_field_extra_fields).
   // Make sure the current value is before the form. (which has weight = 0.005)
   // $element['#weight'] = 0;
 

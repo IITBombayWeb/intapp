@@ -12,7 +12,6 @@ Drupal.behaviors.myBehavior = {
     $( "section[class*='block-views-blockimportant-deadlines-block'] h2" ).find('span').remove();
     //Add Clock Icon
     $("section[class*='block-views-blockimportant-deadlines-block'] h2").prepend('<span class="fa fa-clock-o"></span> ');
-
   }
 };
 
@@ -105,10 +104,10 @@ $(window).resize(function () {
 
 function msgpack_popup(){
   var width = $(window).width();
-  if ((width >= 768)) {
-    $('.basic-cart-pck').css('top', 70);
+  if ((width = 0)) {
+    $('.basic-cart-pck').css();
     if ($('.msg-pck > a').length > 0) {
-      $('.basic-cart-pck').css('right', ($(window).width() - $('.msg-pck > a').offset().left - 170));
+      $('.basic-cart-pck').css('right', ($(window).width() - $('.msg-pck > a').offset()));
     }
   }
 }

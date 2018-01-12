@@ -1,19 +1,15 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\slick_ui\Form\SlickFormBase.
- */
-
 namespace Drupal\slick_ui\Form;
 
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\slick\Form\SlickAdmin;
+use Drupal\slick\Entity\Slick;
+use Drupal\slick\Form\SlickAdminInterface;
 use Drupal\slick\SlickManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides base form for a slick instance configuration form.
@@ -21,16 +17,30 @@ use Drupal\slick\SlickManagerInterface;
 abstract class SlickFormBase extends EntityForm {
 
   /**
-   * The slick service.
+   * The slick admin service.
    *
-   * @var \Drupal\slick\Form\SlickAdmin.
+   * @var \Drupal\slick\Form\SlickAdminInterface
    */
   protected $admin;
 
   /**
+   * The slick manager service.
+   *
+   * @var \Drupal\slick\SlickManagerInterface
+   */
+  protected $manager;
+
+  /**
+   * The JS easing options.
+   *
+   * @var array
+   */
+  protected $jsEasingOptions;
+
+  /**
    * Constructs a SlickForm object.
    */
-  public function __construct(SlickAdmin $admin, SlickManagerInterface $manager) {
+  public function __construct(SlickAdminInterface $admin, SlickManagerInterface $manager) {
     $this->admin = $admin;
     $this->manager = $manager;
   }
@@ -43,6 +53,20 @@ abstract class SlickFormBase extends EntityForm {
       $container->get('slick.admin'),
       $container->get('slick.manager')
     );
+  }
+
+  /**
+   * Returns the slick admin service.
+   */
+  public function admin() {
+    return $this->admin;
+  }
+
+  /**
+   * Returns the slick manager service.
+   */
+  public function manager() {
+    return $this->manager;
   }
 
   /**
@@ -60,10 +84,11 @@ abstract class SlickFormBase extends EntityForm {
       $form['#title'] = $this->t('<em>Edit slick optionset</em>: @label', ['@label' => $this->entity->label()]);
     }
 
-    $slick   = $this->entity;
-    $path    = drupal_get_path('module', 'slick');
-    $tooltip = ['class' => ['is-tooltip']];
-    $readme  = Url::fromUri('base:' . $path . '/README.txt')->toString();
+    $slick     = $this->entity;
+    $path      = drupal_get_path('module', 'slick');
+    $tooltip   = ['class' => ['is-tooltip']];
+    $readme    = Url::fromUri('base:' . $path . '/README.txt')->toString();
+    $admin_css = $this->manager->configLoad('admin_css', 'blazy.settings');
 
     $form['#attributes']['class'][] = 'form--slick';
     $form['#attributes']['class'][] = 'form--blazy';
@@ -108,7 +133,11 @@ abstract class SlickFormBase extends EntityForm {
     $form['group'] = [
       '#type'          => 'select',
       '#title'         => $this->t('Group'),
-      '#options'       => ['main' => t('Main'), 'overlay' => t('Overlay'), 'thumbnail' => t('Thumbnail')],
+      '#options'       => [
+        'main'      => t('Main'),
+        'overlay'   => t('Overlay'),
+        'thumbnail' => t('Thumbnail'),
+      ],
       '#empty_option'  => $this->t('- None -'),
       '#default_value' => $slick->getGroup(),
       '#description'   => $this->t('Group this optionset to avoid confusion for optionset selections. Leave empty to make it available for all.'),
@@ -117,10 +146,9 @@ abstract class SlickFormBase extends EntityForm {
 
     $form['breakpoints'] = [
       '#title'         => $this->t('Breakpoints'),
-      '#type'          => 'number',
+      '#type'          => 'textfield',
       '#default_value' => $form_state->hasValue('breakpoints') ? $form_state->getValue('breakpoints') : $slick->getBreakpoints(),
       '#description'   => $this->t('The number of breakpoints added to Responsive display, max 9. This is not Breakpoint Width (480px, etc).'),
-      '#suffix'        => '</div>',
       '#ajax' => [
         'callback' => '::addBreakpoints',
         'wrapper'  => 'edit-breakpoints-ajax-wrapper',
@@ -133,6 +161,28 @@ abstract class SlickFormBase extends EntityForm {
       '#maxlength'  => 1,
     ];
 
+    $form['optimized'] = [
+      '#type'          => 'checkbox',
+      '#title'         => $this->t('Optimized'),
+      '#default_value' => $slick->optimized(),
+      '#description'   => $this->t('Check to optimize the stored options. Anything similar to defaults will not be stored, except those required by sub-modules and theme_slick(). Like you hand-code/ cherry-pick the needed options, and are smart enough to not repeat defaults, and free up memory. The rest are taken care of by JS. Uncheck only if theme_slick() can not satisfy the needs, and more hand-coded preprocess is needed which is less likely in most cases.'),
+      '#access'        => $slick->id() != 'default',
+      '#attributes'    => $tooltip,
+      '#wrapper_attributes' => ['class' => ['form-item--tooltip-wide']],
+    ];
+
+    if ($slick->id() == 'default') {
+      $form['breakpoints']['#suffix'] = '</div>';
+    }
+    else {
+      $form['optimized']['#suffix'] = '</div>';
+    }
+
+    if ($admin_css) {
+      $form['optimized']['#field_suffix'] = '&nbsp;';
+      $form['optimized']['#title_display'] = 'before';
+    }
+
     return parent::form($form, $form_state);
   }
 
@@ -141,6 +191,42 @@ abstract class SlickFormBase extends EntityForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
+
+    // Optimized if so configured.
+    $slick   = $this->entity;
+    $default = $slick->id() == 'default';
+    if (!$default && !$form_state->isValueEmpty('optimized')) {
+      $defaults = $slick::defaultSettings();
+      $options  = $form_state->getValue('options');
+      $required = $this->getOptionsRequiredByTemplate();
+      $main     = array_diff_assoc($defaults, $required);
+      $settings = $form_state->getValue(['options', 'settings']);
+
+      // Cast the values.
+      $this->typecastOptionset($settings);
+
+      // Remove wasted dependent options if disabled, empty or not.
+      $slick->removeWastedDependentOptions($settings);
+
+      $main_settings = array_diff_assoc($settings, $main);
+      $slick->setSettings($main_settings);
+
+      $responsive_options = ['options', 'responsives', 'responsive'];
+      if ($responsives = $form_state->getValue($responsive_options)) {
+        foreach ($responsives as $delta => &$responsive) {
+          if (!empty($responsive['unslick'])) {
+            $slick->setResponsiveSettings([], $delta);
+          }
+          else {
+            $this->typecastOptionset($responsive['settings']);
+            $slick->removeWastedDependentOptions($responsive['settings']);
+
+            $responsive_settings = array_diff_assoc($responsive['settings'], $defaults);
+            $slick->setResponsiveSettings($responsive_settings, $delta);
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -157,19 +243,26 @@ abstract class SlickFormBase extends EntityForm {
 
     $status        = $slick->save();
     $label         = $slick->label();
-    $edit_link     = $slick->link($this->t('Edit'));
+    $edit_link     = $slick->toLink($this->t('Edit'), 'edit-form')->toString();
     $config_prefix = $slick->getEntityType()->getConfigPrefix();
+    $message       = ['@config_prefix' => $config_prefix, '%label' => $label];
+
+    $notice = [
+      '@config_prefix' => $config_prefix,
+      '%label' => $label,
+      'link' => $edit_link,
+    ];
 
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity.
       // @todo #2278383.
-      drupal_set_message($this->t('@config_prefix %label has been updated.', ['@config_prefix' => $config_prefix, '%label' => $label]));
-      $this->logger('slick')->notice('@config_prefix %label has been updated.', ['@config_prefix' => $config_prefix, '%label' => $label, 'link' => $edit_link]);
+      drupal_set_message($this->t('@config_prefix %label has been updated.', $message));
+      $this->logger('slick')->notice('@config_prefix %label has been updated.', $notice);
     }
     else {
       // If we created a new entity.
-      drupal_set_message($this->t('@config_prefix %label has been added.', ['@config_prefix' => $config_prefix, '%label' => $label]));
-      $this->logger('slick')->notice('@config_prefix %label has been added.', ['@config_prefix' => $config_prefix, '%label' => $label, 'link' => $edit_link]);
+      drupal_set_message($this->t('@config_prefix %label has been added.', $message));
+      $this->logger('slick')->notice('@config_prefix %label has been added.', $notice);
     }
   }
 
@@ -189,6 +282,35 @@ abstract class SlickFormBase extends EntityForm {
   }
 
   /**
+   * Returns the typecast values.
+   *
+   * @param array $settings
+   *   An array of Optionset settings.
+   */
+  public function typecastOptionset(array &$settings = []) {
+    if (empty($settings)) {
+      return;
+    }
+
+    $defaults = Slick::defaultSettings();
+
+    foreach ($defaults as $name => $value) {
+      if (isset($settings[$name])) {
+        // Seems double is ignored, and causes a missing schema, unlike float.
+        $type = gettype($defaults[$name]);
+        $type = $type == 'double' ? 'float' : $type;
+
+        // Change float to integer if value is no longer float.
+        if ($name == 'edgeFriction') {
+          $type = $settings[$name] == '1' ? 'integer' : 'float';
+        }
+
+        settype($settings[$name], $type);
+      }
+    }
+  }
+
+  /**
    * List of all easing methods available from jQuery Easing v1.3.
    *
    * @return array
@@ -196,10 +318,8 @@ abstract class SlickFormBase extends EntityForm {
    *   don't support pure CSS easing.
    */
   public function getJsEasingOptions() {
-    $easings = &drupal_static(__METHOD__, NULL);
-
-    if (!isset($easings)) {
-      $easings = array(
+    if (!isset($this->jsEasingOptions)) {
+      $this->jsEasingOptions = [
         'linear'           => 'Linear',
         'swing'            => 'Swing',
         'easeInQuad'       => 'easeInQuad',
@@ -232,9 +352,9 @@ abstract class SlickFormBase extends EntityForm {
         'easeInBounce'     => 'easeInBounce',
         'easeOutBounce'    => 'easeOutBounce',
         'easeInOutBounce'  => 'easeInOutBounce',
-      );
+      ];
     }
-    return $easings;
+    return $this->jsEasingOptions;
   }
 
   /**
@@ -252,7 +372,7 @@ abstract class SlickFormBase extends EntityForm {
    */
   public function getCssEasingOptions($map = FALSE) {
     $css_easings = [];
-    $available_easings = array(
+    $available_easings = [
 
       // Defaults/ Native.
       'ease'           => 'ease|ease',
@@ -286,7 +406,7 @@ abstract class SlickFormBase extends EntityForm {
       'easeInOutExpo'  => 'easeInOutExpo|cubic-bezier(1.000, 0.000, 0.000, 1.000)',
       'easeInOutCirc'  => 'easeInOutCirc|cubic-bezier(0.785, 0.135, 0.150, 0.860)',
       'easeInOutBack'  => 'easeInOutBack|cubic-bezier(0.680, -0.550, 0.265, 1.550)',
-    );
+    ];
 
     foreach ($available_easings as $key => $easing) {
       list($readable_easing, $css_easing) = array_pad(array_map('trim', explode("|", $easing, 2)), 2, NULL);
@@ -294,6 +414,19 @@ abstract class SlickFormBase extends EntityForm {
       unset($css_easing);
     }
     return $css_easings;
+  }
+
+  /**
+   * Defines options required by theme_slick(), used with optimized option.
+   */
+  public function getOptionsRequiredByTemplate() {
+    $options = [
+      'lazyLoad'     => 'ondemand',
+      'slidesToShow' => 1,
+    ];
+
+    $this->manager->getModuleHandler()->alter('slick_options_required_by_template', $options);
+    return $options;
   }
 
   /**

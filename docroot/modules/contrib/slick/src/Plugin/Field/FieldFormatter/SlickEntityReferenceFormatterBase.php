@@ -1,33 +1,30 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\slick\Plugin\Field\FieldFormatter\SlickEntityReferenceFormatterBase.
- */
-
 namespace Drupal\slick\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\blazy\Dejavu\BlazyEntityReferenceBase;
 use Drupal\slick\SlickFormatterInterface;
 use Drupal\slick\SlickManagerInterface;
-use Drupal\blazy\Dejavu\BlazyEntityReferenceBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base class for slick entity reference formatters.
+ * Base class for slick entity reference formatters with field details.
  *
- * @see \Drupal\slick_media\Plugin\Field\FieldFormatter\SlickMediaFormatter.
+ * @see \Drupal\slick_media\Plugin\Field\FieldFormatter
+ * @see \Drupal\slick_paragraphs\Plugin\Field\FieldFormatter
  */
 abstract class SlickEntityReferenceFormatterBase extends BlazyEntityReferenceBase implements ContainerFactoryPluginInterface {
+
   use SlickFormatterTrait;
 
   /**
    * The logger factory.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface.
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
    */
   protected $loggerFactory;
 
@@ -66,6 +63,15 @@ abstract class SlickEntityReferenceFormatterBase extends BlazyEntityReferenceBas
       $container->get('slick.formatter'),
       $container->get('slick.manager')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getScopedFormElements() {
+    return [
+      'namespace' => 'slick',
+    ] + parent::getScopedFormElements();
   }
 
 }

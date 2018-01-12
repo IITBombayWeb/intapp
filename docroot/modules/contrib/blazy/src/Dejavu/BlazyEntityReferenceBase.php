@@ -1,20 +1,15 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\blazy\Dejavu\BlazyEntityReferenceBase.
- */
-
 namespace Drupal\blazy\Dejavu;
 
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 
 /**
- * Base class for blazy entity reference formatters.
+ * Base class for entity reference formatters with field details.
  */
-abstract class BlazyEntityReferenceBase extends EntityReferenceFormatterBase {
+abstract class BlazyEntityReferenceBase extends BlazyEntityBase {
+
+  use BlazyEntityTrait;
 
   /**
    * {@inheritdoc}
@@ -24,117 +19,62 @@ abstract class BlazyEntityReferenceBase extends EntityReferenceFormatterBase {
   }
 
   /**
-   * Returns media contents.
+   * {@inheritdoc}
    */
-  public function buildElements(array &$build = [], $entities, $langcode) {
+  public function buildElement(array &$build, $entity, $langcode) {
     $settings  = &$build['settings'];
-    $view_mode = $settings['view_mode'] ?: 'full';
+    $item_id   = $settings['item_id'] = empty($settings['item_id']) ? 'box' : $settings['item_id'];
+    $view_mode = $settings['view_mode'] = empty($settings['view_mode']) ? 'full' : $settings['view_mode'];
 
-    foreach ($entities as $delta => $entity) {
-      // Protect ourselves from recursive rendering.
-      static $depth = 0;
-      $depth++;
-      if ($depth > 20) {
-        $this->loggerFactory->get('entity')->error('Recursive rendering detected when rendering entity @entity_type @entity_id. Aborting rendering.', array('@entity_type' => $entity->getEntityTypeId(), '@entity_id' => $entity->id()));
-        return $build;
-      }
-
-      $settings['delta'] = $delta;
-      if ($entity->id()) {
-        if ($settings['vanilla']) {
-          $build['items'][$delta] = $this->manager()->getEntityTypeManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, $view_mode, $langcode);
-        }
-        else {
-          $this->buildElement($build, $entity, $langcode);
-        }
-
-        // Add the entity to cache dependencies so to clear when it is updated.
-        $this->manager()->getRenderer()->addCacheableDependency($build['items'][$delta], $entity);
-      }
-      else {
-        $this->referencedEntities = NULL;
-        // This is an "auto_create" item.
-        $build[$delta] = array('#markup' => $entity->label());
-      }
-
-      $depth = 0;
+    if (!empty($settings['vanilla'])) {
+      return parent::buildElement($build, $entity, $langcode);
     }
 
-    // Supports Blazy formatter multi-breakpoint images if available.
-    $this->formatter->isBlazy($settings, $build['items'][0]);
+    $delta   = isset($settings['delta']) ? $settings['delta'] : 0;
+    $element = ['settings' => $settings];
 
-    return $build;
-  }
-
-  /**
-   * Returns slide contents.
-   */
-  public function buildElement(array &$build = [], $entity, $langcode) {
-    $settings    = &$build['settings'];
-    $delta       = $settings['delta'];
-    $item_id     = $settings['item_id'];
-    $view_mode   = $settings['view_mode'] ?: 'full';
-    $fields      = $entity->getFields();
-    $image       = [];
-    $field_image = '';
-
-    $this->buildMedia($settings, $entity, $langcode);
-
-    // Main image can be separate image item from video thumbnail for highres.
-    // Fallback to default thumbnail if any which has no file API. empty($settings['image']) &&
-    if (isset($fields['thumbnail'])) {
-      $field_image = $settings['source_field'];
-      $item = $fields['thumbnail']->get(0);
-      $settings['file_tags'] = ['file:' . $item->target_id];
+    // Built early before stage to allow custom highres video thumbnail later.
+    // Implementor must import: Drupal\blazy\Dejavu\BlazyVideoTrait.
+    if (method_exists($this, 'getMediaItem')) {
+      $this->getMediaItem($element, $entity);
     }
 
-    $field_image = empty($settings['image']) ? $field_image : $settings['image'];
+    // Build the main stage.
+    $this->buildStage($element, $entity, $langcode);
 
-    if ($field_image && isset($entity->$field_image)) {
-      /** @var \Drupal\file\Plugin\Field\FieldType\FileFieldItemList $file */
-      $file = $entity->get($field_image);
-
-      // Collect cache tags to be added for each item in the field.
-      if (method_exists($file, 'referencedEntities') && isset($file->referencedEntities()[0])) {
-        $item = $file->get(0);
-        $settings['file_tags'] = $file->referencedEntities()[0]->getCacheTags();
-        $settings['uri'] = $file->referencedEntities()[0]->getFileUri();
-      }
+    // If Image rendered is picked, render image as is.
+    if (!empty($settings['image']) && (!empty($settings['media_switch']) && $settings['media_switch'] == 'rendered')) {
+      $element['content'][] = $this->getFieldRenderable($entity, $settings['image'], $view_mode);
     }
-
-    if ($settings['uri']) {
-      /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $item */
-      $element['item']     = $item;
-      $element['settings'] = $settings;
-
-      $image = $this->formatter->getImage($element);
-    }
-
 
     // Optional image with responsive image, lazyLoad, and lightbox supports.
-    $element[$item_id] = $image;
-    $element['settings'] = $settings;
+    $element[$item_id] = empty($element['item']) ? [] : $this->formatter->getImage($element);
 
     // Captions if so configured.
     $this->getCaption($element, $entity, $langcode);
 
     // Layouts can be builtin, or field, if so configured.
-    if ($layout = $settings['layout']) {
+    if (!empty($settings['layout'])) {
+      $layout = $settings['layout'];
       if (strpos($layout, 'field_') !== FALSE) {
         $settings['layout'] = $this->getFieldString($entity, $layout, $langcode);
       }
-      $element['settings']['layout'] = strip_tags($settings['layout']);
+      $element['settings']['layout'] = $settings['layout'];
     }
 
     // Classes, if so configured.
-    $class = $this->getFieldString($entity, $settings['class'], $langcode);
-    $element['settings']['class'] = strip_tags($class);
+    if (!empty($settings['class'])) {
+      $element['settings']['class'] = $this->getFieldString($entity, $settings['class'], $langcode);
+    }
+
+    // Build the main item.
     $build['items'][$delta] = $element;
 
-    if ($settings['nav']) {
+    // Build the thumbnail item.
+    if (!empty($settings['nav'])) {
       // Thumbnail usages: asNavFor pagers, dot, arrows, photobox thumbnails.
-      $element[$item_id]  = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($element['settings']);
-      $element['caption'] = $this->getFieldRenderable($entity, $settings['thumbnail_caption'], $view_mode);
+      $element[$item_id]  = empty($settings['thumbnail_style']) ? [] : $this->formatter->getThumbnail($element['settings'], $element['item']);
+      $element['caption'] = empty($settings['thumbnail_caption']) ? [] : $this->getFieldRenderable($entity, $settings['thumbnail_caption'], $view_mode);
 
       $build['thumb']['items'][$delta] = $element;
     }
@@ -143,20 +83,30 @@ abstract class BlazyEntityReferenceBase extends EntityReferenceFormatterBase {
   /**
    * Builds slide captions with possible multi-value fields.
    */
-  public function getCaption(array &$element = [], $entity, $langcode) {
+  public function getCaption(array &$element, $entity, $langcode) {
     $settings  = $element['settings'];
     $view_mode = $settings['view_mode'];
 
     // Title can be plain text, or link field.
-    $field_title = $settings['title'];
-    $has_title = $field_title && isset($entity->$field_title);
-    if ($has_title && $title = $entity->getTranslation($langcode)->get($field_title)->getValue()) {
-      if (!empty($title[0]['value']) && !isset($title[0]['uri'])) {
-        // Prevents HTML-filter-enabled text from having bad markups (h2 > p).
-        $element['caption']['title']['#markup'] = Xss::filterAdmin($title[0]['value']);
-      }
-      elseif (isset($title[0]['uri']) && !empty($title[0]['title'])) {
-        $element['caption']['title'] = $this->getFieldRenderable($entity, $field_title, $view_mode)[0];
+    if (!empty($settings['title'])) {
+      $field_title = $settings['title'];
+      if (isset($entity->{$field_title})) {
+        if ($entity->hasTranslation($langcode)) {
+          // If the entity has translation, fetch the translated value.
+          $title = $entity->getTranslation($langcode)->get($field_title)->getValue();
+        }
+        else {
+          // Entity doesn't have translation, fetch original value.
+          $title = $entity->get($field_title)->getValue();
+        }
+        if (!empty($title[0]['value']) && !isset($title[0]['uri'])) {
+          // Prevents HTML-filter-enabled text from having bad markups (h2 > p),
+          // except for a few reasonable tags acceptable within H2 tag.
+          $element['caption']['title']['#markup'] = strip_tags($title[0]['value'], '<a><strong><em><span><small>');
+        }
+        elseif (isset($title[0]['uri']) && !empty($title[0]['title'])) {
+          $element['caption']['title'] = $this->getFieldRenderable($entity, $field_title, $view_mode)[0];
+        }
       }
     }
 
@@ -164,7 +114,7 @@ abstract class BlazyEntityReferenceBase extends EntityReferenceFormatterBase {
     if (!empty($settings['caption'])) {
       $caption_items = [];
       foreach ($settings['caption'] as $i => $field_caption) {
-        if (!isset($entity->$field_caption)) {
+        if (!isset($entity->{$field_caption})) {
           continue;
         }
         $caption_items[$i] = $this->getFieldRenderable($entity, $field_caption, $view_mode);
@@ -175,131 +125,143 @@ abstract class BlazyEntityReferenceBase extends EntityReferenceFormatterBase {
     }
 
     // Link, if so configured.
-    $field_link = $settings['link'];
-    if ($field_link && isset($entity->$field_link)) {
-      $links = $this->getFieldRenderable($entity, $field_link, $view_mode);
-      // Only simplify markups for known formatters registered by link.module.
-      if ($links && in_array($links['#formatter'], ['link'])) {
-        $links = [];
-        foreach ($entity->$field_link as $i => $link) {
-          $links[$i] = $link->view($view_mode);
+    if (!empty($settings['link'])) {
+      $field_link = $settings['link'];
+      if (isset($entity->{$field_link})) {
+        $links = $this->getFieldRenderable($entity, $field_link, $view_mode);
+
+        // Only simplify markups for known formatters registered by link.module.
+        if ($links && isset($links['#formatter']) && in_array($links['#formatter'], ['link'])) {
+          $links = [];
+          foreach ($entity->{$field_link} as $i => $link) {
+            $links[$i] = $link->view($view_mode);
+          }
         }
+        $element['caption']['link'] = $links;
       }
-      $element['caption']['link'] = $links;
     }
 
-    $element['caption']['overlay'] = empty($settings['overlay']) ? [] : $this->getOverlay($element, $entity, $langcode);
+    if (!empty($settings['overlay'])) {
+      $element['caption']['overlay'] = $this->getOverlay($settings, $entity, $langcode);
+    }
   }
 
   /**
    * Builds overlay placed within the caption.
    */
-  public function getOverlay(array &$element = [], $entity, $langcode) {
-    return [];
+  public function getOverlay(array $settings, $entity, $langcode) {
+    return $entity->get($settings['overlay'])->view($settings['view_mode']);
   }
 
   /**
-   * Collects media definitions.
+   * Build the main background/stage, image or video.
+   *
+   * Main image can be separate image item from video thumbnail for highres.
+   * Fallback to default thumbnail if any, which has no file API.
    */
-  public function buildMedia(array &$settings = [], $entity, $langcode) {
-    $settings['bundle']         = $entity->bundle();
-    $settings['media_url']      = $entity->url();
-    $settings['media_id']       = $entity->id();
-    $settings['target_bundles'] = $this->getFieldSetting('handler_settings')['target_bundles'];
-    $settings['plugin_id']      = $entity->getType()->getPluginId();
+  public function buildStage(array &$element, $entity, $langcode) {
+    $settings = &$element['settings'];
+    $stage    = empty($settings['source_field']) ? '' : $settings['source_field'];
+    $stage    = empty($settings['image']) ? $stage : $settings['image'];
 
-    // @todo get 'type' independent from bundle names: image, video, audio.
-    $settings['type']           = $entity->bundle();
-  }
+    // The actual video thumbnail has already been downloaded earlier.
+    // This fetches the highres image if provided and available.
+    // With a mix of image and video, image is not always there.
+    if ($stage && isset($entity->{$stage})) {
+      /** @var \Drupal\file\Plugin\Field\FieldType\FileFieldItemList $file */
+      $file = $entity->get($stage);
+      $value = $file->getValue();
 
-  /**
-   * Returns the string value of the fields: link or text.
-   */
-  public function getFieldString($entity, $field_name = '', $langcode, $formatted = FALSE) {
-    $value = '';
-    if ($field_name && isset($entity->$field_name)) {
-      $values = $entity->getTranslation($langcode)->get($field_name)->getValue();
-      if (!empty($values[0]['value'])) {
-        $value = $values[0]['value'];
-      }
-      elseif (isset($values[0]['uri']) && !empty($values[0]['title'])) {
-        $value = $values[0]['uri'];
+      // Do not proceed if it is a Media entity video.
+      if (isset($value[0]) && $value[0]) {
+        // If image, even if multi-value, we can only have one stage per slide.
+        if (isset($value[0]['target_id']) && !empty($value[0]['target_id'])) {
+          if (method_exists($file, 'referencedEntities') && isset($file->referencedEntities()[0])) {
+            /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $item */
+            $element['item'] = $file->get(0);
+
+            // Collects cache tags to be added for each item in the field.
+            $settings['file_tags'] = $file->referencedEntities()[0]->getCacheTags();
+            $settings['uri'] = $file->referencedEntities()[0]->getFileUri();
+          }
+        }
+        // If a VEF with a text, or link field.
+        elseif (isset($value[0]['value']) || isset($value[0]['uri'])) {
+          $external_url = $this->getFieldString($entity, $stage, $langcode);
+
+          if ($external_url) {
+            $this->buildVideo($settings, $external_url);
+            $element['item'] = $value;
+          }
+        }
       }
     }
-    return $value;
-  }
-
-  /**
-   * Returns the formatted renderable array of the field.
-   */
-  public function getFieldRenderable($entity, $field_name = '', $view_mode = 'full') {
-    $has_field = $field_name && isset($entity->$field_name);
-    $view = [];
-    if ($has_field && !empty($entity->$field_name->view($view_mode)[0])) {
-      $view = $entity->$field_name->view($view_mode);
-
-      // Prevents quickedit to operate here as otherwise JS error.
-      // @see 2314185, 2284917, 2160321.
-      // @see quickedit_preprocess_field().
-      $view['#view_mode'] = '_custom';
-    }
-    return $view;
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element    = [];
-    $definition = $this->getScopedFormElements();
+    $element = parent::settingsForm($form, $form_state);
 
-    $definition['_views'] = isset($form['field_api_classes']);
+    if (isset($element['layout'])) {
+      $layout_description = $element['layout']['#description'];
+      $element['layout']['#description'] = $this->t('Create a dedicated List (text - max number 1) field related to the caption placement to have unique layout per slide with the following supported keys: top, right, bottom, left, center, center-top, etc. Be sure its formatter is Key.') . ' ' . $layout_description;
+    }
 
-    $this->admin()->buildSettingsForm($element, $definition);
+    if (isset($element['media_switch'])) {
+      $element['media_switch']['#options']['rendered'] = $this->t('Image rendered by its formatter');
+      $element['media_switch']['#description'] .= ' ' . $this->t('Be sure the enabled fields here are not hidden/disabled at its view mode.');
+    }
 
-    $layout_description = $element['layout']['#description'];
-    $element['layout']['#description'] = t('Create a dedicated List (text - max number 1) field related to the caption placement to have unique layout per slide with the following supported keys: top, right, bottom, left, center, center-top, etc. Be sure its formatter is Key.') . ' ' . $layout_description;
+    if (isset($element['caption'])) {
+      $element['caption']['#description'] = $this->t('Check fields to be treated as captions, even if not caption texts.');
+    }
 
-    $element['media_switch']['#options']['media'] = t('Image to iframe');
-    $element['media_switch']['#description'] .= ' ' . t('Be sure the enabled fields here are not hidden/disabled at its view mode.');
+    if (isset($element['image']['#description'])) {
+      $element['image']['#description'] .= ' ' . $this->t('For video, this allows separate highres image, be sure the same field used for Image to have a mix of videos and images. Leave empty to fallback to the video provider thumbnails. The formatter/renderer is managed by <strong>@namespace</strong> formatter. Meaning original formatter ignored. If you want original formatters, check <strong>Vanilla</strong> option. Alternatively choose <strong>Media switcher &gt; Image rendered </strong>, other image-related settings here will be ignored. <strong>Supported fields</strong>: Image, Video Embed Field.', ['@namespace' => $this->getPluginId()]);
+    }
 
-    $element['image']['#description'] .= ' ' . t('For video, this allows separate highres image, be sure the same field used for Image to have a mix of videos and images. Leave empty to fallback to the video provider thumbnails.');
-    $element['caption']['#description'] = t('Check fields to be treated as captions, even if not caption texts.');
+    if (isset($element['overlay']['#description'])) {
+      $element['overlay']['#description'] .= ' ' . $this->t('The formatter/renderer is managed by the child formatter. <strong>Supported fields</strong>: Image, Video Embed Field, Media Entity.');
+    }
 
     return $element;
   }
 
   /**
-   * Defines the scope for the form elements.
+   * {@inheritdoc}
    */
   public function getScopedFormElements() {
-    $admin    = $this->admin();
-    $views_ui = $this->getFieldSetting('handler') == 'default';
-    $bundles  = $views_ui ? [] : $this->getFieldSetting('handler_settings')['target_bundles'];
-    $strings  = $admin->getFieldOptions($bundles, ['text', 'string', 'list_string']);
-    $texts    = $admin->getFieldOptions($bundles, ['text', 'text_long', 'string', 'string_long', 'link']);
+    $admin       = $this->admin();
+    $target_type = $this->getFieldSetting('target_type');
+    $views_ui    = $this->getFieldSetting('handler') == 'default';
+    $bundles     = $views_ui ? [] : $this->getFieldSetting('handler_settings')['target_bundles'];
+    $strings     = ['text', 'string', 'list_string'];
+    $strings     = $admin->getFieldOptions($bundles, $strings, $target_type);
+    $texts       = ['text', 'text_long', 'string', 'string_long', 'link'];
+    $texts       = $admin->getFieldOptions($bundles, $texts, $target_type);
+    $links       = ['text', 'string', 'link'];
 
     return [
+      'background'        => TRUE,
+      'box_captions'      => TRUE,
       'breakpoints'       => BlazyDefault::getConstantBreakpoints(),
-      'captions'          => $admin->getFieldOptions($bundles),
+      'captions'          => $admin->getFieldOptions($bundles, [], $target_type),
       'classes'           => $strings,
-      'current_view_mode' => $this->viewMode,
       'fieldable_form'    => TRUE,
-      'field_name'        => $this->fieldDefinition->getName(),
-      'images'            => $admin->getFieldOptions($bundles, ['image']),
+      'images'            => $admin->getFieldOptions($bundles, ['image'], $target_type),
       'image_style_form'  => TRUE,
       'layouts'           => $strings,
-      'links'             => $admin->getFieldOptions($bundles, ['text', 'string', 'link']),
+      'links'             => $admin->getFieldOptions($bundles, $links, $target_type),
       'media_switch_form' => TRUE,
       'multimedia'        => TRUE,
-      'settings'          => $this->getSettings(),
-      'target_bundles'    => $bundles,
-      'target_type'       => $this->getFieldSetting('target_type'),
       'thumb_captions'    => $texts,
+      'thumb_positions'   => TRUE,
       'nav'               => TRUE,
       'titles'            => $texts,
       'vanilla'           => TRUE,
-    ];
+    ] + parent::getScopedFormElements();
   }
 
 }

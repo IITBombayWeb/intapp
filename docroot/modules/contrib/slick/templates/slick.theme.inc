@@ -19,18 +19,17 @@ function template_preprocess_slick(&$variables) {
   $customs   = isset($element['#options']) ? $element['#options'] : [];
   $optionset = isset($element['#optionset']) ? $element['#optionset'] : Slick::load($settings['optionset']);
   $js        = $customs ? array_merge($optionset->getSettings(), $customs) : $optionset->getSettings();
-  $display   = $variables['display'] = $settings['display'];
 
   // Prepare attributes.
   $attributes = &$variables['attributes'];
   $content_attributes = new Attribute();
+  $display = $variables['display'] = $settings['display'];
 
-  if (!isset($attributes['id'])) {
-    $id = empty($settings['id']) ? Slick::getHtmlId('slick') : $settings['id'];
-    $attributes['id'] = $display == 'thumbnail' ? $id . '-thumbnail' : $id;
-  }
+  $id = empty($settings['id']) ? Slick::getHtmlId('slick') : $settings['id'];
+  $attributes['id'] = $display == 'thumbnail' ? $id . '-thumbnail' : $id;
 
   // Sniffs for Views to allow block__no_wrapper, views__no_wrapper, etc.
+  // @todo: Use $attributes if TWIG class ordering puts $attributes to the last.
   if ($settings['view_name'] && $settings['current_view_mode']) {
     $settings['attributes']['class'][] = str_replace('_', '-', 'slick--view--' . $settings['view_name']);
     $settings['attributes']['class'][] = str_replace('_', '-', 'slick--view--' . $settings['view_name'] . '--' . $settings['current_view_mode']);
@@ -40,39 +39,43 @@ function template_preprocess_slick(&$variables) {
   $settings['count']   = isset($settings['count']) ? $settings['count'] : count($element['#items']);
   $settings['unslick'] = $settings['unslick'] || $settings['count'] == 1;
 
-  foreach (['asNavFor', 'nextArrow', 'prevArrow', 'downArrowTarget', 'downArrowOffset', 'slidesToShow'] as $key) {
-    $settings[$key] = isset($js[$key]) ? $js[$key] : FALSE;
+  foreach (Slick::jsSettings() as $key => $default) {
+    $settings[$key] = isset($js[$key]) ? $js[$key] : $default;
   }
 
-  $settings['lazy'] = isset($settings['lazy']) ? $settings['lazy'] : $js['lazyLoad'];
-
   // Blazy can still lazyload an unslick.
-  if ($display != 'thumbnail' && $settings['lazy'] == 'blazy') {
-    $js['lazyLoad'] = 'blazy';
-    $blazy = empty($settings['blazy_data']) ? [] : $settings['blazy_data'];
-    $blazy['ratio'] = $settings['ratio'];
-    if (!empty($settings['width']) && empty($blazy['ratio'])) {
-      $blazy['default'] = [$settings['width'], $settings['height']];
+  $settings['lazy'] = empty($settings['lazy']) ? $js['lazyLoad'] : $settings['lazy'];
+  if ($display != 'thumbnail') {
+    if ($settings['lazy'] == 'blazy' || !empty($settings['blazy'])) {
+      if ($settings['lazy'] == 'blazy') {
+        $js['lazyLoad'] = 'blazy';
+      }
+      $attributes['data-blazy'] = empty($settings['blazy_data']) ? '' : Json::encode($settings['blazy_data']);
     }
-    $attributes['data-blazy'] = Json::encode($blazy);
+
+    if (!empty($settings['media_switch']) && empty($settings['grid'])) {
+      $switch = str_replace('_', '-', $settings['media_switch']);
+      $attributes['data-' . $switch . '-gallery'] = TRUE;
+    }
+  }
+
+  if (!empty($js['rtl'])) {
+    $attributes['dir'] = 'rtl';
   }
 
   // Prevents broken slick when only one item given, or an enforced unslick.
   if (!$settings['unslick']) {
     $content_attributes->setAttribute('id', $attributes['id'] . '-slider');
 
-    $settings['arrow']['attributes'] = new Attribute();
-    if ($display == 'main' && $js['downArrow'] && $js['downArrowTarget']) {
-      $settings['downArrow']['attributes'] = new Attribute();
+    $variables['arrow_attributes'] = new Attribute();
+    if ($display == 'main' && !empty($js['downArrow']) && !empty($js['downArrowTarget'])) {
+      $variables['arrow_down_attributes'] = new Attribute();
     }
 
     // focusOnSelect won't work with empty slide value, so add proper selector.
-    if (empty($js['slide']) && $js['focusOnSelect']) {
+    // Respects core Grid markups which may wrap .slick__slide within anon DIV.
+    if (empty($js['slide']) && !empty($js['focusOnSelect'])) {
       $js['slide'] = ($js['rows'] == 1 && $js['slidesPerRow'] == 1) ? '.slick__slide' : $js['slide'];
-    }
-
-    if ($js['rtl']) {
-      $content_attributes->setAttribute('dir', 'rtl');
     }
 
     // Add the configuration as JSON object into the slick container.
@@ -90,15 +93,17 @@ function template_preprocess_slick(&$variables) {
   foreach ($element['#items'] as $delta => $item) {
     $settings['current_item'] = $display;
     $settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
-    unset($item['settings']);
+    $item_attributes = isset($item['attributes']) ? $item['attributes'] : [];
+    unset($item['settings'], $item['attributes']);
 
     $theme = $settings['vanilla'] ? 'vanilla' : ($display == 'thumbnail' ? 'thumbnail' : 'slide');
 
     $slide = [
-      '#theme'    => 'slick_' . $theme,
-      '#item'     => $item,
-      '#delta'    => $delta,
-      '#settings' => $settings,
+      '#theme'      => 'slick_' . $theme,
+      '#item'       => $item,
+      '#delta'      => $delta,
+      '#settings'   => $settings,
+      '#attributes' => $item_attributes,
     ];
     $variables['items'][$delta] = $slide;
     unset($slide);
@@ -158,9 +163,10 @@ function template_preprocess_slick_slide(&$variables) {
   // wrapper: Don't add divities for a single item to have clean markups.
   $item['slide']         = isset($item['slide']) ? $item['slide'] : [];
   $item['caption']       = array_filter($item['caption']);
-  $settings['split']     = !empty($item) && $settings['caption'];
+  $settings['split']     = !empty($item) && !empty($settings['caption']);
   $settings['data']      = !empty($item['caption']['alt']) || !empty($item['caption']['title']) || !empty($item['caption']['data']);
   $settings['fullwidth'] = !empty($settings['skin']) && strpos($settings['skin'], 'full') !== FALSE;
+  $settings['grid']      = empty($settings['grid']) ? FALSE : $settings['grid'];
   $settings['detroy']    = $settings['current_item'] == 'main' && !empty($settings['grid']) && !empty($settings['unslick']);
   $settings['wrapper']   = $settings['count'] > 1 && $settings['current_item'] != 'grid';
 }
@@ -170,21 +176,41 @@ function template_preprocess_slick_slide(&$variables) {
  */
 function template_preprocess_slick_grid(&$variables) {
   $variables['settings'] = $variables['element']['#settings'];
+  $variables['delta']    = isset($variables['element']['#delta']) ? $variables['element']['#delta'] : 0;
+  $variables['grid_id']  = 'grid';
+
+  $settings = $variables['settings'];
+
+  // By default Slick only supports Grid Foundation, adds relevant grid_id for
+  // optional Style: CSS3 Columns, and probably future flexbox.
+  if (!empty($settings['style']) && $settings['style'] != 'slick') {
+    $variables['grid_id'] = $settings['style'];
+  }
+
+  if (!empty($settings['media_switch'])) {
+    $switch = str_replace('_', '-', $settings['media_switch']);
+    $variables['attributes']['data-' . $switch . '-gallery'] = TRUE;
+  }
 
   $variables['items'] = [];
   foreach ($variables['element']['#items'] as $delta => $item) {
-    $variables['settings']['current_item'] = 'grid';
-    $variables['settings'] = isset($item['settings']) ? array_merge($variables['settings'], $item['settings']) : $variables['settings'];
+    $settings = isset($item['settings']) ? array_merge($settings, $item['settings']) : $settings;
+    $settings['current_item'] = 'grid';
     unset($item['settings']);
 
-    $slide['slide'] = [
-      '#theme'    => 'slick_slide',
+    $item_attributes = [];
+    if (!empty($item['#attributes'])) {
+      $item_attributes = $item['#attributes'];
+    }
+
+    $slide['content'] = [
+      '#theme'    => empty($settings['vanilla']) ? 'slick_slide' : 'slick_vanilla',
       '#item'     => $item,
       '#delta'    => $delta,
-      '#settings' => $variables['settings'],
+      '#settings' => $settings,
     ];
 
-    $slide['attributes'] = new Attribute();
+    $slide['attributes'] = new Attribute($item_attributes);
     $variables['items'][$delta] = $slide;
     unset($slide);
   }
@@ -192,6 +218,8 @@ function template_preprocess_slick_grid(&$variables) {
 
 /**
  * Prepares variables for slick-image.html.twig template.
+ *
+ * @deprecated: Just use blazy.html.twig to reduce function calls.
  */
 function template_preprocess_slick_image(&$variables) {
   template_preprocess_blazy($variables);

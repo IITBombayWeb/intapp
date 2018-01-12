@@ -48,7 +48,7 @@ class BootstrapCarousel extends PreprocessBase implements PreprocessInterface {
       $variables->controls = [
         'left' => [
           '#type' => 'link',
-          '#title' => new FormattableMarkup(Element::create($left_icon)->render() . '<span class="sr-only">@text</span>', ['@text' => t('Previous')]),
+          '#title' => new FormattableMarkup(Element::create($left_icon)->renderPlain() . '<span class="sr-only">@text</span>', ['@text' => t('Previous')]),
           '#url' => $url,
           '#attributes' => [
             'class' => ['left', 'carousel-control'],
@@ -58,7 +58,7 @@ class BootstrapCarousel extends PreprocessBase implements PreprocessInterface {
         ],
         'right' => [
           '#type' => 'link',
-          '#title' => new FormattableMarkup(Element::create($right_icon)->render() . '<span class="sr-only">@text</span>', ['@text' => t('Next')]),
+          '#title' => new FormattableMarkup(Element::create($right_icon)->renderPlain() . '<span class="sr-only">@text</span>', ['@text' => t('Next')]),
           '#url' => $url,
           '#attributes' => [
             'class' => ['right', 'carousel-control'],
@@ -75,8 +75,10 @@ class BootstrapCarousel extends PreprocessBase implements PreprocessInterface {
         '#theme' => 'item_list__bootstrap_carousel_indicators',
         '#list_type' => 'ol',
         '#items' => array_keys($variables->slides),
-        '#target' => "#$id",
-        '#start_index' => $variables->start_index,
+        '#context' => [
+          'target' => "#$id",
+          'start_index' => $variables->start_index,
+        ],
       ];
     }
 

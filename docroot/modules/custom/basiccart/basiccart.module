@@ -1,4 +1,5 @@
 <?php
+
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Form\FormStateInterface;
@@ -46,6 +47,7 @@ function basiccart_page_attachments(array &$page) {
 */
 
 function basiccart_entity_insert(EntityInterface $node) {
+	
    $utility = new Utility();
   if($utility::is_basiccart_order($node->bundle())) {
     $get_cart = $utility::get_cart();
@@ -65,7 +67,7 @@ function basiccart_entity_insert(EntityInterface $node) {
 }
 
 /**
-* Implements hook_form_alter().
+* Implements hook_form_alter() iitinap
 */
 
 function basiccart_form_alter(&$form,FormStateInterface $form_state, $form_id) {
@@ -84,6 +86,7 @@ function basiccart_form_alter(&$form,FormStateInterface $form_state, $form_id) {
 */
 
 function basiccart_entity_presave(EntityInterface $node) {
+	
    $utility = new Utility();
   if($utility::is_basiccart_order($node->bundle())) {
     $get_price = $utility::get_total_price();
@@ -303,13 +306,27 @@ function basiccart_tokens($type, $tokens, array $data, array $options, Bubbleabl
  * Implements hook_token_info().
  */
 function basiccart_token_info() {
+	
   $info = array();
-
+   //applying patch
   // Add any new tokens.
-  $info['tokens']['basiccart_order']['products'] = 'Listing of ordered products.';
-  $info['tokens']['basiccart_order']['basiccart_total_price'] = 'Total Price of the Order';
-  $info['tokens']['basiccart_order']['basiccart_vat'] = 'VAT value of the order.';
-  $info['tokens']['basiccart_order']['basiccart_email'] = 'Email defined with the order.';
+  $info['tokens']['basic_cart_order']['products'] = [
+   'name' => t('Products'),
+    'description' => t('Listing of ordered products.')
+  ];
+  $info['tokens']['basic_cart_order']['basic_cart_total_price'] = [
+    'name' => t('Basic cart total price'),
+    'description' => t('Total price of the order'),
+  ];
+  $info['tokens']['basic_cart_order']['basic_cart_vat'] = [
+    'name' => t('Basic cart VAT'),
+    'description' => t('VAT value of the order.'),
+  ];
+  $info['tokens']['basic_cart_order']['basic_cart_email'] = [
+    'name' => t('Basic cart email'),
+    'description' => t('Email defined with the order.'),
+  ];
+
 
   // Return them.
   return $info;

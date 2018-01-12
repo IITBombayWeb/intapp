@@ -206,40 +206,49 @@ class Element extends DrupalAttributes {
   /**
    * Adds a specific Bootstrap class to color a button based on its text value.
    *
+   * @param bool $override
+   *   Flag determining whether or not to override any existing set class.
+   *
    * @return $this
    */
-  public function colorize() {
+  public function colorize($override = TRUE) {
     $button = $this->isButton();
 
     // @todo refactor this more so it's not just "button" specific.
     $prefix = $button ? 'btn' : 'has';
 
-    // Don't add a class if one is already present in the array.
+    // List of classes, based on the prefix.
     $classes = [
-      "$prefix-default", "$prefix-primary", "$prefix-success", "$prefix-info",
+      "$prefix-primary", "$prefix-success", "$prefix-info",
       "$prefix-warning", "$prefix-danger", "$prefix-link",
+      // Default should be last.
+      "$prefix-default"
     ];
 
-    foreach ($classes as $class) {
-      if ($this->hasClass($class)) {
-        if ($button && $this->getProperty('split')) {
-          $this->addClass($class, $this::SPLIT_BUTTON);
+    // Set the class to "btn-default" if it shouldn't be colorized.
+    $class = $button && !Bootstrap::getTheme()->getSetting('button_colorize') ? 'btn-default' : FALSE;
+
+    // Search for an existing class.
+    if (!$class || !$override) {
+      foreach ($classes as $value) {
+        if ($this->hasClass($value)) {
+          $class = $value;
+          break;
         }
-        return $this;
       }
     }
 
-    // Do nothing if setting is disabled.
-    if ($button && !Bootstrap::getTheme()->getSetting('button_colorize')) {
-      $this->addClass('btn-default');
-      return $this;
+    // Find a class based on the value of "value", "title" or "button_type".
+    if (!$class) {
+      $value = $this->getProperty('value', $this->getProperty('title', ''));
+      $class = "$prefix-" . Bootstrap::cssClassFromString($value, $button ? $this->getProperty('button_type', 'default') : 'default');
     }
 
-    if ($value = $this->getProperty('value', $this->getProperty('title'))) {
-      $class = "$prefix-" . Bootstrap::cssClassFromString($value, $this->getProperty('button_type', 'default'));
-      $this->addClass($class);
+    // Remove any existing classes and add the specified class.
+    if ($class) {
+      $this->removeClass($classes)->addClass($class);
       if ($button && $this->getProperty('split')) {
-        $this->addClass($class, $this::SPLIT_BUTTON);
+        $this->removeClass($classes, $this::SPLIT_BUTTON)->addClass($class, $this::SPLIT_BUTTON);
       }
     }
 
@@ -252,13 +261,36 @@ class Element extends DrupalAttributes {
    * @param array|string $element
    *   A render array element or a string.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
+   *   A current FormState instance, if any.
    *
    * @return \Drupal\bootstrap\Utility\Element
    *   The newly created element instance.
    */
   public static function create(&$element = [], FormStateInterface $form_state = NULL) {
-    return new self($element, $form_state);
+    return $element instanceof self ? $element : new self($element, $form_state);
+  }
+
+  /**
+   * Creates a new standalone \Drupal\bootstrap\Utility\Element instance.
+   *
+   * It does not reference the original element passed. If an Element instance
+   * is passed, it will clone it so it doesn't affect the original element.
+   *
+   * @param array|string|\Drupal\bootstrap\Utility\Element $element
+   *   A render array element, string or Element instance.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   A current FormState instance, if any.
+   *
+   * @return \Drupal\bootstrap\Utility\Element
+   *   The newly created element instance.
+   */
+  public static function createStandalone($element = [], FormStateInterface $form_state = NULL) {
+    // Immediately return a cloned version if element is already an Element.
+    if ($element instanceof self) {
+      return clone $element;
+    }
+    $standalone = is_object($element) ? clone $element : $element;
+    return static::create($standalone, $form_state);
   }
 
   /**
@@ -277,6 +309,25 @@ class Element extends DrupalAttributes {
    */
   public function &getArray() {
     return $this->array;
+  }
+
+  /**
+   * Retrieves a context value from the #context element property, if any.
+   *
+   * @param string $name
+   *   The name of the context key to retrieve.
+   * @param mixed $default
+   *   Optional. The default value to use if the context $name isn't set.
+   *
+   * @return mixed|NULL
+   *   The context value or the $default value if not set.
+   */
+  public function &getContext($name, $default = NULL) {
+    $context = &$this->getProperty('context', []);
+    if (!isset($context[$name])) {
+      $context[$name] = $default;
+    }
+    return $context[$name];
   }
 
   /**
@@ -379,7 +430,25 @@ class Element extends DrupalAttributes {
    *   Whether the given property on the element is empty.
    */
   public function isPropertyEmpty($name) {
-    return $this->hasProperty($name) && !empty($this->getProperty($name));
+    return $this->hasProperty($name) && empty($this->getProperty($name));
+  }
+
+  /**
+   * Checks if a value is a render array.
+   *
+   * @param mixed $value
+   *   The value to check.
+   *
+   * @return bool
+   *   TRUE if the given value is a render array, otherwise FALSE.
+   */
+  public static function isRenderArray($value) {
+    return is_array($value) && (isset($value['#type']) ||
+      isset($value['#theme']) || isset($value['#theme_wrappers']) ||
+      isset($value['#markup']) || isset($value['#attached']) ||
+      isset($value['#cache']) || isset($value['#lazy_builder']) ||
+      isset($value['#create_placeholder']) || isset($value['#pre_render']) ||
+      isset($value['#post_render']) || isset($value['#process']));
   }
 
   /**
@@ -464,51 +533,90 @@ class Element extends DrupalAttributes {
   }
 
   /**
-   * Renders the element.
+   * Renders the final element HTML.
    *
-   * @return \Drupal\Component\Render\MarkupInterface|string
+   * @return \Drupal\Component\Render\MarkupInterface
    *   The rendered HTML.
    */
   public function render() {
     /** @var \Drupal\Core\Render\Renderer $renderer */
-    static $renderer;
-    if (!isset($renderer)) {
-      $renderer = \Drupal::service('renderer');
-    }
+    $renderer = \Drupal::service('renderer');
     return $renderer->render($this->array);
+  }
+
+  /**
+   * Renders the final element HTML.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface
+   *   The rendered HTML.
+   */
+  public function renderPlain() {
+    /** @var \Drupal\Core\Render\Renderer $renderer */
+    $renderer = \Drupal::service('renderer');
+    return $renderer->renderPlain($this->array);
+  }
+
+  /**
+   * Renders the final element HTML.
+   *
+   * (Cannot be executed within another render context.)
+   *
+   * @return \Drupal\Component\Render\MarkupInterface
+   *   The rendered HTML.
+   */
+  public function renderRoot() {
+    /** @var \Drupal\Core\Render\Renderer $renderer */
+    $renderer = \Drupal::service('renderer');
+    return $renderer->renderRoot($this->array);
   }
 
   /**
    * Adds Bootstrap button size class to the element.
    *
-   * @param string $size
+   * @param string $class
    *   The full button size class to add. If none is provided, it will default
    *   to any set theme setting.
+   * @param bool $override
+   *   Flag indicating if the passed $class should be forcibly set. Setting
+   *   this to FALSE allows any existing set class to persist.
    *
    * @return $this
    */
-  public function setButtonSize($size = NULL) {
+  public function setButtonSize($class = NULL, $override = TRUE) {
     // Immediately return if element is not a button.
     if (!$this->isButton()) {
       return $this;
     }
 
-    // Don't add a class if one is already present in the array.
-    foreach (['btn-xs', 'btn-sm', 'btn-lg', 'btn-block'] as $class) {
-      if ($this->hasClass($class)) {
-        // Add the found class to any split buttons.
-        if ($this->getProperty('split')) {
-          $this->addClass($class, $this::SPLIT_BUTTON);
-        }
-        return $this;
+    // Retrieve the button size classes from the specific setting's options.
+    static $classes;
+    if (!isset($classes)) {
+      $classes = [];
+      if ($button_size = Bootstrap::getTheme()->getSettingPlugin('button_size')) {
+        $classes = array_keys($button_size->getOptions());
       }
     }
 
-    // Add any a button size.
-    if ($size = $size ?: Bootstrap::getTheme()->getSetting('button_size')) {
-      $this->addClass($size);
+    // Search for an existing class.
+    if (!$class || !$override) {
+      foreach ($classes as $value) {
+        if ($this->hasClass($value)) {
+          $class = $value;
+          break;
+        }
+      }
+    }
+
+    // Attempt to get the default button size, if set.
+    if (!$class) {
+      $class = Bootstrap::getTheme()->getSetting('button_size');
+    }
+
+    // Remove any existing classes and add the specified class.
+    if ($class) {
+      $this->removeClass($classes)->addClass($class);
       if ($this->getProperty('split')) {
-        $this->addClass($size, $this::SPLIT_BUTTON);
+        $this->removeClass($classes, $this::SPLIT_BUTTON)->addClass($class, $this::SPLIT_BUTTON);
       }
     }
 
@@ -563,11 +671,18 @@ class Element extends DrupalAttributes {
    *   The name of the property to set.
    * @param mixed $value
    *   The value of the property to set.
+   * @param bool $recurse
+   *   Flag indicating wither to set the same property on child elements.
    *
    * @return $this
    */
-  public function setProperty($name, $value) {
+  public function setProperty($name, $value, $recurse = FALSE) {
     $this->array["#$name"] = $value instanceof Element ? $value->getArray() : $value;
+    if ($recurse) {
+      foreach ($this->children() as $child) {
+        $child->setProperty($name, $value, $recurse);
+      }
+    }
     return $this;
   }
 
@@ -637,9 +752,23 @@ class Element extends DrupalAttributes {
 
     // Return if element or target shouldn't have "simple" tooltip descriptions.
     $html = FALSE;
-    if (($input_only && !$target->hasProperty('input'))
-      // Ignore if the actual element has no #description set.
-      || !$this->hasProperty('description')
+
+    // If the description is a render array, it must first be pre-rendered so
+    // it can be later passed to Unicode::isSimple() if needed.
+    $description = $this->hasProperty('description') ? $this->getProperty('description') : FALSE;
+    if (static::isRenderArray($description)) {
+      $description = static::createStandalone($description)->renderPlain();
+    }
+
+    if (
+      // Ignore if element has no #description.
+      !$description
+
+      // Ignore if description is not a simple string or MarkupInterface.
+      || (!is_string($description) && !($description instanceof MarkupInterface))
+
+      // Ignore if element is not an input.
+      || ($input_only && !$target->hasProperty('input'))
 
       // Ignore if the target element already has a "data-toggle" attribute set.
       || $target->hasAttribute('data-toggle')
@@ -653,7 +782,7 @@ class Element extends DrupalAttributes {
       || !$target->getProperty('smart_description', TRUE)
 
       // Ignore if the description is not "simple".
-      || !Unicode::isSimple($this->getProperty('description'), $length, $allowed_tags, $html)
+      || !Unicode::isSimple($description, $length, $allowed_tags, $html)
     ) {
       // Set the both the actual element and the target element
       // #smart_description property to FALSE.
@@ -678,7 +807,7 @@ class Element extends DrupalAttributes {
     $attributes = $target->getAttributes($type);
 
     // Set the tooltip attributes.
-    $attributes['title'] = $allowed_tags !== FALSE ? Xss::filter((string) $this->getProperty('description'), $allowed_tags) : $this->getProperty('description');
+    $attributes['title'] = $allowed_tags !== FALSE ? Xss::filter((string) $description, $allowed_tags) : $description;
     $attributes['data-toggle'] = 'tooltip';
     if ($html || $allowed_tags === FALSE) {
       $attributes['data-html'] = 'true';

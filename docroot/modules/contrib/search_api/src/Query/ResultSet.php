@@ -28,28 +28,28 @@ class ResultSet implements \IteratorAggregate, ResultSetInterface {
    *
    * @var \Drupal\search_api\Item\ItemInterface[]
    */
-  protected $resultItems = array();
+  protected $resultItems = [];
 
   /**
    * A numeric array of translated, sanitized warning messages.
    *
    * @var string[]
    */
-  protected $warnings = array();
+  protected $warnings = [];
 
   /**
    * A numeric array of search keys that were ignored.
    *
    * @var string[]
    */
-  protected $ignoredSearchKeys = array();
+  protected $ignoredSearchKeys = [];
 
   /**
    * Extra data set on this search result.
    *
    * @var array
    */
-  protected $extraData = array();
+  protected $extraData = [];
 
   /**
    * Constructs a ResultSet object.
@@ -184,6 +184,15 @@ class ResultSet implements \IteratorAggregate, ResultSetInterface {
       unset($this->extraData[$key]);
     }
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCloneForQuery(QueryInterface $query) {
+    $clone = clone $this;
+    $clone->query = $query;
+    return $clone;
   }
 
   /**

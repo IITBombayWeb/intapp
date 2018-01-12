@@ -62,12 +62,12 @@ abstract class FlagFormBase extends EntityForm {
     $flag = $this->entity;
 
     $form['#flag'] = $flag;
-    $form['#flag_name'] = $flag->id;
+    $form['#flag_name'] = $flag->id();
 
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
-      '#default_value' => $flag->label,
+      '#default_value' => $flag->label(),
       '#description' => $this->t('A short, descriptive title for this flag. It will be used in administrative interfaces to refer to this flag, and in page titles and menu items of some views this module provides (these are customizable, though). Some examples could be <em>Bookmarks</em>, <em>Favorites</em>, or <em>Offensive</em>.'),
       '#maxlength' => 255,
       '#required' => TRUE,
@@ -77,7 +77,7 @@ abstract class FlagFormBase extends EntityForm {
     $form['id'] = [
       '#type' => 'machine_name',
       '#title' => $this->t('Machine name'),
-      '#default_value' => $flag->id,
+      '#default_value' => $flag->id(),
       '#description' => $this->t('The machine-name for this flag. It may be up to 32 characters long and may only contain lowercase letters, underscores, and numbers. It will be used in URLs and in all API calls.'),
       '#weight' => -2,
       '#machine_name' => [
@@ -108,11 +108,10 @@ abstract class FlagFormBase extends EntityForm {
       '#title' => $this->t('Messages'),
     ];
 
-    $flag_short = $flag->getFlagShortText();
     $form['messages']['flag_short'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Flag link text'),
-      '#default_value' => !empty($flag_short) ? $flag_short : $this->t('Flag this item'),
+      '#default_value' => $flag->get('flag_short') ?: $this->t('Flag this item'),
       '#description' => $this->t('The text for the "flag this" link for this flag.'),
       '#required' => TRUE,
     ];
@@ -120,22 +119,21 @@ abstract class FlagFormBase extends EntityForm {
     $form['messages']['flag_long'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Flag link description'),
-      '#default_value' => $flag->getFlagLongText(),
+      '#default_value' => $flag->get('flag_long'),
       '#description' => $this->t('The description of the "flag this" link. Usually displayed on mouseover.'),
     ];
 
     $form['messages']['flag_message'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Flagged message'),
-      '#default_value' => $flag->getFlagMessage(),
+      '#default_value' => $flag->get('flag_message'),
       '#description' => $this->t('Message displayed after flagging content. If JavaScript is enabled, it will be displayed below the link. If not, it will be displayed in the message area.'),
     ];
 
-    $unflag_short = $flag->getUnflagShortText();
     $form['messages']['unflag_short'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Unflag link text'),
-      '#default_value' => !empty($unflag_short) ? $unflag_short : $this->t('Unflag this item'),
+      '#default_value' => $flag->get('unflag_short') ?: $this->t('Unflag this item'),
       '#description' => $this->t('The text for the "unflag this" link for this flag.'),
       '#required' => TRUE,
     ];
@@ -143,14 +141,14 @@ abstract class FlagFormBase extends EntityForm {
     $form['messages']['unflag_long'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Unflag link description'),
-      '#default_value' => $flag->getUnflagLongText(),
+      '#default_value' => $flag->get('unflag_long'),
       '#description' => $this->t('The description of the "unflag this" link. Usually displayed on mouseover.'),
     ];
 
     $form['messages']['unflag_message'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Unflagged message'),
-      '#default_value' => $flag->getUnflagMessage(),
+      '#default_value' => $flag->get('unflag_message'),
       '#description' => $this->t('Message displayed after content has been unflagged. If JavaScript is enabled, it will be displayed below the link. If not, it will be displayed in the message area.'),
     ];
 
@@ -291,7 +289,6 @@ abstract class FlagFormBase extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    // @todo Move this to the validation method for the confirm form plugin
     $flag = $this->entity;
     $flag->getFlagTypePlugin()->validateConfigurationForm($form, $form_state);
     $flag->getLinkTypePlugin()->validateConfigurationForm($form, $form_state);
@@ -306,7 +303,6 @@ abstract class FlagFormBase extends EntityForm {
     $flag->getFlagTypePlugin()->submitConfigurationForm($form, $form_state);
     $flag->getLinkTypePlugin()->submitConfigurationForm($form, $form_state);
 
-    $flag->enable();
     $status = $flag->save();
     $url = $flag->urlInfo();
     if ($status == SAVED_UPDATED) {
@@ -328,7 +324,7 @@ abstract class FlagFormBase extends EntityForm {
     // permissions for different flag types: http://drupal.org/node/879988
 
     // If the flag ID has changed, clean up all the obsolete permissions.
-    if ($flag->id != $form['#flag_name']) {
+    if ($flag->id() != $form['#flag_name']) {
       $old_name = $form['#flag_name'];
       $permissions = ["flag $old_name", "unflag $old_name"];
       foreach (array_keys(user_roles()) as $rid) {

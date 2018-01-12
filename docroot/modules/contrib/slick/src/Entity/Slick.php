@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\slick\Entity\Slick.
- */
-
 namespace Drupal\slick\Entity;
 
 use Drupal\Component\Utility\Html;
@@ -34,6 +29,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "group",
  *     "skin",
  *     "breakpoints",
+ *     "optimized",
  *     "options",
  *   }
  * )
@@ -83,11 +79,25 @@ class Slick extends ConfigEntityBase implements SlickInterface {
   protected $breakpoints = 0;
 
   /**
+   * The flag indicating to optimize the stored options by removing defaults.
+   *
+   * @var bool
+   */
+  protected $optimized = FALSE;
+
+  /**
    * The plugin instance options.
    *
    * @var array
    */
   protected $options = [];
+
+  /**
+   * The slick HTML ID.
+   *
+   * @var int
+   */
+  private static $slickId;
 
   /**
    * {@inheritdoc}
@@ -127,6 +137,13 @@ class Slick extends ConfigEntityBase implements SlickInterface {
   /**
    * {@inheritdoc}
    */
+  public function optimized() {
+    return $this->optimized;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getOptions($group = NULL, $property = NULL) {
     if ($group) {
       if (is_array($group)) {
@@ -145,42 +162,45 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    * {@inheritdoc}
    */
   public function getSettings() {
-    return $this->options['settings'];
+    // With the Optimized options, all defaults are cleaned out, merge em.
+    return isset($this->options['settings']) ? array_merge(self::defaultSettings(), $this->options['settings']) : self::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setSettings($settings) {
+  public function setSettings(array $settings = []) {
     $this->options['settings'] = $settings;
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSetting($setting_name) {
-    return isset($this->options['settings'][$setting_name]) ? $this->options['settings'][$setting_name] : NULL;
+  public function getSetting($name) {
+    return isset($this->getSettings()[$name]) ? $this->getSettings()[$name] : NULL;
   }
 
   /**
-   * Returns available slick default options under group 'settings'.
+   * {@inheritdoc}
+   */
+  public function setSetting($name, $value) {
+    $this->options['settings'][$name] = $value;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public static function defaultSettings($group = 'settings') {
     return self::load('default')->options[$group];
   }
 
   /**
-   * Overrides Drupal\Core\Entity\Entity::create().
-   */
-  public static function create(array $values = []) {
-    $optionset = parent::create($values);
-
-    $optionset->setSettings($optionset->getSettings() + self::defaultSettings());
-    return $optionset;
-  }
-
-  /**
    * Returns the Slick responsive settings.
+   *
+   * @return array
+   *   The responsive options.
    */
   public function getResponsiveOptions() {
     if (empty($this->breakpoints)) {
@@ -204,11 +224,25 @@ class Slick extends ConfigEntityBase implements SlickInterface {
   }
 
   /**
+   * Sets the Slick responsive settings.
+   *
+   * @return $this
+   *   The class instance that this method is called on.
+   */
+  public function setResponsiveSettings($values, $delta = 0, $key = 'settings') {
+    $this->options['responsives']['responsive'][$delta][$key] = $values;
+    return $this;
+  }
+
+  /**
    * Strip out options containing default values so to have real clean JSON.
+   *
+   * @return array
+   *   The cleaned out settings.
    */
   public function removeDefaultValues(array $js) {
     $config   = [];
-    $defaults = $this->load('default')->getSettings();
+    $defaults = self::defaultSettings();
 
     // Remove wasted dependent options if disabled, empty or not.
     $this->removeWastedDependentOptions($js);
@@ -220,7 +254,14 @@ class Slick extends ConfigEntityBase implements SlickInterface {
     }
 
     // Do not pass arrows HTML to JSON object as some are enforced.
-    foreach (['downArrow', 'downArrowTarget', 'downArrowOffset', 'prevArrow', 'nextArrow'] as $key) {
+    $excludes = [
+      'downArrow',
+      'downArrowTarget',
+      'downArrowOffset',
+      'prevArrow',
+      'nextArrow',
+    ];
+    foreach ($excludes as $key) {
       unset($config[$key]);
     }
 
@@ -231,7 +272,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
         $cleaned[$key]['breakpoint'] = $responsives[$key]['breakpoint'];
 
         // Destroy responsive slick if so configured.
-        if ($responsives[$key]['unslick']) {
+        if (!empty($responsives[$key]['unslick'])) {
           $cleaned[$key]['settings'] = 'unslick';
           unset($responsives[$key]['unslick']);
         }
@@ -250,7 +291,7 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    * Removes wasted dependent options, even if not empty.
    */
   public function removeWastedDependentOptions(array &$js) {
-    foreach ($this->getDependentOptions() as $key => $option) {
+    foreach (self::getDependentOptions() as $key => $option) {
       if (isset($js[$key]) && empty($js[$key])) {
         foreach ($option as $dependent) {
           unset($js[$dependent]);
@@ -266,6 +307,9 @@ class Slick extends ConfigEntityBase implements SlickInterface {
 
   /**
    * Defines the dependent options.
+   *
+   * @return array
+   *   The dependent options.
    */
   public static function getDependentOptions() {
     $down_arrow = ['downArrowTarget', 'downArrowOffset'];
@@ -283,31 +327,63 @@ class Slick extends ConfigEntityBase implements SlickInterface {
 
   /**
    * Returns the trusted HTML ID of a single slick instance.
+   *
+   * @return string
+   *   The html ID.
+   *
+   * @todo: Consider Blazy::getHtmlId() instead.
    */
   public static function getHtmlId($string = 'slick', $id = '') {
-    $slick_id = &drupal_static('slick_id', 0);
+    if (!isset(static::$slickId)) {
+      static::$slickId = 0;
+    }
 
     // Do not use dynamic Html::getUniqueId, otherwise broken asnavfors.
-    return empty($id) ? Html::getId($string . '-' . ++$slick_id) : $id;
+    return empty($id) ? Html::getId($string . '-' . ++static::$slickId) : strip_tags($id);
   }
 
   /**
-   * Returns HTML or layout related settings, none of JS to shutup notices.
+   * Returns HTML or layout related settings to shut up notices.
+   *
+   * @return array
+   *   The default settings.
    */
   public static function htmlSettings() {
     return [
-      'cache'             => -1,
+      'cache'             => 0,
       'current_view_mode' => '',
       'display'           => 'main',
-      'grid'              => '',
+      'grid'              => 0,
       'id'                => '',
       'nav'               => FALSE,
+      'navpos'            => FALSE,
       'media_switch'      => '',
       'optionset'         => 'default',
+      'ratio'             => '',
       'skin'              => '',
       'unslick'           => FALSE,
       'vanilla'           => FALSE,
+      'vertical'          => FALSE,
+      'vertical_tn'       => FALSE,
       'view_name'         => '',
+    ];
+  }
+
+  /**
+   * Defines JS options required by theme_slick(), used with optimized option.
+   */
+  public static function jsSettings() {
+    return [
+      'asNavFor'        => '',
+      'downArrowTarget' => '',
+      'downArrowOffset' => '',
+      'lazyLoad'        => 'ondemand',
+      'prevArrow'       => '<button type="button" data-role="none" class="slick-prev" aria-label="Previous" tabindex="0" role="button">Previous</button>',
+      'nextArrow'       => '<button type="button" data-role="none" class="slick-next" aria-label="Next" tabindex="0" role="button">Next</button>',
+      'rows'            => 1,
+      'slidesPerRow'    => 1,
+      'slide'           => '',
+      'slidesToShow'    => 1,
     ];
   }
 

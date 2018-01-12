@@ -31,22 +31,22 @@ class VarietyItems extends ResourceBase {
     $varieties = [
       'retsina' => [
         'name' => 'Retsina',
-        'parent' => 1,  // categoryid for 'white'.
+        'parent' => 1, // categoryid for 'white'.
         'details' => 'Greek',
       ],
       'trebbiano' => [
         'name' => 'Trebbiano',
-        'parent' => 1,  // categoryid for 'white'.
+        'parent' => 1, // categoryid for 'white'.
         'details' => 'Italian',
       ],
       'valpolicella' => [
         'name' => 'Valpolicella',
-        'parent' => 3,  // categoryid for 'red'.
+        'parent' => 3, // categoryid for 'red'.
         'details' => 'Italian Venoto region',
       ],
       'bardolino' => [
         'name' => 'Bardolino',
-        'parent' => 3,  // categoryid for 'red'.
+        'parent' => 3, // categoryid for 'red'.
         'details' => 'Italian Venoto region',
       ],
     ];
@@ -59,6 +59,14 @@ class VarietyItems extends ResourceBase {
 
     $response = new ResourceResponse($data, 200);
     return $response;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function permissions() {
+    // Remove permissions so the resource is available to all.
+    return [];
   }
 
 }

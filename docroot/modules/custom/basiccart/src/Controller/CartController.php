@@ -36,14 +36,15 @@ class CartController extends ControllerBase
     $cart = $utility::get_cart();
     $config= $utility::cart_settings(); 
     $request = \Drupal::request();
-
+  
     if ($route = $request->attributes->get(\Symfony\Cmf\Component\Routing\RouteObjectInterface::ROUTE_OBJECT)) {
       $route->setDefault('_title', t($config->get('cart_page_title')));
     }
-
+    
     return !empty($cart['cart']) ? \Drupal::formBuilder()->getForm('\Drupal\basiccart\Form\CartForm') : array('#type' => 'markup','#markup' => t($config->get('empty_cart')),);
 
-  } 
+  }
+  
   
   public function remove_from_cart($nid) {
     \Drupal::service('page_cache_kill_switch')->trigger();
@@ -64,7 +65,7 @@ class CartController extends ControllerBase
     $response->status = TRUE;
     $response->text = '<p class="messages messages--status">'.t($config->get('added_to_cart_message')).'</p>';
     $response->id = 'ajax-addtocart-message-'.$nid;
-    $response->block = $utility->get_cart_content();
+    $response->block = $utility->get_cart_content('update');
     return new JsonResponse($response);
   }
 

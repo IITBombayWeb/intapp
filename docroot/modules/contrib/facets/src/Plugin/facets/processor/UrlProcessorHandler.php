@@ -19,7 +19,7 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  * @FacetsProcessor(
  *   id = "url_processor_handler",
  *   label = @Translation("URL handler"),
- *   description = @Translation("Triggers the URL processor, which is set in the Facet source configuration."),
+ *   description = @Translation("Trigger the URL processor, which is set in the facet source configuration."),
  *   stages = {
  *     "pre_query" = 50,
  *     "build" = 15,
@@ -35,6 +35,16 @@ class UrlProcessorHandler extends ProcessorPluginBase implements BuildProcessorI
    * @var \Drupal\facets\UrlProcessor\UrlProcessorInterface
    */
   protected $processor;
+
+  /**
+   * Gets the Processor.
+   *
+   * @return \Drupal\facets\UrlProcessor\UrlProcessorInterface
+   *   The Processor.
+   */
+  public function getProcessor() {
+    return $this->processor;
+  }
 
   /**
    * {@inheritdoc}

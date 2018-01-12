@@ -50,7 +50,6 @@ class AddToCartItem extends FieldItemBase {
     $config = Utility::cart_settings();
     $properties['value'] = DataDefinition::create('boolean')
       ->setLabel(t($config->get('add_to_cart_button')));
-   // $properties['no_ui'] = TRUE;
     return $properties;
   }
 

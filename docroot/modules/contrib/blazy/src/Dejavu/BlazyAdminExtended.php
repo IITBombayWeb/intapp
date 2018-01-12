@@ -1,54 +1,42 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\blazy\Dejavu\BlazyAdminExtended.
- */
-
 namespace Drupal\blazy\Dejavu;
 
-use Drupal\Core\Url;
+use Drupal\blazy\Form\BlazyAdminInterface;
 use Drupal\blazy\Form\BlazyAdminFormatterBase;
 
 /**
  * Provides re-usable admin functions, or form elements.
  */
-class BlazyAdminExtended extends BlazyAdminFormatterBase {
+class BlazyAdminExtended extends BlazyAdminFormatterBase implements BlazyAdminInterface {
 
   /**
    * Returns shared form elements across field formatter and Views.
    */
   public function openingForm(array &$form, $definition = []) {
-    if (!isset($definition['namespace'])) {
-      return;
+    $namespace = isset($definition['namespace']) ? $definition['namespace'] : 'blazy';
+
+    if (!empty($definition['vanilla'])) {
+      $form['vanilla'] = [
+        '#type'        => 'checkbox',
+        '#title'       => $this->t('Vanilla @namespace', ['@namespace' => $namespace]),
+        '#description' => $this->t('<strong>Check</strong>:<ul><li>To render individual item as is as without extra logic.</li><li>To disable 99% @module features, and most of the mentioned options here, such as layouts, et al.</li><li>When the @module features can not satisfy the need.</li><li>Things may be broken! You are on your own.</li></ul><strong>Uncheck</strong>:<ul><li>To get consistent markups and its advanced features -- relevant for the provided options as @module needs to know what to style/work with.</li></ul>', ['@module' => $namespace]),
+        '#weight'      => -109,
+        '#enforced'    => TRUE,
+        '#attributes'  => ['class' => ['form-checkbox--vanilla']],
+        '#wrapper_attributes' => ['class' => ['form-item--full', 'form-item--tooltip-bottom']],
+      ];
     }
 
-    $namespace = $definition['namespace'];
-    $path      = drupal_get_path('module', $namespace);
-    $readme    = Url::fromUri('base:' . $path . '/README.txt')->toString();
-
-    $form['vanilla'] = [
-      '#type'        => 'checkbox',
-      '#title'       => t('Vanilla @namespace', ['@namespace' => $namespace]),
-      '#description' => t('<strong>Check</strong>:<ul><li>To render individual item as is as without extra logic.</li><li>To disable 99% @module features, and most of the mentioned options here, such as layouts, et al.</li><li>When the @module features can not satisfy the need.</li><li>Things may be broken! You are on your own.</li></ul><strong>Uncheck</strong>:<ul><li>To get consistent markups and its advanced features -- relevant for the provided options as @module needs to know what to style/work with.</li></ul>', ['@module' => $namespace]),
-      '#weight'      => -109,
-      '#enforced'    => TRUE,
-      '#access'      => isset($definition['vanilla']),
-      '#wrapper_attributes' => ['class' => ['form-item--full', 'form-item--tooltip-bottom']],
-    ];
-
-    $form['optionset'] = [
-      '#type'        => 'select',
-      '#title'       => t('Optionset'),
-      '#options'     => isset($definition['optionsets']) ? $definition['optionsets'] : $this->getOptionsetOptions($namespace),
-      '#enforced'    => TRUE,
-      '#description' => t('Enable the optionset UI module to manage the optionsets.'),
-      '#access'      => isset($definition['optionsets']),
-      '#weight'      => -108,
-    ];
-
-    if (isset($definition['optionsets']) && $this->blazyManager()->getModuleHandler()->moduleExists($namespace . '_ui')) {
-      $form['optionset']['#description'] = t('Manage optionsets at <a href=":url" target="_blank">the optionset admin page</a>.', [':url' => Url::fromRoute('entity.' . $namespace . '.collection')->toString()]);
+    if (!empty($definition['optionsets']) && $namespace != 'blazy') {
+      $form['optionset'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Optionset'),
+        '#options'     => $definition['optionsets'],
+        '#enforced'    => TRUE,
+        '#description' => $this->t('Enable the optionset UI module to manage the optionsets.'),
+        '#weight'      => -108,
+      ];
     }
 
     parent::openingForm($form, $definition);
@@ -58,151 +46,88 @@ class BlazyAdminExtended extends BlazyAdminFormatterBase {
    * Returns re-usable fieldable formatter form elements.
    */
   public function fieldableForm(array &$form, $definition = []) {
-    $is_colorbox   = function_exists('colorbox_theme');
-    $is_photobox   = function_exists('photobox_theme');
-    $is_responsive = function_exists('responsive_image_get_image_dimensions');
-    $image_styles  = function_exists('image_style_options') ? image_style_options(FALSE) : [];
-    $photobox      = \Drupal::root() . '/libraries/photobox/photobox/jquery.photobox.js';
-
-    if (is_file($photobox)) {
-      $is_photobox = TRUE;
+    if (isset($definition['images'])) {
+      $form['image'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Main stage'),
+        '#options'     => is_array($definition['images']) ? $definition['images'] : [],
+        '#description' => $this->t('Main background/stage image field.'),
+        '#prefix'      => '<h3 class="form__title form__title--fields">' . $this->t('Fields') . '</h3>',
+      ];
     }
 
-    $form['image'] = [
-      '#type'        => 'select',
-      '#title'       => t('Main image'),
-      '#options'     => isset($definition['images']) ? $definition['images'] : [],
-      '#description' => t('Main background/stage image field.'),
-      '#access'      => isset($definition['images']),
-      '#prefix'      => '<h3 class="form__title">' . t('Fields') . '</h3>',
-    ];
+    if (isset($definition['thumbnails'])) {
+      $form['thumbnail'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Thumbnail image'),
+        '#options'     => is_array($definition['thumbnails']) ? $definition['thumbnails'] : [],
+        '#description' => $this->t('Leave empty to not use thumbnail pager.'),
+      ];
+    }
 
-    $form['thumbnail'] = array(
-      '#type'        => 'select',
-      '#title'       => t('Thumbnail image'),
-      '#options'     => isset($definition['thumbnails']) ? $definition['thumbnails'] : [],
-      '#description' => t("Leave empty to not use thumbnail pager."),
-      '#access'      => isset($definition['thumbnails']),
-    );
+    if (isset($definition['overlays'])) {
+      $form['overlay'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Overlay media'),
+        '#options'     => is_array($definition['overlays']) ? $definition['overlays'] : [],
+        '#description' => $this->t('Overlay is displayed over the main stage.'),
+      ];
+    }
 
-    $form['overlay'] = array(
-      '#type'        => 'select',
-      '#title'       => t('Overlay media'),
-      '#options'     => isset($definition['overlays']) ? $definition['overlays'] : [],
-      '#description' => t('Overlay is displayed over the main main.'),
-      '#access'      => isset($definition['overlays']),
-    );
+    if (isset($definition['titles'])) {
+      $form['title'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Title'),
+        '#options'     => is_array($definition['titles']) ? $definition['titles'] : [],
+        '#description' => $this->t('If provided, it will bre wrapped with H2.'),
+      ];
+    }
 
-    $form['title'] = [
-      '#type'        => 'select',
-      '#title'       => t('Title'),
-      '#options'     => isset($definition['titles']) ? $definition['titles'] : [],
-      '#description' => t('If provided, it will bre wrapped with H2.'),
-      '#access'      => isset($definition['titles']),
-    ];
+    if (isset($definition['links'])) {
+      $form['link'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Link'),
+        '#options'     => is_array($definition['links']) ? $definition['links'] : [],
+        '#description' => $this->t('Link to content: Read more, View Case Study, etc.'),
+      ];
+    }
 
-    $form['link'] = [
-      '#type'        => 'select',
-      '#title'       => t('Link'),
-      '#options'     => isset($definition['links']) ? $definition['links'] : [],
-      '#description' => t('Link to content: Read more, View Case Study, etc.'),
-      '#access'      => isset($definition['links']),
-    ];
+    if (isset($definition['classes'])) {
+      $form['class'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Item class'),
+        '#options'     => is_array($definition['classes']) ? $definition['classes'] : [],
+        '#description' => $this->t('If provided, individual item will have this class, e.g.: to have different background with transparent images. Be sure its formatter is Key or Label. Accepted field types: list text, string (e.g.: node title), term/entity reference label.'),
+        '#weight'      => 6,
+      ];
+    }
 
-    $form['class'] = [
-      '#type'        => 'select',
-      '#title'       => t('Item class'),
-      '#options'     => isset($definition['classes']) ? $definition['classes'] : [],
-      '#description' => t('If provided, individual item will have this class, e.g.: to have different background with transparent images. Be sure its formatter is Key or Label. Accepted field types: list text, string (e.g.: node title), term/entity reference label.'),
-      '#access'      => isset($definition['classes']),
-      '#weight'      => 6,
-    ];
+    if (!empty($definition['id'])) {
+      $form['id'] = [
+        '#type'         => 'textfield',
+        '#title'        => $this->t('@namespace ID', ['@namespace' => $definition['namespace']]),
+        '#size'         => 40,
+        '#maxlength'    => 255,
+        '#field_prefix' => '#',
+        '#enforced'     => TRUE,
+        '#description'  => $this->t("Manually define the container ID. <em>This ID is used for the cache identifier, so be sure it is unique</em>. Leave empty to have a guaranteed unique ID managed by the module."),
+        '#weight'       => 94,
+      ];
+    }
 
-    $form['id'] = [
-      '#type'         => 'textfield',
-      '#title'        => t('Slick ID'),
-      '#size'         => 40,
-      '#maxlength'    => 255,
-      '#field_prefix' => '#',
-      '#enforced'     => TRUE,
-      '#description'  => t("Manually define the container ID. <em>This ID is used for the cache identifier, so be sure it is unique</em>. Leave empty to have a guaranteed unique ID managed by the module."),
-      '#access'       => isset($definition['id']),
-      '#weight'       => 94,
-    ];
+    if (isset($form['caption'])) {
+      $form['caption']['#description'] = $this->t('Enable any of the following fields as captions. These fields are treated and wrapped as captions.');
+    }
 
-    $form['caption']['#description'] = t('Enable any of the following fields as captions. These fields are treated and wrapped as captions.');
-
-    if (!isset($definition['id'])) {
-      $form['caption']['#description'] .= ' ' . t('Be sure to make them visible at their relevant Manage display.');
+    if (empty($definition['id'])) {
+      if (isset($form['caption'])) {
+        $form['caption']['#description'] .= ' ' . $this->t('Be sure to make them visible at their relevant Manage display.');
+      }
     }
     else {
-      $form['overlay']['#description'] .= ' ' . t('Be sure to CHECK "Use field template" under its formatter if using Slick field formatter.');
-    }
-  }
-
-  /**
-   * Returns re-usable grid elements across field formatter and Views.
-   */
-  public function gridForm(array &$form, $definition = []) {
-    $range = range(1, 12);
-    $grid_options = array_combine($range, $range);
-
-    $header = t('Group individual items as block grid?<small>Only works if the total items &gt; <strong>Visible items</strong>.</small>');
-    $form['grid_header'] = [
-      '#type'   => 'item',
-      '#markup' => '<h3 class="form__title">' . $header . '</h3>',
-    ];
-
-    $form['grid'] = [
-      '#type'        => 'select',
-      '#title'       => t('Grid large'),
-      '#options'     => $grid_options,
-      '#description' => t('The amount of block grid columns for large monitors 64.063em - 90em. <br /><strong>Requires</strong>:<ol><li>Visible items,</li><li>Skin Grid for starter,</li><li>A reasonable amount of contents.</li></ol>Leave empty to DIY, or to not build grids.'),
-      '#enforced'    => TRUE,
-    ];
-
-    $form['grid_medium'] = [
-      '#type'        => 'select',
-      '#title'       => t('Grid medium'),
-      '#options'     => $grid_options,
-      '#description' => t('The amount of block grid columns for medium devices 40.063em - 64em.'),
-    ];
-
-    $form['grid_small'] = [
-      '#type'        => 'select',
-      '#title'       => t('Grid small'),
-      '#options'     => $grid_options,
-      '#description' => t('The amount of block grid columns for small devices 0 - 40em.'),
-    ];
-
-    $form['visible_items'] = [
-      '#type'        => 'select',
-      '#title'       => t('Visible items'),
-      '#options'     => array_combine(range(1, 32), range(1, 32)),
-      '#description' => t('How many items per display at a time. Required if Grid provided. Grid will not work if Views rows count &lt; <strong>Visible items</strong>.'),
-    ];
-
-    $form['preserve_keys'] = [
-      '#type'        => 'checkbox',
-      '#title'       => t('Preserve keys'),
-      '#description' => t('If checked, keys will be preserved. Default is FALSE which will reindex the grid chunk numerically.'),
-    ];
-
-    $grids = [
-      'grid_header',
-      'grid_medium',
-      'grid_small',
-      'visible_items',
-      'preserve_keys',
-    ];
-
-    foreach ($grids as $key) {
-      $form[$key]['#enforced'] = TRUE;
-      $form[$key]['#states'] = [
-        'visible' => [
-          'select[name$="[grid]"]' => ['!value' => ''],
-        ],
-      ];
+      if (isset($form['overlay'])) {
+        $form['overlay']['#description'] .= ' ' . $this->t('Be sure to CHECK "Use field template" under its formatter if using Slick field formatter.');
+      }
     }
   }
 
@@ -210,16 +135,20 @@ class BlazyAdminExtended extends BlazyAdminFormatterBase {
    * Returns shared ending form elements across field formatter and Views.
    */
   public function closingForm(array &$form, $definition = []) {
-    $form['cache'] = [
-      '#type'        => 'select',
-      '#title'       => t('Cache'),
-      '#options'     => $this->getCacheOptions(),
-      '#weight'      => 98,
-      '#enforced'    => TRUE,
-      '#description' => t('Ditch all the logic to cached bare HTML. <ol><li><strong>Permanent</strong>: cached contents will persist (be displayed) till the next cron runs.</li><li><strong>Any number</strong>: expired by the selected expiration time, and fresh contents are fetched till the next cache rebuilt.</li></ol>A working cron job is required to clear stale cache. At any rate, cached contents will be refreshed regardless of the expiration time after the cron hits. <br />Leave it empty to disable caching.<br /><strong>Warning!</strong> Be sure no useless/ sensitive data such as Edit links as they are rendered as is regardless permissions. No permissions are changed, just ugly. Only enable it when all is done, otherwise cached options will be displayed while changing them.'),
-      '#access'      => isset($definition['caches']),
-    ];
+    if (!empty($definition['caches'])) {
+      $form['cache'] = [
+        '#type'        => 'select',
+        '#title'       => $this->t('Cache'),
+        '#options'     => $this->getCacheOptions(),
+        '#weight'      => 98,
+        '#enforced'    => TRUE,
+        '#description' => $this->t('Ditch all the logic to cached bare HTML. <ol><li><strong>Permanent</strong>: cached contents will persist (be displayed) till the next cron runs.</li><li><strong>Any number</strong>: expired by the selected expiration time, and fresh contents are fetched till the next cache rebuilt.</li></ol>A working cron job is required to clear stale cache. At any rate, cached contents will be refreshed regardless of the expiration time after the cron hits. <br />Leave it empty to disable caching.<br /><strong>Warning!</strong> Be sure no useless/ sensitive data such as Edit links as they are rendered as is regardless permissions. No permissions are changed, just ugly. Only enable it when all is done, otherwise cached options will be displayed while changing them.'),
+      ];
 
+      if (!empty($definition['_views'])) {
+        $form['cache']['#description'] .= ' ' . $this->t('Also disable Views cache (<strong>Advanced &gt; Caching</strong>) temporarily _only if trouble to see updated settings.');
+      }
+    }
 
     parent::closingForm($form, $definition);
   }

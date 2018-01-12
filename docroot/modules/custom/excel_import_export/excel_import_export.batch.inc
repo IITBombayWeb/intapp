@@ -3,6 +3,7 @@
   use Drupal\taxonomy\Entity\Term;
   use Drupal\workflow\Entity\WorkflowTransition;
   use Drupal\Core\Url;
+  use Drupal\Core\StreamWrapper\PrivateStream;  
 
 function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = NULL, &$context) {
   // Zip folder lib file.
@@ -292,9 +293,12 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
 }
 
 function excel_import_export_batch_export_finish($success, $filepath, $operations) {
+  
   if ($success) {
+    $host = \Drupal::request()->getHost();
     $url = URL::fromUserInput('/excel/export/download?download=' . $filepath)->toString();
-    drupal_set_message(t('Please click <a href="!link">here</a> to download export file or export file will available on !file', array('!file' => $filepath, '!link' => $url)));
+    drupal_set_message(t('Please click <a href="' . $url . '">here</a> to download export file or export file will available on ' . $filepath . '.'));
+    //drupal_set_message(t('Please click <a href="!link">here</a> to download export file or export file will available on !file', array('!file' => $filepath, '!link' => $url)));
     \Drupal::logger('excel_import_export')->notice("Excel exported by user ID !uid", array('@uid' => \Drupal::currentUser()->id(),));
   } else {
     drupal_set_message("Error in Download please try later", ERROR);
