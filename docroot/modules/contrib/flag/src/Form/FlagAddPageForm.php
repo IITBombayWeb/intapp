@@ -60,7 +60,7 @@ class FlagAddPageForm extends FormBase {
       '#type' => 'radios',
       '#title' => t('Flag Type'),
       '#required' => TRUE,
-      '#description' => t('The type of object this flag will affect. This cannot be changed once the flag is created.'),
+      '#description' => t('Type of item to reference. This cannot be changed once the flag is created.'),
       '#default_value' => 'entity:node',
       '#options' => $this->flagTypeManager->getAllFlagTypes(),
     ];
@@ -84,9 +84,6 @@ class FlagAddPageForm extends FormBase {
     $form_state->setRedirect('entity.flag.add_form', [
       'entity_type' => $form_state->getValue('flag_entity_type')
     ]);
-
-    $tempstore = \Drupal::service('user.private_tempstore')->get('flag');
-    $tempstore->set('FlagAddPage', $form_state->getValues());
   }
 
   /**
@@ -102,4 +99,5 @@ class FlagAddPageForm extends FormBase {
     // @todo: Make this injected like ActionFormBase::exists().
     return \Drupal::entityTypeManager()->getStorage('flag')->load($id);
   }
+
 }

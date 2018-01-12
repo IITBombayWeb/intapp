@@ -55,16 +55,19 @@ class Utility {
           'prefix' => 's',
         ),
         'integer' => array(
-          'prefix' => 'i',
+          // Use trie field for better sorting.
+          'prefix' => 'it',
         ),
         'decimal' => array(
-          'prefix' => 'f',
+          // Use trie field for better sorting.
+          'prefix' => 'ft',
         ),
         'date' => array(
           'prefix' => 'd',
         ),
         'duration' => array(
-          'prefix' => 'i',
+          // Use trie field for better sorting.
+          'prefix' => 'it',
         ),
         'boolean' => array(
           'prefix' => 'b',
@@ -72,19 +75,22 @@ class Utility {
         'uri' => array(
           'prefix' => 's',
         ),
-        'tokens' => array(
-          'prefix' => 't',
-        ),
       ));
 
       // Extra data type info.
       $extra_types_info = array(
+        // Provided by Search API Location module.
         'location' => array(
           'prefix' => 'loc',
         ),
+        // @todo Who provides that type?
         'geohash' => array(
           'prefix' => 'geo',
         ),
+        // Provided by Search API Location module.
+        'rpt' => [
+          'prefix' => 'rpt',
+        ],
       );
 
       // For the extra types, only add our extra info if it's already been
@@ -141,7 +147,9 @@ class Utility {
    *   If a problem occurred while retrieving the files.
    */
   public static function getServerFiles(ServerInterface $server, $dir_name = NULL) {
-    $response = $server->getBackend()->getFile($dir_name);
+    /** @var \Drupal\search_api_solr\SolrBackendInterface $backend */
+    $backend = $server->getBackend();
+    $response = $backend->getSolrConnector()->getFile($dir_name);
 
     // Search for directories and recursively merge directory files.
     $files_data = json_decode($response->getBody(), TRUE);
@@ -171,23 +179,6 @@ class Utility {
   }
 
   /**
-   * Escapes a Search API field name for passing to Solr.
-   *
-   * Since field names can only contain one special character, ":", there is no
-   * need to use the complete escape() method.
-   *
-   * @param string $value
-   *   The field name to escape.
-   *
-   * @return string
-   *   An escaped string suitable for passing to Solr.
-   */
-  public static function escapeFieldName($value) {
-    $value = str_replace(':', '\:', $value);
-    return $value;
-  }
-
-  /**
    * Changes highlighting tags from our custom, HTML-safe ones to HTML.
    *
    * @param string|array $snippet
@@ -205,7 +196,7 @@ class Utility {
    *
    * Solr doesn't restrict the characters used to build field names. But using
    * non java identifiers within a field name can cause different kind of
-   * trouble when running querries. Java identifiers are only consist of
+   * trouble when running queries. Java identifiers are only consist of
    * letters, digits, '$' and '_'. See
    * https://issues.apache.org/jira/browse/SOLR-3996 and
    * http://docs.oracle.com/cd/E19798-01/821-1841/bnbuk/index.html
@@ -215,11 +206,16 @@ class Utility {
    * "Field names should consist of alphanumeric or underscore characters only
    * and not start with a digit ... Names with both leading and trailing
    * underscores (e.g. _version_) are reserved." Field names starting with
-   * digits or underscores are already avoided by our schema.
+   * digits or underscores are already avoided by our schema. The same is true
+   * for the names of field types. See
+   * https://cwiki.apache.org/confluence/display/solr/Field+Type+Definitions+and+Properties
+   * "It is strongly recommended that names consist of alphanumeric or
+   * underscore characters only and not start with a digit. This is not
+   * currently strictly enforced."
    *
    * This function therefore encodes all forbidden characters in their
-   * hexadecimal equivalent encapsulted by a leading sequence of '_X' and a
-   * termination charachter '_'. Example:
+   * hexadecimal equivalent encapsulated by a leading sequence of '_X' and a
+   * termination character '_'. Example:
    * "tm_entity:node/body" becomes "tm_entity_X3a_node_X2f_body".
    *
    * As a consequence the sequence '_X' itself needs to be encoded if it occurs
@@ -231,7 +227,7 @@ class Utility {
    * @return string
    *   The encoded field name.
    */
-  public static function encodeSolrDynamicFieldName($field_name) {
+  public static function encodeSolrName($field_name) {
     return preg_replace_callback('/([^\da-zA-Z_]|_X)/u',
       function ($matches) {
         return '_X' . bin2hex($matches[1]) . '_';
@@ -243,10 +239,11 @@ class Utility {
    * Decodes solr field names.
    *
    * This function therefore decodes all forbidden characters from their
-   * hexadecimal equivalent encapsulted by a leading sequence of '_X' and a
-   * termination charachter '_'. Example:
+   * hexadecimal equivalent encapsulated by a leading sequence of '_X' and a
+   * termination character '_'. Example:
    * "tm_entity_X3a_node_X2f_body" becomes "tm_entity:node/body".
-   * @ee encodeSolrDynamicFieldName() for details.
+   *
+   * @see encodeSolrDynamicFieldName() for details.
    *
    * @param string $field_name
    *   Encoded field name.
@@ -254,7 +251,7 @@ class Utility {
    * @return string
    *   The decoded field name
    */
-  public static function decodeSolrDynamicFieldName($field_name) {
+  public static function decodeSolrName($field_name) {
     return preg_replace_callback('/_X([\dabcdef]+?)_/',
       function ($matches) {
         return hex2bin($matches[1]);

@@ -4,10 +4,8 @@ namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\processor\CountWidgetOrderProcessor;
-use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Unit test for processor.
@@ -19,7 +17,7 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facets\processor\WidgetOrderProcessorInterface
+   * @var \Drupal\facets\Processor\SortProcessorInterface
    */
   protected $processor;
 
@@ -36,90 +34,36 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
+    $facet = new Facet([], 'facets_facet');
     $this->originalResults = [
-      new Result('llama', 'llama', 10),
-      new Result('badger', 'badger', 5),
-      new Result('duck', 'duck', 15),
+      new Result($facet, 'llama', 'llama', 10),
+      new Result($facet, 'badger', 'badger', 5),
+      new Result($facet, 'duck', 'duck', 15),
     ];
 
     $this->processor = new CountWidgetOrderProcessor([], 'count_widget_order', []);
   }
 
   /**
-   * Tests sorting ascending.
+   * Tests sorting.
    */
-  public function testAscending() {
+  public function testSorting() {
+    $sort_value = $this->processor->sortResults($this->originalResults[0], $this->originalResults[1]);
+    $this->assertEquals(1, $sort_value);
 
-    $sorted_results = $this->processor->sortResults($this->originalResults, 'ASC');
+    $sort_value = $this->processor->sortResults($this->originalResults[1], $this->originalResults[2]);
+    $this->assertEquals(-1, $sort_value);
 
-    $this->assertEquals(5, $sorted_results[0]->getCount());
-    $this->assertEquals('badger', $sorted_results[0]->getDisplayValue());
-    $this->assertEquals(10, $sorted_results[1]->getCount());
-    $this->assertEquals('llama', $sorted_results[1]->getDisplayValue());
-    $this->assertEquals(15, $sorted_results[2]->getCount());
-    $this->assertEquals('duck', $sorted_results[2]->getDisplayValue());
-  }
-
-  /**
-   * Tests sorting descending.
-   */
-  public function testDescending() {
-
-    $sorted_results = $this->processor->sortResults($this->originalResults, 'DESC');
-
-    $this->assertEquals(15, $sorted_results[0]->getCount());
-    $this->assertEquals('duck', $sorted_results[0]->getDisplayValue());
-    $this->assertEquals(10, $sorted_results[1]->getCount());
-    $this->assertEquals('llama', $sorted_results[1]->getDisplayValue());
-    $this->assertEquals(5, $sorted_results[2]->getCount());
-    $this->assertEquals('badger', $sorted_results[2]->getDisplayValue());
+    $sort_value = $this->processor->sortResults($this->originalResults[2], $this->originalResults[2]);
+    $this->assertEquals(0, $sort_value);
   }
 
   /**
    * Tests configuration.
    */
-  public function testConfiguration() {
+  public function testDefaultConfiguration() {
     $config = $this->processor->defaultConfiguration();
-    $this->assertEquals(['sort' => 'ASC'], $config);
-  }
-
-  /**
-   * Tests build.
-   */
-  public function testBuild() {
-    $processor_definitions = [
-      'count_widget_order' => [
-        'id' => 'count_widget_order',
-        'class' => 'Drupal\facets\Plugin\facets\processor\CountWidgetOrderProcessor',
-      ],
-    ];
-    $manager = $this->getMockBuilder(ProcessorPluginManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $manager->expects($this->once())
-      ->method('getDefinitions')
-      ->willReturn($processor_definitions);
-    $manager->expects($this->once())
-      ->method('createInstance')
-      ->willReturn($this->processor);
-
-    $container_builder = new ContainerBuilder();
-    $container_builder->set('plugin.manager.facets.processor', $manager);
-    \Drupal::setContainer($container_builder);
-
-    $facet = new Facet(
-      [
-        'id' => 'the_zoo',
-        'results' => $this->originalResults,
-        'processor_configs' => $processor_definitions,
-      ],
-      'facets_facet'
-    );
-    $built = $this->processor->build($facet, $this->originalResults);
-
-    $this->assertEquals('badger', $built[0]->getDisplayValue());
-    $this->assertEquals('llama', $built[1]->getDisplayValue());
-    $this->assertEquals('duck', $built[2]->getDisplayValue());
+    $this->assertEquals(['sort' => 'DESC'], $config);
   }
 
 }

@@ -34,10 +34,11 @@ class HideActiveItemsProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
+    $facet = new Facet([], 'facets_facet');
     $this->originalResults = [
-      new Result('llama', 'llama', 10),
-      new Result('badger', 'badger', 15),
-      new Result('duck', 'duck', 15),
+      new Result($facet, 'llama', 'llama', 10),
+      new Result($facet, 'badger', 'badger', 15),
+      new Result($facet, 'duck', 'duck', 15),
     ];
 
     $this->processor = new HideActiveItemsProcessor([], 'hide_non_narrowing_result_processor', []);
@@ -47,7 +48,7 @@ class HideActiveItemsProcessorTest extends UnitTestCase {
    * Tests filtering of results.
    */
   public function testNoFilterResults() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
 
     $filtered_results = $this->processor->build($facet, $this->originalResults);
@@ -69,7 +70,7 @@ class HideActiveItemsProcessorTest extends UnitTestCase {
     $results = $this->originalResults;
     $results[2]->setActiveState(TRUE);
 
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($results);
 
     $filtered_results = $this->processor->build($facet, $results);

@@ -7,18 +7,18 @@ facets.facet.*:
       label: 'ID'
     name:
       type: label
-      label: Name'
+      label: Name
     uuid:
       type: string
       label: 'UUID'
     weight:
       type: integer
       label: 'Weight'
-    status:
-      type: boolean
-      label: 'Status'
+    min_count:
+      type: integer
+      label: 'Minimum count'
     url_alias:
-      type: string
+      type: label
       label: 'Name of facet as used in the URL'
     facet_source_id:
       type: string
@@ -26,18 +26,34 @@ facets.facet.*:
     field_identifier:
       type: string
       label: 'Field identifier'
-    query_type_name:
-      type: string
-      label: 'Query Type Name'
     query_operator:
       type: string
       label: 'Query Operator'
+    hard_limit:
+      type: integer
+      label: 'Hard limit'
     exclude:
       type: boolean
       label: 'Exclude'
+    use_hierarchy:
+      type: boolean
+      label: 'Use hierarchy'
+    expand_hierarchy:
+      type: boolean
+      label: 'Expand hierarchy'
+    enable_parent_when_child_gets_disabled:
+      type: boolean
+      label: 'Enable parent when child gets disabled'
     widget:
-      type: string
-      label: 'Widget identifier'
+      type: mapping
+      label: 'Facet widget'
+      mapping:
+        type:
+          type: string
+          label: 'Plugin ID'
+        config:
+          type: facet.widget.config.[%parent.type]
+          label: 'Configuration'
     empty_behavior:
       type: mapping
       label: 'Empty behavior'
@@ -51,12 +67,6 @@ facets.facet.*:
         text:
           type: string
           label: 'Text'
-    widget_configs:
-      type: sequence
-      label: 'Widget plugin configurations'
-      sequence:
-        type: string
-        label: 'Widget plugin configurations'
     only_visible_when_facet_source_is_visible:
       type: boolean
       label: 'Show this facet only when the facet source is visible.'
@@ -81,17 +91,3 @@ facets.facet.*:
               label: 'The processor''s weight for this stage'
           settings:
             type: plugin.plugin_configuration.facets_processor.[%parent.processor_id]
-    facet_configs:
-      type: sequence
-      label: 'Facet plugin-specific options'
-      sequence:
-        type: plugin.plugin_configuration.facets_facet_options.[%key]
-        label: 'Facet plugin options'
-
-condition.plugin.other_facet:
-  type: condition.plugin
-  mapping:
-    facet_value:
-      type: string
-    facets:
-      type: string

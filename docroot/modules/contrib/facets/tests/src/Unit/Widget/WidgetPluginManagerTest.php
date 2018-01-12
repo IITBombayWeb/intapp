@@ -93,18 +93,18 @@ class WidgetPluginManagerTest extends UnitTestCase {
   public function testConstruct() {
     $namespaces = new ArrayObject();
     $sut = new WidgetPluginManager($namespaces, $this->cache, $this->moduleHandler, $this->translator);
-    $this->assertInstanceOf('\Drupal\facets\Widget\WidgetPluginManager', $sut);
+    $this->assertInstanceOf(WidgetPluginManager::class, $sut);
   }
 
   /**
    * Tests plugin manager's getDefinitions method.
    */
   public function testGetDefinitions() {
-    $definitions = array(
-      'foo' => array(
+    $definitions = [
+      'foo' => [
         'label' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $this->discovery->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($definitions);

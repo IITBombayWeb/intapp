@@ -94,18 +94,18 @@ class ProcessorPluginManagerTest extends UnitTestCase {
   public function testConstruct() {
     $namespaces = new ArrayObject();
     $sut = new ProcessorPluginManager($namespaces, $this->cache, $this->moduleHandler, $this->translator);
-    $this->assertInstanceOf('\Drupal\facets\Processor\ProcessorPluginManager', $sut);
+    $this->assertInstanceOf(ProcessorPluginManager::class, $sut);
   }
 
   /**
    * Tests plugin manager's getDefinitions method.
    */
   public function testGetDefinitions() {
-    $definitions = array(
-      'foo' => array(
+    $definitions = [
+      'foo' => [
         'label' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $this->discovery->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($definitions);
@@ -123,6 +123,7 @@ class ProcessorPluginManagerTest extends UnitTestCase {
       ProcessorInterface::STAGE_PRE_QUERY,
       ProcessorInterface::STAGE_POST_QUERY,
       ProcessorInterface::STAGE_BUILD,
+      ProcessorInterface::STAGE_SORT,
     ];
 
     $this->assertEquals($stages, array_keys($sut->getProcessingStages()));

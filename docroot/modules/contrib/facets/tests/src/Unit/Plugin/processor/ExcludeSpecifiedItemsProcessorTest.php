@@ -4,6 +4,7 @@ namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\processor\ExcludeSpecifiedItemsProcessor;
+use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -35,30 +36,39 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
+    $facet = new Facet([], 'facets_facet');
     $this->originalResults = [
-      new Result('llama', 'llama', 10),
-      new Result('badger', 'badger', 5),
-      new Result('duck', 'duck', 15),
-      new Result('snbke', 'snbke', 10),
-      new Result('snake', 'snake', 10),
-      new Result('snaake', 'snaake', 10),
-      new Result('snaaake', 'snaaake', 10),
-      new Result('snaaaake', 'snaaaake', 10),
-      new Result('snaaaaake', 'snaaaaake', 10),
-      new Result('snaaaaaake', 'snaaaaaake', 10),
+      new Result($facet, 'llama', 'llama', 10),
+      new Result($facet, 'badger', 'badger', 5),
+      new Result($facet, 'duck', 'duck', 15),
+      new Result($facet, 'snbke', 'snbke', 10),
+      new Result($facet, 'snake', 'snake', 10),
+      new Result($facet, 'snaake', 'snaake', 10),
+      new Result($facet, 'snaaake', 'snaaake', 10),
+      new Result($facet, 'snaaaake', 'snaaaake', 10),
+      new Result($facet, 'snaaaaake', 'snaaaaake', 10),
+      new Result($facet, 'snaaaaaake', 'snaaaaaake', 10),
     ];
 
     $processor_id = 'exclude_specified_items';
-    $this->processor = new ExcludeSpecifiedItemsProcessor([], $processor_id, []);
+    $this->processor = new ExcludeSpecifiedItemsProcessor([], $processor_id, [
+      'id' => "display_value_widget_order",
+      'label' => "Sort by display value",
+      'description' => "Sorts the widget results by display value.",
+      'default_enabled' => TRUE,
+      'stages' => [
+        "build" => 50,
+      ],
+    ]);
 
     $processor_definitions = [
       $processor_id => [
         'id' => $processor_id,
-        'class' => 'Drupal\facets\Plugin\facets\processor\ExcludeSpecifiedItemsProcessor',
+        'class' => ExcludeSpecifiedItemsProcessor::class,
       ],
     ];
 
-    $manager = $this->getMockBuilder('Drupal\facets\Processor\ProcessorPluginManager')
+    $manager = $this->getMockBuilder(ProcessorPluginManager::class)
       ->disableOriginalConstructor()
       ->getMock();
     $manager->expects($this->any())
@@ -77,7 +87,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
    * Tests no filtering happens.
    */
   public function testNoFilter() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->addProcessor([
       'processor_id' => 'exclude_specified_items',
@@ -100,7 +110,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
    * Tests filtering happens for string filter.
    */
   public function testStringFilter() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->addProcessor([
       'processor_id' => 'exclude_specified_items',
@@ -124,12 +134,68 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   }
 
   /**
+   * Tests filtering happens for string filter.
+   */
+  public function testMultiString() {
+    $facet = new Facet([], 'facets_facet');
+    $facet->setResults($this->originalResults);
+    $facet->addProcessor([
+      'processor_id' => 'exclude_specified_items',
+      'weights' => [],
+      'settings' => [
+        'exclude' => 'alpaca',
+        'regex' => 0,
+      ],
+    ]);
+    $this->processor->setConfiguration([
+      'exclude' => 'llama,badger',
+      'regex' => 0,
+    ]);
+    $filtered_results = $this->processor->build($facet, $this->originalResults);
+
+    $this->assertCount((count($this->originalResults) - 2), $filtered_results);
+
+    foreach ($filtered_results as $result) {
+      $this->assertNotEquals('llama', $result->getDisplayValue());
+      $this->assertNotEquals('badger', $result->getDisplayValue());
+    }
+  }
+
+  /**
+   * Tests filtering happens for string filter.
+   */
+  public function testMultiStringTrim() {
+    $facet = new Facet([], 'facets_facet');
+    $facet->setResults($this->originalResults);
+    $facet->addProcessor([
+      'processor_id' => 'exclude_specified_items',
+      'weights' => [],
+      'settings' => [
+        'exclude' => 'alpaca',
+        'regex' => 0,
+      ],
+    ]);
+    $this->processor->setConfiguration([
+      'exclude' => 'llama, badger',
+      'regex' => 0,
+    ]);
+    $filtered_results = $this->processor->build($facet, $this->originalResults);
+
+    $this->assertCount((count($this->originalResults) - 2), $filtered_results);
+
+    foreach ($filtered_results as $result) {
+      $this->assertNotEquals('llama', $result->getDisplayValue());
+      $this->assertNotEquals('badger', $result->getDisplayValue());
+    }
+  }
+
+  /**
    * Tests filtering happens for regex filter.
    *
    * @dataProvider provideRegexTests
    */
   public function testRegexFilter($regex, $expected_results) {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->addProcessor([
       'processor_id' => 'exclude_specified_items',
@@ -253,7 +319,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
    * Tests testDescription().
    */
   public function testDescription() {
-    $this->assertEquals('', $this->processor->getDescription());
+    $this->assertEquals('Sorts the widget results by display value.', $this->processor->getDescription());
   }
 
   /**
@@ -268,6 +334,22 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
    */
   public function testIsLocked() {
     $this->assertEquals(FALSE, $this->processor->isLocked());
+  }
+
+  /**
+   * Tests supportsStage().
+   */
+  public function testSupportsStage() {
+    $this->assertTrue($this->processor->supportsStage('build'));
+    $this->assertFalse($this->processor->supportsStage('sort'));
+  }
+
+  /**
+   * Tests getDefaultWeight().
+   */
+  public function testGetDefaultWeight() {
+    $this->assertEquals(50, $this->processor->getDefaultWeight('build'));
+    $this->assertEquals(0, $this->processor->getDefaultWeight('sort'));
   }
 
 }

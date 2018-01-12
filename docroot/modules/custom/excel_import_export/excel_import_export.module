@@ -34,6 +34,7 @@ function excel_import_export_form_alter(&$form, FormStateInterface $form_state) 
       '#submit' => array('excel_import_export_submit_handler'),
       '#weight' => 100,
     );
+     $form['#validate'][] ='validation';
   } 
 }
 
@@ -51,4 +52,19 @@ function excelImportExportUnserialize($nodeArray) {
     }
   }
   return $nidArray;
+}
+
+/**
+ *
+ * Date Validation.
+ * 
+ */
+function validation(&$form, FormStateInterface $form_state){
+  $min = strtotime($form['created']['min']['#value']);
+  $max = strtotime($form['created']['max']['#value']);
+  if(!empty($max)){
+    if($min > $max){
+      $form_state->setError($form['created']['min'],"From Date is Should Not be Lower than To Date");
+    }
+  }
 }

@@ -39,9 +39,11 @@ function form_validate_program($form, &$form_state){
       $node = Node::load($nid);
       $langcode = $node->language()->getId();
       $ins_term_id = $node->getTranslation($langcode)->get('field_institute')->getValue()[0]['target_id'];
+      /*
       if ($term != $ins_term_id)  {
         $form_state->setError($form['field_institute'], "You don't have access to modify this content");
       }
+      */
     }
   }
 }
@@ -62,4 +64,14 @@ function get_usr_term_id($usr_id)  {
     return $term;
   }
   return ;
+}
+
+function iitinap_general_ENTITY_TYPE_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+  /*if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
+    // Change its weight.
+    $build['an_additional_field']['#weight'] = -10;
+
+    // Add a #post_render callback to act on the rendered HTML of the entity.
+    $build['#post_render'][] = 'my_module_node_post_render';
+  }*/
 }

@@ -2,8 +2,8 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
-use Drupal\facets\Processor\WidgetOrderPluginBase;
-use Drupal\facets\Processor\WidgetOrderProcessorInterface;
+use Drupal\facets\Processor\SortProcessorPluginBase;
+use Drupal\facets\Processor\SortProcessorInterface;
 use Drupal\facets\Result\Result;
 
 /**
@@ -14,38 +14,17 @@ use Drupal\facets\Result\Result;
  *   label = @Translation("Sort by raw value"),
  *   description = @Translation("Sorts the widget results by raw value."),
  *   stages = {
- *     "build" = 50
+ *     "sort" = 50
  *   }
  * )
  */
-class RawValueWidgetOrderProcessor extends WidgetOrderPluginBase implements WidgetOrderProcessorInterface {
+class RawValueWidgetOrderProcessor extends SortProcessorPluginBase implements SortProcessorInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function sortResults(array $results, $order = 'ASC') {
-    if ($order === 'ASC') {
-      usort($results, 'self::sortRawValueAsc');
-    }
-    else {
-      usort($results, 'self::sortRawValueDesc');
-    }
-
-    return $results;
-  }
-
-  /**
-   * Sorts ascending.
-   */
-  protected static function sortRawValueAsc(Result $a, Result $b) {
+  public function sortResults(Result $a, Result $b) {
     return strnatcasecmp($a->getRawValue(), $b->getRawValue());
-  }
-
-  /**
-   * Sorts descending.
-   */
-  protected static function sortRawValueDesc(Result $a, Result $b) {
-    return strnatcasecmp($b->getRawValue(), $a->getRawValue());
   }
 
 }

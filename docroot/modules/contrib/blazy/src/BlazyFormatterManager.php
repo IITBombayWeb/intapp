@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\blazy\BlazyFormatterManager.
- */
-
 namespace Drupal\blazy;
 
 /**
@@ -13,17 +8,15 @@ namespace Drupal\blazy;
 class BlazyFormatterManager extends BlazyManager {
 
   /**
-   * {@inheritdoc}
+   * Returns the field formatter settings inherited by child elements.
+   *
+   * @param array $build
+   *   The array containing: settings, or potential optionset for extensions.
+   * @param object $items
+   *   The items to prepare settings for.
    */
-  public function buildSettings(array &$build = [], $items) {
-    $settings = &$build['settings'];
-
-    // Sniffs for Views to allow block__no_wrapper, views_no_wrapper, etc.
-    if (function_exists('views_get_current_view') && $view = views_get_current_view()) {
-      $settings['view_name'] = $view->storage->id();
-      $settings['current_view_mode'] = $view->current_display;
-    }
-
+  public function buildSettings(array &$build, $items) {
+    $settings       = &$build['settings'];
     $count          = $items->count();
     $field          = $items->getFieldDefinition();
     $entity         = $items->getEntity();
@@ -35,9 +28,10 @@ class BlazyFormatterManager extends BlazyManager {
     $field_clean    = str_replace("field_", '', $field_name);
     $target_type    = $field->getFieldStorageDefinition()->getSetting('target_type');
     $view_mode      = empty($settings['current_view_mode']) ? '_custom' : $settings['current_view_mode'];
-    $namespace      = empty($settings['namespace']) ? 'blazy' : $settings['namespace'];
-    $id             = self::getHtmlId("{$namespace}-{$entity_type_id}-{$entity_id}-{$field_clean}-{$view_mode}");
-    $switch         = empty($settings['media_switch']) ? '' : empty($settings['media_switch']);
+    $namespace      = $settings['namespace'] = empty($settings['namespace']) ? 'blazy' : $settings['namespace'];
+    $id             = isset($settings['id']) ? $settings['id'] : '';
+    $id             = Blazy::getHtmlId("{$namespace}-{$entity_type_id}-{$entity_id}-{$field_clean}-{$view_mode}", $id);
+    $switch         = empty($settings['media_switch']) ? '' : $settings['media_switch'];
     $internal_path  = $absolute_path = NULL;
 
     // Deals with UndefinedLinkTemplateException such as paragraphs type.
@@ -50,34 +44,41 @@ class BlazyFormatterManager extends BlazyManager {
       }
     }
 
-    $settings += [
-      'absolute_path'  => $absolute_path,
-      'bundle'         => $bundle,
-      'count'          => $count,
-      'entity_id'      => $entity_id,
-      'entity_type_id' => $entity_type_id,
-      'field_type'     => $field_type,
-      'field_name'     => $field_name,
-      'internal_path'  => $internal_path,
-      'lightbox'       => $switch && strpos($switch, 'box') !== FALSE,
-      'target_type'    => $target_type,
-      'cache_metadata' => ['keys' => [$id, $count]],
-    ];
+    $settings['breakpoints']    = isset($settings['breakpoints']) && empty($settings['responsive_image_style']) ? $settings['breakpoints'] : [];
+    $settings['bundle']         = $bundle;
+    $settings['cache_metadata'] = ['keys' => [$id, $count]];
+    $settings['content_url']    = $settings['absolute_path'] = $absolute_path;
+    $settings['count']          = $count;
+    $settings['entity_id']      = $entity_id;
+    $settings['entity_type_id'] = $entity_type_id;
+    $settings['field_type']     = $field_type;
+    $settings['field_name']     = $field_name;
+    $settings['id']             = $id;
+    $settings['internal_path']  = $internal_path;
+    $settings['lightbox']       = ($switch && in_array($switch, $this->getLightboxes())) ? $switch : FALSE;
+    $settings['resimage']       = function_exists('responsive_image_get_image_dimensions');
+    $settings['target_type']    = $target_type;
 
-    $this->cleanUpBreakpoints($settings);
+    unset($entity, $field);
 
-    $settings['id']         = $id;
+    // @todo: Enable after proper checks.
+    // $settings = array_filter($settings);
+    if (!empty($settings['vanilla'])) {
+      $settings = array_filter($settings);
+      return;
+    }
+
+    if (!empty($settings['breakpoints'])) {
+      $this->cleanUpBreakpoints($settings);
+    }
+
     $settings['caption']    = empty($settings['caption']) ? [] : array_filter($settings['caption']);
-    $settings['resimage']   = function_exists('responsive_image_get_image_dimensions');
     $settings['background'] = empty($settings['responsive_image_style']) && !empty($settings['background']);
+    $resimage_lazy          = $this->configLoad('responsive_image') && !empty($settings['responsive_image_style']);
+    $settings['blazy']      = $resimage_lazy || !empty($settings['blazy']);
 
-    // @todo simplify these doors.
-    $blazy = isset($settings['theme_hook_image']) && $settings['theme_hook_image'] == 'blazy';
-    // @todo do not enforce blazy such as for slick media/video embed
-    $settings['blazy'] = $blazy || !empty($settings['background']) || !empty($settings['breakpoints']);
-
-    if (!isset($settings['blazy_data'])) {
-      $settings['blazy_data'] = $field_type == 'image' ? $this->buildDataBlazy($settings, $items[0]) : [];
+    if (!empty($settings['blazy'])) {
+      $settings['lazy'] = 'blazy';
     }
 
     // Aspect ratio isn't working with Responsive image, yet.
@@ -89,9 +90,26 @@ class BlazyFormatterManager extends BlazyManager {
         $ratio = TRUE;
       }
     }
+
     $settings['ratio'] = $ratio ? $settings['ratio'] : FALSE;
 
-    unset($entity, $field);
+    // Sets dimensions once, if cropped, to reduce costs with ton of images.
+    // This is less expensive than re-defining dimensions per image.
+    if (!empty($settings['image_style']) && !$resimage_lazy) {
+      if ($field_type == 'image' && $items[0]) {
+        $settings['item'] = $items[0];
+        $settings['uri']  = ($file = $items[0]->entity) && empty($items[0]->uri) ? $file->getFileUri() : $items[0]->uri;
+      }
+
+      if (!empty($settings['uri'])) {
+        $this->setDimensionsOnce($settings);
+      }
+    }
+
+    // Add the entity to formatter cache tags.
+    $settings['cache_tags'][] = $settings['entity_type_id'] . ':' . $settings['entity_id'];
+
+    $this->getModuleHandler()->alter($namespace . '_settings', $build, $items);
   }
 
 }

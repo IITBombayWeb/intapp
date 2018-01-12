@@ -57,19 +57,47 @@
  */
 #}
 {% set container = theme.settings.fluid_container ? 'container-fluid' : 'container' %}
+<div id="page">
 <header>
-  <div class="wrapper-black">
-  <div class="container js-quickedit-main-content">
-    <div class="row">
+  <div class="header-wrp">
+  <div class="pge-wdt clearfix js-quickedit-main-content">
       {# Header #}
-      {% if page.header %}
-        {% block header %}
-          <div class="col-sm-12" role="heading">
-            {{ page.header }}
+      {%if page.header %}
+      {% block header %}
+        {{ page.header }}
+        {% endblock %}
+      {% endif %}        
+      {% if page.header_first %}
+      {% block header_first %}
+          <div class="logo-wrp">
+            {{ page.header_first }}
           </div>
         {% endblock %}
       {% endif %}
-    </div>
+      {% if page.header_second %}
+      {% block header_second %}
+          <div class="mnu-lst">
+              <div class="msg-pck">
+                  <a><img src="/themes/capit/images/packet-icon.png"><span class="circle" id="cnt">{{cntcart}}</span></a>
+                </div>
+                  {% if logged_in %}
+                      <div class="lgn-lst">
+                        <span class="dsk-lgn">Settings<i class="fa fa-caret-down"></i></span>
+                          <span class="mbl-lgn"><i class="fa fa-user"></i></span>
+                      </div>
+                  {% else %}
+                      <div class="lgn-lst">
+                        <span class="dsk-lgn">Login<i class="fa fa-caret-down"></i></span>
+                        <span class="mbl-lgn"><i class="fa fa-user"></i></span>
+                      </div>
+                  {% endif %}
+              {{ page.header_second }}
+               <div class="menu-icn">
+                    <a><i class="fa fa-bars"></i></a>
+                </div>
+          </div>
+        {% endblock %}
+      {% endif %}
   </div> 
   </div>
 </header>
@@ -80,46 +108,32 @@
   </aside>
 </div>
 {% endif %}
-{% if page.featured_top %}
-<div class="featured-top">
-  <div class="video-banner-wrapper slider">
-  <video poster="" loop="" id="bgvid" autoplay="">
-    <source type="video/webm" src="/themes/capit/videos/books.mp4">
-  </video>
-  <div class="slider-content">
-    <div class="video-content">
-      <h3 class="video-content-title">Over 1000 Programs, 23 Institutes, Single Interface</h3>
-    </div>
-  </div>
-</div>
-  <aside class="featured-top__inner section layout-container clearfix" role="complementary">
-    {{ page.featured_top }}
-  </aside>
-{% if site_slogan1 %}
-    <div class="title">
-      <h1>{{ site_slogan1 }}</h1>
-    </div>
+  {% if page.content_top %}
+      <div class="content-top frm-hd">
+          <div class="pge-wdt clearfix hd-in">
+              {{ page.content_top }}
+          </div>
+      </div>
   {% endif %}
-</div>
+  
+{% if page.featured_top %}
+  {{ page.featured_top }}
 {% endif %}
+
 {# Main #}
 {% block main %}
-  <div role="main" class="main-container {{ container }} js-quickedit-main-content">
-    <div class="row">
+  <div role="main" class="main-container cm-pg pge-in-wdt js-quickedit-main-content">
+     <div class="main-inner clearfix">
       {# Sidebar First #}
       {% if page.sidebar_first %}
         {% block sidebar_first %}
-          <div class="mob-menu-div">
-              <a title="Menu" class="mob-menu"> <span class="glyphicon glyphicon-align-justify"></span> MENU</a>
-          </div>
-          <aside class="col-sm-3 leftMobMenu" role="complementary">
-            <div class="left-menu well">
+          <aside class="sidebar-first sd-b leftMobMenu" role="complementary">
+            <div class="left-menu">
             	{{ page.sidebar_first }}
             </div>
           </aside>
         {% endblock %}
       {% endif %}
-
       {# Content #}
       {%
         set content_classes = [
@@ -129,71 +143,54 @@
           page.sidebar_first is empty and page.sidebar_second is empty ? 'col-sm-12'
         ]
       %}
-      <section{{ content_attributes.addClass(content_classes) }}>
-
+      <section class="cnt-pg">
         {# Highlighted #}
         {% if page.highlighted %}
           {% block highlighted %}
             <div class="highlighted">{{ page.highlighted }}</div>
           {% endblock %}
         {% endif %}
-
         {# Breadcrumbs #}
         {% if breadcrumb %}
           {% block breadcrumb %}
             {{ breadcrumb }}
           {% endblock %}
         {% endif %}
-
         {# Action Links #}
         {% if action_links %}
           {% block action_links %}
             <ul class="action-links">{{ action_links }}</ul>
           {% endblock %}
         {% endif %}
-
         {# Help #}
         {% if page.help %}
           {% block help %}
             {{ page.help }}
           {% endblock %}
         {% endif %}
-
         {# Content #}
         {% block content %}
           <a id="main-content"></a>
           {{ page.content }}
         {% endblock %}
       </section>
-
       {# Sidebar Second #}
       {% if page.sidebar_second %}
         {% block sidebar_second %}
-          <aside class="col-sm-3" role="complementary">
+          <aside class="sidebar-first sd-b" role="complementary">
             	{{ page.sidebar_second }}	
           </aside>
         {% endblock %}
       {% endif %}
-    </div>
+      </div>
   </div>
 {% endblock %}
-
-
   {% block footer %}
     <footer class="footer" role="contentinfo">
-    <div class="wrapper-black">
-      <div class="wrap-width">
-        <div class="footer-block clearfix">
-          <div class="footer-left">
-            &copy;Copyright IIT Bombay 2016
-          </div>
-          <div class="footer-right">
-            Powered by Drupal
-          </div>
-        </div>
-      </div>
-    </div>
+      <div class="pge-wdt clearfix">
       {{ page.footer }}
+      </div>
     </footer>
   {% endblock %}
+  </div>
 

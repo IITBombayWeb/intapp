@@ -22,9 +22,9 @@ class MigrationDeleteForm extends EntityConfirmFormBase {
    *   Translated string.
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete migration %label?', array(
+    return $this->t('Are you sure you want to delete migration %label?', [
         '%label' => $this->entity->label(),
-    ));
+    ]);
   }
 
   /**
@@ -44,7 +44,7 @@ class MigrationDeleteForm extends EntityConfirmFormBase {
    *   The URL to go to if the user cancels the deletion.
    */
   public function getCancelUrl() {
-    return new Url('entity.migration.list', array('migration_group' => $this->entity->get('migration_group')));
+    return new Url('entity.migration_group.list');
   }
 
   /**
@@ -60,13 +60,12 @@ class MigrationDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
 
     // Set a message that the entity was deleted.
-    drupal_set_message(t('Migration %label was deleted.', array(
+    drupal_set_message(t('Migration %label was deleted.', [
       '%label' => $this->entity->label(),
-    )));
+    ]));
 
     // Redirect the user to the list controller when complete.
-    $form_state->setRedirectUrl($this->getCancelUrl(),
-          array('migration_group' => $this->entity->get('migration_group')));
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

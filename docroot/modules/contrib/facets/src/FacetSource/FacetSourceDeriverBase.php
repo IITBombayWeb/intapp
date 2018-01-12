@@ -2,10 +2,10 @@
 
 namespace Drupal\facets\FacetSource;
 
-
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\search_api\Display\DisplayPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,14 +20,21 @@ abstract class FacetSourceDeriverBase implements ContainerDeriverInterface {
    *
    * @var array
    */
-  protected $derivatives = array();
+  protected $derivatives = [];
 
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
+
+  /**
+   * The search api display plugin manager.
+   *
+   * @var \Drupal\search_api\Display\DisplayPluginManager
+   */
+  protected $searchApiDisplayPluginManager;
 
   /**
    * {@inheritdoc}
@@ -35,13 +42,19 @@ abstract class FacetSourceDeriverBase implements ContainerDeriverInterface {
   public static function create(ContainerInterface $container, $base_plugin_id) {
     $deriver = new static();
 
-    /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
+    $module_list = $container->get('module_handler')->getModuleList();
+    if (!in_array('search_api', array_keys($module_list))) {
+      return;
+    }
+
     $entity_type_manager = $container->get('entity_type.manager');
     $deriver->setEntityTypeManager($entity_type_manager);
 
-    /** @var \Drupal\Core\StringTranslation\TranslationInterface $translation */
     $translation = $container->get('string_translation');
     $deriver->setStringTranslation($translation);
+
+    $search_api_display_plugin_manager = $container->get('plugin.manager.search_api.display');
+    $deriver->setSearchApiDisplayPluginManager($search_api_display_plugin_manager);
 
     return $deriver;
   }
@@ -49,7 +62,7 @@ abstract class FacetSourceDeriverBase implements ContainerDeriverInterface {
   /**
    * Retrieves the entity manager.
    *
-   * @return \Drupal\Core\Entity\EntityTypeManager
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
    *   The entity manager.
    */
   public function getEntityTypeManager() {
@@ -59,7 +72,7 @@ abstract class FacetSourceDeriverBase implements ContainerDeriverInterface {
   /**
    * Sets the entity manager.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
    *
    * @return $this
@@ -75,6 +88,26 @@ abstract class FacetSourceDeriverBase implements ContainerDeriverInterface {
   public function getDerivativeDefinition($derivative_id, $base_plugin_definition) {
     $derivatives = $this->getDerivativeDefinitions($base_plugin_definition);
     return isset($derivatives[$derivative_id]) ? $derivatives[$derivative_id] : NULL;
+  }
+
+  /**
+   * Sets search api's display plugin manager.
+   *
+   * @param \Drupal\search_api\Display\DisplayPluginManager $search_api_display_plugin_manager
+   *   The plugin manager.
+   */
+  public function setSearchApiDisplayPluginManager(DisplayPluginManager $search_api_display_plugin_manager) {
+    $this->searchApiDisplayPluginManager = $search_api_display_plugin_manager;
+  }
+
+  /**
+   * Returns the display plugin manager.
+   *
+   * @return \Drupal\search_api\Display\DisplayPluginManager
+   *   The plugin manager.
+   */
+  public function getSearchApiDisplayPluginManager() {
+    return $this->searchApiDisplayPluginManager;
   }
 
   /**

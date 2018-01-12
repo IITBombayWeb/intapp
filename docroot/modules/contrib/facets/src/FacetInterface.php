@@ -10,23 +10,62 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface FacetInterface extends ConfigEntityInterface {
 
   /**
-   * Sets the facet's widget plugin id.
+   * Sets the facet widget definition.
    *
-   * @param string $widget
+   * @param string $id
    *   The widget plugin id.
-   *
-   * @return $this
-   *   Returns self
+   * @param array $configuration
+   *   (optional) The facet widget plugin configuration. If missed, the default
+   *   plugin configuration will be filled.
    */
-  public function setWidget($widget);
+  public function setWidget($id, array $configuration = NULL);
 
   /**
-   * Returns the facet's widget plugin id.
+   * Returns the facet widget definition.
    *
-   * @return string
-   *   The widget plugin id.
+   * @return array
+   *   An associative array with the following structure:
+   *   - id: The widget plugin id as a string.
+   *   - config: The widget configuration as an array.
    */
   public function getWidget();
+
+  /**
+   * Returns the facet widget instance.
+   *
+   * @return \Drupal\facets\Widget\WidgetPluginBase
+   *   The plugin instance
+   */
+  public function getWidgetInstance();
+
+  /**
+   * Sets the facet hierarchy definition.
+   *
+   * @param string $id
+   *   The hierarchy plugin id.
+   * @param array $configuration
+   *   (optional) The facet hierarchy plugin configuration. When empty, the
+   *   default plugin configuration will be used.
+   */
+  public function setHierarchy($id, array $configuration = NULL);
+
+  /**
+   * Returns the facet hierarchy definition.
+   *
+   * @return array
+   *   An associative array with the following structure:
+   *   - id: The hierarchy plugin id as a string.
+   *   - config: The widget configuration as an array.
+   */
+  public function getHierarchy();
+
+  /**
+   * Returns the facet hierarchy instance.
+   *
+   * @return \Drupal\facets\Hierarchy\HierarchyPluginBase
+   *   The plugin instance
+   */
+  public function getHierarchyInstance();
 
   /**
    * Returns field identifier.
@@ -41,9 +80,6 @@ interface FacetInterface extends ConfigEntityInterface {
    *
    * @param string $field_identifier
    *   The field identifier of this facet.
-   *
-   * @return $this
-   *   Returns self.
    */
   public function setFieldIdentifier($field_identifier);
 
@@ -57,8 +93,6 @@ interface FacetInterface extends ConfigEntityInterface {
 
   /**
    * Returns the field name of the facet as used in the index.
-   *
-   * @TODO: Check if fieldIdentifier can be used as well!
    *
    * @return string
    *   The name of the facet.
@@ -98,6 +132,14 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getActiveItems();
 
   /**
+   * Overwrites the active items.
+   *
+   * @param array $values
+   *   A list of values.
+   */
+  public function setActiveItems(array $values);
+
+  /**
    * Checks if a value is active.
    *
    * @param string $value
@@ -127,7 +169,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Returns the result for the facet.
    *
-   * @return \Drupal\facets\Result\ResultInterface[] $results
+   * @return \Drupal\facets\Result\ResultInterface[]
    *   The results of the facet.
    */
   public function getResults();
@@ -139,26 +181,6 @@ interface FacetInterface extends ConfigEntityInterface {
    *   The results of the facet.
    */
   public function setResults(array $results);
-
-  /**
-   * Sets an array of unfiltered results.
-   *
-   * These unfiltered results are used to set the correct count of the actual
-   * facet results when using the OR query operator. They are not results value
-   * objects like those in ::$results.
-   *
-   * @param array $all_results
-   *   Unfiltered results.
-   */
-  public function setUnfilteredResults(array $all_results = []);
-
-  /**
-   * Returns an array of unfiltered results.
-   *
-   * @return array
-   *   Unfiltered results.
-   */
-  public function getUnfilteredResults();
 
   /**
    * Returns the query type instance.
@@ -177,6 +199,19 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getQueryOperator();
 
   /**
+   * Returns the limit number for facet items.
+   */
+  public function getHardLimit();
+
+  /**
+   * Returns the data definition from the facet field.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface
+   *   A typed data definition.
+   */
+  public function getDataDefinition();
+
+  /**
    * Returns the value of the exclude boolean.
    *
    * This will return true when the current facet's value should be exclusive
@@ -189,12 +224,61 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getExclude();
 
   /**
-   * Returns the plugin name for the url processor.
+   * Returns the value of the use_hierarchy boolean.
    *
-   * @return string
-   *   The id of the url processor.
+   * This will return true when the results in the facet should be rendered in
+   * a hierarchical structure.
+   *
+   * @return bool
+   *   A boolean flag indicating if results should be rendered using hierarchy.
    */
-  public function getUrlProcessorName();
+  public function getUseHierarchy();
+
+  /**
+   * Sets the use_hierarchy.
+   *
+   * @param bool $use_hierarchy
+   *   A boolean flag indicating if results should be rendered using hierarchy.
+   */
+  public function setUseHierarchy($use_hierarchy);
+
+  /**
+   * Returns the value of the expand_hierarchy boolean.
+   *
+   * This will return true when the results in the facet should be expanded in
+   * a hierarchical structure, regardless of active state.
+   *
+   * @return bool
+   *   Wether or not results should always be expanded using hierarchy.
+   */
+  public function getExpandHierarchy();
+
+  /**
+   * Sets the expand_hierarchy.
+   *
+   * @param bool $expand_hierarchy
+   *   Wether or not results should always be expanded using hierarchy.
+   */
+  public function setExpandHierarchy($expand_hierarchy);
+
+  /**
+   * Returns the value of the enable_parent_when_child_gets_disabled boolean.
+   *
+   * This will return true when the parent item in the facet should be enabled
+   * in an hierarchical structure, when a child facet item gets disabled.
+   *
+   * @return bool
+   *   Wether or not parents should be enabled when a child gets disabled.
+   */
+  public function getEnableParentWhenChildGetsDisabled();
+
+  /**
+   * Sets the enable_parent_when_child_gets_disabled.
+   *
+   * @param bool $enable_parent_when_child_gets_disabled
+   *   Wether or not parents should be enabled when a child gets disabled.
+   */
+  public function setEnableParentWhenChildGetsDisabled($enable_parent_when_child_gets_disabled);
 
   /**
    * Sets a string representation of the Facet source plugin.
@@ -203,9 +287,6 @@ interface FacetInterface extends ConfigEntityInterface {
    *
    * @param string $facet_source_id
    *   The facet source id.
-   *
-   * @return $this
-   *   Returns self.
    */
   public function setFacetSourceId($facet_source_id);
 
@@ -216,6 +297,14 @@ interface FacetInterface extends ConfigEntityInterface {
    *   The query operator being used.
    */
   public function setQueryOperator($operator);
+
+  /**
+   * Sets the hard limit of facet items.
+   *
+   * @param int $limit
+   *   Hard limit of the facet.
+   */
+  public function setHardLimit($limit);
 
   /**
    * Sets the exclude.
@@ -236,7 +325,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Returns the plugin instance of a facet source.
    *
-   * @return \Drupal\facets\FacetSource\FacetSourcePluginInterface
+   * @return \Drupal\facets\FacetSource\FacetSourcePluginInterface|null
    *   The plugin instance for the facet source.
    */
   public function getFacetSource();
@@ -252,7 +341,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Loads the facet sources for this facet.
    *
-   * @param bool|TRUE $only_enabled
+   * @param bool $only_enabled
    *   Only return enabled facet sources.
    *
    * @return \Drupal\facets\FacetSource\FacetSourcePluginInterface[]
@@ -263,7 +352,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Returns an array of processors with their configuration.
    *
-   * @param bool|TRUE $only_enabled
+   * @param bool $only_enabled
    *   Only return enabled processors.
    *
    * @return \Drupal\facets\Processor\ProcessorInterface[]
@@ -302,9 +391,6 @@ interface FacetInterface extends ConfigEntityInterface {
    * @param bool $only_visible_when_facet_source_is_visible
    *   A boolean flag indicating if the facet should be hidden on a page that
    *   does not show the facet source.
-   *
-   * @return $this
-   *   Returns self.
    */
   public function setOnlyVisibleWhenFacetSourceIsVisible($only_visible_when_facet_source_is_visible);
 
@@ -343,42 +429,10 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Returns the defined no-results behavior or NULL if none defined.
    *
-   * @return array|NULL
+   * @return array|null
    *   The behavior definition or NULL.
    */
   public function getEmptyBehavior();
-
-  /**
-   * Returns the configuration of the selected widget.
-   *
-   * @return array
-   *   The configuration settings for the widget.
-   */
-  public function getWidgetConfigs();
-
-  /**
-   * Sets the configuration for the widget of this facet.
-   *
-   * @param array $widget_config
-   *   The configuration settings for the widget.
-   */
-  public function setWidgetConfigs(array $widget_config);
-
-  /**
-   * Returns any additional configuration for this facet, not defined above.
-   *
-   * @return array
-   *   An array of additional configuration for the facet.
-   */
-  public function getFacetConfigs();
-
-  /**
-   * Defines any additional configuration for this facet not defined above.
-   *
-   * @param array $facet_config
-   *   An array of additional configuration for the facet.
-   */
-  public function setFacetConfigs(array $facet_config);
 
   /**
    * Returns the weight of the facet.
@@ -392,5 +446,21 @@ interface FacetInterface extends ConfigEntityInterface {
    *   Weight of the facet.
    */
   public function setWeight($weight);
+
+  /**
+   * Sets the minimum count of the result to show.
+   *
+   * @param int $min_count
+   *   Minimum count.
+   */
+  public function setMinCount($min_count);
+
+  /**
+   * Returns the minimum count of the result to show.
+   *
+   * @return int
+   *   Minimum count.
+   */
+  public function getMinCount();
 
 }

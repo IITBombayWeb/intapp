@@ -4,6 +4,7 @@ namespace Drupal\workflow\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -11,16 +12,23 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @ConfigEntityType(
  *   id = "workflow_type",
- *   label = @Translation("Workflow"),
+ *   label = @Translation("Workflow type"),
+ *   label_singular = @Translation("Workflow type"),
+ *   label_plural = @Translation("Workflow types"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count Workflow type",
+ *     plural = "@count Workflow types",
+ *   ),
  *   module = "workflow",
- *   translatable = FALSE,
+ *   static_cache = TRUE,
+ *   translatable = TRUE,
  *   handlers = {
  *     "storage" = "Drupal\workflow\Entity\WorkflowStorage",
  *     "list_builder" = "Drupal\workflow_ui\Controller\WorkflowListBuilder",
  *     "form" = {
- *        "add" = "Drupal\workflow_ui\Form\WorkflowForm",
- *        "edit" = "Drupal\workflow_ui\Form\WorkflowForm",
+ *        "add" = "Drupal\workflow\Form\WorkflowTypeForm",
  *        "delete" = "Drupal\Core\Entity\EntityDeleteForm",
+ *        "edit" = "Drupal\workflow\Form\WorkflowTypeForm",
  *      }
  *   },
  *   admin_permission = "administer workflow",
@@ -33,15 +41,15 @@ use Drupal\Core\Session\AccountInterface;
  *   config_export = {
  *     "id",
  *     "label",
- *     "status",
  *     "module",
+ *     "status",
  *     "options",
  *   },
  *   links = {
- *     "canonical" = "/admin/config/workflow/workflow",
+ *     "canonical" = "/admin/config/workflow/workflow/{workflow_type}",
  *     "collection" = "/admin/config/workflow/workflow",
- *     "edit-form" = "/admin/config/workflow/workflow/{workflow_type}/edit",
  *     "delete-form" = "/admin/config/workflow/workflow/{workflow_type}/delete",
+ *     "edit-form" = "/admin/config/workflow/workflow/{workflow_type}",
  *   },
  * )
  */
@@ -61,31 +69,20 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
    */
   public $label;
 
-// TODO D8-port Workflow: complete below variables. (Add get()-functions).
-// @see https://www.drupal.org/node/1809494
-// @see https://codedrop.com.au/blog/creating-custom-config-entities-drupal-8
-  public $options = array();
+  // TODO D8-port Workflow: complete below variables. (Add get()-functions).
+  // @see https://www.drupal.org/node/1809494
+  // @see https://codedrop.com.au/blog/creating-custom-config-entities-drupal-8
+  public $options = [];
 
   /**
    * The workflow-specific creation state.
-   *
    */
   private $creation_state;
   private $creation_sid = 0;
 
   // Attached States and Transitions.
-  public $states = array();
-  public $transitions = array();
-
-  /**
-   * Retrieves the workflow manager.
-   *
-   * @return \Drupal\workflow\Entity\WorkflowManagerInterface
-   *   The workflow manager.
-   */
-  public static function workflowManager() {
-    return \Drupal::service('workflow.manager');
-  }
+  public $states = [];
+  public $transitions = [];
 
   /**
    * CRUD functions.
@@ -114,7 +111,7 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
     // Are we saving a new Workflow?
     // Make sure a Creation state exists.
     if ($status == SAVED_NEW) {
-      $state = $this->getCreationState();
+      $this->getCreationState();
     }
 
     return $status;
@@ -122,29 +119,21 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @return Workflow|null
-   *   The entity object or NULL if there is no entity with the given ID.
    */
-  public static function load($id) {
-    $entity = parent::load($id);
-
-    if ($entity) {
-      // Load the states, so they are already present on the next (cached) load.
-      // N.B. commented out, since it doesn't work. Workflow is loaded 4x per
-      // Node form. Use lazy loading.
-      // $entity->states = $entity->getStates($all = TRUE);
-      // $entity->transitions = $entity->getTransitions(NULL);
+  public static function postLoad(EntityStorageInterface $storage, array &$entities) {
+    /** @var Workflow $workflow */
+    foreach($entities as &$workflow) {
+      //Better performance, together with Annotation static_cache = TRUE.
+      // Load the states, and set the creation state.
+      $workflow->getStates();
+      $workflow->getCreationState();
     }
-    return $entity;
   }
 
   /**
    * Given a wid, delete the workflow and its data.
    */
   public function delete() {
-    $wid = $this->id();
-
     if (!$this->isDeletable()) {
       // @todo: throw error if not workflow->isDeletable().
     }
@@ -171,7 +160,7 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
     if (count($states) < 1) {
       // That's all, so let's remind them to create some states.
       $message = t('Workflow %workflow has no states defined, so it cannot be assigned to content yet.',
-        array('%workflow' => $this->label()));
+        ['%workflow' => $this->label()]);
       drupal_set_message($message, 'warning');
 
       // Skip allowing this workflow.
@@ -183,7 +172,7 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
     if (count($transitions) < 1) {
       // That's all, so let's remind them to create some transitions.
       $message = t('Workflow %workflow has no transitions defined, so it cannot be assigned to content yet.',
-        array('%workflow' => $this->label()));
+        ['%workflow' => $this->label()]);
       drupal_set_message($message, 'warning');
 
       // Skip allowing this workflow.
@@ -197,7 +186,6 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
    * {@inheritdoc}
    */
   public function isDeletable() {
-    $is_deletable = FALSE;
 
     // May not be deleted if assigned to a Field.
     foreach ($fields = _workflow_info_fields() as $field_info) {
@@ -205,17 +193,7 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
         return FALSE;
       }
     }
-
-    // D8-port: This is deleted, since it is only for D7's workflow_node.
-    // // May not be deleted if a State is assigned to a state.
-    // foreach ($this->getStates(TRUE) as $state) {
-    //   if ($state->count()) {
-    //     return $is_deletable;
-    //   }
-    // }
-    $is_deletable = TRUE;
-
-    return $is_deletable;
+    return TRUE;
   }
 
   /**
@@ -237,9 +215,9 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
     /* @var $state WorkflowState */
     $state = WorkflowState::load($sid);
     if (!$state || $wid != $state->getWorkflowId()) {
-      $state = WorkflowState::create($values = array('id' => $sid, 'wid' => $wid));
+      $state = WorkflowState::create($values = ['id' => $sid, 'wid' => $wid]);
       if ($save) {
-        $status = $state->save();
+        $state->save();
       }
     }
 
@@ -306,15 +284,14 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
    * {@inheritdoc}
    */
   public function getNextSid(EntityInterface $entity, $field_name, AccountInterface $user, $force = FALSE) {
-    $new_sid = FALSE;
-
-    $current_sid = Workflow::workflowManager()->getCurrentStateId($entity, $field_name);
+    $current_sid = WorkflowManager::getCurrentStateId($entity, $field_name);
     /* @var $current_state WorkflowState */
     $current_state = WorkflowState::load($current_sid);
     $options = $current_state->getOptions($entity, $field_name, $user, $force);
     // Loop over every option. To find the next one.
     $flag = $current_state->isCreationState();
     $new_sid = $current_state->id();
+
     foreach ($options as $sid => $name) {
       if ($flag) {
         $new_sid = $sid;
@@ -335,17 +312,17 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
     $wid = $this->id();
 
     if ($reset) {
-      $this->states = $wid ? WorkflowState::loadMultiple([], $wid, $reset) : array();
+      $this->states = $wid ? WorkflowState::loadMultiple([], $wid, $reset) : [];
     }
     elseif ($this->states === NULL) {
-      $this->states = $wid ? WorkflowState::loadMultiple([], $wid, $reset) : array();
+      $this->states = $wid ? WorkflowState::loadMultiple([], $wid, $reset) : [];
     }
-    elseif ($this->states === array()) {
-      $this->states = $wid ? WorkflowState::loadMultiple([], $wid, $reset) : array();
+    elseif ($this->states === []) {
+      $this->states = $wid ? WorkflowState::loadMultiple([], $wid, $reset) : [];
     }
-    // Do not unset, but add to array - you'll remove global objects otherwise.
-    $states = array();
 
+    // Do not unset, but add to array - you'll remove global objects otherwise.
+    $states = [];
     foreach ($this->states as $state) {
       $id = $state->id();
       if ($all === TRUE) {
@@ -361,7 +338,6 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
         // Do not add state.
       }
     }
-
     return $states;
   }
 
@@ -380,17 +356,16 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
   /**
    * {@inheritdoc}
    */
-  public function createTransition($from_sid, $to_sid, $values = array()) {
+  public function createTransition($from_sid, $to_sid, $values = []) {
     $config_transition = NULL;
 
-    $workflow = $this;
-
     // First check if this transition already exists.
-    if ($transitions = $this->getTransitionsByStateId($from_sid, $to_sid)) {
+    $transitions = $this->getTransitionsByStateId($from_sid, $to_sid);
+    if ($transitions) {
       $config_transition = reset($transitions);
     }
     else {
-      $values['wid'] = $workflow->id();
+      $values['wid'] = $this->id();
       $values['from_sid'] = $from_sid;
       $values['to_sid'] = $to_sid;
       $config_transition = WorkflowConfigTransition::create($values);
@@ -413,8 +388,8 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTransitions(array $ids = NULL, array $conditions = array()) {
-    $config_transitions = array();
+  public function getTransitions(array $ids = NULL, array $conditions = []) {
+    $config_transitions = [];
 
     // Get filters on 'from' states, 'to' states, roles.
     $from_sid = isset($conditions['from_sid']) ? $conditions['from_sid'] : FALSE;
@@ -452,17 +427,17 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
    * {@inheritdoc}
    */
   public function getTransitionsById($tid) {
-    return $this->getTransitions(array($tid));
+    return $this->getTransitions([$tid]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getTransitionsByStateId($from_sid, $to_sid) {
-    $conditions = array(
+    $conditions = [
       'from_sid' => $from_sid,
       'to_sid' => $to_sid,
-    );
+    ];
     return $this->getTransitions(NULL, $conditions);
   }
 

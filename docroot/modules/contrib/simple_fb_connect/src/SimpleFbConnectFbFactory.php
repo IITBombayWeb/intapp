@@ -1,14 +1,8 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\simple_fb_connect\SimpleFbConnectFbFactory.
- */
-
 namespace Drupal\simple_fb_connect;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\simple_fb_connect\SimpleFbConnectPersistentDataHandler;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Facebook\Facebook;
 
@@ -51,12 +45,13 @@ class SimpleFbConnectFbFactory {
   public function getFbService() {
     // Check that App ID and secret have been defined in module settings.
     if ($this->validateConfig()) {
-      $sdk_config = array(
+      $sdk_config = [
         'app_id' => $this->getAppId(),
         'app_secret' => $this->getAppSecret(),
-        'default_graph_version' => 'v2.6',
+        'default_graph_version' => $this->getApiVersion(),
         'persistent_data_handler' => $this->persistentDataHandler,
-      );
+        'http_client_handler' => $this->getHttpClient(),
+      ];
       return new Facebook($sdk_config);
     }
 
@@ -119,6 +114,43 @@ class SimpleFbConnectFbFactory {
       ->get('simple_fb_connect.settings')
       ->get('app_secret');
     return $app_secret;
+  }
+
+  /**
+   * Returns api_version from module settings.
+   *
+   * @return string
+   *   API version defined in module settings.
+   */
+  protected function getApiVersion() {
+    $api_version = $this->configFactory
+      ->get('simple_fb_connect.settings')
+      ->get('api_version');
+    return $api_version;
+  }
+
+  /**
+   * Returns HTTP client to be used with Facebook SDK.
+   *
+   * Facebook SDK v5 uses the following autodetect logic for determining the
+   * HTTP client:
+   * 1. If cURL extension is loaded, use it.
+   * 2. If cURL was not loaded but Guzzle is found, use it.
+   * 3. Fallback to FacebookStreamHttpClient.
+   *
+   * Drupal 8 ships with Guzzle v6 but Facebook SDK v5 works only
+   * with Guzzle v5. Therefore we need to change the autodetect logic
+   * so that we're first using cURL and if that is not available, we
+   * fallback directly to FacebookStreamHttpClient.
+   *
+   * @return string
+   *   Client that should be used with Facebook SDK.
+   */
+  protected function getHttpClient() {
+    if (extension_loaded('curl')) {
+      return 'curl';
+    }
+    return 'stream';
   }
 
 }

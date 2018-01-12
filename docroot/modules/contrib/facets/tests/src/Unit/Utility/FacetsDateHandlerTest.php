@@ -4,9 +4,14 @@ namespace Drupal\Tests\facets\Unit\Utility;
 
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\facets\Utility\FacetsDateHandler;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Unit test for Date Handler Service.
@@ -38,9 +43,9 @@ class FacetsDateHandlerTest extends UnitTestCase {
   public function setUp() {
     parent::setUp();
 
-    $entity_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $entity_storage = $this->getMock(EntityStorageInterface::class);
 
-    $em = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $em = $this->getMock(EntityManagerInterface::class);
     $em->expects($this->any())
       ->method('getStorage')
       ->with('date_format')
@@ -48,11 +53,11 @@ class FacetsDateHandlerTest extends UnitTestCase {
 
     $language = new Language(['id' => 'en']);
 
-    $lm = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+    $lm = $this->getMock(LanguageManagerInterface::class);
     $lm->method('getCurrentLanguage')
       ->willReturn($language);
-    $st = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
-    $rs = $this->getMock('Symfony\Component\HttpFoundation\RequestStack');
+    $st = $this->getMock(TranslationInterface::class);
+    $rs = $this->getMock(RequestStack::class);
     $cf = $this->getConfigFactoryStub();
 
     $config_factory = $this->getConfigFactoryStub([
@@ -134,6 +139,10 @@ class FacetsDateHandlerTest extends UnitTestCase {
     // The best search gap between two dates must be a second.
     $date_gap = $this->handler->getTimestampGap(static::TIMESTAMP, static::TIMESTAMP + 59);
     $this->assertEquals($fd::FACETS_DATE_SECOND, $date_gap);
+
+    // When passing in a minimum gap it should be respected.
+    $date_gap = $this->handler->getTimestampGap(static::TIMESTAMP, static::TIMESTAMP + 3600, $fd::FACETS_DATE_DAY);
+    $this->assertEquals($fd::FACETS_DATE_DAY, $date_gap);
   }
 
   /**
@@ -177,6 +186,13 @@ class FacetsDateHandlerTest extends UnitTestCase {
   }
 
   /**
+   * Tests for ::nextDateIncrement method.
+   */
+  public function testInvalidNextDateIncrement() {
+    $this->assertFalse($this->handler->getNextDateIncrement('foo', FacetsDateHandler::FACETS_DATE_SECOND));
+  }
+
+  /**
    * Tests for ::gapCompare method.
    */
   public function testGapCompare() {
@@ -201,8 +217,28 @@ class FacetsDateHandlerTest extends UnitTestCase {
   public function testFormatTimestamp() {
     $fd = $this->handler;
 
-    $year = $fd->formatTimestamp(static::TIMESTAMP);
-    $this->assertEquals(1987, $year);
+    $formatted = $fd->formatTimestamp(static::TIMESTAMP);
+    $this->assertEquals('1987', $formatted);
+
+    $formatted = $fd->formatTimestamp(static::TIMESTAMP, 'llama');
+    $this->assertEquals('1987', $formatted);
+
+    $formatted = $fd->formatTimestamp(static::TIMESTAMP, $fd::FACETS_DATE_YEAR);
+    $this->assertEquals('1987', $formatted);
+  }
+
+  /**
+   * Test extract items.
+   */
+  public function testExtractActiveItems() {
+    $this->assertFalse($this->handler->extractActiveItems('foo'));
+
+    $range = '[2016-03-01T00:00:00Z TO 2016-04-01T00:00:00Z]';
+    $extracted = $this->handler->extractActiveItems($range);
+
+    $this->assertInternalType('array', $extracted);
+    $this->assertEquals('1456790400', $extracted['start']['timestamp']);
+    $this->assertEquals('2016-03-01T00:00:00Z', $extracted['start']['iso']);
   }
 
   /**

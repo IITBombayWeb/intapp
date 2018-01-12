@@ -16,24 +16,28 @@
  */
 #}
 {% block content %}
+ <div class="logo-wrp">
   {% if site_logo %}
-    <a class="logo navbar-btn pull-left" href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home">
+   <div class="dsk-log">
+    <a class="logo" href="/homepage" title="{{ 'Home'|t }}" >
       <img src="{{ site_logo }}" alt="{{ 'Home'|t }}" />
     </a>
+  </div>
+  <div class="mob-log">
+      <a class="logo" href="/homepage" title="Home" rel="home">
+      <img alt="Home" src="/themes/capit/logo-mble.svg">
+    </a>
+    </div>
   {% endif %}
-  {% if site_name %}
+ <!-- {% if site_name %}
   <div class="logo-name"><a href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a></div>
   {% endif %}
   {% if site_slogan %}
   <div id="logo-slogan">
     <div class="slogan">{{ site_slogan }}</div>
   </div>
-  {% endif %}
-  <div id="login">
-    {% if logged_in %}
-    <a><span class="fa fa-caret-down "></span>Settings</a>
-    {% else %}
-    <a><span class="fa fa-caret-down"></span>Login</a>
-    {% endif %}
-  </div> 
+  {% endif %} -->
+  </div>
+
 {% endblock %}
+

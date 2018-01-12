@@ -3,6 +3,7 @@
 namespace Drupal\search_api;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Item\FieldInterface;
 use Drupal\search_api\Processor\ProcessorInterface;
 use Drupal\search_api\Query\QueryInterface;
@@ -46,18 +47,6 @@ interface IndexInterface extends ConfigEntityInterface {
   public function isReadOnly();
 
   /**
-   * Gets the cache ID prefix used for this index's caches.
-   *
-   * @param string $sub_id
-   *   An ID for the particular cache within the index that should be
-   *   identified.
-   *
-   * @return string
-   *   The cache ID (prefix) for this index's caches.
-   */
-  public function getCacheId($sub_id);
-
-  /**
    * Retrieves an option.
    *
    * @param string $name
@@ -79,20 +68,6 @@ interface IndexInterface extends ConfigEntityInterface {
    * - cron_limit: The maximum number of items to be indexed per cron batch.
    * - index_directly: Boolean setting whether entities are indexed immediately
    *   after they are created or updated.
-   * - fields: An array of all indexed fields for this index. Keys are the field
-   *   identifiers, the values are arrays for specifying the field settings. The
-   *   structure of those arrays looks like this:
-   *   - type: The type set for this field. One of the types returned by
-   *     \Drupal\search_api\Utility::getDefaultDataTypes().
-   *   - boost: (optional) A boost value for terms found in this field during
-   *     searches. Usually only relevant for fulltext fields. Defaults to 1.0.
-   * - processors: An array of all processors available for the index. The keys
-   *   are the processor identifiers, the values are arrays containing the
-   *   settings for that processor. The inner structure looks like this:
-   *   - status: Boolean indicating whether the processor is enabled.
-   *   - weight: Used for sorting the processors.
-   *   - settings: Processor-specific settings, configured via the processor's
-   *     configuration form.
    *
    * @return array
    *   An associative array of option values, keyed by the option name.
@@ -122,14 +97,12 @@ interface IndexInterface extends ConfigEntityInterface {
   public function setOptions(array $options);
 
   /**
-   * Sets this index's datasource plugins.
+   * Retrieves this index's datasource plugins.
    *
-   * @param \Drupal\search_api\Datasource\DatasourceInterface[] $datasources
-   *   An array of datasources
-   *
-   * @return $this
+   * @return \Drupal\search_api\Datasource\DatasourceInterface[]
+   *   The datasource plugins used by this index, keyed by plugin ID.
    */
-  public function setDatasources(array $datasources);
+  public function getDatasources();
 
   /**
    * Retrieves the IDs of all datasources enabled for this index.
@@ -171,16 +144,45 @@ interface IndexInterface extends ConfigEntityInterface {
   public function getDatasource($datasource_id);
 
   /**
-   * Retrieves this index's datasource plugins.
+   * Adds a datasource to this index.
    *
-   * @param bool $only_enabled
-   *   (optional) If FALSE, also include disabled processors. Otherwise, only
-   *   load enabled ones.
+   * An existing datasource with the same ID will be replaced.
    *
-   * @return \Drupal\search_api\Datasource\DatasourceInterface[]
-   *   The datasource plugins used by this index, keyed by plugin ID.
+   * @param \Drupal\search_api\Datasource\DatasourceInterface $datasource
+   *   The datasource to be added.
+   *
+   * @return $this
    */
-  public function getDatasources($only_enabled = TRUE);
+  public function addDatasource(DatasourceInterface $datasource);
+
+  /**
+   * Removes a datasource from this index.
+   *
+   * @param string $datasource_id
+   *   The ID of the datasource to remove.
+   *
+   * @return $this
+   */
+  public function removeDatasource($datasource_id);
+
+  /**
+   * Sets this index's datasource plugins.
+   *
+   * @param \Drupal\search_api\Datasource\DatasourceInterface[] $datasources
+   *   An array of datasources.
+   *
+   * @return $this
+   */
+  public function setDatasources(array $datasources);
+
+  /**
+   * Retrieves all entity types contained in this index.
+   *
+   * @return string[]
+   *   An associative array mapping all datasources containing entities to their
+   *   entity type IDs.
+   */
+  public function getEntityTypes();
 
   /**
    * Determines whether the tracker is valid.
@@ -260,21 +262,18 @@ interface IndexInterface extends ConfigEntityInterface {
    *
    * @param \Drupal\search_api\ServerInterface|null $server
    *   The server to move this index to, or NULL.
+   *
+   * @return $this
    */
   public function setServer(ServerInterface $server = NULL);
 
   /**
-   * Loads this index's processors.
-   *
-   * @param bool $only_enabled
-   *   (optional) If FALSE, also include disabled processors. Otherwise, only
-   *   load enabled ones.
+   * Retrieves this index's processors.
    *
    * @return \Drupal\search_api\Processor\ProcessorInterface[]
-   *   An array of all enabled (or available, if $only_enabled is FALSE)
-   *   processors for this index.
+   *   An array of all enabled processors for this index.
    */
-  public function getProcessors($only_enabled = TRUE);
+  public function getProcessors();
 
   /**
    * Loads this index's processors for a specific stage.
@@ -282,19 +281,51 @@ interface IndexInterface extends ConfigEntityInterface {
    * @param string $stage
    *   The stage for which to return the processors. One of the
    *   \Drupal\search_api\Processor\ProcessorInterface::STAGE_* constants.
-   * @param bool $only_enabled
-   *   (optional) If FALSE, also include disabled processors. Otherwise, only
-   *   load enabled ones.
+   * @param array[] $overrides
+   *   (optional) Overrides to apply to the index's processors, keyed by
+   *   processor IDs with their respective overridden settings as values.
    *
    * @return \Drupal\search_api\Processor\ProcessorInterface[]
-   *   An array of all enabled (or available, if if $only_enabled is FALSE)
-   *   processors that support the given stage, ordered by the weight for that
-   *   stage.
+   *   An array of all enabled processors that support the given stage, ordered
+   *   by the weight for that stage.
    */
-  public function getProcessorsByStage($stage, $only_enabled = TRUE);
+  public function getProcessorsByStage($stage, array $overrides = []);
+
+  /**
+   * Determines whether the given processor ID is valid for this index.
+   *
+   * The general contract of this method is that it should return TRUE if, and
+   * only if, a call to getProcessor() with the same ID would not result in an
+   * exception.
+   *
+   * @param string $processor_id
+   *   A processor plugin ID.
+   *
+   * @return bool
+   *   TRUE if the processor with the given ID is enabled for this index and
+   *   can be loaded. FALSE otherwise.
+   */
+  public function isValidProcessor($processor_id);
+
+  /**
+   * Retrieves a specific processor plugin for this index.
+   *
+   * @param string $processor_id
+   *   The ID of the processor plugin to return.
+   *
+   * @return \Drupal\search_api\Processor\ProcessorInterface
+   *   The processor plugin with the given ID.
+   *
+   * @throws \Drupal\search_api\SearchApiException
+   *   Thrown if the specified processor isn't enabled for this index, or
+   *   couldn't be loaded.
+   */
+  public function getProcessor($processor_id);
 
   /**
    * Adds a processor to this index.
+   *
+   * An existing processor with the same ID will be replaced.
    *
    * @param \Drupal\search_api\Processor\ProcessorInterface $processor
    *   The processor to be added.
@@ -314,14 +345,34 @@ interface IndexInterface extends ConfigEntityInterface {
   public function removeProcessor($processor_id);
 
   /**
+   * Sets this index's processor plugins.
+   *
+   * @param \Drupal\search_api\Processor\ProcessorInterface[] $processors
+   *   An array of processors.
+   *
+   * @return $this
+   */
+  public function setProcessors(array $processors);
+
+  /**
+   * Alter the items to be indexed.
+   *
+   * Lets all enabled processors for this index alter the indexed items.
+   *
+   * @param \Drupal\search_api\Item\ItemInterface[] $items
+   *   An array of items to be indexed, passed by reference.
+   */
+  public function alterIndexedItems(array &$items);
+
+  /**
    * Preprocesses data items for indexing.
    *
    * Lets all enabled processors for this index preprocess the indexed data.
    *
-   * @param array $items
+   * @param \Drupal\search_api\Item\ItemInterface[] $items
    *   An array of items to be preprocessed for indexing.
    */
-  public function preprocessIndexItems(array &$items);
+  public function preprocessIndexItems(array $items);
 
   /**
    * Preprocesses a search query.
@@ -397,12 +448,32 @@ interface IndexInterface extends ConfigEntityInterface {
   public function removeField($field_id);
 
   /**
+   * Sets this index's fields.
+   *
+   * Usually, it's a better idea to add/rename/remove fields individually with
+   * the above methods. Use this method only if this is for some reason not
+   * easily possible (such as when renaming multiple fields at once might cause
+   * conflicts).
+   *
+   * @param \Drupal\search_api\Item\FieldInterface[] $fields
+   *   An array of fields for this index, keyed by field IDs.
+   *
+   * @return $this
+   */
+  public function setFields(array $fields);
+
+  /**
    * Returns a list of all indexed fields of this index.
+   *
+   * @param bool $include_server_defined
+   *   (optional) If TRUE, also include special fields defined by the server
+   *   backend. For more information, see
+   *   \Drupal\search_api\Backend\BackendSpecificInterface::getBackendDefinedFields().
    *
    * @return \Drupal\search_api\Item\FieldInterface[]
    *   An array of all indexed fields for this index, keyed by field identifier.
    */
-  public function getFields();
+  public function getFields($include_server_defined = FALSE);
 
   /**
    * Returns a field from this index.
@@ -439,14 +510,26 @@ interface IndexInterface extends ConfigEntityInterface {
   public function getFulltextFields();
 
   /**
+   * Retrieves all field IDs that changed compared to the index's saved version.
+   *
+   * @return string[]
+   *   An associative array mapping old field IDs to the new ones.
+   */
+  public function getFieldRenames();
+
+  /**
+   * Resets the index's fields to the saved state.
+   *
+   * @return $this
+   */
+  public function discardFieldChanges();
+
+  /**
    * Retrieves the properties of one of this index's datasources.
    *
    * @param string|null $datasource_id
    *   The ID of the datasource for which the properties should be retrieved. Or
    *   NULL to retrieve all datasource-independent properties.
-   * @param bool $alter
-   *   (optional) Whether to pass the property definitions to the index's
-   *   enabled processors for altering before returning them.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
    *   The properties belonging to the given datasource that are available in
@@ -456,7 +539,7 @@ interface IndexInterface extends ConfigEntityInterface {
    *   Thrown if the specified datasource isn't enabled for this index, or
    *   couldn't be loaded.
    */
-  public function getPropertyDefinitions($datasource_id, $alter = TRUE);
+  public function getPropertyDefinitions($datasource_id);
 
   /**
    * Loads a single search object of this index.
@@ -502,9 +585,9 @@ interface IndexInterface extends ConfigEntityInterface {
   /**
    * Indexes some objects on this index.
    *
-   * Will return the IDs of items that were marked as indexed – i.e., items that
-   * were either rejected from indexing (by a processor or alter hook) or were
-   * successfully indexed.
+   * Will return the IDs of items that were marked as indexed – that is, items
+   * that were either rejected from indexing (by a processor or alter hook) or
+   * were successfully indexed.
    *
    * @param \Drupal\Core\TypedData\ComplexDataInterface[] $search_objects
    *   An array of search objects to be indexed, keyed by their item IDs.
@@ -516,6 +599,45 @@ interface IndexInterface extends ConfigEntityInterface {
    *   Thrown if any error occurred during indexing.
    */
   public function indexSpecificItems(array $search_objects);
+
+  /**
+   * Determines whether the index is currently in "batch tracking" mode.
+   *
+   * @return bool
+   *   Whether the index is currently in "batch tracking" mode.
+   */
+  public function isBatchTracking();
+
+  /**
+   * Puts the index into "batch tracking" mode.
+   *
+   * This mode should be used when adding batches of items to the index's
+   * tracking tables, or when marking them as updated. This will prevent the
+   * index from immediately trying to index all of these items, even if its
+   * "index_directly" option is set.
+   *
+   * @return $this
+   *
+   * @see \Drupal\search_api\IndexInterface::trackItemsInserted()
+   * @see \Drupal\search_api\IndexInterface::trackItemsUpdated()
+   */
+  public function startBatchTracking();
+
+  /**
+   * Stop the latest initialized "batch tracking" mode for the index.
+   *
+   * Note that the index might remain in "batch tracking" mode if
+   * startBatchTracking() was called multiple times. You have to take care to
+   * always call the two methods the same number of times.
+   *
+   * @return $this
+   *
+   * @throws \Drupal\search_api\SearchApiException
+   *   Thrown if the index wasn't in "batch tracking" mode before.
+   *
+   * @see \Drupal\search_api\IndexInterface::startBatchTracking
+   */
+  public function stopBatchTracking();
 
   /**
    * Adds items from a specific datasource to the index.
@@ -560,8 +682,8 @@ interface IndexInterface extends ConfigEntityInterface {
    * Marks all items in this index for reindexing.
    *
    * @throws \Drupal\search_api\SearchApiException
-   *   Thrown if an internal error prevented the operation from succeeding.
-   *   E.g., if the tracker couldn't be loaded.
+   *   Thrown if an internal error prevented the operation from succeeding – for
+   *   example, if the tracker couldn't be loaded.
    */
   public function reindex();
 
@@ -598,6 +720,6 @@ interface IndexInterface extends ConfigEntityInterface {
    *
    * @see \Drupal\search_api\Query\QueryInterface::create()
    */
-  public function query(array $options = array());
+  public function query(array $options = []);
 
 }

@@ -20,12 +20,17 @@ interface ProcessorInterface extends ConfigurablePluginInterface, PluginInspecti
   /**
    * Processing stage: post_query.
    */
-  const STAGE_POST_QUERY = 'post query';
+  const STAGE_POST_QUERY = 'post_query';
 
   /**
    * Processing stage: build.
    */
   const STAGE_BUILD = 'build';
+
+  /**
+   * Processing stage: sort.
+   */
+  const STAGE_SORT = 'sort';
 
   /**
    * Adds a configuration form for this processor.
@@ -105,5 +110,29 @@ interface ProcessorInterface extends ConfigurablePluginInterface, PluginInspecti
    *   The description of this processor.
    */
   public function getDescription();
+
+  /**
+   * Checks if the facet is supported by this widget.
+   *
+   * Reasons why this would be unsupported can be chosen by the widget.
+   *
+   * @param \Drupal\facets\FacetInterface $facet
+   *   The facet to check for.
+   *
+   * @return bool
+   *   Returns true when allowed, false otherwise.
+   *
+   * @see \Drupal\facets\Widget\WidgetPluginInterface::supportsFacet
+   */
+  public function supportsFacet(FacetInterface $facet);
+
+  /**
+   * Picks the preferred query type for this widget.
+   *
+   * @return string|null
+   *   The query type machine name to load or NULL to load the default query
+   *   type.
+   */
+  public function getQueryType();
 
 }

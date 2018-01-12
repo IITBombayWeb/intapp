@@ -2,6 +2,7 @@
 
 namespace Drupal\flag\Entity;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -38,7 +39,6 @@ use Drupal\flag\FlagInterface;
  *     "label",
  *     "bundles",
  *     "entity_type",
- *     "enabled",
  *     "global",
  *     "weight",
  *     "flag_short",
@@ -74,14 +74,7 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    *
    * @var string
    */
-  public $id;
-
-  /**
-   * The flag UUID.
-   *
-   * @var string
-   */
-  public $uuid;
+  protected $id;
 
   /**
    * The entity type this flag works with.
@@ -95,7 +88,7 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    *
    * @var string
    */
-  public $label = '';
+  protected $label = '';
 
   /**
    * Whether this flag state should act as a single toggle to all users.
@@ -103,13 +96,6 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    * @var bool
    */
   protected $global = FALSE;
-
-  /**
-   * Whether this flag is enabled.
-   *
-   * @var bool
-   */
-  protected $enabled = TRUE;
 
   /**
    * The bundles this flag applies to.
@@ -217,42 +203,18 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    *
    * @var int
    */
-  public $weight = 0;
+  protected $weight = 0;
 
   /**
    * {@inheritdoc}
    */
-  public function enable() {
-    $this->enabled = TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function disable() {
-    $this->enabled = FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isEnabled() {
-    return $this->enabled;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isFlagged(EntityInterface $entity, AccountInterface $account = NULL) {
-    // Get the current user if one wasn't passed to the method.
-    if ($account == NULL) {
-      $account = \Drupal::currentUser();
-    }
+  public function isFlagged(EntityInterface $entity, AccountInterface $account = NULL, $session_id = NULL) {
+    \Drupal::service('flag')->populateFlaggerDefaults($account, $session_id);
 
     // Load the is flagged list from the flagging storage, check if this flag
     // is in the list.
     $flag_ids = \Drupal::entityTypeManager()->getStorage('flagging')
-      ->loadIsFlagged($entity, $account);
+      ->loadIsFlagged($entity, $account, $session_id);
     return isset($flag_ids[$this->id()]);
 
   }
@@ -381,30 +343,16 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPermissions() {
-    return [
-      "flag $this->id" => [
-        'title' => t('Flag %flag_title', [
-          '%flag_title' => $this->label,
-        ]),
-      ],
-      "unflag $this->id" => [
-        'title' => t('Unflag %flag_title', [
-          '%flag_title' => $this->label,
-        ]),
-      ],
-    ];
+  public function actionPermissions() {
+    return $this->getFlagTypePlugin()->actionPermissions($this);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasActionAccess($action, AccountInterface $account = NULL) {
-    if ($action === 'flag' || $action === 'unflag') {
-      $account = $account ?: \Drupal::currentUser();
-      $permission = $action . ' ' . $this->id;
-      return $account->hasPermission($permission);
-    }
+  public function actionAccess($action, AccountInterface $account = NULL, EntityInterface $flaggable = NULL) {
+    $account = $account ?: \Drupal::currentUser();
+    return $this->getFlagTypePlugin()->actionAccess($action, $this, $account, $flaggable);
   }
 
   /**
@@ -436,15 +384,15 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFlagShortText() {
-    return $this->flag_short;
+  public function getShortText($action) {
+    return $action === 'unflag' ? $this->unflag_short : $this->flag_short;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFlagLongText() {
-    return $this->flag_long;
+  public function getLongText($action) {
+    return $action === 'unflag' ? $this->unflag_long : $this->flag_long;
   }
 
   /**
@@ -457,8 +405,8 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFlagMessage() {
-    return $this->flag_message;
+  public function getMessage($action) {
+    return $action === 'unflag' ? $this->unflag_message : $this->flag_message;
   }
 
   /**
@@ -471,13 +419,6 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getUnflagLongText() {
-    return $this->unflag_long;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setUnflagLongText($unflag_long) {
     $this->unflag_long = $unflag_long;
   }
@@ -485,22 +426,8 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getUnflagMessage() {
-    return $this->unflag_message;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setUnflagMessage($unflag_message) {
     $this->unflag_message = $unflag_message;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getUnflagShortText() {
-    return $this->unflag_short;
   }
 
   /**
@@ -590,13 +517,13 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
     // Check if the entities are flags, if not go with the default.
     if ($a instanceof FlagInterface && $b instanceof FlagInterface) {
 
-      if ($a->isEnabled() && $b->isEnabled()) {
+      if ($a->status() && $b->status()) {
         return parent::sort($a, $b);
       }
-      elseif (!$a->isEnabled()) {
+      elseif (!$a->status()) {
         return -1;
       }
-      elseif (!$b->isEnabled()) {
+      elseif (!$b->status()) {
         return 1;
       }
     }

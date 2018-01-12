@@ -3,11 +3,8 @@
 namespace Drupal\facets\Plugin\facets\widget;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facets\FacetInterface;
-use Drupal\facets\Result\ResultInterface;
-use Drupal\facets\Widget\WidgetInterface;
+use Drupal\facets\Widget\WidgetPluginBase;
 
 /**
  * The links widget.
@@ -18,188 +15,81 @@ use Drupal\facets\Widget\WidgetInterface;
  *   description = @Translation("A simple widget that shows a list of links"),
  * )
  */
-class LinksWidget implements WidgetInterface {
+class LinksWidget extends WidgetPluginBase {
 
-  use StringTranslationTrait;
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return [
+      'soft_limit' => 0,
+      'soft_limit_settings' => [
+        'show_less_label' => 'Show less',
+        'show_more_label' => 'Show more',
+      ],
+    ] + parent::defaultConfiguration();
+  }
 
   /**
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet) {
-    /** @var \Drupal\facets\Result\Result[] $results */
-    $results = $facet->getResults();
-    $items = [];
-
-    $configuration = $facet->getWidgetConfigs();
-    $show_numbers = empty($configuration['show_numbers']) ? FALSE : (bool) $configuration['show_numbers'];
-
-    foreach ($results as $result) {
-      // Get the link.
-      $text = $result->getDisplayValue();
-      if ($show_numbers) {
-        $text .= ' (' . $result->getCount() . ')';
-      }
-      if ($result->isActive()) {
-        $text = '(-) ' . $text;
-      }
-
-      if (is_null($result->getUrl())) {
-        $items[] = $text;
-      }
-      else {
-        $items[] = $this->buildListItems($result, $show_numbers);
-      }
+    $build = parent::build($facet);
+    $soft_limit = (int) $this->getConfiguration()['soft_limit'];
+    if ($soft_limit !== 0) {
+      $show_less_label = $this->getConfiguration()['soft_limit_settings']['show_less_label'];
+      $show_more_label = $this->getConfiguration()['soft_limit_settings']['show_more_label'];
+      $build['#attached']['library'][] = 'facets/soft-limit';
+      $build['#attached']['drupalSettings']['facets']['softLimit'][$facet->id()] = $soft_limit;
+      $build['#attached']['drupalSettings']['facets']['softLimitSettings'][$facet->id()]['showLessLabel'] = $show_less_label;
+      $build['#attached']['drupalSettings']['facets']['softLimitSettings'][$facet->id()]['showMoreLabel'] = $show_more_label;
     }
-
-    $build = [
-      '#theme' => 'item_list',
-      '#items' => $items,
-      '#cache' => [
-        'contexts' => [
-          'url.path',
-          'url.query_args',
-        ],
-      ],
-    ];
+    if ($facet->getUseHierarchy()) {
+      $build['#attached']['library'][] = 'facets/drupal.facets.hierarchical';
+    }
     return $build;
   }
 
   /**
-   * Builds a renderable array of result items.
-   *
-   * @param \Drupal\facets\Result\ResultInterface $result
-   *   A result item.
-   * @param bool $show_numbers
-   *   A boolean that's true when the numbers should be shown.
-   *
-   * @return array|Link|string
-   *   A renderable array of the result or a link when the result has no
-   *   children.
-   */
-  protected function buildListItems(ResultInterface $result, $show_numbers) {
-    if ($children = $result->getChildren()) {
-      $link = $this->prepareLink($result, $show_numbers);
-
-      $children_markup = [];
-      foreach ($children as $child) {
-        $children_markup[] = $this->buildChildren($child, $show_numbers);
-      }
-
-      if ($link instanceof Link) {
-        $items = $link->toRenderable();
-        $items['#wrapper_attibutes'] = ['class' => ['expanded']];
-        $items['children'] = [$children_markup];
-      }
-      else {
-        $items = [
-          '#markup' => $link,
-          '#wrapper_attributes' => [
-            'class' => ['expanded'],
-          ],
-          'children' => [$children_markup],
-        ];
-      }
-    }
-    else {
-      $items = $this->prepareLink($result, $show_numbers);
-    }
-
-    return $items;
-  }
-
-  /**
-   * Returns the text or link for an item.
-   *
-   * @param \Drupal\facets\Result\ResultInterface $result
-   *   A result item.
-   * @param bool $show_numbers
-   *   A boolean that's true when the numbers should be shown.
-   *
-   * @return Link|string
-   *   The item, can be a link or just the text.
-   */
-  protected function prepareLink(ResultInterface $result, $show_numbers) {
-    $text = $result->getDisplayValue();
-
-    if ($show_numbers && $result->getCount()) {
-      $text .= ' (' . $result->getCount() . ')';
-    }
-    if ($result->isActive()) {
-      $text = '(-) ' . $text;
-    }
-
-    if (is_null($result->getUrl())) {
-      $link = $text;
-    }
-    else {
-      $link = new Link($text, $result->getUrl());
-    }
-
-    return $link;
-  }
-
-  /**
-   * Builds a renderable array of a result.
-   *
-   * @param \Drupal\facets\Result\ResultInterface $child
-   *   A result item.
-   * @param bool $show_numbers
-   *   A boolean that's true when the numbers should be shown.
-   *
-   * @return array|Link|string
-   *   A renderable array of the result.
-   */
-  protected function buildChildren(ResultInterface $child, $show_numbers) {
-    $text = $child->getDisplayValue();
-    if ($show_numbers && $child->getCount()) {
-      $text .= ' (' . $child->getCount() . ')';
-    }
-    if ($child->isActive()) {
-      $text = '(-) ' . $text;
-    }
-
-    if (!is_null($child->getUrl())) {
-      $link = new Link($text, $child->getUrl());
-      $link = $link->toRenderable();
-      $link['#wrapper_attributes'] = ['class' => ['leaf']];
-    }
-    else {
-      $link = [
-        '#markup' => $text,
-        '#wrapper_attributes' => [
-          'class' => ['leaf'],
-        ],
-      ];
-    }
-
-    return $link;
-  }
-
-  /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state, $config) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
+    $form = parent::buildConfigurationForm($form, $form_state, $facet);
 
-    $form['show_numbers'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Show the amount of results'),
+    $options = [50, 40, 30, 20, 15, 10, 5, 3];
+    $form['soft_limit'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Soft limit'),
+      '#default_value' => $this->getConfiguration()['soft_limit'],
+      '#options' => [0 => $this->t('No limit')] + array_combine($options, $options),
+      '#description' => $this->t('Limit the number of displayed facets via JavaScript.'),
     ];
-
-    if (!is_null($config)) {
-      $widget_configs = $config->get('widget_configs');
-      if (isset($widget_configs['show_numbers'])) {
-        $form['show_numbers']['#default_value'] = $widget_configs['show_numbers'];
-      }
-    }
-
+    $form['soft_limit_settings'] = [
+      '#type' => 'container',
+      '#title' => $this->t('Soft limit settings'),
+      '#states' => [
+        'invisible' => [':input[name="widget_config[soft_limit]"]' => ['value' => 0]],
+      ],
+    ];
+    $form['soft_limit_settings']['show_less_label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Show less label'),
+      '#description' => $this->t('This text will be used for "Show less" link.'),
+      '#default_value' => $this->getConfiguration()['soft_limit_settings']['show_less_label'],
+      '#states' => [
+        'optional' => [':input[name="widget_config[soft_limit]"]' => ['value' => 0]],
+      ],
+    ];
+    $form['soft_limit_settings']['show_more_label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Show more label'),
+      '#description' => $this->t('This text will be used for "Show more" link.'),
+      '#default_value' => $this->getConfiguration()['soft_limit_settings']['show_more_label'],
+      '#states' => [
+        'optional' => [':input[name="widget_config[soft_limit]"]' => ['value' => 0]],
+      ],
+    ];
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getQueryType($query_types) {
-    return $query_types['string'];
   }
 
 }

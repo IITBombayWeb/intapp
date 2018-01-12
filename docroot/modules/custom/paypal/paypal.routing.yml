@@ -1,0 +1,27 @@
+paypal.confirm:
+ path: '/paypal/confirm'
+ defaults:
+   _form: '\Drupal\paypal\Form\ConfirmPayment'
+ requirements:
+   _permission: 'paypal confirm'
+paypal.thankyou:
+ path: '/paypal/thankyou'
+ defaults:
+   _form: '\Drupal\paypal\Form\Thankyoupage'
+ requirements:
+   _permission: 'paypal thank_you'
+paypal.process:
+ path: '/paypal/ipn_notification'
+ defaults:
+   _title: 'IPN Notification'
+   _form: '\Drupal\paypal\Form\ProcessPage'
+ requirements:
+   _permission: 'paypal process_page'
+paypal.settings_file:
+ path: 'admin/config/paypal/settings'
+ defaults:
+   _form: '\Drupal\paypal\Form\PaypalSettingsForm'
+   _title: 'Paypal Config Settings'
+ requirements:
+   _role: 'administrator'
+  

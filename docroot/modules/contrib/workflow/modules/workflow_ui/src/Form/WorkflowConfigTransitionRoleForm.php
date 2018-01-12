@@ -5,6 +5,7 @@ namespace Drupal\workflow_ui\Form;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\workflow\Entity\WorkflowConfigTransition;
+use Drupal\workflow\Entity\WorkflowState;
 
 /**
  * Defines a class to build a listing of Workflow Config Transitions entities.
@@ -27,17 +28,18 @@ class WorkflowConfigTransitionRoleForm extends WorkflowConfigTransitionFormBase 
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header = array();
+    $header = [];
 
     $workflow = $this->workflow;
     $states = $workflow->getStates($all = 'CREATION');
     if ($states) {
       $header['label_new'] = t('From \ To');
 
+      /* @var $state WorkflowState */
       foreach ($states as $state) {
         // Don't allow transition TO (creation).
         if (!$state->isCreationState()) {
-          $header[$state->id()] = t('@label', array('@label' => $state->label()));
+          $header[$state->id()] = t('@label', ['@label' => $state->label()]);
         }
       }
     }
@@ -49,19 +51,19 @@ class WorkflowConfigTransitionRoleForm extends WorkflowConfigTransitionFormBase 
    *
    * Builds a row for the following table:
    *   Transitions, for example:
-   *     18 => array(
-   *       20 => array(
+   *     18 => [
+   *       20 => [
    *         'author' => 1,
    *         1        => 0,
    *         2        => 1,
-   *       )
-   *     )
+   *       ]
+   *     ]
    *   means the transition from state 18 to state 20 can be executed by
    *   the content author or a user in role 2. The $transitions array should
    *   contain ALL transitions for the workflow.
    */
   public function buildRow(EntityInterface $entity) {
-    $row = array();
+    $row = [];
 
     $workflow = $this->workflow;
     if ($workflow) {
@@ -70,6 +72,7 @@ class WorkflowConfigTransitionRoleForm extends WorkflowConfigTransitionFormBase 
       $from_state = $entity;
       $from_sid = $from_state->id();
 
+      /* @var $states WorkflowState[] */
       $states = $workflow->getStates($all = 'CREATION');
       if ($states) {
         // Only get the roles with proper permission + Author role.
@@ -78,12 +81,14 @@ class WorkflowConfigTransitionRoleForm extends WorkflowConfigTransitionFormBase 
         // Prepare default value for 'stay_on_this_state'.
         $allow_all_roles = []; // array_combine (array_keys($roles) , array_keys($roles));
 
+        /* @var $state WorkflowState */
         foreach ($states as $state) {
           $row['to'] = [
             '#type' => 'value',
-            '#markup' => t('@label', array('@label' => $from_state->label())),
+            '#markup' => t('@label', ['@label' => $from_state->label()]),
           ];
 
+          /* @var $to_state WorkflowState */
           foreach ($states as $to_state) {
             // Don't allow transition TO (creation).
             if ($to_state->isCreationState()) {
@@ -102,7 +107,7 @@ class WorkflowConfigTransitionRoleForm extends WorkflowConfigTransitionFormBase 
               $config_transition = $workflow->createTransition($from_sid, $to_sid);
             }
 
-            $row[$to_sid]['workflow_config_transition'] = ['#type' => 'value', '#value' => $config_transition,];
+            $row[$to_sid]['workflow_config_transition'] = ['#type' => 'value', '#value' => $config_transition, ];
             $row[$to_sid]['roles'] = [
               '#type' => $stay_on_this_state ? 'checkboxes' : 'checkboxes',
               '#options' => $stay_on_this_state ? [] : $roles,
@@ -144,7 +149,7 @@ class WorkflowConfigTransitionRoleForm extends WorkflowConfigTransitionFormBase 
     }
     if (!$author_has_permission) {
       $form_state->setErrorByName('id', t('Please give the author permission to go from %creation to at least one state!',
-        array('%creation' => $creation_state->label())));
+        ['%creation' => $creation_state->label()]));
     }
 
     return;

@@ -55,7 +55,7 @@ class RouteCollectionBuilder
      * @param string|null $prefix
      * @param string      $type
      *
-     * @return RouteCollectionBuilder
+     * @return self
      *
      * @throws FileLoaderLoadException
      */
@@ -101,7 +101,7 @@ class RouteCollectionBuilder
     /**
      * Returns a RouteCollectionBuilder that can be configured and then added with mount().
      *
-     * @return RouteCollectionBuilder
+     * @return self
      */
     public function createBuilder()
     {
@@ -272,7 +272,6 @@ class RouteCollectionBuilder
                 $route->setDefaults(array_merge($this->defaults, $route->getDefaults()));
                 $route->setOptions(array_merge($this->options, $route->getOptions()));
 
-                // we're extra careful here to avoid re-setting deprecated _method and _scheme
                 foreach ($this->requirements as $key => $val) {
                     if (!$route->hasRequirement($key)) {
                         $route->setRequirement($key, $val);

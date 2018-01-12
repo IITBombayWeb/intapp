@@ -2,23 +2,25 @@
 
 namespace Drupal\facets;
 
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
+use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
+use Drupal\facets_summary\Entity\FacetsSummary;
+use Drupal\facets_summary\FacetsSummaryInterface;
 
 /**
  * Builds a listing of facet entities.
  */
-class FacetListBuilder extends ConfigEntityListBuilder {
+class FacetListBuilder extends DraggableListBuilder {
 
   /**
    * {@inheritdoc}
    */
-  public function load() {
-    $entities = parent::load();
-    $this->sortByStatusThenAlphabetically($entities);
-    return $entities;
+  public function getFormId() {
+    return 'facets_overview';
   }
 
   /**
@@ -30,27 +32,54 @@ class FacetListBuilder extends ConfigEntityListBuilder {
     if ($entity instanceof FacetInterface) {
 
       if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
-        $operations['edit'] = array(
+        $operations['edit'] = [
           'title' => $this->t('Edit'),
           'weight' => 10,
           'url' => $entity->toUrl('edit-form'),
-        );
+        ];
       }
-      if ($entity->access('update') && $entity->hasLinkTemplate('display-form')) {
-        $operations['display'] = array(
-          'title' => $this->t('Display'),
+      if ($entity->access('update') && $entity->hasLinkTemplate('settings-form')) {
+        $operations['settings'] = [
+          'title' => $this->t('Facet settings'),
           'weight' => 20,
-          'url' => $entity->toUrl('display-form'),
-        );
+          'url' => $entity->toUrl('settings-form'),
+        ];
+      }
+      if ($entity->access('update') && $entity->hasLinkTemplate('clone-form')) {
+        $operations['clone'] = [
+          'title' => $this->t('Clone facet'),
+          'weight' => 90,
+          'url' => $entity->toUrl('clone-form'),
+        ];
       }
       if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
-        $operations['delete'] = array(
+        $operations['delete'] = [
           'title' => $this->t('Delete'),
           'weight' => 100,
           'url' => $entity->toUrl('delete-form'),
-        );
+        ];
       }
-
+    }
+    elseif ($entity instanceof FacetsSummaryInterface) {
+      $operations['edit'] = [
+        'title' => $this->t('Edit'),
+        'weight' => 10,
+        'url' => $entity->toUrl('edit-form'),
+      ];
+      if ($entity->access('update') && $entity->hasLinkTemplate('settings-form')) {
+        $operations['settings'] = [
+          'title' => $this->t('Facet Summary settings'),
+          'weight' => 20,
+          'url' => $entity->toUrl('settings-form'),
+        ];
+      }
+      if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
+        $operations['delete'] = [
+          'title' => $this->t('Delete'),
+          'weight' => 100,
+          'url' => $entity->toUrl('delete-form'),
+        ];
+      }
     }
 
     return $operations;
@@ -65,10 +94,6 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       'title' => [
         'data' => $this->t('Title'),
       ],
-      'status' => [
-        'data' => $this->t('Enabled'),
-        'class' => ['checkbox'],
-      ],
     ];
     return $header + parent::buildHeader();
   }
@@ -78,76 +103,133 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\facets\FacetInterface $entity */
+    $facet = $entity;
+    $row = [
+      'type' => [
+        '#theme_wrappers' => [
+          'container' => [
+            '#attributes' => ['class' => 'facets-type'],
+          ],
+        ],
+        '#type' => 'markup',
+        '#markup' => 'Facet',
+      ],
+      'title' => [
+        '#type' => 'link',
+        '#title' => $facet->label(),
+        '#suffix' => '<div>' . $entity->getFieldAlias() . ' - ' . $facet->getWidget()['type'] . '</div>',
+        '#attributes' => [
+          'class' => ['search-api-title'],
+        ],
+      ] + $facet->toUrl('edit-form')->toRenderArray(),
+      '#attributes' => [
+        'title' => $this->t('ID: @name', ['@name' => $facet->id()]),
+        'class' => [
+          'facet',
+        ],
+      ],
+    ];
+    return array_merge_recursive($row, parent::buildRow($entity));
+  }
+
+  /**
+   * Builds an array of facet summary for display in the overview.
+   */
+  public function buildFacetSummaryRow(FacetsSummaryInterface $entity) {
+    /** @var \Drupal\facets\FacetInterface $entity */
+    $facet = $entity;
     $row = parent::buildRow($entity);
-
-    $status_label = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
-    $status_icon = array(
-      '#theme' => 'image',
-      '#uri' => $entity->status() ? 'core/misc/icons/73b355/check.svg' : 'core/misc/icons/e32700/error.svg',
-      '#width' => 18,
-      '#height' => 18,
-      '#alt' => $status_label,
-      '#title' => $status_label,
-    );
-
-    return array(
-      'data' => array(
-        'type' => array(
-          'data' => 'Facet',
-          'class' => array('facets-type'),
-        ),
-        'title' => array(
-          'data' => array(
-            '#type' => 'link',
-            '#title' => $entity->getName(),
-            '#suffix' => '<div>' . $entity->getFieldAlias() . ' - ' . $entity->getWidget() . '</div>',
-          ) + $entity->toUrl('edit-form')->toRenderArray(),
-          'class' => array('search-api-title'),
-        ),
-        'status' => array(
-          'data' => $status_icon,
-          'class' => array('checkbox'),
-        ),
-        'operations' => $row['operations'],
-      ),
-      'title' => $this->t('ID: @name', array('@name' => $entity->id())),
-      'class' => array('facet'),
-    );
+    return [
+      'type' => [
+        '#theme_wrappers' => [
+          'container' => [
+            '#attributes' => ['class' => 'facets-summary-type'],
+          ],
+        ],
+        '#type' => 'markup',
+        '#markup' => 'Facets Summary',
+      ],
+      'title' => [
+        '#theme_wrappers' => [
+          'container' => [
+            '#attributes' => ['class' => 'facets-title'],
+          ],
+        ],
+        '#type' => 'link',
+        '#title' => $facet->label(),
+        '#attributes' => [
+          'class' => ['search-api-title'],
+        ],
+        '#wrapper_attributes' => [
+          'colspan' => 2,
+        ],
+      ] + $facet->toUrl('edit-form')->toRenderArray(),
+      'operations' => $row['operations'],
+      '#attributes' => [
+        'title' => $this->t('ID: @name', ['@name' => $facet->id()]),
+        'class' => [
+          'facet',
+        ],
+      ],
+    ];
   }
 
   /**
    * Builds an array of facet sources for display in the overview.
    */
   public function buildFacetSourceRow(array $facet_source = []) {
-    return array(
-      'data' => array(
-        'type' => array(
-          'data' => 'Facet source',
-          'class' => array('facets-type'),
-        ),
-        'title' => array(
-          'data' => $facet_source['id'],
-        ),
-        'status' => array(
-          'data' => '',
-        ),
-        'operations' => array(
-          'data' => Link::createFromRoute(
-            $this->t('Configure'),
-            'entity.facets_facet_source.edit_form',
-            ['source_id' => $facet_source['id']]
-          )->toRenderable(),
-        ),
-      ),
-      'class' => array('facet-source'),
-    );
+    return [
+      'type' => [
+        '#theme_wrappers' => [
+          'container' => [
+            '#attributes' => ['class' => 'facets-type'],
+          ],
+        ],
+        '#type' => 'markup',
+        '#markup' => 'Facet source',
+      ],
+      'title' => [
+        '#theme_wrappers' => [
+          'container' => [
+            '#attributes' => ['class' => 'facets-title'],
+          ],
+        ],
+        '#type' => 'markup',
+        '#markup' => $facet_source['id'],
+        '#wrapper_attributes' => [
+          'colspan' => 2,
+        ],
+      ],
+      'operations' => [
+        'data' => Link::createFromRoute(
+          $this->t('Configure'),
+          'entity.facets_facet_source.edit_form',
+          ['facets_facet_source' => $facet_source['id']]
+        )->toRenderable(),
+      ],
+      '#attributes' => [
+        'class' => ['facet-source', 'facet-source-' . $facet_source['id']],
+        'no_striping' => TRUE,
+      ],
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function render() {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $groups = $this->loadGroups();
+
+    $form['facets'] = [
+      '#type' => 'table',
+      '#header' => $this->buildHeader(),
+      '#empty' => $groups['lone_facets'] ? '' : $this->t('There are no facet sources or facets defined.'),
+      '#attributes' => [
+        'class' => [
+          'facets-groups-list',
+        ],
+      ],
+    ];
 
     // When no facet sources are found, we should show a message that you can't
     // add facets yet.
@@ -161,42 +243,89 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       ];
     }
 
-    $list['#attached']['library'][] = 'facets/drupal.facets.admin_css';
-
-    $list['facet_sources'] = array(
-      '#type' => 'table',
-      '#header' => $this->buildHeader(),
-      '#rows' => array(),
-      '#empty' => $groups['lone_facets'] ? '' : $this->t('There are no facet sources or facets defined.'),
-      '#attributes' => array(
-        'class' => array(
-          'facets-groups-list',
-        ),
-      ),
-    );
+    $form['#attached']['library'][] = 'facets/drupal.facets.admin_css';
 
     foreach ($groups['facet_source_groups'] as $facet_source_group) {
-      $list['facet_sources']['#rows'][$facet_source_group['facet_source']['id']] = $this->buildFacetSourceRow($facet_source_group['facet_source']);
-      foreach ($facet_source_group['facets'] as $i => $facet) {
-        $list['facet_sources']['#rows'][$facet->id()] = $this->buildRow($facet);
+      $subgroup_class = Html::cleanCssIdentifier('facets-weight-' . $facet_source_group['facet_source']['id']);
+      $delta = round(count($facet_source_group['facets']) / 2);
+
+      $form['facets']['#tabledrag'][] = [
+        'action' => 'order',
+        'relationship' => 'sibling',
+        'group' => 'weight',
+        'subgroup' => $subgroup_class,
+      ];
+      $form['facets'][$facet_source_group['facet_source']['id']] = $this->buildFacetSourceRow($facet_source_group['facet_source']);
+      foreach ($facet_source_group['facets'] as $facet) {
+        if ($facet instanceof FacetInterface) {
+          $form['facets'][$facet->id()] = $this->buildRow($facet);
+          $form['facets'][$facet->id()]['weight']['#attributes']['class'][] = $subgroup_class;
+          $form['facets'][$facet->id()]['weight']['#delta'] = $delta;
+        }
+        elseif ($facet instanceof FacetsSummaryInterface) {
+          $form['facets'][$facet->id()] = $this->buildFacetSummaryRow($facet);
+        }
       }
     }
 
     // Output the list of facets without a facet source separately.
     if (!empty($groups['lone_facets'])) {
-      $list['lone_facets']['heading']['#markup'] = '<h3>' . $this->t('Facets not currently associated with any facet source') . '</h3>';
-      $list['lone_facets']['table'] = array(
-        '#type' => 'table',
-        '#header' => $this->buildHeader(),
-        '#rows' => array(),
-      );
-
-      foreach ($groups['lone_facets'] as $entity) {
-        $list['lone_facets']['table']['#rows'][$entity->id()] = $this->buildRow($entity);
+      $subgroup_class = 'facets-weight-lone-facets';
+      $form['facets']['#tabledrag'][] = [
+        'action' => 'order',
+        'relationship' => 'sibling',
+        'group' => 'weight',
+        'subgroup' => $subgroup_class,
+      ];
+      $form['facets']['lone_facets'] = [
+        'type' => [
+          '#theme_wrappers' => [
+            'container' => [
+              '#attributes' => ['class' => 'facets-type'],
+            ],
+          ],
+          '#type' => 'markup',
+          '#markup' => '<h3>' . $this->t('Facets not currently associated with any facet source') . '</h3>',
+        ],
+        '#wrapper_attributes' => [
+          'colspan' => 4,
+        ],
+      ];
+      /** @var \Drupal\facets\FacetInterface $facet */
+      foreach ($groups['lone_facets'] as $facet) {
+        // Facets core search moved into a separate project. Show a clean
+        // message to notify users how to resolve their broken facets.
+        if (substr($facet->getFacetSourceId(), 0, 16) == 'core_node_search') {
+          $project_link = Link::fromTextAndUrl('https://www.drupal.org/project/facets_core_search', Url::fromUri('https://www.drupal.org/project/facets_core_search'))->toString();
+          drupal_set_message(t('Core search facets has been moved to a separate project. You need to download and enable this module from @project_link to continue using your core search facets.', ['@project_link' => $project_link]), 'error');
+        }
+        $form['facets'][$facet->id()] = $this->buildRow($facet);
+        $form['facets'][$facet->id()]['weight']['#attributes']['class'][] = $subgroup_class;
       }
     }
 
-    return $list + parent::render();
+    $form['actions']['#type'] = 'actions';
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => t('Save'),
+      '#button_type' => 'primary',
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $entities = $this->storage->loadMultiple(array_keys($form_state->getValue('facets')));
+    /** @var \Drupal\block\BlockInterface[] $entities */
+    foreach ($entities as $entity_id => $entity) {
+      $entity_values = $form_state->getValue(['facets', $entity_id]);
+      $entity->setWeight($entity_values['weight']);
+      $entity->save();
+    }
+    drupal_set_message(t('The facets have been updated.'));
   }
 
   /**
@@ -210,12 +339,14 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    */
   public function loadGroups() {
     $facet_source_plugin_manager = \Drupal::service('plugin.manager.facets.facet_source');
-    $facets = $this->storage->loadMultiple();
+    $facets = $this->load();
+    $facets_summaries = [];
+    if (\Drupal::moduleHandler()->moduleExists('facets_summary')) {
+      $facets_summaries = FacetsSummary::loadMultiple();
+    }
     $facet_sources = $facet_source_plugin_manager->getDefinitions();
 
-    $this->sortByStatusThenAlphabetically($facets);
-
-    $facet_source_groups = array();
+    $facet_source_groups = [];
     foreach ($facet_sources as $facet_source) {
       $facet_source_groups[$facet_source['id']] = [
         'facet_source' => $facet_source,
@@ -231,31 +362,22 @@ class FacetListBuilder extends ConfigEntityListBuilder {
           unset($facets[$facet->id()]);
         }
       }
+
+      foreach ($facets_summaries as $summary) {
+        /** @var \Drupal\facets_summary\FacetsSummaryInterface $summary */
+        if ($summary->getFacetSourceId() == $facet_source['id']) {
+          $facet_source_groups[$facet_source['id']]['facets'][$summary->id()] = $summary;
+          // Remove this facet from $facet so it will finally only contain those
+          // facets not belonging to any facet_source.
+          unset($facets_summaries[$summary->id()]);
+        }
+      }
     }
 
     return [
       'facet_source_groups' => $facet_source_groups,
       'lone_facets' => $facets,
     ];
-  }
-
-  /**
-   * Sorts an array of entities by status and then alphabetically.
-   *
-   * Will preserve the key/value association of the array.
-   *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface[] $entities
-   *   An array of config entities.
-   */
-  protected function sortByStatusThenAlphabetically(array &$entities) {
-    uasort($entities, function (ConfigEntityInterface $a, ConfigEntityInterface $b) {
-      if ($a->status() == $b->status()) {
-        return strnatcasecmp($a->label(), $b->label());
-      }
-      else {
-        return $a->status() ? -1 : 1;
-      }
-    });
   }
 
 }
