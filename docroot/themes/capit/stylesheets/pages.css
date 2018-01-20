@@ -673,7 +673,12 @@ a.basiccart-get-quantity:hover {
 	background-position: -100px -56px;
 }
 
-
+.nav-tabs {
+	border-bottom: none;
+}
+.footer {
+	border-top: none
+}
 /*--buton --*/
 
 .form--inline a {
