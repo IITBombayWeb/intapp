@@ -388,6 +388,7 @@ h2{
 	background: #fff;
 	width: 85%;
 	margin-top: 75px;
+	position: relative;
 }
 .empt-cart > .bscart-pop {
 	padding: 0;
@@ -678,6 +679,12 @@ a.basiccart-get-quantity:hover {
 }
 .footer {
 	border-top: none
+}
+.test {
+	position: absolute;
+    top: 0px;
+    right: 30px;
+    font-size: 20px;
 }
 /*--buton --*/
 
