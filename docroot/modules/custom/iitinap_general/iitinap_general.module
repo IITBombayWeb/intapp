@@ -75,3 +75,11 @@ function iitinap_general_ENTITY_TYPE_view_alter(array &$build, Drupal\Core\Entit
     $build['#post_render'][] = 'my_module_node_post_render';
   }*/
 }
+
+function iitinap_general_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+  // Swap out jQuery to use an updated version of the library.
+  if(explode('/', $_SERVER['REQUEST_URI'])[1] == 'search'){
+    dpm("1");
+    $javascript['core/assets/vendor/jquery/jquery.min.js']['data'] = drupal_get_path('module', 'iitinap_general') . '/js/jquery.min.js';
+  }
+}
