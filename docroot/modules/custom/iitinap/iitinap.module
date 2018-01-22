@@ -476,16 +476,16 @@ function form_validate_data1($form, &$form_state) {
 	      $form_state->setError($form['field_city']['widget'][0]['value'],"Please Enter Valid City Name.");
           }
        }
-       //country
-       $country1=$form['field_country']['widget'][0]['value']['#value'];
-       if(empty($country1)){
-       	$form_state->setError($form['field_country']['widget'][0]['value'],"Please select the Country");
-       }
-       //gender
-       $gender=$form['field_gender']['widget'][0]['value']['#value'];
-       if(empty($gender)){
-       	$form_state->setError($form['field_gender']['widget'][0]['value'],"Please select the Gender");
-       }
+       // //country
+       // $country1=$form['field_country']['widget'][0]['value']['#value'];
+       // if(empty($country1)){
+       // 	$form_state->setError($form['field_country']['widget'][0]['value'],"Please select the Country");
+       // }
+       // //gender
+       // $gender=$form['field_gender']['widget'][0]['value']['#value'];
+       // if(empty($gender)){
+       // 	$form_state->setError($form['field_gender']['widget'][0]['value'],"Please select the Gender");
+       //}
        //school city
        $city_school= $form['field_city_school']['widget'][0]['value']['#value'];
        if(!empty($city_school)){
