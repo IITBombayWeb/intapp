@@ -78,7 +78,7 @@ $(document).ready(function() {
   }
 });
 
-$(window).load(function(){
+$(window).on('load', function(){
   $(".srch-blk, .bscart-pop").mCustomScrollbar({
     scrollButtons:{enable:true},
     theme: "dark-thick",
