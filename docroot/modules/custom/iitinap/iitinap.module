@@ -529,16 +529,16 @@ function form_validate_data1($form, &$form_state) {
 	         $form_state->setError($form['field_school']['widget'][0]['value'],"Please Enter School/Institution Last Studied.");
 	      }
        }
-       // //country
-       // $country1=$form['field_country']['widget'][0]['value']['#value'];
-       // if(empty($country1)){
-       // 	$form_state->setError($form['field_country']['widget'][0]['value'],"Please select the Country");
-       // }
-       // //gender
-       // $gender=$form['field_gender']['widget'][0]['value']['#value'];
-       // if(empty($gender)){
-       // 	$form_state->setError($form['field_gender']['widget'][0]['value'],"Please select the Gender");
-       // }
+       //country
+       $country1=$form['field_country']['widget']['#value'];
+       if(empty($country1)){
+       	$form_state->setError($form['field_country']['widget']['#value'],"Please select the Country");
+       }
+       //gender
+       $gender=$form['field_gender']['widget']['#value'];
+       if(empty($gender)){
+       	$form_state->setError($form['field_gender']['widget']['#value'],"Please select the Gender");
+       }
        //Medium of Instruction
        $medium_ins = $form['field_medium_of_instruction_']['widget'][0]['value']['#value'];
         if(!empty($form['field_medium_of_instruction_']['widget'][0]['value']['#value'])){
