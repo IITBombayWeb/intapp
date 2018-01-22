@@ -437,7 +437,7 @@ function form_validate_data1($form, &$form_state) {
 	     	 $form_state->setError($form['field_first_name']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed.");
 	      }
        }
-       //Sur Name
+       //Sure Name
        $field_surname = $form['field_surname']['widget'][0]['value']['#value'];
        if(!empty($field_surname)){
 	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_surname)){
@@ -472,7 +472,7 @@ function form_validate_data1($form, &$form_state) {
        //city
        $city = $form['field_city']['widget'][0]['value']['#value'];
        if(!empty($city)){
-          if(!preg_match("/^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/",$city)){
+          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$city)){
 	      $form_state->setError($form['field_city']['widget'][0]['value'],"Please Enter Valid City Name.");
           }
        }
