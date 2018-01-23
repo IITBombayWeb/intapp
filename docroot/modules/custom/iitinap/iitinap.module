@@ -499,14 +499,19 @@ function form_validate_data1($form, &$form_state) {
           }
        }
        //Pincode
-       if(!is_numeric($form['field_pin']['widget'][0]['value']['#value'])){
-	 $form_state->setError($form['field_pin']['widget'][0]['value'],"Please Enter Valid Pincode.");
+       $pincode=$form['field_pin']['widget'][0]['value']['#value'];
+       if(!empty($pincode)){
+       	if(!preg_match("/^[a-zA-Z0-9]+/", $pincode)){
+       	$form_state->setError($form['field_pin']['widget'][0]['value'],"Please Enter Valid Pincode.");
+       	}
        }
-       //Pincode School
-       if(!is_numeric($form['field_pincode_school']['widget'][0]['value']['#value'])){
+	   //Pincode School
+       $pincode_school=$form['field_pincode_school']['widget'][0]['value']['#value'];
+       if(!empty($pincode_school)){
+       	if(!preg_match("/^[a-zA-Z0-9]+/", $pincode_school)){
 	 $form_state->setError($form['field_pincode_school']['widget'][0]['value'],"Please Enter Valid  Pincode.");
        }
-       
+       }
        //Name of the Qualifying Examination
        $Qulify_exam = $form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'];
        if(!empty($form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'])){
