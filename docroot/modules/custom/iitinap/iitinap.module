@@ -472,7 +472,7 @@ function form_validate_data1($form, &$form_state) {
        //city
        $city = $form['field_city']['widget'][0]['value']['#value'];
        if(!empty($city)){
-          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$city)){
+          if(!preg_match("/^[\pL\pM\p{Zs}.-]+$/u",$city)){
 	      $form_state->setError($form['field_city']['widget'][0]['value'],"Please Enter Valid City Name.");
           }
        }
@@ -523,7 +523,7 @@ function form_validate_data1($form, &$form_state) {
        // Name of the Board/University and Country
        $board_uni = $form['field_name_of_the_board_universi']['widget'][0]['value']['#value'];
        if(!empty($form['field_name_of_the_board_universi']['widget'][0]['value']['#value'])){
-	       if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/",$board_uni)){
+	       if(!preg_match("/^[\pL\pM\p{Zs}.-]+$/u",$board_uni)){
 	 $form_state->setError($form['field_name_of_the_board_universi']['widget'][0]['value'],"Please Enter Name of the Board/University and Country.");
        }
        
