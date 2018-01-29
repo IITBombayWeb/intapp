@@ -53,7 +53,7 @@
     theme.settings.navbar_position ? 'navbar-is-' ~ theme.settings.navbar_position,
     theme.has_glyphicons ? 'has-glyphicons',
     user.hasPermission('administer')  ? 'admin',
-    user.hasPermission('anonymous') ? 'anony',
+    user.isAnonymous() ? 'anony',
   ]
 %}
 <!DOCTYPE html>
