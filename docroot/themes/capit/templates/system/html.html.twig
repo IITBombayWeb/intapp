@@ -53,6 +53,7 @@
     theme.settings.navbar_position ? 'navbar-is-' ~ theme.settings.navbar_position,
     theme.has_glyphicons ? 'has-glyphicons',
     user.hasPermission('administer')  ? 'admin',
+    anony ? 'anony' : '',
   ]
 %}
 <!DOCTYPE html>
@@ -68,7 +69,7 @@
   {% else %}
   {% set clas = '' %}
   {% endif %}
-  <body{{ attributes.addClass(body_classes) }} {{attributes.addClass(clas)}}>
+  <body{{ attributes.addClass(body_classes) }}>
     <a href="#main-content" class="visually-hidden focusable skip-link">
       {{ 'Skip to main content'|t }}
     </a>
