@@ -45,7 +45,7 @@ function capit_preprocess_page(&$variables) {
 	$variables['cntcart'] = count($utility['cart']);
 	$userCurrent = \Drupal::currentUser();
   if($userCurrent->isAnonymous()){
-    $variables['attributes']['class'][] = 'no-view-anyms';
+    $variables['anony'] = 'no-view-anyms';
    }
 }
 
