@@ -68,7 +68,7 @@
   {% else %}
   {% set clas = '' %}
   {% endif %}
-  <body{{ attributes.addClass(body_classes) }} {{clas}}>
+  <body{{ attributes.addClass(body_classes) }} {{attributes.addClass(clas)}}>
     <a href="#main-content" class="visually-hidden focusable skip-link">
       {{ 'Skip to main content'|t }}
     </a>
