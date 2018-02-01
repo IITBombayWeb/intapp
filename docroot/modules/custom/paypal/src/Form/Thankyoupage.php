@@ -293,7 +293,7 @@ class Thankyoupage extends FormBase {
               ]);
               $node->save();
               $node_id = $node->id();
-              $filename = 'public://applications/' . $username . '_' . $account . '_' . $node_id . '.pdf';
+              $filename = 'sites/default/private/applications/' . $username . '_' . $account . '_' . $node_id . '.pdf';
               $file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE);
               $node = Node::load($node_id);
               $new_application_id = "$institute_code-$created-$node_id";

@@ -35,7 +35,7 @@ class PdfDownload extends ActionBase
             $filename         = explode('/', $application_path);
             $filename         = end($filename);
         }
-        $base_path  = 'sites/default/files/';
+        $base_path  = 'sites/default/private/';
         $content    = file_get_contents($base_url . '/' . $base_path . 'applications/' . $filename);
         header('Content-type: application/pdf');
         header('Content-Disposition: attachment; filename=' . $filename);
