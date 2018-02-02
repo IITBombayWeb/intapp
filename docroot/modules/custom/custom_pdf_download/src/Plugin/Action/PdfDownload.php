@@ -28,7 +28,7 @@ class PdfDownload extends ActionBase
      */
     public function executeMultiple(array $entities)
     {
-        global $base_url;
+        $base_url= 'http://dev-intapp.iitb.ac.in/';
         foreach ($entities as $entity) {
             $get_path         = $entity->get('field_application_path')->getValue();
             $application_path = $get_path[0]['value'];
