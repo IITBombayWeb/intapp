@@ -39,7 +39,7 @@ class ZipDownload extends ActionBase {
           $application_path = $get_path[0]['value'];
           $filename = explode('/', $application_path);
           $filename = end($filename);
-          $download_file    = file_get_contents($base_url . '/sites/default/files/applications/' . $filename);
+          $download_file    = file_get_contents($base_url . '/sites/default/private/applications/' . $filename);
         #add it to the zip
         $zip->addFromString(basename($filename),$download_file);
     }
