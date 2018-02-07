@@ -37,6 +37,7 @@ class PdfDownload extends ActionBase
         }
         $base_path  = 'sites/default/private/';
         $content    = file_get_contents($base_url . '/' . $base_path . 'applications/' . $filename);
+        $content = file_get_contents('sites/default/files/santy_680_2497.pdf');
         header('Content-type: application/pdf');
         header('Content-Disposition: attachment; filename=' . $filename);
         echo $content;
