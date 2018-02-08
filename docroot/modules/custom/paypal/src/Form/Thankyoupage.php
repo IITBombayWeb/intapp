@@ -250,7 +250,7 @@ class Thankyoupage extends FormBase {
 					     <div class="alm width_50"><span class="label">Email:</span> <span class="ml">' . $Email . '</span></div>
 					     <div><span class="label">Communication address:</span> <span class="ml">' . $field_permanent_address . ',' . $fpa_city . '-' . $fpa_pin . ',' . $fpa_state . ',' . $fpa_country . '</span></div>  
 					</div>
-					<div class="prof-img alm width_25">' . $image . '</div>
+					<div class="prof-img alm width_25">' . $default_image . '</div>
 					<div class="alm width_25"><span class="label">Gender:</span>' . $gender . '</div>
 					<div class="alm width_25"><span class="label">Date of Birth:</span>' . $dob . '</div>
 				      </div>
