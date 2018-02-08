@@ -92,7 +92,7 @@ class Thankyoupage extends FormBase {
               $test = explode('//', $path);
               $path_array = $test[1];
               $base_path = 'sites/default/files/' . $path_array;
-              // $image = '<img src = "'.$base_path.'" alt="My Logo" />';.
+              $image = '<img src = "'.$base_path.'" alt="My Logo" />';.
               $default_image = 'sites/default/files/pictures/Icon-user.png';
               $first_name = $profile->get('field_first_name')->getValue()[0]['value'];
               $sur_name = $profile->get('field_surname')->getValue()[0]['value'];
@@ -250,7 +250,7 @@ class Thankyoupage extends FormBase {
 					     <div class="alm width_50"><span class="label">Email:</span> <span class="ml">' . $Email . '</span></div>
 					     <div><span class="label">Communication address:</span> <span class="ml">' . $field_permanent_address . ',' . $fpa_city . '-' . $fpa_pin . ',' . $fpa_state . ',' . $fpa_country . '</span></div>  
 					</div>
-					<div class="prof-img alm width_25">' . $default_image . '</div>
+					<div class="prof-img alm width_25">' . $image . '</div>
 					<div class="alm width_25"><span class="label">Gender:</span>' . $gender . '</div>
 					<div class="alm width_25"><span class="label">Date of Birth:</span>' . $dob . '</div>
 				      </div>
