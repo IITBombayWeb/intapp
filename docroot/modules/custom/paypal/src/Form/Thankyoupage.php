@@ -26,7 +26,6 @@ class Thankyoupage extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-
     $user = \Drupal::currentUser()->id();
     if (isset($_GET['tx']) && !empty($_GET['tx']) && isset($_GET['cc']) && !empty($_GET['cc']) && isset($_GET['amt']) && !empty($_GET['amt']) && isset($_GET['cm']) && !empty($_GET['cm']) && isset($_GET['tx']) && !empty($_GET['tx'])) {
       $query = \Drupal::database()->select('paypal_payment_status', 'pay_st');
@@ -92,8 +91,10 @@ class Thankyoupage extends FormBase {
               $test = explode('//', $path);
               $path_array = $test[1];
               $base_path = 'sites/default/files/' . $path_array;
-              // $image = '<img src = "'.$base_path.'" alt="My Logo" />';.
+              $image = '<img src = "'.$base_path.'" alt="My Logo" />';
               $default_image = 'sites/default/files/pictures/Icon-user.png';
+              print_r($image);
+              exit;
               $first_name = $profile->get('field_first_name')->getValue()[0]['value'];
               $sur_name = $profile->get('field_surname')->getValue()[0]['value'];
               $gender = $profile->get('field_gender')->getValue()[0]['value'];
@@ -293,7 +294,7 @@ class Thankyoupage extends FormBase {
               ]);
               $node->save();
               $node_id = $node->id();
-              $filename = 'public://applications/' . $username . '_' . $account . '_' . $node_id . '.pdf';
+              $filename = 'sites/default/private/applications/' . $username . '_' . $account . '_' . $node_id . '.pdf';
               $file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE);
               $node = Node::load($node_id);
               $new_application_id = "$institute_code-$created-$node_id";
