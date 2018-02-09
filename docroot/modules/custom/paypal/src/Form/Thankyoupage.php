@@ -93,8 +93,8 @@ class Thankyoupage extends FormBase {
               $base_path = 'sites/default/files/' . $path_array;
               $image = '<img src = "'.$base_path.'" alt="My Logo" />';
               $default_image = 'sites/default/files/pictures/Icon-user.png';
-              print_r($image);
-              exit;
+              //print_r($image);
+              //exit;
               $first_name = $profile->get('field_first_name')->getValue()[0]['value'];
               $sur_name = $profile->get('field_surname')->getValue()[0]['value'];
               $gender = $profile->get('field_gender')->getValue()[0]['value'];
