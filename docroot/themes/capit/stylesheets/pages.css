@@ -127,7 +127,11 @@ h2{
   float: right;
 }
 .radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
-	margin-left: 0;
+  margin-left: 0;
+}
+
+.anony .nav-tabs {
+  display: none;
 }
 /*main page*/
 
