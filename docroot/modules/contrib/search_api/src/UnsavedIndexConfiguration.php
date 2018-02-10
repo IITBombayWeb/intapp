@@ -1,5 +1,7 @@
 <?php
 
+// @codingStandardsIgnoreFile
+
 namespace Drupal\search_api;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -18,6 +20,9 @@ use Drupal\user\SharedTempStore;
 
 /**
  * Represents a configuration of an index that was not yet permanently saved.
+ *
+ * Proxy code created with:
+ * php ./core/scripts/generate-proxy-class.php 'Drupal\search_api\IndexInterface' modules/search_api/src/
  */
 class UnsavedIndexConfiguration implements IndexInterface, UnsavedConfigurationInterface {
 
@@ -278,13 +283,6 @@ class UnsavedIndexConfiguration implements IndexInterface, UnsavedConfigurationI
   /**
    * {@inheritdoc}
    */
-  public function getEntityTypes() {
-    return $this->entity->getEntityTypes();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function hasValidTracker() {
     return $this->entity->hasValidTracker();
   }
@@ -357,7 +355,7 @@ class UnsavedIndexConfiguration implements IndexInterface, UnsavedConfigurationI
   /**
    * {@inheritdoc}
    */
-  public function getProcessorsByStage($stage, array $overrides = []) {
+  public function getProcessorsByStage($stage, $overrides = []) {
     return $this->entity->getProcessorsByStage($stage, $overrides);
   }
 

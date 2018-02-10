@@ -2,7 +2,6 @@
 
 namespace Drupal\simple_fb_connect;
 
-use Facebook\GraphNodes\GraphNode;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -87,7 +86,7 @@ class SimpleFbConnectUserManager {
   public function loadUserByProperty($field, $value) {
     $users = $this->entityTypeManager
       ->getStorage('user')
-      ->loadByProperties([$field => $value]);
+      ->loadByProperties(array($field => $value));
 
     if (!empty($users)) {
       return current($users);
@@ -106,19 +105,17 @@ class SimpleFbConnectUserManager {
    *   User's email address.
    * @param int $fbid
    *   User's Facebook ID.
-   * @param \Facebook\GraphNodes\GraphNode $fb_profile_pic
-   *   GraphNode object representing user's Facebook profile picture.
    *
    * @return \Drupal\user\Entity\User|false
    *   Drupal user account if user was created
    *   False otherwise
    */
-  public function createUser($name, $email, $fbid, GraphNode $fb_profile_pic) {
+  public function createUser($name, $email, $fbid) {
     // Make sure we have everything we need.
-    if (!$name || !$email || !$fb_profile_pic) {
+    if (!$name || !$email) {
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Failed to create user. Name: @name, email: @email', ['@name' => $name, '@email' => $email]);
+        ->error('Failed to create user. Name: @name, email: @email', array('@name' => $name, '@email' => $email));
       $this->drupalSetMessage($this->t('Error while creating user account. Please contact site administrator.'), 'error');
       return FALSE;
     }
@@ -128,7 +125,7 @@ class SimpleFbConnectUserManager {
 
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->warning('Failed to create user. User registration is disabled in Drupal account settings. Name: @name, email: @email.', ['@name' => $name, '@email' => $email]);
+        ->warning('Failed to create user. User registration is disabled in Drupal account settings. Name: @name, email: @email.', array('@name' => $name, '@email' => $email));
 
       $this->drupalSetMessage($this->t('Only existing users can log in with Facebook. Contact system administrator.'), 'error');
       return FALSE;
@@ -147,7 +144,7 @@ class SimpleFbConnectUserManager {
     // Get the current UI language.
     $langcode = $this->languageManager->getCurrentLanguage()->getId();
 
-    $fields = [
+    $fields = array(
       'name' => $this->generateUniqueUsername($name),
       'mail' => $email,
       'init' => $email,
@@ -156,45 +153,21 @@ class SimpleFbConnectUserManager {
       'langcode' => $langcode,
       'preferred_langcode' => $langcode,
       'preferred_admin_langcode' => $langcode,
-    ];
-
-    // Check if user's picture should be downloaded from FB. We don't download
-    // the default silhouette unless Drupal user picture is a required field.
-    $file = FALSE;
-    $is_silhouette = (bool) $fb_profile_pic->getField('is_silhouette');
-    if ($this->userPictureEnabled() && ($this->userPictureRequired() || !$is_silhouette)) {
-      $file = $this->downloadProfilePic($fb_profile_pic->getField('url'), $fbid);
-      if (!$file) {
-        $this->loggerFactory
-          ->get('simple_fb_connect')
-          ->error('Failed to create user. Profile picture could not be downloaded. Name: @name, email: @email', ['@name' => $name, '@email' => $email]);
-        $this->drupalSetMessage($this->t('Error while creating user account. Please contact site administrator.'), 'error');
-        return FALSE;
-      }
-      $file->save();
-      $fields['user_picture'] = $file->id();
-    }
+    );
 
     // Create new user account.
     $new_user = $this->entityTypeManager
       ->getStorage('user')
       ->create($fields);
 
-    // Dispatch an event so that other modules can react to the user creation.
-    // Set the account twice on the event: as the main subject but also in the
-    // list of arguments.
-    $event = new GenericEvent($new_user, ['account' => $new_user, 'fbid' => $fbid]);
-    $this->eventDispatcher->dispatch('simple_fb_connect.user_created', $event);
-
     // Validate the new user.
     $violations = $new_user->validate();
     if (count($violations) > 0) {
-      $property = $violations[0]->getPropertyPath();
-      $msg      = $violations[0]->getMessage();
-      $this->drupalSetMessage($this->t('Error while creating user account. Please contact site administrator.'), 'error');
+      $msg = $violations[0]->getMessage();
+      $this->drupalSetMessage($this->t('Creation of user account failed: @message', array('@message' => $msg)), 'error');
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not create new user, validation failed. Property: @property. Message: @message', ['@property' => $property, '@message' => $msg]);
+        ->error('Could not create new user: @message', array('@message' => $msg));
       return FALSE;
     }
 
@@ -204,15 +177,14 @@ class SimpleFbConnectUserManager {
 
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->notice('New user created. Username @username, UID: @uid', ['@username' => $new_user->getAccountName(), '@uid' => $new_user->id()]);
+        ->notice('New user created. Username @username, UID: @uid', array('@username' => $new_user->getAccountName(), '@uid' => $new_user->id()));
 
-      $this->drupalSetMessage($this->t('New user account %username created.', ['%username' => $new_user->getAccountName()]));
+      // Dispatch an event so that other modules can react to the user creation.
+      // Set the account twice on the event: as the main subject but also in the
+      // list of arguments.
+      $event = new GenericEvent($new_user, ['account' => $new_user, 'fbid' => $fbid]);
+      $this->eventDispatcher->dispatch('simple_fb_connect.user_created', $event);
 
-      // Set the owner of the profile picture file if it was downloaded.
-      if ($file) {
-        $file->setOwner($new_user);
-        $file->save();
-      }
       return $new_user;
     }
 
@@ -220,7 +192,7 @@ class SimpleFbConnectUserManager {
       $this->drupalSetMessage($this->t('Creation of user account failed. Please contact site administrator.'), 'error');
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not create new user. Exception: @message', ['@message' => $ex->getMessage()]);
+        ->error('Could not create new user. Exception: @message', array('@message' => $ex->getMessage()));
     }
 
     return FALSE;
@@ -264,14 +236,15 @@ class SimpleFbConnectUserManager {
 
       // TODO: Add Boost cookie if Boost module is enabled
       // https://www.drupal.org/node/2524372
+      $this->drupalSetMessage($this->t('You are now logged in as @username.', array('@username' => $drupal_user->getAccountName())));
       return TRUE;
     }
 
     // If we are still here, account is blocked.
-    $this->drupalSetMessage($this->t('You could not be logged in because your user account %username is not active.', ['%username' => $drupal_user->getAccountName()]), 'warning');
+    $this->drupalSetMessage($this->t('You could not be logged in because your user account @username is not active.', array('@username' => $drupal_user->getAccountName())), 'warning');
     $this->loggerFactory
       ->get('simple_fb_connect')
-      ->warning('Facebook login for user @user prevented. Account is blocked.', ['@user' => $drupal_user->getAccountName()]);
+      ->warning('Facebook login for user @user prevented. Account is blocked.', array('@user' => $drupal_user->getAccountName()));
     return FALSE;
   }
 
@@ -373,7 +346,7 @@ class SimpleFbConnectUserManager {
 
         $this->loggerFactory
           ->get('simple_fb_connect')
-          ->warning('Facebook login for user @user prevented. Facebook login for site administrator (user 1) is disabled in module settings.', ['@user' => $drupal_user->getAccountName()]);
+          ->warning('Facebook login for user @user prevented. Facebook login for site administrator (user 1) is disabled in module settings.', array('@user' => $drupal_user->getAccountName()));
         return TRUE;
       }
     }
@@ -408,7 +381,7 @@ class SimpleFbConnectUserManager {
       if (array_key_exists($role, $disabled_roles)) {
         $this->loggerFactory
           ->get('simple_fb_connect')
-          ->warning('Facebook login for user @user prevented. Facebook login for role @role is disabled in module settings.', ['@user' => $drupal_user->getAccountName(), '@role' => $role]);
+          ->warning('Facebook login for user @user prevented. Facebook login for role @role is disabled in module settings.', array('@user' => $drupal_user->getAccountName(), '@role' => $role));
         return TRUE;
       }
     }
@@ -426,10 +399,6 @@ class SimpleFbConnectUserManager {
    *   Absolute URL where the picture will be downloaded from.
    * @param string $fbid
    *   User's Facebook ID.
-   *
-   * @deprecated This method is deprecated as of 8.x-3.1 when the logic of this
-   * method was moved to method createUser because the user creation failed when
-   * user_picture was required field.
    *
    * @return bool
    *   True if picture was successfully set.
@@ -489,7 +458,7 @@ class SimpleFbConnectUserManager {
     if (!$this->filePrepareDirectory($directory, 1)) {
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not save FB profile picture. Directory is not writeable: @directory', ['@directory' => $directory]);
+        ->error('Could not save FB profile picture. Directory is not writeable: @directory', array('@directory' => $directory));
       return FALSE;
     }
 
@@ -502,7 +471,7 @@ class SimpleFbConnectUserManager {
     if (!$file = $this->systemRetrieveFile($picture_url, $destination, TRUE, 1)) {
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not download Facebook profile picture from url: @url', ['@url' => $picture_url]);
+        ->error('Could not download Facebook profile picture from url: @url', array('@url' => $picture_url));
       return FALSE;
     }
 
@@ -536,22 +505,6 @@ class SimpleFbConnectUserManager {
     if (isset($field_definitions['user_picture'])) {
       return $field_definitions['user_picture']->getSetting('file_directory');
     }
-    return FALSE;
-  }
-
-  /**
-   * Checks if user pictures are enabled and required.
-   *
-   * @return bool
-   *   True if user pictures are enabled and field is required.
-   *   False otherwise.
-   */
-  protected function userPictureRequired() {
-    $field_definitions = $this->entityFieldManager->getFieldDefinitions('user', 'user');
-    if (isset($field_definitions['user_picture'])) {
-      return $field_definitions['user_picture']->get('required');
-    }
-    // If user_picture field is not defined, it is not required.
     return FALSE;
   }
 

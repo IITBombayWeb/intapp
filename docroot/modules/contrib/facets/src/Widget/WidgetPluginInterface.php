@@ -25,11 +25,13 @@ interface WidgetPluginInterface extends ConfigurablePluginInterface {
   /**
    * Picks the preferred query type for this widget.
    *
-   * @return string|null
-   *   The query type machine name to load or NULL to load the default query
-   *   type.
+   * @param string[] $query_types
+   *   An array keyed with query type name and it's plugin class to load.
+   *
+   * @return string
+   *   The query type plugin class to load.
    */
-  public function getQueryType();
+  public function getQueryType(array $query_types);
 
   /**
    * Checks is a specific property is required for this widget.
@@ -48,21 +50,6 @@ interface WidgetPluginInterface extends ConfigurablePluginInterface {
    *   True when the property is required, false by default.
    */
   public function isPropertyRequired($name, $type);
-
-  /**
-   * Checks if the facet is supported by this processor.
-   *
-   * Reasons why this would be unsupported can be chosen by the processor.
-   *
-   * @param \Drupal\facets\FacetInterface $facet
-   *   The facet to check for.
-   *
-   * @return bool
-   *   Returns true when allowed, false otherwise.
-   *
-   * @see \Drupal\facets\Processor\ProcessorInterface::supportsFacet
-   */
-  public function supportsFacet(FacetInterface $facet);
 
   /**
    * Provides a configuration form for this widget.

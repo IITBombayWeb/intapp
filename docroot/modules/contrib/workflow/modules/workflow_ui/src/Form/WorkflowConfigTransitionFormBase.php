@@ -4,7 +4,6 @@ namespace Drupal\workflow_ui\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\workflow\Entity\WorkflowState;
 
 /**
  * Defines a class to build a draggable listing of Workflow Config Transitions entities.
@@ -32,7 +31,7 @@ abstract class WorkflowConfigTransitionFormBase extends ConfigFormBase {
    *
    * @var \Drupal\Core\Entity\EntityInterface[]
    */
-  protected $entities = [];
+  protected $entities = array();
 
   /**
    * The workflow object.
@@ -48,7 +47,7 @@ abstract class WorkflowConfigTransitionFormBase extends ConfigFormBase {
     // The $this->type and $this->entitiesKey must be set in the var section.
 
     // Get the Workflow from the page.
-    $this->workflow = workflow_url_get_workflow();
+    $this->workflow = workflow_ui_url_get_workflow();
   }
 
   /**
@@ -71,15 +70,13 @@ abstract class WorkflowConfigTransitionFormBase extends ConfigFormBase {
    * Create an $entity for every ConfigTransition.
    */
   public function load() {
-    $entities = [];
+    $entities = array();
 
     $entity_type = $this->entitiesKey;
     $workflow = $this->workflow;
     $states = $workflow->getStates($all = 'CREATION');
 
     if ($states) {
-      /* @var $from_state WorkflowState */
-      /* @var $to_state WorkflowState */
       switch ($entity_type) {
         case 'workflow_state':
           foreach ($states as $from_state) {
@@ -98,10 +95,10 @@ abstract class WorkflowConfigTransitionFormBase extends ConfigFormBase {
               if ($to_state->isCreationState()) {
                 continue;
               }
-//            // Only allow transitions from $from_state.
-//            if ($state->id() <> $from_state->id()) {
-//              continue;
-//            }
+//          // Only  allow transitions from $from_state.
+//          if ($state->id() <> $from_state->id()) {
+//            continue;
+//          }
 
               // Load existing config_transitions. Create if not found.
               $config_transitions = $workflow->getTransitionsByStateId($from_sid, $to_sid);
@@ -136,7 +133,7 @@ abstract class WorkflowConfigTransitionFormBase extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form = [];
+    $form = array();
 
     if (!$this->workflow) {
       return $form;
@@ -145,13 +142,12 @@ abstract class WorkflowConfigTransitionFormBase extends ConfigFormBase {
     /*
      * Begin of copied code DraggableListBuilder::buildForm()
      */
-    $form[$this->entitiesKey] = [
+    $form[$this->entitiesKey] = array(
       '#type' => 'table',
       '#header' => $this->buildHeader(),
-      '#sticky' => TRUE,
-      '#empty' => t('There is no @label yet.', ['@label' => 'Transition']),
-      '#tabledrag' => [['action' => 'order', 'relationship' => 'sibling', 'group' => 'weight', ], ],
-    ];
+      '#empty' => t('There is no @label yet.', array('@label' => 'Transition')),
+      '#tabledrag' => array(array('action' => 'order', 'relationship' => 'sibling', 'group' => 'weight',),),
+    );
 
     $this->entities = $this->load();
     $delta = 10;
@@ -165,7 +161,7 @@ abstract class WorkflowConfigTransitionFormBase extends ConfigFormBase {
     foreach ($this->entities as $entity) {
       $row = $this->buildRow($entity);
       if (isset($row['label'])) {
-        $row['label'] = ['#markup' => $row['label']];
+        $row['label'] = array('#markup' => $row['label']);
       }
       if (isset($row['weight'])) {
         $row['weight']['#delta'] = $delta;
@@ -185,7 +181,7 @@ abstract class WorkflowConfigTransitionFormBase extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    parent::validateForm($form, $form_state);
+    return parent::validateForm($form, $form_state);
   }
 
 }

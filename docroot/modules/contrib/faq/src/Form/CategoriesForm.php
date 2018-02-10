@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\faq\Form\CategoriesForm.
+ */
+
 namespace Drupal\faq\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

@@ -32,4 +32,18 @@ class HideWhenNotRenderedProcessor extends ProcessorPluginBase implements BuildP
     return $build;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isHidden() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isLocked() {
+    return FALSE;
+  }
+
 }

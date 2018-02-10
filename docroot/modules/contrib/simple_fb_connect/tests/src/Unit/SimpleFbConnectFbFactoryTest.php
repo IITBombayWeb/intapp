@@ -34,12 +34,12 @@ class SimpleFbConnectFbFactoryTest extends UnitTestCase {
    */
   protected function finalizeSetup($app_id, $app_secret) {
     $this->configFactory = $this->getConfigFactoryStub(
-      [
-        'simple_fb_connect.settings' => [
+      array(
+        'simple_fb_connect.settings' => array(
           'app_id' => $app_id,
           'app_secret' => $app_secret,
-        ],
-      ]
+        ),
+      )
     );
 
     $this->fbFactory = new SimpleFbConnectFbFactory(
@@ -96,14 +96,14 @@ class SimpleFbConnectFbFactoryTest extends UnitTestCase {
    * @see ::testLoginuser()
    */
   public function getFbServiceBadDataProvider() {
-    return [
-      [NULL, NULL],
-      ['', ''],
-      ['123', NULL],
-      [NULL, 'abc'],
-      ['123', ''],
-      [NULL, ''],
-    ];
+    return array(
+      array(NULL, NULL),
+      array('', ''),
+      array('123', NULL),
+      array(NULL, 'abc'),
+      array('123', ''),
+      array(NULL, ''),
+    );
   }
 
 }

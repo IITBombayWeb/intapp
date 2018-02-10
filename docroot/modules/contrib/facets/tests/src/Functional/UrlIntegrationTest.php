@@ -6,7 +6,6 @@ use Drupal\Core\Url;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\FacetSourceInterface;
-use Drupal\views\Views;
 
 /**
  * Tests the overall functionality of the Facets admin UI.
@@ -38,7 +37,7 @@ class UrlIntegrationTest extends FacetsTestBase {
 
     $this->setUpExampleStructure();
     $this->insertExampleContent();
-    $this->assertEquals($this->indexItems($this->indexId), 5, '5 items were indexed.');
+    $this->assertEqual($this->indexItems($this->indexId), 5, '5 items were indexed.');
   }
 
   /**
@@ -57,7 +56,7 @@ class UrlIntegrationTest extends FacetsTestBase {
     $this->assertTrue($facet instanceof FacetInterface);
     $config = $facet->getFacetSourceConfig();
     $this->assertTrue($config instanceof FacetSourceInterface);
-    $this->assertEquals('f', $config->getFilterKey());
+    $this->assertEqual('f', $config->getFilterKey());
 
     $facet = NULL;
     $config = NULL;
@@ -76,7 +75,7 @@ class UrlIntegrationTest extends FacetsTestBase {
     $facet = Facet::load($id);
     $config = $facet->getFacetSourceConfig();
     $this->assertTrue($config instanceof FacetSourceInterface);
-    $this->assertEquals('y', $config->getFilterKey());
+    $this->assertEqual('y', $config->getFilterKey());
 
     $facet = NULL;
     $config = NULL;
@@ -99,7 +98,7 @@ class UrlIntegrationTest extends FacetsTestBase {
     $facet = Facet::load($id);
     $config = $facet->getFacetSourceConfig();
     $this->assertTrue($config instanceof FacetSourceInterface);
-    $this->assertEquals('y', $config->getFilterKey());
+    $this->assertEqual('y', $config->getFilterKey());
 
     $facet = NULL;
     $config = NULL;
@@ -127,7 +126,7 @@ class UrlIntegrationTest extends FacetsTestBase {
       'category' => 'item_category',
     ])->save();
     // Make sure the new item is indexed.
-    $this->assertEquals(1, $this->indexItems($this->indexId));
+    $this->assertEqual(1, $this->indexItems($this->indexId));
 
     // Go to the overview and test that we have the expected links.
     $this->drupalGet('search-api-test-fulltext');
@@ -137,82 +136,14 @@ class UrlIntegrationTest extends FacetsTestBase {
 
     // Click the link with the colon.
     $this->clickLink('test:colon');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     // Make sure 'test:colon' is active.
     $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'water_bear:test:colon']]);
-    $this->assertSession()->addressEquals($url);
+    $this->assertUrl($url);
     $this->checkFacetIsActive('test:colon');
     $this->assertFacetLabel('orange');
     $this->assertFacetLabel('banana');
-  }
-
-  /**
-   * Regression test for #2871475.
-   *
-   * @link https://drupal.org/node/2871475
-   */
-  public function testIncompleteFacetUrl() {
-    $id = 'owl';
-    $name = 'Owl';
-    $this->createFacet($name, $id);
-
-    $url = Url::fromUserInput('/search-api-test-fulltext');
-    $this->checkClickedFacetUrl($url);
-
-    // Build the path as described in #2871475.
-    $path = 'search-api-test-fulltext';
-    $options['absolute'] = TRUE;
-    $url = $this->buildUrl($path, $options);
-    $url .= '?f';
-
-    // Visit the page.
-    $session = $this->getSession();
-    $this->prepareRequest();
-    $session->visit($url);
-
-    // Check that no errors occurred.
-    $this->assertSession()->statusCodeEquals(200);
-  }
-
-  /**
-   * Regression test for #2898189.
-   *
-   * @link https://www.drupal.org/node/2898189
-   */
-  public function testResetPager() {
-    $id = 'owl';
-    $name = 'Owl';
-    $this->createFacet($name, $id);
-
-    // Set view pager option to 2 items, so we can check the pager rest on the
-    // facet links.
-    $view = Views::getView('search_api_test_view');
-    $view->setDisplay('page_1');
-    $pagerOptions = $view->display_handler->getOption('pager');
-    $pagerOptions['options']['items_per_page'] = 2;
-    $view->display_handler->setOption('pager', $pagerOptions);
-    $view->save();
-
-    $content_types = ['item', 'article'];
-    foreach ($content_types as $content_type) {
-      $this->drupalGet('search-api-test-fulltext');
-      $this->clickLink('2');
-      $this->assertTrue(strpos($this->getUrl(), 'page=1'));
-      $this->clickLink($content_type);
-      $this->assertFalse(strpos($this->getUrl(), 'page=1'));
-    }
-  }
-
-  /**
-   * Tests that creating a facet with a duplicate url alias is forbidden.
-   */
-  public function testCreatingDuplicateUrlAlias() {
-    $this->createFacet('Owl', 'owl');
-    $this->createFacet('Another owl', 'another_owl');
-    $this->drupalGet('admin/config/search/facets/another_owl/edit');
-    $this->drupalPostForm(NULL, ['facet_settings[url_alias]' => 'owl'], 'Save');
-    $this->assertSession()->pageTextContains('This alias is already in use for another facet defined on the same source.');
   }
 
 }

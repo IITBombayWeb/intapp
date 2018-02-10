@@ -32,7 +32,7 @@ class ConfigEditor extends FormBase {
       return;
     }
 
-    $data = $config->getOriginal();
+    $data = $config->get();
 
     if (empty($data)) {
       drupal_set_message(t('Config @name exists but has no data.', array('@name' => $config_name)), 'warning');

@@ -1,10 +1,9 @@
 name: Entity test
 type: module
-package: Testing
 # core: 8.x
 
-# Information added by Drupal.org packaging script on 2017-09-20
-version: '8.x-1.0-beta1'
+# Information added by Drupal.org packaging script on 2016-12-08
+version: '8.x-1.0-alpha4'
 core: '8.x'
 project: 'entity'
-datestamp: 1505895847
+datestamp: 1481194986

@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @see \Drupal\workflow\Entity\WorkflowConfigTransition
  */
+//class WorkflowConfigTransitionLabelListBuilder extends ConfigEntityListBuilder implements FormInterface {
 class WorkflowConfigTransitionLabelForm extends WorkflowConfigTransitionFormBase {
 
   /**
@@ -26,12 +27,12 @@ class WorkflowConfigTransitionLabelForm extends WorkflowConfigTransitionFormBase
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header = [
+    $header = array(
       'from' => t('Transition from'),
       'to' => t('Transition to'),
       'label_new' => t('label'),
       'config_transition' => '',
-    ];
+    );
 
     return $header;
   }
@@ -40,7 +41,7 @@ class WorkflowConfigTransitionLabelForm extends WorkflowConfigTransitionFormBase
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row = [];
+    $row = array();
 
     $workflow = $this->workflow;
     if ($workflow) {

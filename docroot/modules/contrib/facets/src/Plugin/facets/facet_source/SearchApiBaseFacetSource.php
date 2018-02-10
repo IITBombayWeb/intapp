@@ -118,8 +118,10 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
     $backend = $server->getBackend();
 
     $fields = $this->index->getFields();
-    if (isset($fields[$field_id])) {
-      return $this->getQueryTypesForDataType($backend, $fields[$field_id]->getType());
+    foreach ($fields as $field) {
+      if ($field->getFieldIdentifier() == $field_id) {
+        return $this->getQueryTypesForDataType($backend, $field->getType());
+      }
     }
 
     throw new InvalidQueryTypeException("No available query types were found for facet {$facet->getName()}");

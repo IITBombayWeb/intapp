@@ -2,10 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\hierarchy;
 
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\facets\Hierarchy\HierarchyPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Taxonomy hierarchy.
@@ -17,42 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class Taxonomy extends HierarchyPluginBase {
-
-  /**
-   * The current primary database.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
-   * Constructs a Drupal\Component\Plugin\PluginBase object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Database\Connection $database
-   *   The current primary database.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->database = $database;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('database')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -72,7 +33,8 @@ class Taxonomy extends HierarchyPluginBase {
   public function getNestedChildIds($id) {
     $children = &drupal_static(__FUNCTION__, []);
     if (!isset($children[$id])) {
-      $query = $this->database->select('taxonomy_term_hierarchy', 'h');
+      // TODO: refactor to swap out deprecated db_select.
+      $query = db_select('taxonomy_term_hierarchy', 'h');
       $query->addField('h', 'tid');
       $query->condition('h.parent', $id);
       $queried_children = $query->execute()->fetchCol();
@@ -89,16 +51,18 @@ class Taxonomy extends HierarchyPluginBase {
    * {@inheritdoc}
    */
   public function getChildIds(array $ids) {
-    $result = $this->database->select('taxonomy_term_hierarchy', 'th')
-      ->fields('th', ['tid', 'parent'])
+    // TODO: refactor to swap out deprecated db_select.
+    // TODO: also check if this query does not too much, plain d7 c/p here.
+    $result = db_select('taxonomy_term_hierarchy', 'th')
+      ->fields('th', array('tid', 'parent'))
       ->condition('th.parent', '0', '>')
-      ->condition((new Condition('OR'))
+      ->condition(db_or()
         ->condition('th.tid', $ids, 'IN')
         ->condition('th.parent', $ids, 'IN')
       )
       ->execute();
 
-    $parents = [];
+    $parents = array();
     foreach ($result as $record) {
       $parents[$record->parent][] = $record->tid;
     }
@@ -115,10 +79,11 @@ class Taxonomy extends HierarchyPluginBase {
    *   Returns FALSE if no parent is found, else parent tid.
    */
   protected function taxonomyGetParent($tid) {
+    // TODO: refactor to swap out deprecated db_select.
     $parent = &drupal_static(__FUNCTION__, []);
 
     if (!isset($parent[$tid])) {
-      $query = $this->database->select('taxonomy_term_hierarchy', 'h');
+      $query = db_select('taxonomy_term_hierarchy', 'h');
       $query->addField('h', 'parent');
       $query->condition('h.tid', $tid);
       $parent[$tid] = $query->execute()->fetchField();

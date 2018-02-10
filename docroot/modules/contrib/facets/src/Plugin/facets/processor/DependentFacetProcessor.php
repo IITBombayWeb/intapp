@@ -16,8 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @FacetsProcessor(
  *   id = "dependent_processor",
- *   label = @Translation("Dependent facet"),
- *   description = @Translation("Display this facet depending on the state of another facet."),
+ *   label = @Translation("Dependent Facet"),
+ *   description = @Translation("Make this facet depend on the state of another facet."),
  *   stages = {
  *     "build" = 5
  *   }
@@ -79,7 +79,8 @@ class DependentFacetProcessor extends ProcessorPluginBase implements BuildProces
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $current_facet) {
     $build = [];
 
-    $config = $this->getConfiguration();
+    $processors = $current_facet->getProcessors();
+    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()]->getConfiguration() : NULL;
 
     // Loop over all defined blocks and filter them by provider, this builds an
     // array of blocks that are provided by the facets module.
@@ -109,9 +110,9 @@ class DependentFacetProcessor extends ProcessorPluginBase implements BuildProces
         '#title' => $this->t('Condition mode'),
         '#type' => 'radios',
         '#options' => [
-          'presence' => $this->t('Check whether the facet is present.'),
-          'not_empty' => $this->t('Check whether the facet is selected / not empty.'),
-          'values' => $this->t('Check whether the facet is set to specific values.'),
+          'presence' => $this->t('Check for facet being present'),
+          'not_empty' => $this->t('Check for facet being selected / not empty'),
+          'values' => $this->t('Check for facet being set to specific values'),
         ],
         '#default_value' => empty($config[$facet->id()]['condition']) ? NULL : $config[$facet->id()]['condition'],
         '#states' => [

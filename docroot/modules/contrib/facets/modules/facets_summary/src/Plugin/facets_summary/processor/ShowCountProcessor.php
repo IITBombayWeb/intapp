@@ -38,4 +38,18 @@ class ShowCountProcessor extends ProcessorPluginBase implements BuildProcessorIn
     return $build;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isHidden() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isLocked() {
+    return FALSE;
+  }
+
 }

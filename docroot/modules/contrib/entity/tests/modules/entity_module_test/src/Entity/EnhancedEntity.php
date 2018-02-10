@@ -14,7 +14,7 @@ use Drupal\entity\Revision\RevisionableContentEntityBase;
  *   label = @Translation("Entity test with enhancements"),
  *   handlers = {
  *     "storage" = "\Drupal\Core\Entity\Sql\SqlContentEntityStorage",
- *     "access" = "\Drupal\Core\Entity\EntityAccessControlHandler",
+ *     "access" = "\Drupal\entity\EntityAccessControlHandler",
  *     "permission_provider" = "\Drupal\entity\EntityPermissionProvider",
  *     "form" = {
  *       "add" = "\Drupal\entity\Form\RevisionableContentEntityForm",

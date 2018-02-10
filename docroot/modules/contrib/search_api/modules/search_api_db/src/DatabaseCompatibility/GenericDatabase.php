@@ -48,15 +48,6 @@ class GenericDatabase implements DatabaseCompatibilityHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCloneForDatabase(Connection $database) {
-    $service = clone $this;
-    $service->database = $database;
-    return $service;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function alterNewTable($table, $type = 'text') {}
 
   /**

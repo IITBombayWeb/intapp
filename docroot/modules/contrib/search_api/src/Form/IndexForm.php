@@ -16,13 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for the Index entity.
- *
- * When altering this form via hook_form_FORM_ID_alter(), please be aware that
- * this form's form ID ("search_api_index_form") is also the base form ID of
- * several other forms, which will therefore trigger the same hook
- * implementation via hook_form_BASE_FORM_ID_alter(). In cases where this isn't
- * desired you should therefore make sure to explicitly check the form ID within
- * the hook's body.
  */
 class IndexForm extends EntityForm {
 
@@ -427,7 +420,7 @@ class IndexForm extends EntityForm {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current form state.
    */
-  public function submitAjaxDatasourceConfigForm(array $form, FormStateInterface $form_state) {
+  public function submitAjaxDatasourceConfigForm($form, FormStateInterface $form_state) {
     $form_state->setValue('id', NULL);
     $form_state->setRebuild();
   }
@@ -483,7 +476,7 @@ class IndexForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    /** @var \Drupal\search_api\IndexInterface $index */
+    /** @var $index \Drupal\search_api\IndexInterface */
     $index = $this->getEntity();
 
     $storage = $this->entityTypeManager->getStorage('search_api_index');
@@ -558,7 +551,7 @@ class IndexForm extends EntityForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    /** @var \Drupal\search_api\IndexInterface $index */
+    /** @var $index \Drupal\search_api\IndexInterface */
     $index = $this->getEntity();
     $index->setOptions($form_state->getValue('options', []) + $this->originalEntity->getOptions());
 

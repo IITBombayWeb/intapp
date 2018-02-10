@@ -104,11 +104,11 @@ interface TextValueInterface {
    * Sets the properties of this text value.
    *
    * @param array $properties
-   *   An associative array of property values.
+   *   An associative array of properties.
    *
    * @return $this
    */
-  public function setProperties(array $properties);
+  public function setProperties($properties);
 
   /**
    * Sets the properties of this text value.

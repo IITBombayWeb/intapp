@@ -13,7 +13,7 @@ function workflow_ui_install() {
     ['fragment' => 'module-workflow']);
   $message = t("Please review which roles may 'participate in workflows'
     <a href=':url'>on the Permissions page</a>.",
-    [':url' => $url->toString()]);
+    array(':url' => $url->toString()));
   drupal_set_message($message);
 }
 

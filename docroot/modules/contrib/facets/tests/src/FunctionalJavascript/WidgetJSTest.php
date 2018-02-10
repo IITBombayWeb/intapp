@@ -3,7 +3,6 @@
 namespace Drupal\Tests\facets\FunctionalJavascript;
 
 use Drupal\block\Entity\Block;
-use Drupal\facets\Entity\Facet;
 use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\search_api\Entity\Index;
 
@@ -61,72 +60,6 @@ class WidgetJSTest extends JavascriptTestBase {
     // Check that after choosing the field, the name is already filled in.
     $field_value = $this->getSession()->getPage()->findField('edit-name')->getValue();
     $this->assertEquals('Type', $field_value);
-  }
-
-  /**
-   * Tests show more / less links.
-   */
-  public function testLinksShowMoreLess() {
-    $facet_storage = \Drupal::entityTypeManager()->getStorage('facets_facet');
-    $id = 'owl';
-
-    // Create and save a facet with a checkbox widget on the 'type' field.
-    $facet_storage->create([
-      'id' => $id,
-      'name' => strtoupper($id),
-      'url_alias' => $id,
-      'facet_source_id' => 'search_api:views_page__search_api_test_view__page_1',
-      'field_identifier' => 'type',
-      'empty_behavior' => ['behavior' => 'none'],
-      'weight' => 1,
-      'widget' => [
-        'type' => 'links',
-        'config' => [
-          'show_numbers' => TRUE,
-          'soft_limit' => 1,
-          'soft_limit_settings' => [
-            'show_less_label' => 'Show less',
-            'show_more_label' => 'Show more',
-          ],
-        ],
-      ],
-      'processor_configs' => [
-        'url_processor_handler' => [
-          'processor_id' => 'url_processor_handler',
-          'weights' => ['pre_query' => -10, 'build' => -10],
-          'settings' => [],
-        ],
-      ],
-    ])->save();
-    $this->createBlock($id);
-
-    // Go to the views page.
-    $this->drupalGet('search-api-test-fulltext');
-
-    // Make sure the block is shown on the page.
-    $page = $this->getSession()->getPage();
-    $block = $page->findById('block-owl-block');
-    $block->isVisible();
-
-    // Make sure the show more / show less links are shown.
-    $this->assertSession()->linkExists('Show more');
-
-    // Change the link label of show more into "Moar Llamas".
-    $facet = Facet::load('owl');
-    $facet->setWidget('links', [
-      'show_numbers' => TRUE,
-      'soft_limit' => 1,
-      'soft_limit_settings' => [
-        'show_less_label' => 'Show less',
-        'show_more_label' => 'Moar Llamas',
-      ],
-    ]);
-    $facet->save();
-
-    // Check that the new configuration is used now.
-    $this->drupalGet('search-api-test-fulltext');
-    $this->assertSession()->linkNotExists('Show more');
-    $this->assertSession()->linkExists('Moar Llamas');
   }
 
   /**
@@ -233,9 +166,6 @@ class WidgetJSTest extends JavascriptTestBase {
     $dropdown = $block->find('css', 'select');
     $dropdown->isVisible();
 
-    $block->find('css', '.item-list__dropdown');
-    $block->isVisible();
-
     $options = $dropdown->findAll('css', 'option');
     $this->assertCount(3, $options);
 
@@ -254,49 +184,49 @@ class WidgetJSTest extends JavascriptTestBase {
   /**
    * Setup and insert test content.
    */
-  protected function insertExampleContent() {
+  private function insertExampleContent() {
     entity_test_create_bundle('item', NULL, 'entity_test_mulrev_changed');
     entity_test_create_bundle('article', NULL, 'entity_test_mulrev_changed');
 
     $entity_test_storage = \Drupal::entityTypeManager()
       ->getStorage('entity_test_mulrev_changed');
-    $entity_1 = $entity_test_storage->create([
+    $entity_1 = $entity_test_storage->create(array(
       'name' => 'foo bar baz',
       'body' => 'test test',
       'type' => 'item',
-      'keywords' => ['orange'],
+      'keywords' => array('orange'),
       'category' => 'item_category',
-    ]);
+    ));
     $entity_1->save();
-    $entity_2 = $entity_test_storage->create([
+    $entity_2 = $entity_test_storage->create(array(
       'name' => 'foo test',
       'body' => 'bar test',
       'type' => 'item',
-      'keywords' => ['orange', 'apple', 'grape'],
+      'keywords' => array('orange', 'apple', 'grape'),
       'category' => 'item_category',
-    ]);
+    ));
     $entity_2->save();
-    $entity_3 = $entity_test_storage->create([
+    $entity_3 = $entity_test_storage->create(array(
       'name' => 'bar',
       'body' => 'test foobar',
       'type' => 'item',
-    ]);
+    ));
     $entity_3->save();
-    $entity_4 = $entity_test_storage->create([
+    $entity_4 = $entity_test_storage->create(array(
       'name' => 'foo baz',
       'body' => 'test test test',
       'type' => 'article',
-      'keywords' => ['apple', 'strawberry', 'grape'],
+      'keywords' => array('apple', 'strawberry', 'grape'),
       'category' => 'article_category',
-    ]);
+    ));
     $entity_4->save();
-    $entity_5 = $entity_test_storage->create([
+    $entity_5 = $entity_test_storage->create(array(
       'name' => 'bar baz',
       'body' => 'foo',
       'type' => 'article',
-      'keywords' => ['orange', 'strawberry', 'grape', 'banana'],
+      'keywords' => array('orange', 'strawberry', 'grape', 'banana'),
       'category' => 'article_category',
-    ]);
+    ));
     $entity_5->save();
 
     $inserted_entities = \Drupal::entityQuery('entity_test_mulrev_changed')

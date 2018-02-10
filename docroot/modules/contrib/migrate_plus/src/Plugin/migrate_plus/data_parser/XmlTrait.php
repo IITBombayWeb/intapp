@@ -47,7 +47,10 @@ trait XmlTrait {
     }
 
     return t(
-      "@libxmlerrorcodename @libxmlerrorcode: @libxmlerrormessage\nLine: @libxmlerrorline\nColumn: @libxmlerrorcolumn\nFile: @libxmlerrorfile",
+      "@libxmlerrorcodename @libxmlerrorcode: @libxmlerrormessage\n" .
+      "Line: @libxmlerrorline\n" .
+      "Column: @libxmlerrorcolumn\n" .
+      "File: @libxmlerrorfile",
       [
         '@libxmlerrorcodename' => $error_code_name,
         '@libxmlerrorcode' => $error->code,

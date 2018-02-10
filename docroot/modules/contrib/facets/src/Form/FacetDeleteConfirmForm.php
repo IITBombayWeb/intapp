@@ -15,7 +15,7 @@ class FacetDeleteConfirmForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the facet %name?', ['%name' => $this->entity->label()]);
+    return $this->t('Are you sure you want to delete the facet %name?', array('%name' => $this->entity->label()));
   }
 
   /**
@@ -35,9 +35,16 @@ class FacetDeleteConfirmForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
-    drupal_set_message($this->t('The facet %name has been deleted.', ['%name' => $this->entity->label()]));
+    drupal_set_message($this->t('The facet %name has been deleted.', array('%name' => $this->entity->label())));
     $form_state->setRedirect('facets.overview');
   }
 

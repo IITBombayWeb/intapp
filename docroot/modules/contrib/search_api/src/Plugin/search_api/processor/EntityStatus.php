@@ -13,7 +13,7 @@ use Drupal\user\UserInterface;
  * @SearchApiProcessor(
  *   id = "entity_status",
  *   label = @Translation("Entity status"),
- *   description = @Translation("Exclude inactive users and unpublished entities (which have a ""Published"" state) from being indexed."),
+ *   description = @Translation("Exclude unpublished content, unpublished comments and inactive users from being indexed."),
  *   stages = {
  *     "alter_items" = 0,
  *   },
@@ -25,20 +25,9 @@ class EntityStatus extends ProcessorPluginBase {
    * {@inheritdoc}
    */
   public static function supportsIndex(IndexInterface $index) {
-    $interface = EntityPublishedInterface::class;
+    $supported_entity_types = ['node', 'comment', 'user'];
     foreach ($index->getDatasources() as $datasource) {
-      $entity_type_id = $datasource->getEntityTypeId();
-      if (!$entity_type_id) {
-        continue;
-      }
-      // We support users and any entities that implement
-      // \Drupal\Core\Entity\EntityPublishedInterface.
-      if ($entity_type_id === 'user') {
-        return TRUE;
-      }
-      $entity_type = \Drupal::entityTypeManager()
-        ->getDefinition($entity_type_id);
-      if ($entity_type && $entity_type->entityClassImplements($interface)) {
+      if (in_array($datasource->getEntityTypeId(), $supported_entity_types)) {
         return TRUE;
       }
     }

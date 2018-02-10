@@ -10,7 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Generates entity permissions via their permission providers.
  *
  * @see \Drupal\entity\EntityPermissionProvider
- * @see \Drupal\entity\UncacheableEntityPermissionProvider
  */
 class EntityPermissions implements ContainerInjectionInterface {
 

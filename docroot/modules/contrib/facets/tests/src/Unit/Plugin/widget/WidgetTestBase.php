@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
-use Drupal\facets\Entity\Facet;
-use Drupal\facets\FacetInterface;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Field\WidgetPluginManager;
@@ -25,13 +23,6 @@ abstract class WidgetTestBase extends UnitTestCase {
   protected $widget;
 
   /**
-   * The facet used for the widget test.
-   *
-   * @var \Drupal\facets\FacetInterface
-   */
-  protected $facet;
-
-  /**
    * An array containing the results for the widget.
    *
    * @var \Drupal\facets\Result\Result[]
@@ -51,14 +42,12 @@ abstract class WidgetTestBase extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $facet = new Facet([], 'facets_facet');
-    $this->facet = $facet;
     /** @var \Drupal\facets\Result\Result[] $original_results */
     $original_results = [
-      new Result($facet, 'llama', 'Llama', 10),
-      new Result($facet, 'badger', 'Badger', 20),
-      new Result($facet, 'duck', 'Duck', 15),
-      new Result($facet, 'alpaca', 'Alpaca', 9),
+      new Result('llama', 'Llama', 10),
+      new Result('badger', 'Badger', 20),
+      new Result('duck', 'Duck', 15),
+      new Result('alpaca', 'Alpaca', 9),
     ];
 
     foreach ($original_results as $original_result) {
@@ -98,7 +87,7 @@ abstract class WidgetTestBase extends UnitTestCase {
    */
   public function testGetQueryType() {
     $result = $this->widget->getQueryType($this->queryTypes);
-    $this->assertEquals(NULL, $result);
+    $this->assertEquals('string', $result);
   }
 
   /**
@@ -113,10 +102,6 @@ abstract class WidgetTestBase extends UnitTestCase {
    *
    * @param string $text
    *   Text to display.
-   * @param string $raw_value
-   *   Raw value of the result.
-   * @param \Drupal\facets\FacetInterface $facet
-   *   The facet.
    * @param int $count
    *   Number of results.
    * @param bool $active
@@ -127,11 +112,9 @@ abstract class WidgetTestBase extends UnitTestCase {
    * @return array
    *   A render array.
    */
-  protected function buildLinkAssertion($text, $raw_value, FacetInterface $facet, $count = 0, $active = FALSE, $show_numbers = TRUE) {
+  protected function buildLinkAssertion($text, $count = 0, $active = FALSE, $show_numbers = TRUE) {
     return [
       '#theme' => 'facets_result_item',
-      '#raw_value' => $raw_value,
-      '#facet' => $facet,
       '#value' => $text,
       '#show_count' => $show_numbers && ($count !== NULL),
       '#count' => $count,

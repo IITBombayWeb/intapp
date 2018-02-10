@@ -54,6 +54,25 @@ class DevelController extends ControllerBase {
   }
 
   /**
+   * Builds the elements info overview page.
+   *
+   * @return array
+   *   Array of page elements to render.
+   */
+  public function elementsPage() {
+    $element_info_manager = \Drupal::service('element_info');
+
+    $elements_info = array();
+    foreach ($element_info_manager->getDefinitions() as $element_type => $definition) {
+      $elements_info[$element_type] = $definition + $element_info_manager->getInfo($element_type);
+    }
+
+    ksort($elements_info);
+
+    return $this->dumper->exportAsRenderable($elements_info);
+  }
+
+  /**
    * Builds the fields info overview page.
    *
    * @return array
@@ -85,6 +104,18 @@ class DevelController extends ControllerBase {
     $output['widget_types'] = $this->dumper->exportAsRenderable($widget_types, $this->t('Widget types'));
 
     return $output;
+  }
+
+  /**
+   * Builds the entity types overview page.
+   *
+   * @return array
+   *   Array of page elements to render.
+   */
+  public function entityInfoPage() {
+    $types = $this->entityTypeManager()->getDefinitions();
+    ksort($types);
+    return $this->dumper->exportAsRenderable($types);
   }
 
   /**

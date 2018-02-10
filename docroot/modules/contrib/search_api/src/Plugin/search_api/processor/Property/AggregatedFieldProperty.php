@@ -2,7 +2,6 @@
 
 namespace Drupal\search_api\Plugin\search_api\processor\Property;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\search_api\IndexInterface;
@@ -13,8 +12,6 @@ use Drupal\search_api\Utility\Utility;
 
 /**
  * Defines an "aggregated field" property.
- *
- * @see \Drupal\search_api\Plugin\search_api\processor\AggregatedFields
  */
 class AggregatedFieldProperty extends ConfigurablePropertyBase {
 
@@ -69,8 +66,7 @@ class AggregatedFieldProperty extends ConfigurablePropertyBase {
       if (!$datasource_id && $name == 'aggregated_field') {
         continue;
       }
-      $label = $datasource_labels[$datasource_id] . $property->getLabel();
-      $field_options[$combined_id] = Html::escape($label);
+      $field_options[$combined_id] = $datasource_labels[$datasource_id] . $property->getLabel();
       if ($property instanceof ConfigurablePropertyInterface) {
         $description = $property->getFieldDescription($field);
       }

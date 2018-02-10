@@ -29,9 +29,6 @@ class ProfileViewTest extends ViewsKernelTestBase {
     'users',
   ];
 
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 

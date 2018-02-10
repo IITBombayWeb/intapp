@@ -3,7 +3,6 @@
 namespace Drupal\migrate_plus\Plugin\migrate_plus\data_parser;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate_plus\DataParserPluginBase;
 
@@ -47,14 +46,8 @@ class Soap extends DataParserPluginBase implements ContainerFactoryPluginInterfa
 
   /**
    * {@inheritdoc}
-   *
-   * @throws \Drupal\migrate\Exception\RequirementsException
-   *   If PHP SOAP extension is not installed.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    if (!class_exists('\SoapClient')) {
-      throw new RequirementsException('The PHP SOAP extension is not installed');
-    }
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->function = $configuration['function'];
     $this->parameters = $configuration['parameters'];
@@ -70,7 +63,7 @@ class Soap extends DataParserPluginBase implements ContainerFactoryPluginInterfa
    *   If we can't resolve the SOAP function or its response property.
    */
   protected function openSourceUrl($url) {
-    // Will throw SoapFault if there's an error in a SOAP call.
+    // Will throw SoapFault if there's
     $client = new \SoapClient($url);
     // Determine the response property name.
     $function_found = FALSE;

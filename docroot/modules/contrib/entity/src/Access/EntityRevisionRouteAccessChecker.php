@@ -7,8 +7,9 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -29,42 +30,42 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
   protected $accessCache = array();
 
   /**
-   * The currently active route match object.
+   * The request stack.
    *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $routeMatch;
+  protected $requestStack;
 
   /**
    * Creates a new EntityRevisionRouteAccessChecker instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The currently active route match object.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->routeMatch = $route_match;
+    $this->requestStack = $request_stack;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, AccountInterface $account, RouteMatchInterface $route_match = NULL) {
-    if (empty($route_match)) {
-      $route_match = $this->routeMatch;
+  public function access(Route $route, AccountInterface $account, Request $request = NULL) {
+    if (empty($request)) {
+      $request = $this->requestStack->getCurrentRequest();
     }
 
     $operation = $route->getRequirement('_entity_access_revision');
-    list($entity_type_id, $operation) = explode('.', $operation, 2);
+    list(, $operation) = explode('.', $operation, 2);
 
     if ($operation === 'list') {
-      $_entity = $route_match->getParameter($entity_type_id);
+      $_entity = $request->attributes->get('_entity', $request->attributes->get($route->getOption('entity_type_id')));
       return AccessResult::allowedIf($this->checkAccess($_entity, $account, $operation))->cachePerPermissions();
     }
     else {
-      $_entity_revision = $route_match->getParameter($entity_type_id . '_revision');
+      $_entity_revision = $request->attributes->get('_entity_revision');
       return AccessResult::allowedIf($_entity_revision && $this->checkAccess($_entity_revision, $account, $operation))->cachePerPermissions();
     }
   }
@@ -103,10 +104,8 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
     $cid = $entity->getRevisionId() . ':' . $langcode . ':' . $account->id() . ':' . $operation;
 
     if (!isset($this->accessCache[$cid])) {
-      $admin_permission = $entity_type->getAdminPermission();
-
       // Perform basic permission checks first.
-      if (!$account->hasPermission($map[$operation]) && !$account->hasPermission($type_map[$operation]) && ($admin_permission && !$account->hasPermission($admin_permission))) {
+      if (!$account->hasPermission($map[$operation]) && !$account->hasPermission($type_map[$operation]) && !$account->hasPermission('administer nodes')) {
         $this->accessCache[$cid] = FALSE;
         return FALSE;
       }
@@ -115,8 +114,6 @@ class EntityRevisionRouteAccessChecker implements AccessInterface {
         $this->accessCache[$cid] = TRUE;
       }
       else {
-        // Entity access handlers are generally not aware of the "list" operation.
-        $operation = $operation == 'list' ? 'view' : $operation;
         // First check the access to the default revision and finally, if the
         // node passed in is not the default revision then access to that, too.
         $this->accessCache[$cid] = $entity_access->access($entity_storage->load($entity->id()), $operation, $account) && ($entity->isDefaultRevision() || $entity_access->access($entity, $operation, $account));

@@ -125,5 +125,4 @@ class Table extends DestinationBase implements ContainerFactoryPluginInterface {
     }
     $delete->execute();
   }
-
 }

@@ -74,6 +74,9 @@ function search_api_views_data() {
           if ($datasource = $field->getDatasource()) {
             $field_definition['group'] = t('@datasource datasource', ['@datasource' => $datasource->label()]);
           }
+          if ($definition = $field->getDataDefinition()) {
+            $field_definition['title short'] = $definition->getLabel();
+          }
           if ($field_id != $field_alias) {
             $field_definition['real field'] = $field_id;
           }
@@ -301,10 +304,11 @@ function _search_api_views_handler_mapping() {
       ],
       'entity:taxonomy_term' => [
         'argument' => [
-          'id' => 'search_api_term',
+          'id' => 'search_api',
+          'filter' => 'intval',
         ],
         'filter' => [
-          'id' => 'search_api_term',
+          'id' => 'search_api',
         ],
         'sort' => [
           'id' => 'search_api',

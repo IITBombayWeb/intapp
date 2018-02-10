@@ -14,5 +14,8 @@
         "issues": "https://www.drupal.org/project/issues/social_api",
         "source": "http://cgit.drupalcode.org/social_api"
     },
-    "license": "GPL-2.0+"
+    "license": "GPL-2.0+",
+    "require" : {
+        "hybridauth/hybridauth" : "^2.6.0"
+    }
 }

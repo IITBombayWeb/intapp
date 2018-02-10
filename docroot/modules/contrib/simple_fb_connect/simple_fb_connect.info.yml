@@ -3,10 +3,9 @@ type: module
 description: 'Allows users to authenticate with their Facebook accounts.'
 package: Authentication
 # core: 8.x
-configure: simple_fb_connect.settings_form
 
-# Information added by Drupal.org packaging script on 2017-08-05
-version: '8.x-3.1'
+# Information added by Drupal.org packaging script on 2017-01-31
+version: '8.x-3.0'
 core: '8.x'
 project: 'simple_fb_connect'
-datestamp: 1501958347
+datestamp: 1485893677

@@ -5,6 +5,7 @@ namespace Drupal\Tests\migrate_plus\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate_plus\Entity\Migration;
 use Drupal\migrate_plus\Entity\MigrationGroup;
+use Drupal\migrate_plus\Entity\MigrationGroupInterface;
 
 /**
  * Test migration groups.
@@ -21,14 +22,14 @@ class MigrationGroupTest extends KernelTestBase {
   public function testConfigurationMerge() {
     $group_id = 'test_group';
 
-    /** @var \Drupal\migrate_plus\Entity\MigrationGroupInterface $migration_group */
+    /** @var MigrationGroupInterface $migration_group */
     $group_configuration = [
       'id' => $group_id,
       'shared_configuration' => [
         'migration_tags' => ['Drupal 6'], // In migration, so will be overridden.
         'source' => [
           'constants' => [
-            'type' => 'image', // Not in migration, so will be added.
+            'type' => 'image',    // Not in migration, so will be added.
             'cardinality' => '1', // In migration, so will be overridden.
           ],
         ],
@@ -52,10 +53,10 @@ class MigrationGroupTest extends KernelTestBase {
       'migration_dependencies' => [],
     ]);
     $migration->set('source', [
-      'plugin' => 'empty', // Not in group, persists.
+      'plugin' => 'empty',        // Not in group, persists.
       'constants' => [
-        'entity_type' => 'user', // Not in group, persists.
-        'cardinality' => '3', // Overrides group.
+        'entity_type' => 'user',  // Not in group, persists.
+        'cardinality' => '3',     // Overrides group.
       ],
     ]);
     $migration->save();
@@ -87,7 +88,7 @@ class MigrationGroupTest extends KernelTestBase {
    * Test that deleting a group deletes its migrations.
    */
   public function testDelete() {
-    /** @var \Drupal\migrate_plus\Entity\MigrationGroupInterface $migration_group */
+    /** @var MigrationGroupInterface $migration_group */
     $group_configuration = [
       'id' => 'test_group',
     ];

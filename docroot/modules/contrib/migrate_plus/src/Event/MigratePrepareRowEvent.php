@@ -64,7 +64,7 @@ class MigratePrepareRowEvent extends Event {
   /**
    * Gets the source plugin.
    *
-   * @return \Drupal\migrate\Plugin\MigrateSourceInterface
+   * @return \Drupal\migrate\Plugin\MigrateSourceInterface $source
    *   The source plugin firing the event.
    */
   public function getSource() {

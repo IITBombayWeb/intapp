@@ -21,9 +21,7 @@ class FacetController extends ControllerBase {
    *   The facet edit form.
    */
   public function editForm(FacetInterface $facets_facet) {
-    $facet = $this->entityTypeManager()
-      ->getStorage('facets_facet')
-      ->load($facets_facet->id());
+    $facet = \Drupal::service('entity_type.manager')->getStorage('facets_facet')->load($facets_facet->id());
     return $this->entityFormBuilder()->getForm($facet, 'default');
   }
 
@@ -37,7 +35,7 @@ class FacetController extends ControllerBase {
    *   The page title.
    */
   public function pageTitle(FacetInterface $facet) {
-    return new FormattableMarkup('@title', ['@title' => $facet->label()]);
+    return new FormattableMarkup('@title', array('@title' => $facet->label()));
   }
 
 }

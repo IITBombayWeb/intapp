@@ -34,48 +34,48 @@ trait ExampleContentTrait {
 
     $entity_test_storage = \Drupal::entityTypeManager()
       ->getStorage('entity_test_mulrev_changed');
-    $this->entities[1] = $entity_test_storage->create([
+    $this->entities[1] = $entity_test_storage->create(array(
       'name' => 'foo bar baz',
       'body' => 'test test',
       'type' => 'item',
-      'keywords' => ['orange'],
+      'keywords' => array('orange'),
       'category' => 'item_category',
-    ]);
+    ));
     $this->entities[1]->save();
-    $this->entities[2] = $entity_test_storage->create([
+    $this->entities[2] = $entity_test_storage->create(array(
       'name' => 'foo test',
       'body' => 'bar test',
       'type' => 'item',
-      'keywords' => ['orange', 'apple', 'grape'],
+      'keywords' => array('orange', 'apple', 'grape'),
       'category' => 'item_category',
-    ]);
+    ));
     $this->entities[2]->save();
-    $this->entities[3] = $entity_test_storage->create([
+    $this->entities[3] = $entity_test_storage->create(array(
       'name' => 'bar',
       'body' => 'test foobar',
       'type' => 'item',
-    ]);
+    ));
     $this->entities[3]->save();
-    $this->entities[4] = $entity_test_storage->create([
+    $this->entities[4] = $entity_test_storage->create(array(
       'name' => 'foo baz',
       'body' => 'test test test',
       'type' => 'article',
-      'keywords' => ['apple', 'strawberry', 'grape'],
+      'keywords' => array('apple', 'strawberry', 'grape'),
       'category' => 'article_category',
-    ]);
+    ));
     $this->entities[4]->save();
-    $this->entities[5] = $entity_test_storage->create([
+    $this->entities[5] = $entity_test_storage->create(array(
       'name' => 'bar baz',
       'body' => 'foo',
       'type' => 'article',
-      'keywords' => ['orange', 'strawberry', 'grape', 'banana'],
+      'keywords' => array('orange', 'strawberry', 'grape', 'banana'),
       'category' => 'article_category',
-    ]);
+    ));
     $this->entities[5]->save();
     $count = \Drupal::entityQuery('entity_test_mulrev_changed')
       ->count()
       ->execute() - $count;
-    $this->assertEquals($count, 5, "$count items inserted.");
+    $this->assertEqual($count, 5, "$count items inserted.");
   }
 
   /**

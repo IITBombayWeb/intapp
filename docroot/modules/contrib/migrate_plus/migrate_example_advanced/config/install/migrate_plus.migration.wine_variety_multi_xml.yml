@@ -54,7 +54,7 @@ process:
   name: category_name
   description: category_details
   parent:
-    plugin: migration_lookup
+    plugin: migration
     migration: wine_terms
     source: category_parent
   field_variety_attributes: category_attributes

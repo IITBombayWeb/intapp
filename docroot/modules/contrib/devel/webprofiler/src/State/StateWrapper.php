@@ -2,14 +2,13 @@
 
 namespace Drupal\webprofiler\State;
 
-use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\State\StateInterface;
 use Drupal\webprofiler\DataCollector\StateDataCollector;
 
 /**
  * Class StateWrapper.
  */
-class StateWrapper extends CacheCollector implements StateInterface {
+class StateWrapper implements StateInterface {
 
   /**
    * The system state.
@@ -91,20 +90,6 @@ class StateWrapper extends CacheCollector implements StateInterface {
    */
   public function resetCache() {
     $this->state->resetCache();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function resolveCacheMiss($key) {
-    return $this->state->resolveCacheMiss($key);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function destruct() {
-    $this->updateCache();
   }
 
   /**

@@ -12,10 +12,16 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  */
 interface ProcessorInterface extends ConfigurablePluginInterface, PluginInspectionInterface {
 
+
   /**
    * Processing stage: build.
    */
   const STAGE_BUILD = 'build';
+
+  /**
+   * Processing stage: sort.
+   */
+  const STAGE_SORT = 'sort';
 
   /**
    * Adds a configuration form for this processor.
@@ -57,8 +63,9 @@ interface ProcessorInterface extends ConfigurablePluginInterface, PluginInspecti
    * Checks whether this processor implements a particular stage.
    *
    * @param string $stage_identifier
-   *   The stage that can be supported by the processor, check the constants
-   *   defined in this class for a list of options.
+   *   The stage to check: self::STAGE_PRE_QUERY,
+   *   self::STAGE_POST_QUERY
+   *   or self::STAGE_BUILD.
    *
    * @return bool
    *   TRUE if the processor runs on a particular stage; FALSE otherwise.

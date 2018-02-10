@@ -18,6 +18,13 @@ use Drupal\facets\Widget\WidgetPluginBase;
 class ArrayWidget extends WidgetPluginBase {
 
   /**
+   * A flag that indicates if we should display the numbers.
+   *
+   * @var bool
+   */
+  protected $showNumbers = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet) {
@@ -34,7 +41,7 @@ class ArrayWidget extends WidgetPluginBase {
         $items[$facet->getFieldIdentifier()][] = $text;
       }
       else {
-        $items[$facet->getFieldIdentifier()][] = $this->buildListItems($facet, $result);
+        $items[$facet->getFieldIdentifier()][] = $this->buildListItems($result);
       }
     }
 
@@ -42,9 +49,15 @@ class ArrayWidget extends WidgetPluginBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Builds an array with the results.
+   *
+   * @param \Drupal\facets\Result\ResultInterface $result
+   *   A result item.
+   *
+   * @return array
+   *   An array of the result.
    */
-  protected function buildListItems(FacetInterface $facet, ResultInterface $result) {
+  protected function buildListItems(ResultInterface $result) {
     if ($children = $result->getChildren()) {
       $items = $this->prepare($result);
 

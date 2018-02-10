@@ -2,7 +2,6 @@
 
 namespace Drupal\facets_custom_widget\Plugin\facets\widget;
 
-use Drupal\facets\FacetInterface;
 use Drupal\facets\Widget\WidgetPluginBase;
 
 /**
@@ -28,13 +27,6 @@ class CustomWidget extends WidgetPluginBase {
     }
 
     return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function supportsFacet(FacetInterface $facet) {
-    return \Drupal::state()->get('facets_test_supports_facet', TRUE);
   }
 
 }

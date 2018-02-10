@@ -124,7 +124,7 @@ class TextValue implements TextValueInterface {
   /**
    * {@inheritdoc}
    */
-  public function setProperties(array $properties) {
+  public function setProperties($properties) {
     $this->properties = $properties;
     return $this;
   }

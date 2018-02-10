@@ -2,11 +2,12 @@
 
 namespace Drupal\Tests\facets\Functional;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\search_api\Item\Field;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Tests\TaxonomyTestTrait;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
-use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
 
 /**
  * Tests the hierarchical facets implementation.
@@ -26,7 +27,7 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
   protected $vocabulary;
 
   /**
-   * The field name for the referenced term.
+   * The fieldname for the referenced term.
    *
    * @var string
    */
@@ -69,8 +70,8 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
     $this->setUpExampleStructure();
 
     // Create a taxonomy_term_reference field on the article and item.
-    $this->fieldName = 'tax_ref_field';
-    $fieldLabel = 'Taxonomy reference field';
+    $this->fieldName = Unicode::strtolower($this->randomMachineName());
+    $fieldLabel = $this->randomString();
 
     $this->createEntityReferenceField('entity_test_mulrev_changed', 'article', $this->fieldName, $fieldLabel, 'taxonomy_term');
     $this->createEntityReferenceField('entity_test_mulrev_changed', 'item', $this->fieldName, $fieldLabel, 'taxonomy_term');
@@ -118,7 +119,7 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
     // Verify that the link to the index processors settings page is available.
     $this->drupalGet($this->facetEditPage);
     $this->clickLink('Search api index processor configuration');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     // Enable hierarchical facets and translation of entity ids to its names for
     // a better readability.
@@ -133,18 +134,18 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('Parent 1');
     $this->assertFacetLabel('Parent 2');
-    $this->assertSession()->linkNotExists('Child 1');
-    $this->assertSession()->linkNotExists('Child 2');
-    $this->assertSession()->linkNotExists('Child 3');
-    $this->assertSession()->linkNotExists('Child 4');
+    $this->assertNoLink('Child 1');
+    $this->assertNoLink('Child 2');
+    $this->assertNoLink('Child 3');
+    $this->assertNoLink('Child 4');
 
     // Click the first parent and make sure its children are visible.
     $this->clickLink('Parent 1');
     $this->checkFacetIsActive('Parent 1');
     $this->assertFacetLabel('Child 1');
     $this->assertFacetLabel('Child 2');
-    $this->assertSession()->linkNotExists('Child 3');
-    $this->assertSession()->linkNotExists('Child 4');
+    $this->assertNoLink('Child 3');
+    $this->assertNoLink('Child 4');
   }
 
   /**
@@ -167,40 +168,6 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
     $this->assertFacetLabel('Child 2');
     $this->assertFacetLabel('Child 3');
     $this->assertFacetLabel('Child 4');
-  }
-
-  /**
-   * Tests sorting of hierarchy.
-   */
-  public function testHierarchySorting() {
-    // Expand the hierarchy and verify that all items are visible initially.
-    $edit = [
-      'facet_settings[expand_hierarchy]' => '1',
-      'facet_settings[use_hierarchy]' => '1',
-      'facet_settings[translate_entity][status]' => '1',
-      'facet_sorting[display_value_widget_order][status]' => '1',
-      'facet_sorting[display_value_widget_order][settings][sort]' => 'ASC',
-      'facet_sorting[count_widget_order][status]' => '0',
-      'facet_sorting[active_widget_order][status]' => '0',
-    ];
-    $this->drupalPostForm($this->facetEditPage, $edit, 'Save');
-
-    $this->drupalGet('search-api-test-fulltext');
-    $this->assertStringPosition('Parent 1', 'Parent 2');
-    $this->assertStringPosition('Child 1', 'Child 2');
-    $this->assertStringPosition('Child 2', 'Child 3');
-    $this->assertStringPosition('Child 3', 'Child 4');
-
-    $edit = [
-      'facet_sorting[display_value_widget_order][settings][sort]' => 'DESC',
-    ];
-    $this->drupalPostForm($this->facetEditPage, $edit, 'Save');
-
-    $this->drupalGet('search-api-test-fulltext');
-    $this->assertStringPosition('Parent 2', 'Parent 1');
-    $this->assertStringPosition('Child 4', 'Child 3');
-    $this->assertStringPosition('Child 3', 'Child 2');
-    $this->assertStringPosition('Child 2', 'Child 1');
   }
 
   /**
@@ -266,7 +233,7 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
     }
 
     // Generate 4 child terms.
-    foreach (range(1, 4) as $i) {
+    for ($i = 1; $i <= 4; $i++) {
       $this->terms[$i] = Term::create([
         'name' => sprintf('Child %d', $i),
         'description' => '',
@@ -297,63 +264,76 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
     $entity_test_storage = \Drupal::entityTypeManager()
       ->getStorage('entity_test_mulrev_changed');
 
-    $this->entities[1] = $entity_test_storage->create([
+    $this->entities[1] = $entity_test_storage->create(array(
       'name' => 'foo bar baz',
       'body' => 'test test',
       'type' => 'item',
-      'keywords' => ['orange'],
+      'keywords' => array('orange'),
       'category' => 'item_category',
       $this->fieldName => [$this->parents['Parent 1']->id()],
-    ]);
+    ));
     $this->entities[1]->save();
 
-    $this->entities[2] = $entity_test_storage->create([
+    $this->entities[2] = $entity_test_storage->create(array(
       'name' => 'foo test',
       'body' => 'bar test',
       'type' => 'item',
-      'keywords' => ['orange', 'apple', 'grape'],
+      'keywords' => array('orange', 'apple', 'grape'),
       'category' => 'item_category',
       $this->fieldName => [$this->parents['Parent 2']->id()],
-    ]);
+    ));
     $this->entities[2]->save();
 
-    $this->entities[3] = $entity_test_storage->create([
+    $this->entities[3] = $entity_test_storage->create(array(
       'name' => 'bar',
       'body' => 'test foobar',
       'type' => 'item',
       $this->fieldName => [$this->terms[1]->id()],
-    ]);
+    ));
     $this->entities[3]->save();
 
-    $this->entities[4] = $entity_test_storage->create([
+    $this->entities[4] = $entity_test_storage->create(array(
       'name' => 'foo baz',
       'body' => 'test test test',
       'type' => 'article',
-      'keywords' => ['apple', 'strawberry', 'grape'],
+      'keywords' => array('apple', 'strawberry', 'grape'),
       'category' => 'article_category',
       $this->fieldName => [$this->terms[2]->id()],
-    ]);
+    ));
     $this->entities[4]->save();
 
-    $this->entities[5] = $entity_test_storage->create([
+    $this->entities[5] = $entity_test_storage->create(array(
       'name' => 'bar baz',
       'body' => 'foo',
       'type' => 'article',
-      'keywords' => ['orange', 'strawberry', 'grape', 'banana'],
+      'keywords' => array('orange', 'strawberry', 'grape', 'banana'),
       'category' => 'article_category',
       $this->fieldName => [$this->terms[3]->id()],
-    ]);
+    ));
     $this->entities[5]->save();
 
-    $this->entities[6] = $entity_test_storage->create([
+    $this->entities[6] = $entity_test_storage->create(array(
       'name' => 'bar baz',
       'body' => 'foo',
       'type' => 'article',
-      'keywords' => ['orange', 'strawberry', 'grape', 'banana'],
+      'keywords' => array('orange', 'strawberry', 'grape', 'banana'),
       'category' => 'article_category',
       $this->fieldName => [$this->terms[4]->id()],
-    ]);
+    ));
     $this->entities[6]->save();
+  }
+
+  /**
+   * Convert facet name to machine name.
+   *
+   * @param string $facet_name
+   *   The name of the facet.
+   *
+   * @return string
+   *   The facet name changed to a machine name.
+   */
+  protected function convertNameToMachineName($facet_name) {
+    return preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
   }
 
 }

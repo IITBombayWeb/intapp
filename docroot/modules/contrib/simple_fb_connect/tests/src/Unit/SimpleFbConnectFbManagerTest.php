@@ -51,34 +51,5 @@ class SimpleFbConnectFbManagerTest extends UnitTestCase {
     $this->fbManager->setFacebookService($this->facebook);
   }
 
-  /**
-   * Tests getFbReRequestUrl method.
-   *
-   * @covers ::getFbReRequestUrl
-   */
-  public function testGetFbReRequestUrl() {
-    $login_helper = $this->getMockBuilder('Facebook\Helpers\FacebookRedirectLoginHelper')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $login_helper
-      ->expects($this->once())
-      ->method('getReRequestUrl')
-      ->willReturn('https://www.facebook.com/rerequest-url');
-
-    $this->facebook
-      ->expects($this->once())
-      ->method('getRedirectLoginHelper')
-      ->willReturn($login_helper);
-
-    $this->urlGenerator
-      ->expects($this->once())
-      ->method('generateFromRoute')
-      ->willReturn('http://www.example.com/user/simple-fb-connect/return');
-
-    $this->assertSame($this->fbManager->getFbReRequestUrl(), 'https://www.facebook.com/rerequest-url');
-  }
-
-  // TODO: write more tests for this class.
-
+  // TODO: write the actual tests.
 }

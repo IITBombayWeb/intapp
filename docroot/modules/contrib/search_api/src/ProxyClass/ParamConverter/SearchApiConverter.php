@@ -1,5 +1,11 @@
 <?php
 
+// @codingStandardsIgnoreFile
+
+/**
+ * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\search_api\ParamConverter\SearchApiConverter' "modules/search_api/src/".
+ */
+
 namespace Drupal\search_api\ProxyClass\ParamConverter;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -9,11 +15,6 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Provides a proxy class for \Drupal\search_api\ParamConverter\SearchApiConverter.
- *
- * This file was generated via:
- * @code
- * php core/scripts/generate-proxy-class.php 'Drupal\search_api\ParamConverter\SearchApiConverter' modules/search_api/src/
- * @endcode
  *
  * @see \Drupal\Component\ProxyBuilder\ProxyBuilder
  */
@@ -38,14 +39,14 @@ class SearchApiConverter implements ParamConverterInterface {
   /**
    * The service container.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   * @var ContainerInterface
    */
   protected $container;
 
   /**
    * Constructs a ProxyClass Drupal proxy object.
    *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   * @param ContainerInterface $container
    *   The container.
    * @param string $drupal_proxy_original_service_id
    *   The service ID of the original service.
@@ -58,7 +59,7 @@ class SearchApiConverter implements ParamConverterInterface {
   /**
    * Lazy loads the real service from the container.
    *
-   * @return \Drupal\search_api\ParamConverter\SearchApiConverter
+   * @return object
    *   Returns the constructed real service.
    */
   protected function lazyLoadItself() {

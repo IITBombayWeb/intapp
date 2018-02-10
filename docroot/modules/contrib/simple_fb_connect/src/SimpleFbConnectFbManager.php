@@ -68,10 +68,10 @@ class SimpleFbConnectFbManager {
 
     // Define the URL where Facebook should return the user.
     $return_url = $this->urlGenerator->generateFromRoute(
-      'simple_fb_connect.return_from_fb', [], ['absolute' => TRUE]);
+      'simple_fb_connect.return_from_fb', array(), array('absolute' => TRUE));
 
     // Define the initial array of Facebook permissions.
-    $scope = ['public_profile', 'email'];
+    $scope = array('public_profile', 'email');
 
     // Dispatch an event so that other modules can modify the permission scope.
     // Set the scope twice on the event: as the main subject but also in the
@@ -95,10 +95,10 @@ class SimpleFbConnectFbManager {
 
     // Define the URL where Facebook should return the user.
     $return_url = $this->urlGenerator->generateFromRoute(
-      'simple_fb_connect.return_from_fb', [], ['absolute' => TRUE]);
+      'simple_fb_connect.return_from_fb', array(), array('absolute' => TRUE));
 
     // Define the array of Facebook permissions to re-request.
-    $scope = ['public_profile', 'email'];
+    $scope = array('public_profile', 'email');
 
     // Generate and return the URL where we should redirect the user.
     return $login_helper->getReRequestUrl($return_url, $scope);
@@ -119,7 +119,7 @@ class SimpleFbConnectFbManager {
 
     // URL where Facebook returned the user.
     $return_url = $this->urlGenerator->generateFromRoute(
-      'simple_fb_connect.return_from_fb', [], ['absolute' => TRUE]);
+      'simple_fb_connect.return_from_fb', array(), array('absolute' => TRUE));
 
     try {
       $access_token = $helper->getAccessToken($return_url);
@@ -129,7 +129,7 @@ class SimpleFbConnectFbManager {
       // Graph API returned an error.
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not get Facebook access token. FacebookResponseException: @message', ['@message' => json_encode($ex->getMessage())]);
+        ->error('Could not get Facebook access token. FacebookResponseException: @message', array('@message' => json_encode($ex->getMessage())));
       return FALSE;
     }
 
@@ -137,7 +137,7 @@ class SimpleFbConnectFbManager {
       // Validation failed or other local issues.
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not get Facebook access token. Exception: @message', ['@message' => ($ex->getMessage())]);
+        ->error('Could not get Facebook access token. Exception: @message', array('@message' => ($ex->getMessage())));
     }
 
     // If login was OK on Facebook, we now have user's access token.
@@ -181,12 +181,12 @@ class SimpleFbConnectFbManager {
     catch (FacebookResponseException $ex) {
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not check Facebook permissions: FacebookResponseException: @message', ['@message' => json_encode($ex->getMessage())]);
+        ->error('Could not check Facebook permissions: FacebookResponseException: @message', array('@message' => json_encode($ex->getMessage())));
     }
     catch (FacebookSDKException $ex) {
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not check Facebook permissions: FacebookSDKException: @message', ['@message' => ($ex->getMessage())]);
+        ->error('Could not check Facebook permissions: FacebookSDKException: @message', array('@message' => ($ex->getMessage())));
     }
 
     // We don't have permission or we got an exception during the API call.
@@ -209,12 +209,12 @@ class SimpleFbConnectFbManager {
     catch (FacebookResponseException $ex) {
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not load Facebook user profile: FacebookResponseException: @message', ['@message' => json_encode($ex->getMessage())]);
+        ->error('Could not load Facebook user profile: FacebookResponseException: @message', array('@message' => json_encode($ex->getMessage())));
     }
     catch (FacebookSDKException $ex) {
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not load Facebook user profile: FacebookSDKException: @message', ['@message' => ($ex->getMessage())]);
+        ->error('Could not load Facebook user profile: FacebookSDKException: @message', array('@message' => ($ex->getMessage())));
     }
 
     // Something went wrong.
@@ -224,10 +224,11 @@ class SimpleFbConnectFbManager {
   /**
    * Makes an API call to get the URL of user's Facebook profile picture.
    *
-   * @return \Facebook\GraphNodes\GraphNode
-   *   GraphNode object representing user's Facebook profile picture.
+   * @return string|false
+   *   Absolute URL of the profile picture.
+   *   False if user did not have a profile picture on FB or an error occured.
    */
-  public function getFbProfilePic() {
+  public function getFbProfilePicUrl() {
     // Determine preferred resolution for the profile picture.
     $resolution = $this->getPreferredResolution();
 
@@ -240,40 +241,28 @@ class SimpleFbConnectFbManager {
     // Call Graph API to request profile picture.
     try {
       $graph_node = $this->facebook->get($query)->getGraphNode();
-      return $graph_node;
-    }
 
+      // We don't download the FB default silhouttes, only real pictures.
+      $is_silhoutte = (bool) $graph_node->getField('is_silhouette');
+      if ($is_silhoutte) {
+        return FALSE;
+      }
+
+      // We have a real picture, return URL for it.
+      return $graph_node->getField('url');
+    }
     catch (FacebookResponseException $ex) {
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not load Facebook profile picture. FacebookResponseException: @message', ['@message' => json_encode($ex->getMessage())]);
+        ->error('Could not load Facebook profile picture URL. FacebookResponseException: @message', array('@message' => json_encode($ex->getMessage())));
     }
     catch (FacebookSDKException $ex) {
       $this->loggerFactory
         ->get('simple_fb_connect')
-        ->error('Could not load Facebook profile picture. FacebookSDKException: @message', ['@message' => ($ex->getMessage())]);
+        ->error('Could not load Facebook profile picture URL. FacebookSDKException: @message', array('@message' => ($ex->getMessage())));
     }
 
     // Something went wrong and the picture could not be loaded.
-    return FALSE;
-  }
-
-  /**
-   * Returns the URL of user's Facebook profile picture.
-   *
-   * @deprecated This method is deprecated as of 8.x-3.1 and exists only for
-   * backwards compatibility. Please use getFbProfilePic() instead.
-   *
-   * @return string|false
-   *   Absolute URL of the profile picture.
-   *   False if user did not have a profile picture on FB or an error occured.
-   */
-  public function getFbProfilePicUrl() {
-    // Read the user's profile picture from Facebook API.
-    if ($graph_node = $this->getFbProfilePic()) {
-      return $graph_node->getField('url');
-    }
-    // Something went wrong.
     return FALSE;
   }
 
@@ -328,7 +317,7 @@ class SimpleFbConnectFbManager {
       return FALSE;
     }
     $dimensions = explode('x', $resolution);
-    return ['width' => $dimensions[0], 'height' => $dimensions[1]];
+    return array('width' => $dimensions[0], 'height' => $dimensions[1]);
   }
 
 }

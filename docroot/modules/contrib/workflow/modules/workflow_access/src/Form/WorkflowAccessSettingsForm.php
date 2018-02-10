@@ -31,23 +31,23 @@ class WorkflowAccessSettingsForm extends ConfigFormBase {
     $config = $this->config('workflow_access.settings');
     $weight = $config->get('workflow_access_priority');
 
-    $form['workflow_access'] = [
+    $form['workflow_access'] = array(
       '#type' => 'details',
       '#open' => TRUE,
       '#title' => t('Workflow Access Settings'),
-    ];
+    );
     $form['workflow_access']['#tree'] = TRUE;
 
     $url = 'https://api.drupal.org/api/drupal/core%21modules%21node%21node.api.php/function/hook_node_access_records/8';
-    $form['workflow_access']['workflow_access_priority'] = [
+    $form['workflow_access']['workflow_access_priority'] = array(
       '#type' => 'weight',
       '#delta' => 10,
       '#title' => t('Workflow Access Priority'),
       '#default_value' => $weight,
       '#description' => t('This sets the node access priority. Changing this
       setting can be dangerous. If there is any doubt, leave it at 0.
-      <a href=":url" target="_blank">Read the manual</a>.', [':url' => $url]),
-    ];
+      <a href=":url" target="_blank">Read the manual</a>.', array(':url' => $url)),
+    );
 
     return parent::buildForm($form, $form_state);
   }

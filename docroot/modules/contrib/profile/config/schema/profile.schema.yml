@@ -31,12 +31,6 @@ profile.type.*:
     langcode:
       type: string
       label: 'Default language'
-    use_revisions:
-      type: boolean
-      label: 'User revisions'
-    description:
-      type: text
-      label: 'Description'
 
 field.field.*.*.*.third_party.profile:
   type: mapping

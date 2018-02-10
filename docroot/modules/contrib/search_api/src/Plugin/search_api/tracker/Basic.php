@@ -4,10 +4,7 @@ namespace Drupal\search_api\Plugin\search_api\tracker;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\search_api\LoggerTrait;
-use Drupal\search_api\Plugin\PluginFormTrait;
 use Drupal\search_api\Tracker\TrackerPluginBase;
 use Drupal\search_api\Utility\Utility;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,13 +15,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *  @SearchApiTracker(
  *   id = "default",
  *   label = @Translation("Default"),
- *   description = @Translation("Default index tracker which uses a simple database table for tracking items.")
+ *   description = @Translation("Index tracker which uses first in/first out for processing pending items.")
  * )
  */
-class Basic extends TrackerPluginBase implements PluginFormInterface {
+class Basic extends TrackerPluginBase {
 
   use LoggerTrait;
-  use PluginFormTrait;
 
   /**
    * Status value that represents items which are indexed in their latest form.
@@ -110,31 +106,6 @@ class Basic extends TrackerPluginBase implements PluginFormInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function defaultConfiguration() {
-    return ['indexing_order' => 'fifo'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['indexing_order'] = [
-      '#type' => 'radios',
-      '#title' => $this->t('Indexing order'),
-      '#description' => $this->t('The order in which items will be indexed.'),
-      '#options' => [
-        'fifo' => $this->t('Index items in the same order in which they were saved'),
-        'lifo' => $this->t('Index the most recent items first'),
-      ],
-      '#default_value' => $this->configuration['indexing_order'],
-    ];
-
-    return $form;
-  }
-
-  /**
    * Creates a SELECT statement for this tracker.
    *
    * @return \Drupal\Core\Database\Query\SelectInterface
@@ -196,8 +167,7 @@ class Basic extends TrackerPluginBase implements PluginFormInterface {
       $select->condition('datasource', $datasource_id);
     }
     $select->condition('sai.status', $this::STATUS_NOT_INDEXED, '=');
-    $lifo = $this->configuration['indexing_order'] === 'lifo';
-    $select->orderBy('sai.changed', $lifo ? 'DESC' : 'ASC');
+    $select->orderBy('sai.changed', 'ASC');
     // Add a secondary sort on item ID to make the order completely predictable.
     $select->orderBy('sai.item_id', 'ASC');
 

@@ -8,8 +8,8 @@ use Drupal\node\Entity\NodeType;
 use Drupal\search_api\Item\Field;
 use Drupal\search_api\Query\Query;
 use Drupal\simpletest\NodeCreationTrait;
-use Drupal\Tests\search_api\Kernel\ResultsTrait;
 use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
+use Drupal\Tests\search_api\Kernel\ResultsTrait;
 
 /**
  * Tests the "Hierarchy" processor.
@@ -37,8 +37,6 @@ class AddHierarchyTest extends ProcessorTestBase {
 
   /**
    * A hierarchy to test.
-   *
-   * @var string[][]
    */
   protected static $hierarchy = [
     'fruit' => [
@@ -70,7 +68,7 @@ class AddHierarchyTest extends ProcessorTestBase {
   /**
    * Vocabulary to test with when using taxonomy for the hierarchy.
    *
-   * @var \Drupal\taxonomy\Entity\Vocabulary
+   * @var \Drupal\taxonomy\VocabularyInterface
    */
   protected $vocabulary;
 

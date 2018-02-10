@@ -3,15 +3,12 @@
 namespace Drupal\migrate_tools\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Routing\CurrentRouteMatch;
-use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
+use Drupal\migrate_plus\Plugin\MigrationConfigEntityPluginManager;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\migrate_tools\MigrateBatchExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Url;
-use Drupal\migrate\MigrateMessage;
 
 /**
  * Returns responses for migrate_tools migration view routes.
@@ -21,28 +18,18 @@ class MigrationController extends ControllerBase implements ContainerInjectionIn
   /**
    * Plugin manager for migration plugins.
    *
-   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
+   * @var \Drupal\migrate_plus\Plugin\MigrationConfigEntityPluginManager
    */
-  protected $migrationPluginManager;
-
-  /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\CurrentRouteMatch
-   */
-  protected $currentRouteMatch;
+  protected $migrationConfigEntityPluginManager;
 
   /**
    * Constructs a new MigrationController object.
    *
-   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
+   * @param \Drupal\migrate_plus\Plugin\MigrationConfigEntityPluginManager $migration_config_entity_plugin_manager
    *   The plugin manager for config entity-based migrations.
-   * @param \Drupal\Core\Routing\CurrentRouteMatch $currentRouteMatch
-   *   The current route match.
    */
-  public function __construct(MigrationPluginManagerInterface $migration_plugin_manager, CurrentRouteMatch $currentRouteMatch) {
-    $this->migrationPluginManager = $migration_plugin_manager;
-    $this->currentRouteMatch = $currentRouteMatch;
+  public function __construct(MigrationConfigEntityPluginManager $migration_config_entity_plugin_manager) {
+    $this->migrationConfigEntityPluginManager = $migration_config_entity_plugin_manager;
   }
 
   /**
@@ -50,8 +37,7 @@ class MigrationController extends ControllerBase implements ContainerInjectionIn
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.migration'),
-      $container->get('current_route_match')
+      $container->get('plugin.manager.config_entity_migration')
     );
   }
 
@@ -68,8 +54,8 @@ class MigrationController extends ControllerBase implements ContainerInjectionIn
    */
   public function overview($migration_group, $migration) {
 
-    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
-    $migration = $this->migrationPluginManager->createInstance($migration);
+    /** @var MigrationInterface $migration */
+    $migration = $this->migrationConfigEntityPluginManager->createInstance($migration);
 
     $build['overview'] = [
       '#type' => 'fieldset',
@@ -120,8 +106,8 @@ class MigrationController extends ControllerBase implements ContainerInjectionIn
    */
   public function source($migration_group, $migration) {
 
-    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
-    $migration = $this->migrationPluginManager->createInstance($migration);
+    /** @var MigrationInterface $migration */
+    $migration = $this->migrationConfigEntityPluginManager->createInstance($migration);
 
     // Source field information.
     $build['source'] = [
@@ -160,35 +146,6 @@ class MigrationController extends ControllerBase implements ContainerInjectionIn
   }
 
   /**
-   * Run a migration.
-   *
-   * @param string $migration_group
-   *   Machine name of the migration's group.
-   * @param string $migration
-   *   Machine name of the migration.
-   *
-   * @return array
-   *   A render array as expected by drupal_render().
-   */
-  public function run($migration_group, $migration) {
-    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
-    $migration = $this->migrationPluginManager->createInstance($migration);
-
-    $migrateMessage = new MigrateMessage();
-    $options = [];
-
-    $executable = new MigrateBatchExecutable($migration, $migrateMessage, $options);
-    $executable->batchImport();
-
-    $migration_group = $this->currentRouteMatch->getParameter('migration_group');
-    $route_parameters = [
-      'migration_group' => $migration_group,
-      'migration' => $migration->id(),
-    ];
-    return batch_process(Url::fromRoute('entity.migration.process', $route_parameters));
-  }
-
-  /**
    * Display process information of a migration entity.
    *
    * @param string $migration_group
@@ -201,8 +158,8 @@ class MigrationController extends ControllerBase implements ContainerInjectionIn
    */
   public function process($migration_group, $migration) {
 
-    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
-    $migration = $this->migrationPluginManager->createInstance($migration);
+    /** @var MigrationInterface $migration */
+    $migration = $this->migrationConfigEntityPluginManager->createInstance($migration);
 
     // Process information.
     $build['process'] = [
@@ -248,12 +205,6 @@ class MigrationController extends ControllerBase implements ContainerInjectionIn
       '#empty' => $this->t('No process defined.'),
     ];
 
-    $build['process']['run'] = [
-      '#type' => 'link',
-      '#title' => $this->t('Run'),
-      '#url' => Url::fromRoute('entity.migration.process.run', ['migration_group' => $migration_group, 'migration' => $migration->id()]),
-    ];
-
     return $build;
   }
 
@@ -269,8 +220,8 @@ class MigrationController extends ControllerBase implements ContainerInjectionIn
    *   A render array as expected by drupal_render().
    */
   public function destination($migration_group, $migration) {
-    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
-    $migration = $this->migrationPluginManager->createInstance($migration);
+    /** @var MigrationInterface $migration */
+    $migration = $this->migrationConfigEntityPluginManager->createInstance($migration);
 
     // Destination field information.
     $build['destination'] = [

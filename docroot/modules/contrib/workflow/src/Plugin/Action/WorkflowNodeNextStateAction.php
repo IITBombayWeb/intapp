@@ -23,7 +23,7 @@ class WorkflowNodeNextStateAction extends WorkflowStateActionBase {
    */
   public function calculateDependencies(){
     return [
-      'module' => ['workflow', 'node'],
+      'module' => array('workflow', 'node'),
     ];
   }
 

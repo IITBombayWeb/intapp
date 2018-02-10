@@ -6,7 +6,6 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\UserStorageInterface;
-use Drupal\workflow\Entity\WorkflowTransitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -53,23 +52,20 @@ class WorkflowFieldConstraintValidator extends ConstraintValidator implements Co
    * {@inheritdoc}
    */
   public function validate($entity, Constraint $constraint) {
-    // Workflow field name on CommentForm has special requirements.
+
+    // Workflow field name on comment has special requirements.
     $field_storage = $entity->getFieldDefinition()->getFieldStorageDefinition();
     if ($field_storage->getTargetEntityTypeId() == 'comment') {
-      if (!$this->isValidFieldname($field_storage)) {
+      if (!$this->isValidFieldname($field_storage, $entity->getEntity())) {
         $this->context->buildViolation($constraint->messageFieldname)
           ->atPath('fieldnameOnComment')
           ->addViolation();
       }
     }
+
   }
 
-  /**
-   * @param FieldStorageConfig $field_storage
-   *
-   * @return bool
-   */
-  protected function isValidFieldname(FieldStorageConfig $field_storage) {
+  protected function isValidFieldname(FieldStorageConfig $field_storage, FieldableEntityInterface $entity) {
     $comment_field_name_ok = FALSE;
 
     if ($field_storage->getTargetEntityTypeId() !== 'comment') {
@@ -80,7 +76,7 @@ class WorkflowFieldConstraintValidator extends ConstraintValidator implements Co
 
     // Check if the 'comment' field name exists on the 'commented' entity type.
     // @todo: Still not waterproof. You could have a field on a non-relevant entity_type.
-    foreach (_workflow_info_fields() as $key => $info) {
+    foreach(_workflow_info_fields() as $key => $info) {
       if (($info->getName() == $field_name) && ($info->getTargetEntityTypeId() !== 'comment')) {
         $comment_field_name_ok = TRUE;
       }

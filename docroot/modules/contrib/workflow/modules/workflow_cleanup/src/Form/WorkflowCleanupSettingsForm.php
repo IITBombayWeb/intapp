@@ -7,11 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\workflow\Entity\WorkflowConfigTransition;
 use Drupal\workflow\Entity\WorkflowState;
 
-/**
- * Class WorkflowCleanupSettingsForm
- *
- * @package Drupal\workflow_cleanup\Form
- */
 class WorkflowCleanupSettingsForm extends FormBase {
 
   /**
@@ -30,8 +25,6 @@ class WorkflowCleanupSettingsForm extends FormBase {
     // Get all of the states, indexed by sid.
     $orphans = $inactive = [];
 
-    /* @var $states WorkflowState[] */
-    /* @var $state WorkflowState */
     $states = WorkflowState::loadMultiple();
 
     foreach ($states as $state) {
@@ -101,7 +94,6 @@ class WorkflowCleanupSettingsForm extends FormBase {
 
       foreach ($values[$section] as $sid => $data) {
         if ($data['check']) {
-          /* @var $state WorkflowState */
           $state = $states[$sid];
           $state_name = $state->label();
 
@@ -116,23 +108,22 @@ class WorkflowCleanupSettingsForm extends FormBase {
           }
           if ($count) {
             drupal_set_message(t('@count transitions for the "@state" state have been deleted.',
-              ['@state' => $state_name, '@count' => $count]));
+              array('@state' => $state_name, '@count' => $count)));
           }
 
           // @todo: Remove history records too.
           $count = 0;
-          // $count = db_delete('workflow_node_history')->condition('sid', $sid)->execute();
+//          $count = db_delete('workflow_node_history')->condition('sid', $sid)->execute();
           if ($count) {
             drupal_set_message(t('@count history records for the "@state" state have been deleted.',
-              ['@state' => $state_name, '@count' => $count]));
+              array('@state' => $state_name, '@count' => $count)));
           }
 
           $state->delete();
           drupal_set_message(t('The "@state" state has been deleted.',
-            ['@state' => $state_name]));
+            array('@state' => $state_name)));
         }
       }
     }
   }
-
 }

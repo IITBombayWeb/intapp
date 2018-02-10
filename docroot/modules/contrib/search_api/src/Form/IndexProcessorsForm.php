@@ -54,7 +54,6 @@ class IndexProcessorsForm extends EntityForm {
    * @param \Drupal\search_api\Processor\ProcessorPluginManager $processor_plugin_manager
    *   The processor plugin manager.
    * @param \Psr\Log\LoggerInterface $logger
-   *   The logger.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, ProcessorPluginManager $processor_plugin_manager, LoggerInterface $logger) {
     $this->entityTypeManager = $entity_type_manager;
@@ -360,7 +359,7 @@ class IndexProcessorsForm extends EntityForm {
       }
       elseif (class_exists($processor_definition['class'])) {
         if (call_user_func([$processor_definition['class'], 'supportsIndex'], $this->entity)) {
-          /** @var \Drupal\search_api\Processor\ProcessorInterface $processor */
+          /** @var $processor \Drupal\search_api\Processor\ProcessorInterface */
           $processor = $this->processorPluginManager->createInstance($name, $settings);
           $processors[$name] = $processor;
         }

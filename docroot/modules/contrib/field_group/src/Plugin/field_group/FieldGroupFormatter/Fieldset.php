@@ -36,12 +36,6 @@ class Fieldset extends FieldGroupFormatterBase {
       $element += array(
         '#description' => $this->getSetting('description'),
       );
-
-      // When a fieldset has a description, an id is required.
-      if (!$this->getSetting('id')) {
-        $element['#id'] = Html::getId($this->group->group_name);
-      }
-
     }
 
     if ($this->getSetting('id')) {

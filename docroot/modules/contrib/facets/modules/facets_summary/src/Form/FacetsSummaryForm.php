@@ -32,6 +32,13 @@ class FacetsSummaryForm extends EntityForm {
   protected $facetSummaryStorage;
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The plugin manager for facet sources.
    *
    * @var \Drupal\facets\FacetSource\FacetSourcePluginManager
@@ -110,7 +117,7 @@ class FacetsSummaryForm extends EntityForm {
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'facets/drupal.facets.index-active-formatters';
-    $form['#title'] = $this->t('Edit %label facets summary', ['%label' => $facets_summary->label()]);
+    $form['#title'] = $this->t('Edit %label facets summary', array('%label' => $facets_summary->label()));
 
     $form['facets'] = [
       '#type' => 'table',
@@ -193,68 +200,68 @@ class FacetsSummaryForm extends EntityForm {
     $enabled_processors = $facets_summary->getProcessors(TRUE);
 
     $stages = $this->processorPluginManager->getProcessingStages();
-    $processors_by_stage = [];
+    $processors_by_stage = array();
     foreach ($stages as $stage => $definition) {
       $processors_by_stage[$stage] = $facets_summary->getProcessorsByStage($stage, FALSE);
     }
 
     // Add the list of all other processors with checkboxes to enable/disable
     // them.
-    $form['facets_summary_settings'] = [
+    $form['facets_summary_settings'] = array(
       '#type' => 'fieldset',
       '#title' => $this->t('Facets Summary settings'),
-      '#attributes' => [
-        'class' => [
+      '#attributes' => array(
+        'class' => array(
           'search-api-status-wrapper',
-        ],
-      ],
-    ];
+        ),
+      ),
+    );
     foreach ($all_processors as $processor_id => $processor) {
       $clean_css_id = Html::cleanCssIdentifier($processor_id);
-      $form['facets_summary_settings'][$processor_id]['status'] = [
+      $form['facets_summary_settings'][$processor_id]['status'] = array(
         '#type' => 'checkbox',
         '#title' => (string) $processor->getPluginDefinition()['label'],
         '#default_value' => !empty($enabled_processors[$processor_id]),
         '#description' => $processor->getDescription(),
-        '#attributes' => [
-          'class' => [
+        '#attributes' => array(
+          'class' => array(
             'search-api-processor-status-' . $clean_css_id,
-          ],
+          ),
           'data-id' => $clean_css_id,
-        ],
-      ];
+        ),
+      );
 
       $form['facets_summary_settings'][$processor_id]['settings'] = [];
       $processor_form_state = SubformState::createForSubform($form['facets_summary_settings'][$processor_id]['settings'], $form, $form_state);
       $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facets_summary);
       if ($processor_form) {
-        $form['facets_summary_settings'][$processor_id]['settings'] = [
+        $form['facets_summary_settings'][$processor_id]['settings'] = array(
           '#type' => 'details',
           '#title' => $this->t('%processor settings', ['%processor' => (string) $processor->getPluginDefinition()['label']]),
           '#open' => TRUE,
-          '#attributes' => [
-            'class' => [
+          '#attributes' => array(
+            'class' => array(
               'facets-processor-settings-' . Html::cleanCssIdentifier($processor_id),
               'facets-processor-settings-facet',
               'facets-processor-settings',
-            ],
-          ],
-          '#states' => [
-            'visible' => [
-              ':input[name="facets_summary_settings[' . $processor_id . '][status]"]' => ['checked' => TRUE],
-            ],
-          ],
-        ];
+            ),
+          ),
+          '#states' => array(
+            'visible' => array(
+              ':input[name="facets_summary_settings[' . $processor_id . '][status]"]' => array('checked' => TRUE),
+            ),
+          ),
+        );
         $form['facets_summary_settings'][$processor_id]['settings'] += $processor_form;
       }
     }
 
-    $form['weights'] = [
+    $form['weights'] = array(
       '#type' => 'details',
       '#title' => $this->t('Advanced settings'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-    ];
+    );
 
     $form['weights']['order'] = [
       '#prefix' => '<h3>',
@@ -265,24 +272,24 @@ class FacetsSummaryForm extends EntityForm {
     // Order enabled processors per stage, create all the containers for the
     // different stages.
     foreach ($stages as $stage => $description) {
-      $form['weights'][$stage] = [
+      $form['weights'][$stage] = array(
         '#type' => 'fieldset',
         '#title' => $description['label'],
-        '#attributes' => [
-          'class' => [
+        '#attributes' => array(
+          'class' => array(
             'search-api-stage-wrapper',
             'search-api-stage-wrapper-' . Html::cleanCssIdentifier($stage),
-          ],
-        ],
-      ];
-      $form['weights'][$stage]['order'] = [
+          ),
+        ),
+      );
+      $form['weights'][$stage]['order'] = array(
         '#type' => 'table',
-      ];
-      $form['weights'][$stage]['order']['#tabledrag'][] = [
+      );
+      $form['weights'][$stage]['order']['#tabledrag'][] = array(
         'action' => 'order',
         'relationship' => 'sibling',
         'group' => 'search-api-processor-weight-' . Html::cleanCssIdentifier($stage),
-      ];
+      );
     }
 
     $processor_settings = $facets_summary->getProcessorConfigs();
@@ -296,38 +303,38 @@ class FacetsSummaryForm extends EntityForm {
           ? $processor_settings[$processor_id]['weights'][$stage]
           : $processor->getDefaultWeight($stage);
         if ($processor->isHidden()) {
-          $form['processors'][$processor_id]['weights'][$stage] = [
+          $form['processors'][$processor_id]['weights'][$stage] = array(
             '#type' => 'value',
             '#value' => $weight,
-          ];
+          );
           continue;
         }
         $form['weights'][$stage]['order'][$processor_id]['#attributes']['class'][] = 'draggable';
         $form['weights'][$stage]['order'][$processor_id]['#attributes']['class'][] = 'search-api-processor-weight--' . Html::cleanCssIdentifier($processor_id);
         $form['weights'][$stage]['order'][$processor_id]['#weight'] = $weight;
         $form['weights'][$stage]['order'][$processor_id]['label']['#plain_text'] = (string) $processor->getPluginDefinition()['label'];
-        $form['weights'][$stage]['order'][$processor_id]['weight'] = [
+        $form['weights'][$stage]['order'][$processor_id]['weight'] = array(
           '#type' => 'weight',
-          '#title' => $this->t('Weight for processor %title', ['%title' => (string) $processor->getPluginDefinition()['label']]),
+          '#title' => $this->t('Weight for processor %title', array('%title' => (string) $processor->getPluginDefinition()['label'])),
           '#title_display' => 'invisible',
           '#default_value' => $weight,
-          '#parents' => ['processors', $processor_id, 'weights', $stage],
-          '#attributes' => [
-            'class' => [
+          '#parents' => array('processors', $processor_id, 'weights', $stage),
+          '#attributes' => array(
+            'class' => array(
               'search-api-processor-weight-' . Html::cleanCssIdentifier($stage),
-            ],
-          ],
-        ];
+            ),
+          ),
+        );
       }
     }
 
     // Add vertical tabs containing the settings for the processors. Tabs for
     // disabled processors are hidden with JS magic, but need to be included in
     // case the processor is enabled.
-    $form['processor_settings'] = [
+    $form['processor_settings'] = array(
       '#title' => $this->t('Processor settings'),
       '#type' => 'vertical_tabs',
-    ];
+    );
 
     return $form;
   }
@@ -362,6 +369,8 @@ class FacetsSummaryForm extends EntityForm {
     $values = $form_state->getValues();
 
     // Store processor settings.
+    // @todo Go through all available processors, enable/disable with method on
+    //   processor plugin to allow reaction.
     /** @var \Drupal\facets_summary\FacetsSummaryInterface $facets_summary */
     $facets_summary = $this->entity;
 
@@ -374,11 +383,11 @@ class FacetsSummaryForm extends EntityForm {
         continue;
       }
 
-      $new_settings = [
+      $new_settings = array(
         'processor_id' => $processor_id,
-        'weights' => [],
-        'settings' => [],
-      ];
+        'weights' => array(),
+        'settings' => array(),
+      );
 
       if (!empty($values['processors'][$processor_id]['weights'])) {
         $new_settings['weights'] = $values['processors'][$processor_id]['weights'];

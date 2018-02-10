@@ -46,8 +46,8 @@ class NumericGranularWidget extends LinksWidget {
   /**
    * {@inheritdoc}
    */
-  public function getQueryType() {
-    return 'numeric';
+  public function getQueryType(array $query_types) {
+    return $query_types['numeric'];
   }
 
 }

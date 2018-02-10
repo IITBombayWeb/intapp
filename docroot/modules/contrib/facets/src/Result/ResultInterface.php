@@ -10,14 +10,6 @@ use Drupal\Core\Url;
 interface ResultInterface {
 
   /**
-   * Returns the facet related to the result.
-   *
-   * @return \Drupal\facets\FacetInterface
-   *   The facet related to the result.
-   */
-  public function getFacet();
-
-  /**
    * Returns the raw value as present in the index.
    *
    * @return string
@@ -36,16 +28,16 @@ interface ResultInterface {
   /**
    * Returns the count for the result.
    *
-   * @return int
-   *   The amount of items for the result.
+   * @return int|null
+   *   The amount of items for the result or NULL.
    */
   public function getCount();
 
   /**
    * Sets the count for the result.
    *
-   * @param int $count
-   *   The amount of items for the result.
+   * @param int|null $count
+   *   The amount of items for the result or NULL.
    */
   public function setCount($count);
 

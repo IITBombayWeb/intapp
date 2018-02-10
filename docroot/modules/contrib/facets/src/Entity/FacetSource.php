@@ -126,5 +126,4 @@ class FacetSource extends ConfigEntityBase implements FacetSourceInterface {
   public function setBreadcrumbSettings(array $settings) {
     $this->breadcrumb = $settings;
   }
-
 }

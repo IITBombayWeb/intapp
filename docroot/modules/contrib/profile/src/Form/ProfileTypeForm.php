@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\field_ui\FieldUI;
 use Drupal\user\Entity\Role;
 
+
 /**
  * Form controller for profile type forms.
  */
@@ -18,7 +19,6 @@ class ProfileTypeForm extends BundleEntityFormBase {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
-    /** @var \Drupal\profile\Entity\ProfileTypeInterface $type */
     $type = $this->entity;
 
     if ($this->operation == 'add') {
@@ -44,12 +44,6 @@ class ProfileTypeForm extends BundleEntityFormBase {
         'exists' => '\Drupal\profile\Entity\ProfileType::load',
         'source' => ['label'],
       ],
-    ];
-    $form['description'] = [
-      '#title' => $this->t('Description'),
-      '#type' => 'textarea',
-      '#default_value' => $type->getDescription(),
-      '#description' => $this->t('This text will be displayed only for administrative purposes.'),
     ];
     $form['registration'] = [
       '#type' => 'checkbox',
@@ -77,12 +71,6 @@ class ProfileTypeForm extends BundleEntityFormBase {
       }
     }
 
-    $form['use_revisions'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Create a new revision when a profile is modified'),
-      '#default_value' => $type->shouldCreateNewRevision(),
-    ];
-
     return $this->protectBundleIdElement($form);
   }
 
@@ -96,7 +84,7 @@ class ProfileTypeForm extends BundleEntityFormBase {
     ) {
       $actions['save_continue'] = $actions['submit'];
       $actions['save_continue']['#value'] = $this->t('Save and manage fields');
-      $actions['save_continue']['#submit'][] = [$this, 'redirectToFieldUi'];
+      $actions['save_continue']['#submit'][] = [$this, 'redirectToFieldUI'];
     }
     return $actions;
   }
@@ -120,7 +108,7 @@ class ProfileTypeForm extends BundleEntityFormBase {
   /**
    * Form submission handler to redirect to Manage fields page of Field UI.
    */
-  public function redirectToFieldUi(array $form, FormStateInterface $form_state) {
+  public function redirectToFieldUI(array $form, FormStateInterface $form_state) {
     if ($form_state->getTriggeringElement()['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo('profile', $this->entity->id())) {
       $form_state->setRedirectUrl($route_info);
     }

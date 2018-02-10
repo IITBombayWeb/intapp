@@ -255,12 +255,14 @@ class Highlight extends ProcessorPluginBase implements PluginFormInterface {
     }
     if ($this->configuration['highlight'] != 'never') {
       $highlighted_fields = $this->highlightFields($result_items, $keys);
-      foreach ($highlighted_fields as $item_id => $item_fields) {
-        $item = $result_items[$item_id];
+      if ($highlighted_fields) {
         // Maybe the backend or some other processor has already set highlighted
         // field values.
-        $item_fields += $item->getExtraData('highlighted_fields', []);
-        $item->setExtraData('highlighted_fields', $item_fields);
+        foreach ($results->getExtraData('highlighted_fields', []) as $item_id => $old_highlighting) {
+          $highlighted_fields += [$item_id => []];
+          $highlighted_fields[$item_id] += $old_highlighting;
+        }
+        $results->setExtraData('highlighted_fields', $highlighted_fields);
       }
     }
   }
@@ -365,7 +367,7 @@ class Highlight extends ProcessorPluginBase implements PluginFormInterface {
    *   An array of all unique positive keywords used in the query.
    */
   protected function getKeywords(QueryInterface $query) {
-    $keys = $query->getOriginalKeys();
+    $keys = $query->getKeys();
     if (!$keys) {
       return [];
     }

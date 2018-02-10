@@ -45,13 +45,13 @@ class SimpleFbConnectFbFactory {
   public function getFbService() {
     // Check that App ID and secret have been defined in module settings.
     if ($this->validateConfig()) {
-      $sdk_config = [
+      $sdk_config = array(
         'app_id' => $this->getAppId(),
         'app_secret' => $this->getAppSecret(),
         'default_graph_version' => $this->getApiVersion(),
         'persistent_data_handler' => $this->persistentDataHandler,
         'http_client_handler' => $this->getHttpClient(),
-      ];
+      );
       return new Facebook($sdk_config);
     }
 

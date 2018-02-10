@@ -7,6 +7,7 @@ use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\migrate_plus\Entity\MigrationGroup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
  * Class MigrationFormBase.
@@ -66,7 +67,7 @@ class MigrationFormBase extends EntityForm {
     // Get anything we need from the base class.
     $form = parent::buildForm($form, $form_state);
 
-    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
+    /** @var MigrationInterface $migration */
     $migration = $this->entity;
 
     $form['warning'] = [
@@ -76,24 +77,24 @@ class MigrationFormBase extends EntityForm {
     ];
 
     // Build the form.
-    $form['label'] = [
+    $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $migration->label(),
       '#required' => TRUE,
-    ];
-    $form['id'] = [
+    );
+    $form['id'] = array(
       '#type' => 'machine_name',
       '#title' => $this->t('Machine name'),
       '#default_value' => $migration->id(),
-      '#machine_name' => [
-        'exists' => [$this, 'exists'],
+      '#machine_name' => array(
+        'exists' => array($this, 'exists'),
         'replace_pattern' => '([^a-z0-9_]+)|(^custom$)',
         'error' => 'The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".',
-      ],
+      ),
       '#disabled' => !$migration->isNew(),
-    ];
+    );
 
     $groups = MigrationGroup::loadMultiple();
     $group_options = [];
@@ -104,14 +105,14 @@ class MigrationFormBase extends EntityForm {
       $migration->set('migration_group', 'default');
     }
 
-    $form['migration_group'] = [
+    $form['migration_group'] = array(
       '#type' => 'select',
       '#title' => $this->t('Migration Group'),
       '#empty_value' => '',
       '#default_value' => $migration->get('migration_group'),
       '#options' => $group_options,
       '#description' => $this->t('Assign this migration to an existing group.'),
-    ];
+    );
 
     return $form;
   }
@@ -179,16 +180,16 @@ class MigrationFormBase extends EntityForm {
 
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity...
-      drupal_set_message($this->t('Migration %label has been updated.', ['%label' => $migration->label()]));
+      drupal_set_message($this->t('Migration %label has been updated.', array('%label' => $migration->label())));
     }
     else {
       // If we created a new entity...
-      drupal_set_message($this->t('Migration %label has been added.', ['%label' => $migration->label()]));
+      drupal_set_message($this->t('Migration %label has been added.', array('%label' => $migration->label())));
     }
 
     // Redirect the user back to the listing route after the save operation.
     $form_state->setRedirect('entity.migration.list',
-      ['migration_group' => $migration->get('migration_group')]);
+      array('migration_group' => $migration->get('migration_group')));
   }
 
 }

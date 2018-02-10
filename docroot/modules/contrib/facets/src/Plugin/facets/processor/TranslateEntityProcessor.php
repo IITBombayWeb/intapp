@@ -5,11 +5,9 @@ namespace Drupal\facets\Plugin\facets\processor;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
-use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
-use Drupal\facets\Exception\InvalidProcessorException;
 use Drupal\facets\FacetInterface;
+use Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay;
 use Drupal\facets\Processor\BuildProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,8 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @FacetsProcessor(
  *   id = "translate_entity",
- *   label = @Translation("Transform entity ID to label"),
- *   description = @Translation("Display the entity label instead of its ID (for example the term name instead of the taxonomy term ID). This only works when an actual entity is indexed, not for the entity id or aggregated fields."),
+ *   label = @Translation("Transform entity id into label"),
+ *   description = @Translation("Show entity label instead of entity id. E.g. for a taxonomy term id, show the term name instead"),
  *   stages = {
  *     "build" = 5
  *   }
@@ -82,30 +80,33 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
   public function build(FacetInterface $facet, array $results) {
     $language_interface = $this->languageManager->getCurrentLanguage();
 
-    /** @var \Drupal\Core\TypedData\DataDefinitionInterface $data_definition */
-    $data_definition = $facet->getDataDefinition();
-
-    $property = NULL;
-    foreach ($data_definition->getPropertyDefinitions() as $k => $definition) {
-      if ($definition instanceof DataReferenceDefinitionInterface && $definition->getDataType() === 'entity_reference') {
-        $property = $k;
-        break;
-      }
-    }
-
-    if ($property === NULL) {
-      throw new InvalidProcessorException("Field doesn't have an entity definition, so this processor doesn't work.");
-    }
-
-    $entity_type = $data_definition
-      ->getPropertyDefinition($property)
-      ->getTargetDefinition()
-      ->getEntityTypeId();
+    $ids = [];
 
     /** @var \Drupal\facets\Result\ResultInterface $result */
-    $ids = [];
     foreach ($results as $delta => $result) {
       $ids[$delta] = $result->getRawValue();
+    }
+
+    // Default to nodes.
+    $entity_type = 'node';
+    $source = $facet->getFacetSource();
+
+    // Support multiple entity types when using Search API.
+    if ($source instanceof SearchApiDisplay) {
+
+      $field_id = $facet->getFieldIdentifier();
+
+      // Load the index from the source, load the definition from the
+      // datasource.
+      /** @var \Drupal\facets\FacetSource\SearchApiFacetSourceInterface $source */
+      $index = $source->getIndex();
+      $field = $index->getField($field_id);
+
+      // Determine the target entity type.
+      $entity_type = $field->getDataDefinition()
+        ->getPropertyDefinition('entity')
+        ->getTargetDefinition()
+        ->getEntityTypeId();
     }
 
     // Load all indexed entities of this type.
@@ -135,27 +136,6 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
 
     // Return the results with the new display values.
     return $results;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function supportsFacet(FacetInterface $facet) {
-    $data_definition = $facet->getDataDefinition();
-    if ($data_definition->getDataType() === 'entity_reference') {
-      return TRUE;
-    }
-    if (!($data_definition instanceof ComplexDataDefinitionInterface)) {
-      return FALSE;
-    }
-
-    $property_definitions = $data_definition->getPropertyDefinitions();
-    foreach ($property_definitions as $definition) {
-      if ($definition instanceof DataReferenceDefinitionInterface) {
-        return TRUE;
-      }
-    }
-    return FALSE;
   }
 
 }

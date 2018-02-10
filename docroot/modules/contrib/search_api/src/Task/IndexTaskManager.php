@@ -62,7 +62,7 @@ class IndexTaskManager implements IndexTaskManagerInterface, EventSubscriberInte
   /**
    * Processes all pending index tasks inside a batch run.
    *
-   * @param array|\ArrayAccess $context
+   * @param array $context
    *   The current batch context.
    * @param \Drupal\Core\Config\ConfigImporter $config_importer
    *   The config importer.

@@ -12,7 +12,6 @@ use Drupal\search_api\Entity\Server;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\search_api\Query\ResultSetInterface;
-use Drupal\search_api\Utility\Utility;
 use Drupal\Tests\search_api\Functional\ExampleContentTrait;
 
 /**
@@ -62,14 +61,25 @@ abstract class BackendTestBase extends KernelTestBase {
     $this->installEntitySchema('entity_test_mulrev_changed');
     $this->installEntitySchema('search_api_task');
     $this->installConfig('search_api_test_example_content');
-    $this->installConfig('search_api');
+
+    // Set the tracking page size so tracking will work properly.
+    \Drupal::configFactory()
+      ->getEditable('search_api.settings')
+      ->set('tracking_page_size', 100)
+      ->save();
 
     // Do not use a batch for tracking the initial items after creating an
     // index when running the tests via the GUI. Otherwise, it seems Drupal's
     // Batch API gets confused and the test fails.
-    if (!Utility::isRunningInCli()) {
+    if (php_sapi_name() != 'cli') {
       \Drupal::state()->set('search_api_use_tracking_batch', FALSE);
     }
+
+    // Set tracking page size so tracking will work properly.
+    \Drupal::configFactory()
+      ->getEditable('search_api.settings')
+      ->set('tracking_page_size', 100)
+      ->save();
 
     $this->setUpExampleStructure();
   }

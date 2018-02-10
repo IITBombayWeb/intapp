@@ -5,13 +5,13 @@ namespace Drupal\workflow\Plugin\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\workflow\Entity\WorkflowManager;
+use Drupal\workflow\Entity\WorkflowTransition;
 
 /**
  * Provides a 'Workflow Transition form' block.
  * Credits to workflow_extensions module.
  *
- * @todo D8-port: add cache options in configuration.
+ * @TODO D8-port: add cache options in configuration.
  *    'cache' => DRUPAL_NO_CACHE, // DRUPAL_CACHE_PER_ROLE will be assumed.
  *
  * @Block(
@@ -20,13 +20,13 @@ use Drupal\workflow\Entity\WorkflowManager;
  *   category = @Translation("Forms")
  * )
  */
-class WorkflowTransitionBlock extends BlockBase {
+class WorkflowTransitionBlock extends BlockBase  {
 
   /**
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    /* @var $entity \Drupal\Core\Entity\EntityInterface */
+    /* @var $entity EntityInterface */
     if (!$entity = workflow_url_get_entity()) {
       return AccessResult::forbidden();
     }
@@ -54,7 +54,7 @@ class WorkflowTransitionBlock extends BlockBase {
     $form = [];
 
     // Get the entity for this form.
-    /* @var $entity \Drupal\Core\Entity\EntityInterface */
+    /* @var $entity EntityInterface */
     if (!$entity = workflow_url_get_entity()) {
       return $form;
     }
@@ -66,8 +66,12 @@ class WorkflowTransitionBlock extends BlockBase {
     /*
      * Output: generate the Transition Form.
      */
+    // Create a transition, to pass to the form. No need to use setValues().
+    $current_sid = workflow_node_current_state($entity, $field_name);
+    $transition = WorkflowTransition::create([$current_sid, 'field_name' => $field_name]);
+    $transition->setTargetEntity($entity);
     // Add the WorkflowTransitionForm to the page.
-    $form = WorkflowManager::getWorkflowTransitionForm($entity, $field_name);
+    $form = $this->entityFormBuilder()->getForm($transition, 'add');
 
     return $form;
   }
@@ -81,5 +85,4 @@ class WorkflowTransitionBlock extends BlockBase {
   protected function entityFormBuilder() {
     return \Drupal::getContainer()->get('entity.form_builder');
   }
-
 }

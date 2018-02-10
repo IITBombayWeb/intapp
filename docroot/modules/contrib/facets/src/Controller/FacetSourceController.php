@@ -3,7 +3,6 @@
 namespace Drupal\facets\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\facets\Form\FacetSourceEditForm;
 
 /**
  * Provides route responses for facet source configuration.
@@ -21,7 +20,7 @@ class FacetSourceController extends ControllerBase {
    */
   public function facetSourceConfigForm($facets_facet_source) {
     // Returns the render array of the FacetSourceConfigForm.
-    return $this->formBuilder()->getForm(FacetSourceEditForm::class);
+    return $this->formBuilder()->getForm('\Drupal\facets\Form\FacetSourceEditForm');
   }
 
 }

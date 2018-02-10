@@ -20,7 +20,7 @@ abstract class FacetSourceDeriverBase implements ContainerDeriverInterface {
    *
    * @var array
    */
-  protected $derivatives = [];
+  protected $derivatives = array();
 
   /**
    * The entity manager.

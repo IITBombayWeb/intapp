@@ -44,9 +44,9 @@ field_settings:
     property_path: sticky
   field_tags:
     label: Tags
-    type: integer
+    type: string
     datasource_id: 'entity:node'
-    property_path: 'field_tags'
+    property_path: 'field_tags:entity:name'
   author:
     label: 'Author name'
     type: string
@@ -96,7 +96,7 @@ processor_settings:
       h3: 2
       string: 2
       b: 2
-  entity_status:
+  node_status:
     weights:
       preprocess_index: -10
   rendered_item:

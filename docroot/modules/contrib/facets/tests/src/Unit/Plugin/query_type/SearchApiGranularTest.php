@@ -3,14 +3,8 @@
 namespace Drupal\Tests\facets\Unit\Plugin\query_type;
 
 use Drupal\facets\Entity\Facet;
-use Drupal\facets\FacetInterface;
 use Drupal\facets\Plugin\facets\query_type\SearchApiGranular;
-use Drupal\search_api\Backend\BackendInterface;
-use Drupal\search_api\IndexInterface;
-use Drupal\facets\Result\ResultInterface;
-use Drupal\facets\Widget\WidgetPluginInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
-use Drupal\search_api\ServerInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -24,21 +18,13 @@ class SearchApiGranularTest extends UnitTestCase {
    * Tests string query type without executing the query with an "AND" operator.
    */
   public function testQueryTypeAnd() {
-    $backend = $this->prophesize(BackendInterface::class);
-    $backend->getSupportedFeatures()->willReturn([]);
-    $server = $this->prophesize(ServerInterface::class);
-    $server->getBackend()->willReturn($backend);
-    $index = $this->prophesize(IndexInterface::class);
-    $index->getServerInstance()->willReturn($server);
-    $query = $this->prophesize(SearchApiQuery::class);
-    $query->getIndex()->willReturn($index);
-
+    $query = new SearchApiQuery([], 'search_api_query', []);
+    $facetReflection = new \ReflectionClass('Drupal\facets\Entity\Facet');
     $facet = new Facet(
       ['query_operator' => 'AND', 'widget' => 'links'],
       'facets_facet'
     );
-    $facetReflection = new \ReflectionClass(Facet::class);
-    $widget = $this->getMockBuilder(WidgetPluginInterface::class)
+    $widget = $this->getMockBuilder('Drupal\facets\Widget\WidgetPluginInterface')
       ->disableOriginalConstructor()
       ->getMock();
     $widget->method('getConfiguration')->will($this->returnValue(['granularity' => 10]));
@@ -63,7 +49,7 @@ class SearchApiGranularTest extends UnitTestCase {
     $query_type = new SearchApiGranular(
       [
         'facet' => $facet,
-        'query' => $query->reveal(),
+        'query' => $query,
         'results' => $original_results,
       ],
       'search_api_string',
@@ -71,13 +57,13 @@ class SearchApiGranularTest extends UnitTestCase {
     );
 
     $built_facet = $query_type->build();
-    $this->assertInstanceOf(FacetInterface::class, $built_facet);
+    $this->assertInstanceOf('\Drupal\facets\FacetInterface', $built_facet);
 
     $results = $built_facet->getResults();
     $this->assertInternalType('array', $results);
 
     foreach ($grouped_results as $k => $result) {
-      $this->assertInstanceOf(ResultInterface::class, $results[$k]);
+      $this->assertInstanceOf('\Drupal\facets\Result\ResultInterface', $results[$k]);
       $this->assertEquals($result['count'], $results[$k]->getCount());
       $this->assertEquals($result['filter'], $results[$k]->getDisplayValue());
     }
@@ -100,7 +86,7 @@ class SearchApiGranularTest extends UnitTestCase {
     );
 
     $built_facet = $query_type->build();
-    $this->assertInstanceOf(FacetInterface::class, $built_facet);
+    $this->assertInstanceOf('\Drupal\facets\FacetInterface', $built_facet);
 
     $results = $built_facet->getResults();
     $this->assertInternalType('array', $results);

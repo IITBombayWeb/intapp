@@ -19,7 +19,7 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  * @FacetsProcessor(
  *   id = "url_processor_handler",
  *   label = @Translation("URL handler"),
- *   description = @Translation("Trigger the URL processor, which is set in the facet source configuration."),
+ *   description = @Translation("Triggers the URL processor, which is set in the Facet source configuration."),
  *   stages = {
  *     "pre_query" = 50,
  *     "build" = 15,

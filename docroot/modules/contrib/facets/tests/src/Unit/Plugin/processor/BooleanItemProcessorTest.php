@@ -34,10 +34,9 @@ class BooleanItemProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $facet = new Facet([], 'facets_facet');
     $this->originalResults = [
-      new Result($facet, 0, 0, 10),
-      new Result($facet, 1, 1, 15),
+      new Result(0, 0, 10),
+      new Result(1, 1, 15),
     ];
 
     $this->processor = new BooleanItemProcessor([], 'boolean_item_processor', []);

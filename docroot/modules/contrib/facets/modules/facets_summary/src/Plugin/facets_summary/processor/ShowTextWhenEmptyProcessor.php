@@ -26,15 +26,16 @@ class ShowTextWhenEmptyProcessor extends ProcessorPluginBase implements BuildPro
    * {@inheritdoc}
    */
   public function build(FacetsSummaryInterface $facets_summary, array $build, array $facets) {
-    $config = $this->getConfiguration();
+    $processors = $facets_summary->getProcessors();
+    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : NULL;
 
     if (!isset($build['#items'])) {
       return [
         '#theme' => 'facets_summary_empty',
         '#message' => [
           '#type' => 'processed_text',
-          '#text' => $config['text']['value'],
-          '#format' => $config['text']['format'],
+          '#text' => !is_null($config) ? $config->getConfiguration()['text']['value'] : $this->defaultConfiguration()['text']['value'],
+          '#format' => !is_null($config) ? $config->getConfiguration()['text']['format'] : $this->defaultConfiguration()['text']['format'],
         ],
       ];
     }
@@ -46,14 +47,15 @@ class ShowTextWhenEmptyProcessor extends ProcessorPluginBase implements BuildPro
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetsSummaryInterface $facets_summary) {
     // By default, there should be no config form.
-    $config = $this->getConfiguration();
+    $processors = $facets_summary->getProcessors();
+    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : NULL;
 
     $build['text'] = [
       '#type' => 'text_format',
       '#title' => $this->t('Empty text'),
-      '#format' => $config['text']['format'],
+      '#format' => !is_null($config) ? $config->getConfiguration()['text']['format'] : $this->defaultConfiguration()['text']['format'],
       '#editor' => TRUE,
-      '#default_value' => $config['text']['value'],
+      '#default_value' => !is_null($config) ? $config->getConfiguration()['text']['value'] : $this->defaultConfiguration()['text']['value'],
     ];
 
     return $build;
@@ -63,12 +65,26 @@ class ShowTextWhenEmptyProcessor extends ProcessorPluginBase implements BuildPro
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return [
-      'text' => [
+    return array(
+      'text' => array(
         'format' => 'plain_text',
         'value' => $this->t('There is no current search in progress.'),
-      ],
-    ];
+      ),
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isHidden() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isLocked() {
+    return FALSE;
   }
 
 }

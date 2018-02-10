@@ -25,17 +25,4 @@ class SearchApiOptions extends ManyToOne {
     unset($form['reduce_duplicates']);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getValueOptions() {
-    parent::getValueOptions();
-
-    if ($this->valueOptions === NULL) {
-      $this->valueOptions = [];
-    }
-
-    return $this->valueOptions;
-  }
-
 }

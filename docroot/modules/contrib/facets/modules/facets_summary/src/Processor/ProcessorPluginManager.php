@@ -7,7 +7,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\facets_summary\Annotation\SummaryProcessor;
 
 /**
  * Manages processor plugins.
@@ -25,7 +24,7 @@ class ProcessorPluginManager extends DefaultPluginManager {
    * {@inheritdoc}
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TranslationInterface $translation) {
-    parent::__construct('Plugin/facets_summary/processor', $namespaces, $module_handler, ProcessorInterface::class, SummaryProcessor::class);
+    parent::__construct('Plugin/facets_summary/processor', $namespaces, $module_handler, 'Drupal\facets_summary\Processor\ProcessorInterface', 'Drupal\facets_summary\Annotation\SummaryProcessor');
     $this->setCacheBackend($cache_backend, 'facets_summary_processors');
     $this->setStringTranslation($translation);
   }
@@ -43,11 +42,11 @@ class ProcessorPluginManager extends DefaultPluginManager {
    *   - label: The translated label for this stage.
    */
   public function getProcessingStages() {
-    return [
-      ProcessorInterface::STAGE_BUILD => [
+    return array(
+      ProcessorInterface::STAGE_BUILD => array(
         'label' => $this->t('Build stage'),
-      ],
-    ];
+      ),
+    );
   }
 
 }

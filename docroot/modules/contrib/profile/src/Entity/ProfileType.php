@@ -3,7 +3,6 @@
 namespace Drupal\profile\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
-use Drupal\Core\Entity\EntityDescriptionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
@@ -39,16 +38,14 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "roles",
  *     "weight",
  *     "status",
- *     "langcode",
- *     "use_revisions",
- *     "description"
+ *     "langcode"
  *   },
  *   links = {
- *     "add-form" = "/admin/config/people/profiles/add",
- *     "delete-form" = "/admin/config/people/profiles/manage/{profile_type}/delete",
- *     "edit-form" = "/admin/config/people/profiles/manage/{profile_type}",
- *     "admin-form" = "/admin/config/people/profiles/manage/{profile_type}",
- *     "collection" = "/admin/config/people/profiles"
+ *     "add-form" = "/admin/config/people/profiles/types/add",
+ *     "delete-form" = "/admin/config/people/profiles/types/manage/{profile_type}/delete",
+ *     "edit-form" = "/admin/config/people/profiles/types/manage/{profile_type}",
+ *     "admin-form" = "/admin/config/people/profiles/types/manage/{profile_type}",
+ *     "collection" = "/admin/config/people/profiles/types"
  *   }
  * )
  */
@@ -57,7 +54,7 @@ class ProfileType extends ConfigEntityBundleBase implements ProfileTypeInterface
   /**
    * The primary identifier of the profile type.
    *
-   * @var int
+   * @var integer
    */
   protected $id;
 
@@ -76,23 +73,16 @@ class ProfileType extends ConfigEntityBundleBase implements ProfileTypeInterface
   protected $label;
 
   /**
-   * A brief description of the profile type.
-   *
-   * @var string
-   */
-  protected $description;
-
-  /**
    * Whether the profile type is shown during registration.
    *
-   * @var bool
+   * @var boolean
    */
   protected $registration = FALSE;
 
   /**
    * Whether the profile type allows multiple profiles.
    *
-   * @var bool
+   * @var boolean
    */
   protected $multiple = FALSE;
 
@@ -106,16 +96,9 @@ class ProfileType extends ConfigEntityBundleBase implements ProfileTypeInterface
   /**
    * The weight of the profile type compared to others.
    *
-   * @var int
+   * @var integer
    */
   protected $weight = 0;
-
-  /**
-   * Should profiles of this type always generate revisions.
-   *
-   * @var bool
-   */
-  protected $use_revisions = FALSE;
 
   /**
    * {@inheritdoc}
@@ -157,7 +140,7 @@ class ProfileType extends ConfigEntityBundleBase implements ProfileTypeInterface
   /**
    * {@inheritdoc}
    */
-  public function setRoles(array $roles) {
+  public function setRoles($roles) {
     $this->roles = $roles;
     return $this;
   }
@@ -180,34 +163,15 @@ class ProfileType extends ConfigEntityBundleBase implements ProfileTypeInterface
   /**
    * {@inheritdoc}
    */
-  public function shouldCreateNewRevision() {
-    return $this->use_revisions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDescription() {
-    return $this->description;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setDescription($description) {
-    $this->description = $description;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
     // Rebuild module data to generate bundle permissions and link tasks.
     if (!$update) {
       system_rebuild_module_data();
+      // @todo Setting ->setRebuildNeeded isn't enough. Investigate.
+      \Drupal::service('router.builder')->rebuild();
     }
   }
+
 }

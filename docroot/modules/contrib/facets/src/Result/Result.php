@@ -3,19 +3,11 @@
 namespace Drupal\facets\Result;
 
 use Drupal\Core\Url;
-use Drupal\facets\FacetInterface;
 
 /**
  * The default implementation of the result interfaces.
  */
 class Result implements ResultInterface {
-
-  /**
-   * The facet related to the result.
-   *
-   * @var \Drupal\facets\FacetInterface
-   */
-  protected $facet;
 
   /**
    * The facet value.
@@ -34,9 +26,9 @@ class Result implements ResultInterface {
   /**
    * The facet count.
    *
-   * @var int
+   * @var int|null
    */
-  protected $count = 0;
+  protected $count = NULL;
 
   /**
    * The Url object.
@@ -62,17 +54,14 @@ class Result implements ResultInterface {
   /**
    * Constructs a new result value object.
    *
-   * @param \Drupal\facets\FacetInterface $facet
-   *   The facet related to the result.
    * @param mixed $raw_value
    *   The raw value.
    * @param mixed $display_value
    *   The formatted value.
-   * @param int $count
-   *   The amount of items.
+   * @param int|null $count
+   *   The amount of items or NULL.
    */
-  public function __construct(FacetInterface $facet, $raw_value, $display_value, $count) {
-    $this->facet = $facet;
+  public function __construct($raw_value, $display_value, $count) {
     $this->rawValue = $raw_value;
     $this->displayValue = $display_value;
     $this->count = (int) $count;
@@ -103,7 +92,7 @@ class Result implements ResultInterface {
    * {@inheritdoc}
    */
   public function setCount($count) {
-    $this->count = (int) $count;
+    $this->count = $count;
   }
 
   /**
@@ -168,13 +157,6 @@ class Result implements ResultInterface {
       }
     }
     return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFacet() {
-    return $this->facet;
   }
 
 }

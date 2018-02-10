@@ -18,6 +18,13 @@ use Drupal\facets\Result\Result;
 class SearchApiRange extends QueryTypePluginBase {
 
   /**
+   * The backend's native query object.
+   *
+   * @var \Drupal\search_api\Query\QueryInterface
+   */
+  protected $query;
+
+  /**
    * {@inheritdoc}
    */
   public function execute() {
@@ -59,12 +66,12 @@ class SearchApiRange extends QueryTypePluginBase {
     $query_operator = $this->facet->getQueryOperator();
 
     if (!empty($this->results)) {
-      $facet_results = [];
-      foreach ($this->results as $result) {
+      $facet_results = array();
+      foreach ($this->results as $key => $result) {
         if ($result['count'] || $query_operator == 'or') {
           $count = $result['count'];
           $result_filter = trim($result['filter'], '"');
-          $result = new Result($this->facet, $result_filter, $result_filter, $count);
+          $result = new Result($result_filter, $result_filter, $count);
           $facet_results[] = $result;
         }
       }

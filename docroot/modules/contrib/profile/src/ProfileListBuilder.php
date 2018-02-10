@@ -9,7 +9,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Routing\RedirectDestinationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -34,13 +33,6 @@ class ProfileListBuilder extends EntityListBuilder {
   protected $renderer;
 
   /**
-   * The redirect destination service.
-   *
-   * @var \Drupal\Core\Routing\RedirectDestinationInterface
-   */
-  protected $redirectDestination;
-
-  /**
    * Constructs a new ProfileListController object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -52,12 +44,11 @@ class ProfileListBuilder extends EntityListBuilder {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, DateFormatter $date_formatter, RendererInterface $renderer, RedirectDestinationInterface $redirect_destination) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, DateFormatter $date_formatter, RendererInterface $renderer) {
     parent::__construct($entity_type, $storage);
 
     $this->dateFormatter = $date_formatter;
     $this->renderer = $renderer;
-    $this->redirectDestination = $redirect_destination;
   }
 
   /**
@@ -68,8 +59,7 @@ class ProfileListBuilder extends EntityListBuilder {
       $entity_type,
       $container->get('entity.manager')->getStorage($entity_type->id()),
       $container->get('date.formatter'),
-      $container->get('renderer'),
-      $container->get('redirect.destination')
+      $container->get('renderer')
     );
   }
 
@@ -135,11 +125,6 @@ class ProfileListBuilder extends EntityListBuilder {
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
-
-    $destination = $this->redirectDestination->getAsArray();
-    foreach ($operations as $key => $operation) {
-      $operations[$key]['query'] = $destination;
-    }
 
     if ($entity->isActive() && !$entity->isDefault()) {
       $operations['set_default'] = [

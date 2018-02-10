@@ -89,6 +89,7 @@ class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
    */
   public function getConfiguration() {
     unset($this->configuration['facet']);
+    // TODO: Do we need this here anyway?
     return $this->configuration + $this->defaultConfiguration();
   }
 
@@ -105,20 +106,6 @@ class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
   public function calculateDependencies() {
     $this->addDependency('module', $this->getPluginDefinition()['provider']);
     return $this->dependencies;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function supportsFacet(FacetInterface $facet) {
-    return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getQueryType() {
-    return NULL;
   }
 
 }

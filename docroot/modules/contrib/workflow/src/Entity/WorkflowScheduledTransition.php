@@ -23,14 +23,11 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   handlers = {
  *     "access" = "Drupal\workflow\WorkflowAccessControlHandler",
  *     "list_builder" = "Drupal\workflow\WorkflowTransitionListBuilder",
- *     "form" = {
- *        "add" = "Drupal\workflow\Form\WorkflowTransitionForm",
- *        "edit" = "Drupal\workflow\Form\WorkflowTransitionForm",
- *        "delete" = "Drupal\Core\Entity\EntityDeleteForm",
- *      },
  *     "views_data" = "Drupal\workflow\WorkflowScheduledTransitionViewsData",
  *   },
  *   base_table = "workflow_transition_schedule",
+ *   data_table = "workflow_transition_field_data",
+ *   fieldable = TRUE,
  *   translatable = FALSE,
  *   entity_keys = {
  *     "id" = "tid",
@@ -49,7 +46,7 @@ class WorkflowScheduledTransition extends WorkflowTransition {
   /**
    * Constructor.
    */
-  public function __construct(array $values = [], $entityType = 'workflow_scheduled_transition', $bundle = FALSE, $translations = []) {
+  public function __construct(array $values = array(), $entityType = 'WorkflowScheduledTransition', $bundle = FALSE, $translations = array()) {
     // Please be aware that $entity_type and $entityType are different things!
     parent::__construct($values, $entityType, $bundle, $translations);
 
@@ -62,8 +59,8 @@ class WorkflowScheduledTransition extends WorkflowTransition {
   /**
    * {@inheritdoc}
    */
-  public function setValues($to_sid, $uid = NULL, $scheduled = NULL, $comment = '', $force_create = FALSE) {
-    parent::setValues($to_sid, $uid, $scheduled, $comment, $force_create);
+  public function setValues($to_sid, $uid = NULL, $scheduled = REQUEST_TIME, $comment = '') {
+    parent::setValues($to_sid, $uid, $scheduled, $comment);
   }
 
   /**
@@ -73,18 +70,13 @@ class WorkflowScheduledTransition extends WorkflowTransition {
    *   Drupal\Component\Plugin\Exception\PluginNotFoundException: The "entity:workflow_scheduled_transition:eerste" plugin does not exist. in Drupal\Core\Plugin\DefaultPluginManager->doGetDefinition() (line 60 of core\lib\Drupal\Component\Plugin\Discovery\DiscoveryTrait.php).
    */
   function validate() {
-    // Since this function generates an error in one use case (using WorkflowTransitionForm)
-    // and is not called in the other use case (using the Workflow Widget),
-    // this function is disabled for now.
-    // @todo: this function is only called in the WorkflowTransitionForm, not in the Widget.
-    // @todo: repair https://www.drupal.org/node/2896650
-
-    // The following is from return parent::validate();
+    // return parent::validate();
     $this->validated = TRUE;
-    //$violations = $this->getTypedData()->validate();
+    // $constraints = $this->getTypedData()->getConstraints();
+    // $violations = $this->getTypedData()->validate();
+    $violations = NULL; // new \Traversable();
     // return new EntityConstraintViolationList($this, iterator_to_array($violations));
-    $violations = [];
-    return new EntityConstraintViolationList($this, $violations);
+    return new EntityConstraintViolationList($this, iterator_to_array($violations));
   }
 
   /**
@@ -101,12 +93,12 @@ class WorkflowScheduledTransition extends WorkflowTransition {
     // If executed, save in history.
     if ($this->is_executed) {
       // Be careful, we are not a WorkflowScheduleTransition anymore!
-      // No fuzzing around, just copy the ScheduledTransition to a normal one.
+      // No fuzzling around, just copy the ScheduledTransition to a normal one.
       $current_sid = $this->getFromSid();
       $field_name = $this->getFieldName();
       $executed_transition = WorkflowTransition::create([$current_sid, 'field_name' => $field_name]);
       $executed_transition->setTargetEntity($this->getTargetEntity());
-      $executed_transition->setValues($this->getToSid(), $this->getOwnerId(), \Drupal::time()->getRequestTime(), $this->getComment());
+      $executed_transition->setValues($this->getToSid(), $this->getOwnerId(), REQUEST_TIME, $this->getComment());
       return $executed_transition->save();  // <-- exit !!
     }
 
@@ -135,12 +127,12 @@ class WorkflowScheduledTransition extends WorkflowTransition {
     if ($state = $this->getToState()) {
       $entity = $this->getTargetEntity();
       $message = '%entity_title scheduled for state change to %state_name on %scheduled_date';
-      $args = [
+      $args = array(
         '%entity_title' => $entity->label(),
         '%state_name' => $state->label(),
         '%scheduled_date' => $this->getTimestampFormatted(),
-        'link' => ($this->getTargetEntityId() && $this->getTargetEntity()->hasLinkTemplate('canonical')) ? $this->getTargetEntity()->toLink(t('View'))->toString() : '',
-      ];
+        'link' => ($this->getTargetEntityId()) ? $this->getTargetEntity()->link(t('View')) : '',
+      );
       \Drupal::logger('workflow')->notice($message, $args);
       drupal_set_message(t($message, $args));
     }
@@ -172,16 +164,16 @@ class WorkflowScheduledTransition extends WorkflowTransition {
   }
 
   /**
-   * Given a time frame, get all scheduled transitions.
+   * Given a timeframe, get all scheduled transitions.
    *
    * @param int $start
    * @param int $end
    *
-   * @return WorkflowScheduledTransition[]
+   * @return WorkflowScheduledTransition[] $transitions
    *   An array of transitions.
    */
   public static function loadBetween($start = 0, $end = 0) {
-    $transition_type = 'workflow_scheduled_transition'; // @todo: get this from annotation.
+    $transition_type = 'workflow_scheduled_transition'; // TODO get this from annotation.
 
     /* @var $query \Drupal\Core\Entity\Query\QueryInterface */
     $query = \Drupal::entityQuery($transition_type)
@@ -208,7 +200,7 @@ class WorkflowScheduledTransition extends WorkflowTransition {
    * If a scheduled transition has no comment, a default comment is added before executing it.
    */
   public function addDefaultComment() {
-    $this->setComment(t('Scheduled by user @uid.', ['@uid' => $this->getOwnerId()]));
+    $this->setComment(t('Scheduled by user @uid.', array('@uid' => $this->getOwnerId())));
   }
 
   /**
@@ -216,7 +208,7 @@ class WorkflowScheduledTransition extends WorkflowTransition {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields = [];
+    $fields = array();
 
     // Add the specific ID-field : tid vs. hid.
     $fields['tid'] = BaseFieldDefinition::create('integer')

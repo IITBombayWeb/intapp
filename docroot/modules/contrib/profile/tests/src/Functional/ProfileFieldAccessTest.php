@@ -1,7 +1,6 @@
 <?php
 
 namespace Drupal\Tests\profile\Functional;
-
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -13,15 +12,11 @@ use Drupal\field\Entity\FieldStorageConfig;
 class ProfileFieldAccessTest extends ProfileTestBase {
 
   /**
-   * A test user.
-   *
    * @var \Drupal\user\Entity\User
    */
   protected $webUser;
 
   /**
-   * A test user.
-   *
    * @var \Drupal\user\Entity\User
    */
   protected $otherUser;
@@ -93,7 +88,6 @@ class ProfileFieldAccessTest extends ProfileTestBase {
       'profile_fullname[0][value]' => $secret,
       'profile_bio[0][value]' => $not_secret,
     ];
-    $this->assertSession()->buttonNotExists('Save and make default');
     $this->submitForm($edit, 'Save');
 
     /** @var \Drupal\profile\ProfileStorageInterface $storage */

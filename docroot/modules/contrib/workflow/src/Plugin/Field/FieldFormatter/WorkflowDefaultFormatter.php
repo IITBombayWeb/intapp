@@ -3,14 +3,16 @@
 namespace Drupal\workflow\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\EntityFormBuilderInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\workflow\Entity\WorkflowManager;
+use Drupal\workflow\Entity\WorkflowManagerInterface;
 use Drupal\workflow\Entity\WorkflowState;
+use Drupal\workflow\Entity\WorkflowTransition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,9 +33,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WorkflowDefaultFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+    ) + parent::defaultSettings();
+  }
+
+  /**
    * The workflow storage.
    *
-   * @var \Drupal\workflow\Entity\WorkflowStorage
+   * @var \Drupal\workflow\WorkflowStorageInterface
    */
   protected $storage;
 
@@ -54,9 +64,9 @@ class WorkflowDefaultFormatter extends FormatterBase implements ContainerFactory
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $entityTypeManager;
+  protected $entityManager;
 
   /**
    * The entity form builder.
@@ -102,17 +112,17 @@ class WorkflowDefaultFormatter extends FormatterBase implements ContainerFactory
    *   Third party settings.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager
    * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder
    *   The entity form builder.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityTypeManagerInterface $entity_manager, EntityFormBuilderInterface $entity_form_builder) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityManagerInterface $entity_manager, EntityFormBuilderInterface $entity_form_builder) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->viewBuilder = $entity_manager->getViewBuilder('workflow_transition');
     $this->storage = $entity_manager->getStorage('workflow_transition');
     $this->currentUser = $current_user;
-    $this->entityTypeManager = $entity_manager;
+    $this->entityManager = $entity_manager;
     $this->entityFormBuilder = $entity_form_builder;
   }
 
@@ -122,17 +132,22 @@ class WorkflowDefaultFormatter extends FormatterBase implements ContainerFactory
    * N.B. A large part of this function is taken from CommentDefaultFormatter.
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $output = [];
+    $elements = array();
+    $output = array();
 
     $field_name = $this->fieldDefinition->getName();
     $entity = $items->getEntity();
     $entity_type = $entity->getEntityTypeId();
 
+    $status = $items->status;
+
+    $workflow_settings = $this->getFieldSettings();
+
     $user = \Drupal::currentUser(); // @todo #2287057: OK?
     // @todo: Perhaps global user is not always the correct user.
     // E.g., on ScheduledTransition->execute()? But this function is mostly used in UI.
 
-    $current_sid = WorkflowManager::getCurrentStateId($entity, $field_name);
+    $current_sid = $this->workflowManager()->getCurrentStateId($entity, $field_name);
     /* @var $current_state WorkflowState */
     $current_state = WorkflowState::load($current_sid);
 
@@ -154,7 +169,7 @@ class WorkflowDefaultFormatter extends FormatterBase implements ContainerFactory
     // Workflows are added to the search results and search index by
     // workflow_node_update_index() instead of by this formatter, so don't
     // return anything if the view mode is search_index or search_result.
-    if (in_array($this->viewMode, ['search_result', 'search_index'])) {
+    if (in_array($this->viewMode, array('search_result', 'search_index'))) {
       return $elements;
     }
 
@@ -169,25 +184,47 @@ class WorkflowDefaultFormatter extends FormatterBase implements ContainerFactory
       return $elements;
     }
 
+    // Create a transition, to pass to the form. No need to use setValues().
+    $transition = WorkflowTransition::create([$current_sid, 'field_name' => $field_name]);
+    $transition->setTargetEntity($entity);
+
     // Remove the default formatter. We are now building the widget.
-    $elements = [];
+    $elements = array();
 
     // BEGIN Copy from CommentDefaultFormatter
     $elements['#cache']['contexts'][] = 'user.permissions';
+    $output['workflows'] = [];
     // Add the WorkflowTransitionForm to the page.
-    $output['workflows'] = WorkflowManager::getWorkflowTransitionForm($entity, $field_name);
+    // $build = $this->viewBuilder->viewMultiple($workflows);
+    $build = $this->entityFormBuilder()->getForm($transition, 'add');
+    $output['workflows'] += $build;
 
     // Only show the add workflow form if the user has permission.
     $elements['#cache']['contexts'][] = 'user.roles';
     // Do not show the form for the print view mode.
-    $elements[] = $output + [
+    $elements[] = $output + array(
       '#workflow_type' => $this->getFieldSetting('workflow_type'),
       '#workflow_display_mode' => $this->getFieldSetting('default_mode'),
-      'workflows' => [],
-      ];
+      'workflows' => array(),
+    );
     // END Copy from CommentDefaultFormatter
 
     return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element = array();
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    return array();
   }
 
   /**
@@ -203,4 +240,12 @@ class WorkflowDefaultFormatter extends FormatterBase implements ContainerFactory
     return $this->entityFormBuilder;
   }
 
+  /**
+   * Retrieves the WorkflowManager.
+   *
+   * @return WorkflowManagerInterface
+   */
+  protected function workflowManager() {
+    return \Drupal::service('workflow.manager');
+  }
 }

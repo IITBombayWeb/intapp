@@ -75,9 +75,6 @@ class IntegrationTest extends SearchApiBrowserTestBase {
 
     $this->rebuildContainer();
 
-    $this->drupalPostForm('admin/config/search/search-api/server/default_server/edit', [], 'Save');
-    $this->assertSession()->pageTextContains('The server was successfully saved.');
-
     $server = Server::load('default_server');
     $this->assertTrue($server, 'Server can be loaded');
 
