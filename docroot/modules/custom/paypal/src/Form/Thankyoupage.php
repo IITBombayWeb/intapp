@@ -84,15 +84,20 @@ class Thankyoupage extends FormBase {
               $current_date = format_date(time(), 'custom', 'dmY hms');
               // Image code.
               $uid = User::load(\Drupal::currentUser()->id());
-              $user_fid = $uid->get('user_picture')->getValue();
-              $fid = $user_fid[0]['target_id'];
-              $file = File::load($fid);
-              $path = $file->uri->value;
-              $test = explode('//', $path);
-              $path_array = $test[1];
-              $base_path = 'sites/default/files/' . $path_array;
-              $image = '<img src = "'.$base_path.'" alt="My Logo" />';
-              //$default_image = 'sites/default/files/pictures/Icon-user.png';
+              if(!empty($uid)){
+                $user_fid = $uid->get('user_picture')->getValue();
+                $fid = $user_fid[0]['target_id'];
+                $file = File::load($fid);
+                $path = $file->uri->value;
+                $test = explode('//', $path);
+                $path_array = $test[1];
+                $base_path = 'sites/default/files/' . $path_array;
+                $image = '<img src = "'.$base_path.'" alt="My Logo" />';
+               }
+              else{
+                $default_image = 'sites/default/files/pictures/Icon-user.png';
+               }
+              
               //print_r($image);
               //exit;
               $first_name = $profile->get('field_first_name')->getValue()[0]['value'];
