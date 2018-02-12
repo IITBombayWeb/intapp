@@ -17,7 +17,7 @@
 
 class Google_Service_ShoppingContent_Datafeed extends Google_Collection
 {
-  protected $collection_key = 'targets';
+  protected $collection_key = 'intendedDestinations';
   public $attributeLanguage;
   public $contentLanguage;
   public $contentType;
@@ -31,8 +31,6 @@ class Google_Service_ShoppingContent_Datafeed extends Google_Collection
   public $kind;
   public $name;
   public $targetCountry;
-  protected $targetsType = 'Google_Service_ShoppingContent_DatafeedTarget';
-  protected $targetsDataType = 'array';
 
   public function setAttributeLanguage($attributeLanguage)
   {
@@ -133,19 +131,5 @@ class Google_Service_ShoppingContent_Datafeed extends Google_Collection
   public function getTargetCountry()
   {
     return $this->targetCountry;
-  }
-  /**
-   * @param Google_Service_ShoppingContent_DatafeedTarget
-   */
-  public function setTargets($targets)
-  {
-    $this->targets = $targets;
-  }
-  /**
-   * @return Google_Service_ShoppingContent_DatafeedTarget
-   */
-  public function getTargets()
-  {
-    return $this->targets;
   }
 }

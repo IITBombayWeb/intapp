@@ -17,22 +17,22 @@
 
 class Google_Service_BigQueryDataTransfer_ScheduleTransferRunsResponse extends Google_Collection
 {
-  protected $collection_key = 'runs';
-  protected $runsType = 'Google_Service_BigQueryDataTransfer_TransferRun';
-  protected $runsDataType = 'array';
+  protected $collection_key = 'createdRuns';
+  protected $createdRunsType = 'Google_Service_BigQueryDataTransfer_TransferRun';
+  protected $createdRunsDataType = 'array';
 
   /**
    * @param Google_Service_BigQueryDataTransfer_TransferRun
    */
-  public function setRuns($runs)
+  public function setCreatedRuns($createdRuns)
   {
-    $this->runs = $runs;
+    $this->createdRuns = $createdRuns;
   }
   /**
    * @return Google_Service_BigQueryDataTransfer_TransferRun
    */
-  public function getRuns()
+  public function getCreatedRuns()
   {
-    return $this->runs;
+    return $this->createdRuns;
   }
 }

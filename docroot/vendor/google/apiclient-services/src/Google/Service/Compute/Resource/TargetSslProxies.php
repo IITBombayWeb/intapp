@@ -31,19 +31,6 @@ class Google_Service_Compute_Resource_TargetSslProxies extends Google_Service_Re
    * @param string $project Project ID for this request.
    * @param string $targetSslProxy Name of the TargetSslProxy resource to delete.
    * @param array $optParams Optional parameters.
-   *
-   * @opt_param string requestId An optional request ID to identify requests.
-   * Specify a unique request ID so that if you must retry your request, the
-   * server will know to ignore the request if it has already been completed.
-   *
-   * For example, consider a situation where you make an initial request and the
-   * request times out. If you make the request again with the same request ID,
-   * the server can check if original operation with the same request ID was
-   * received, and if so, will ignore the second request. This prevents clients
-   * from accidentally creating duplicate commitments.
-   *
-   * The request ID must be a valid UUID with the exception that zero UUID is not
-   * supported (00000000-0000-0000-0000-000000000000).
    * @return Google_Service_Compute_Operation
    */
   public function delete($project, $targetSslProxy, $optParams = array())
@@ -74,19 +61,6 @@ class Google_Service_Compute_Resource_TargetSslProxies extends Google_Service_Re
    * @param string $project Project ID for this request.
    * @param Google_Service_Compute_TargetSslProxy $postBody
    * @param array $optParams Optional parameters.
-   *
-   * @opt_param string requestId An optional request ID to identify requests.
-   * Specify a unique request ID so that if you must retry your request, the
-   * server will know to ignore the request if it has already been completed.
-   *
-   * For example, consider a situation where you make an initial request and the
-   * request times out. If you make the request again with the same request ID,
-   * the server can check if original operation with the same request ID was
-   * received, and if so, will ignore the second request. This prevents clients
-   * from accidentally creating duplicate commitments.
-   *
-   * The request ID must be a valid UUID with the exception that zero UUID is not
-   * supported (00000000-0000-0000-0000-000000000000).
    * @return Google_Service_Compute_Operation
    */
   public function insert($project, Google_Service_Compute_TargetSslProxy $postBody, $optParams = array())
@@ -161,19 +135,6 @@ class Google_Service_Compute_Resource_TargetSslProxies extends Google_Service_Re
    * BackendService resource is to be set.
    * @param Google_Service_Compute_TargetSslProxiesSetBackendServiceRequest $postBody
    * @param array $optParams Optional parameters.
-   *
-   * @opt_param string requestId An optional request ID to identify requests.
-   * Specify a unique request ID so that if you must retry your request, the
-   * server will know to ignore the request if it has already been completed.
-   *
-   * For example, consider a situation where you make an initial request and the
-   * request times out. If you make the request again with the same request ID,
-   * the server can check if original operation with the same request ID was
-   * received, and if so, will ignore the second request. This prevents clients
-   * from accidentally creating duplicate commitments.
-   *
-   * The request ID must be a valid UUID with the exception that zero UUID is not
-   * supported (00000000-0000-0000-0000-000000000000).
    * @return Google_Service_Compute_Operation
    */
   public function setBackendService($project, $targetSslProxy, Google_Service_Compute_TargetSslProxiesSetBackendServiceRequest $postBody, $optParams = array())
@@ -191,19 +152,6 @@ class Google_Service_Compute_Resource_TargetSslProxies extends Google_Service_Re
    * ProxyHeader is to be set.
    * @param Google_Service_Compute_TargetSslProxiesSetProxyHeaderRequest $postBody
    * @param array $optParams Optional parameters.
-   *
-   * @opt_param string requestId An optional request ID to identify requests.
-   * Specify a unique request ID so that if you must retry your request, the
-   * server will know to ignore the request if it has already been completed.
-   *
-   * For example, consider a situation where you make an initial request and the
-   * request times out. If you make the request again with the same request ID,
-   * the server can check if original operation with the same request ID was
-   * received, and if so, will ignore the second request. This prevents clients
-   * from accidentally creating duplicate commitments.
-   *
-   * The request ID must be a valid UUID with the exception that zero UUID is not
-   * supported (00000000-0000-0000-0000-000000000000).
    * @return Google_Service_Compute_Operation
    */
   public function setProxyHeader($project, $targetSslProxy, Google_Service_Compute_TargetSslProxiesSetProxyHeaderRequest $postBody, $optParams = array())
@@ -221,19 +169,6 @@ class Google_Service_Compute_Resource_TargetSslProxies extends Google_Service_Re
    * SslCertificate resource is to be set.
    * @param Google_Service_Compute_TargetSslProxiesSetSslCertificatesRequest $postBody
    * @param array $optParams Optional parameters.
-   *
-   * @opt_param string requestId An optional request ID to identify requests.
-   * Specify a unique request ID so that if you must retry your request, the
-   * server will know to ignore the request if it has already been completed.
-   *
-   * For example, consider a situation where you make an initial request and the
-   * request times out. If you make the request again with the same request ID,
-   * the server can check if original operation with the same request ID was
-   * received, and if so, will ignore the second request. This prevents clients
-   * from accidentally creating duplicate commitments.
-   *
-   * The request ID must be a valid UUID with the exception that zero UUID is not
-   * supported (00000000-0000-0000-0000-000000000000).
    * @return Google_Service_Compute_Operation
    */
   public function setSslCertificates($project, $targetSslProxy, Google_Service_Compute_TargetSslProxiesSetSslCertificatesRequest $postBody, $optParams = array())

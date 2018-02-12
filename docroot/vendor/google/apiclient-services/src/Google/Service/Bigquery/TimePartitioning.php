@@ -18,7 +18,6 @@
 class Google_Service_Bigquery_TimePartitioning extends Google_Model
 {
   public $expirationMs;
-  public $field;
   public $type;
 
   public function setExpirationMs($expirationMs)
@@ -28,14 +27,6 @@ class Google_Service_Bigquery_TimePartitioning extends Google_Model
   public function getExpirationMs()
   {
     return $this->expirationMs;
-  }
-  public function setField($field)
-  {
-    $this->field = $field;
-  }
-  public function getField()
-  {
-    return $this->field;
   }
   public function setType($type)
   {

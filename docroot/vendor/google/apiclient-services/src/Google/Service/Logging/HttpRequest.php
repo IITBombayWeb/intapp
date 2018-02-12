@@ -22,7 +22,6 @@ class Google_Service_Logging_HttpRequest extends Google_Model
   public $cacheLookup;
   public $cacheValidatedWithOriginServer;
   public $latency;
-  public $protocol;
   public $referer;
   public $remoteIp;
   public $requestMethod;
@@ -72,14 +71,6 @@ class Google_Service_Logging_HttpRequest extends Google_Model
   public function getLatency()
   {
     return $this->latency;
-  }
-  public function setProtocol($protocol)
-  {
-    $this->protocol = $protocol;
-  }
-  public function getProtocol()
-  {
-    return $this->protocol;
   }
   public function setReferer($referer)
   {

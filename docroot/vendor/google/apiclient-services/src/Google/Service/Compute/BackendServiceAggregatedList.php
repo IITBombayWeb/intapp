@@ -23,8 +23,6 @@ class Google_Service_Compute_BackendServiceAggregatedList extends Google_Model
   public $kind;
   public $nextPageToken;
   public $selfLink;
-  protected $warningType = 'Google_Service_Compute_BackendServiceAggregatedListWarning';
-  protected $warningDataType = '';
 
   public function setId($id)
   {
@@ -71,19 +69,5 @@ class Google_Service_Compute_BackendServiceAggregatedList extends Google_Model
   public function getSelfLink()
   {
     return $this->selfLink;
-  }
-  /**
-   * @param Google_Service_Compute_BackendServiceAggregatedListWarning
-   */
-  public function setWarning(Google_Service_Compute_BackendServiceAggregatedListWarning $warning)
-  {
-    $this->warning = $warning;
-  }
-  /**
-   * @return Google_Service_Compute_BackendServiceAggregatedListWarning
-   */
-  public function getWarning()
-  {
-    return $this->warning;
   }
 }

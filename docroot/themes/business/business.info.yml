@@ -36,8 +36,8 @@ features:
   - 'main_menu'
   - 'secondary_menu'
 
-# Information added by Drupal.org packaging script on 2016-10-07
-version: '8.x-1.7'
+# Information added by Drupal.org packaging script on 2016-05-27
+version: '8.x-1.6'
 core: '8.x'
 project: 'business'
-datestamp: 1475815741
+datestamp: 1464341915

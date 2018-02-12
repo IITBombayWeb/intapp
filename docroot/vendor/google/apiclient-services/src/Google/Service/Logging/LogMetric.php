@@ -17,31 +17,11 @@
 
 class Google_Service_Logging_LogMetric extends Google_Model
 {
-  protected $bucketOptionsType = 'Google_Service_Logging_BucketOptions';
-  protected $bucketOptionsDataType = '';
   public $description;
   public $filter;
-  public $labelExtractors;
-  protected $metricDescriptorType = 'Google_Service_Logging_MetricDescriptor';
-  protected $metricDescriptorDataType = '';
   public $name;
-  public $valueExtractor;
   public $version;
 
-  /**
-   * @param Google_Service_Logging_BucketOptions
-   */
-  public function setBucketOptions(Google_Service_Logging_BucketOptions $bucketOptions)
-  {
-    $this->bucketOptions = $bucketOptions;
-  }
-  /**
-   * @return Google_Service_Logging_BucketOptions
-   */
-  public function getBucketOptions()
-  {
-    return $this->bucketOptions;
-  }
   public function setDescription($description)
   {
     $this->description = $description;
@@ -58,28 +38,6 @@ class Google_Service_Logging_LogMetric extends Google_Model
   {
     return $this->filter;
   }
-  public function setLabelExtractors($labelExtractors)
-  {
-    $this->labelExtractors = $labelExtractors;
-  }
-  public function getLabelExtractors()
-  {
-    return $this->labelExtractors;
-  }
-  /**
-   * @param Google_Service_Logging_MetricDescriptor
-   */
-  public function setMetricDescriptor(Google_Service_Logging_MetricDescriptor $metricDescriptor)
-  {
-    $this->metricDescriptor = $metricDescriptor;
-  }
-  /**
-   * @return Google_Service_Logging_MetricDescriptor
-   */
-  public function getMetricDescriptor()
-  {
-    return $this->metricDescriptor;
-  }
   public function setName($name)
   {
     $this->name = $name;
@@ -87,14 +45,6 @@ class Google_Service_Logging_LogMetric extends Google_Model
   public function getName()
   {
     return $this->name;
-  }
-  public function setValueExtractor($valueExtractor)
-  {
-    $this->valueExtractor = $valueExtractor;
-  }
-  public function getValueExtractor()
-  {
-    return $this->valueExtractor;
   }
   public function setVersion($version)
   {

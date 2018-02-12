@@ -29,7 +29,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     // Try to post a new node without uploading a file.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
+    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
     $this->assertRaw(t('@title field is required.', ['@title' => $field->getLabel()]), 'Node save failed when required file field was empty.');
 
     // Create a new node with the uploaded file.
@@ -50,7 +50,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     // Try to post a new node without uploading a file in the multivalue field.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
+    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
     $this->assertRaw(t('@title field is required.', ['@title' => $field->getLabel()]), 'Node save failed when required multiple value file field was empty.');
 
     // Create a new node with the uploaded file into the multivalue field.
@@ -71,10 +71,8 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $field_name = strtolower($this->randomMachineName());
     $this->createFileField($field_name, 'node', $type_name, [], ['required' => '1']);
 
-    // 128KB.
-    $small_file = $this->getTestFile('text', 131072);
-    // 1.2MB
-    $large_file = $this->getTestFile('text', 1310720);
+    $small_file = $this->getTestFile('text', 131072); // 128KB.
+    $large_file = $this->getTestFile('text', 1310720); // 1.2MB
 
     // Test uploading both a large and small file with different increments.
     $sizes = [
@@ -186,7 +184,6 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $this->assertNoText('Only files with the following extensions are allowed: txt.');
     $this->assertText('Article ' . $node->getTitle() . ' has been updated.');
   }
-
   /**
    * Test the validation message is displayed only once for ajax uploads.
    */
@@ -206,6 +203,6 @@ class FileFieldValidateTest extends FileFieldTestBase {
       ':class' => 'messages--error',
     ]);
     $this->assertEqual(count($elements), 1, 'Ajax validation messages are displayed once.');
-  }
+ }
 
 }

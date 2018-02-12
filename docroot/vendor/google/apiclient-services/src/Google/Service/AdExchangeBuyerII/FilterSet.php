@@ -20,12 +20,13 @@ class Google_Service_AdExchangeBuyerII_FilterSet extends Google_Collection
   protected $collection_key = 'sellerNetworkIds';
   protected $absoluteDateRangeType = 'Google_Service_AdExchangeBuyerII_AbsoluteDateRange';
   protected $absoluteDateRangeDataType = '';
+  public $buyerAccountId;
   public $creativeId;
   public $dealId;
   public $environment;
+  public $filterSetId;
   public $format;
-  public $formats;
-  public $name;
+  public $ownerAccountId;
   public $platforms;
   protected $realtimeTimeRangeType = 'Google_Service_AdExchangeBuyerII_RealtimeTimeRange';
   protected $realtimeTimeRangeDataType = '';
@@ -47,6 +48,14 @@ class Google_Service_AdExchangeBuyerII_FilterSet extends Google_Collection
   public function getAbsoluteDateRange()
   {
     return $this->absoluteDateRange;
+  }
+  public function setBuyerAccountId($buyerAccountId)
+  {
+    $this->buyerAccountId = $buyerAccountId;
+  }
+  public function getBuyerAccountId()
+  {
+    return $this->buyerAccountId;
   }
   public function setCreativeId($creativeId)
   {
@@ -72,6 +81,14 @@ class Google_Service_AdExchangeBuyerII_FilterSet extends Google_Collection
   {
     return $this->environment;
   }
+  public function setFilterSetId($filterSetId)
+  {
+    $this->filterSetId = $filterSetId;
+  }
+  public function getFilterSetId()
+  {
+    return $this->filterSetId;
+  }
   public function setFormat($format)
   {
     $this->format = $format;
@@ -80,21 +97,13 @@ class Google_Service_AdExchangeBuyerII_FilterSet extends Google_Collection
   {
     return $this->format;
   }
-  public function setFormats($formats)
+  public function setOwnerAccountId($ownerAccountId)
   {
-    $this->formats = $formats;
+    $this->ownerAccountId = $ownerAccountId;
   }
-  public function getFormats()
+  public function getOwnerAccountId()
   {
-    return $this->formats;
-  }
-  public function setName($name)
-  {
-    $this->name = $name;
-  }
-  public function getName()
-  {
-    return $this->name;
+    return $this->ownerAccountId;
   }
   public function setPlatforms($platforms)
   {

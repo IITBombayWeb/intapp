@@ -9,6 +9,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\UpdateException;
 
+
 /**
  * @defgroup update_api Update API
  * @{
@@ -229,7 +230,8 @@ function hook_modules_installed($modules) {
 function hook_install() {
   // Create the styles directory and ensure it's writable.
   $directory = file_default_scheme() . '://styles';
-  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  $mode = isset($GLOBALS['install_state']['mode']) ? $GLOBALS['install_state']['mode'] : NULL;
+  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS, $mode);
 }
 
 /**
@@ -447,7 +449,8 @@ function hook_install_tasks(&$install_state) {
     // tasks are complete, with a link to reload the current page and therefore
     // pass on to the final Drupal installation tasks when the user is ready to
     // do so).
-    'myprofile_final_site_setup' => [],
+    'myprofile_final_site_setup' => [
+    ],
   ];
   return $tasks;
 }

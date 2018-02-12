@@ -25,8 +25,6 @@ class Google_Service_Appengine_Application extends Google_Collection
   public $defaultHostname;
   protected $dispatchRulesType = 'Google_Service_Appengine_UrlDispatchRule';
   protected $dispatchRulesDataType = 'array';
-  protected $featureSettingsType = 'Google_Service_Appengine_FeatureSettings';
-  protected $featureSettingsDataType = '';
   public $gcrDomain;
   protected $iapType = 'Google_Service_Appengine_IdentityAwareProxy';
   protected $iapDataType = '';
@@ -88,20 +86,6 @@ class Google_Service_Appengine_Application extends Google_Collection
   public function getDispatchRules()
   {
     return $this->dispatchRules;
-  }
-  /**
-   * @param Google_Service_Appengine_FeatureSettings
-   */
-  public function setFeatureSettings(Google_Service_Appengine_FeatureSettings $featureSettings)
-  {
-    $this->featureSettings = $featureSettings;
-  }
-  /**
-   * @return Google_Service_Appengine_FeatureSettings
-   */
-  public function getFeatureSettings()
-  {
-    return $this->featureSettings;
   }
   public function setGcrDomain($gcrDomain)
   {

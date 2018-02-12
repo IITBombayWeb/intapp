@@ -15,7 +15,6 @@ var Drupal = Drupal || {};
     return {
       DEFAULTS: {
         animation: !!settings.popover_animation,
-        enabled: settings.popover_enabled,
         html: !!settings.popover_html,
         placement: settings.popover_placement,
         selector: settings.popover_selector,
@@ -36,10 +35,6 @@ var Drupal = Drupal || {};
    */
   Drupal.behaviors.bootstrapPopovers = {
     attach: function (context) {
-      // Immediately return if popovers are not available.
-      if (!$.fn.popover || !$.fn.popover.Constructor.DEFAULTS.enabled) {
-        return;
-      }
 
       // Popover autoclose.
       if ($.fn.popover.Constructor.DEFAULTS.triggerAutoclose) {
@@ -107,11 +102,6 @@ var Drupal = Drupal || {};
       }
     },
     detach: function (context) {
-      // Immediately return if popovers are not available.
-      if (!$.fn.popover || !$.fn.popover.Constructor.DEFAULTS.enabled) {
-        return;
-      }
-
       // Destroy all popovers.
       $(context).find('[data-toggle="popover"]')
         .off('click.drupal.bootstrap.popover')

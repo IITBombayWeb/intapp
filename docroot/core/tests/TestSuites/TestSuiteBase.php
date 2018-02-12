@@ -1,7 +1,6 @@
 <?php
 
 namespace Drupal\Tests\TestSuites;
-
 use Drupal\simpletest\TestDiscovery;
 
 /**

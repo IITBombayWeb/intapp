@@ -28,6 +28,8 @@ class Google_Service_YouTube_LiveBroadcast extends Google_Model
   protected $statisticsDataType = '';
   protected $statusType = 'Google_Service_YouTube_LiveBroadcastStatus';
   protected $statusDataType = '';
+  protected $topicDetailsType = 'Google_Service_YouTube_LiveBroadcastTopicDetails';
+  protected $topicDetailsDataType = '';
 
   /**
    * @param Google_Service_YouTube_LiveBroadcastContentDetails
@@ -108,5 +110,19 @@ class Google_Service_YouTube_LiveBroadcast extends Google_Model
   public function getStatus()
   {
     return $this->status;
+  }
+  /**
+   * @param Google_Service_YouTube_LiveBroadcastTopicDetails
+   */
+  public function setTopicDetails(Google_Service_YouTube_LiveBroadcastTopicDetails $topicDetails)
+  {
+    $this->topicDetails = $topicDetails;
+  }
+  /**
+   * @return Google_Service_YouTube_LiveBroadcastTopicDetails
+   */
+  public function getTopicDetails()
+  {
+    return $this->topicDetails;
   }
 }

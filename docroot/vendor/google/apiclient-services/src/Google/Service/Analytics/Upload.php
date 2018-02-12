@@ -24,7 +24,6 @@ class Google_Service_Analytics_Upload extends Google_Collection
   public $id;
   public $kind;
   public $status;
-  public $uploadTime;
 
   public function setAccountId($accountId)
   {
@@ -73,13 +72,5 @@ class Google_Service_Analytics_Upload extends Google_Collection
   public function getStatus()
   {
     return $this->status;
-  }
-  public function setUploadTime($uploadTime)
-  {
-    $this->uploadTime = $uploadTime;
-  }
-  public function getUploadTime()
-  {
-    return $this->uploadTime;
   }
 }

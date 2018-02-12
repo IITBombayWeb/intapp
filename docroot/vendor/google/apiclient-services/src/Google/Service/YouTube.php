@@ -288,10 +288,6 @@ class Google_Service_YouTube extends Google_Service
               'path' => 'channelBanners/insert',
               'httpMethod' => 'POST',
               'parameters' => array(
-                'channelId' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'onBehalfOfContentOwner' => array(
                   'location' => 'query',
                   'type' => 'string',

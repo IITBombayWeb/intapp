@@ -19,7 +19,6 @@ class Google_Service_IdentityToolkit_VerifyCustomTokenResponse extends Google_Mo
 {
   public $expiresIn;
   public $idToken;
-  public $isNewUser;
   public $kind;
   public $refreshToken;
 
@@ -38,14 +37,6 @@ class Google_Service_IdentityToolkit_VerifyCustomTokenResponse extends Google_Mo
   public function getIdToken()
   {
     return $this->idToken;
-  }
-  public function setIsNewUser($isNewUser)
-  {
-    $this->isNewUser = $isNewUser;
-  }
-  public function getIsNewUser()
-  {
-    return $this->isNewUser;
   }
   public function setKind($kind)
   {

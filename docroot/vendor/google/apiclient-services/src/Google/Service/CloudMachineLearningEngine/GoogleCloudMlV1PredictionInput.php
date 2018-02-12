@@ -18,7 +18,6 @@
 class Google_Service_CloudMachineLearningEngine_GoogleCloudMlV1PredictionInput extends Google_Collection
 {
   protected $collection_key = 'inputPaths';
-  public $batchSize;
   public $dataFormat;
   public $inputPaths;
   public $maxWorkerCount;
@@ -26,18 +25,9 @@ class Google_Service_CloudMachineLearningEngine_GoogleCloudMlV1PredictionInput e
   public $outputPath;
   public $region;
   public $runtimeVersion;
-  public $signatureName;
   public $uri;
   public $versionName;
 
-  public function setBatchSize($batchSize)
-  {
-    $this->batchSize = $batchSize;
-  }
-  public function getBatchSize()
-  {
-    return $this->batchSize;
-  }
   public function setDataFormat($dataFormat)
   {
     $this->dataFormat = $dataFormat;
@@ -93,14 +83,6 @@ class Google_Service_CloudMachineLearningEngine_GoogleCloudMlV1PredictionInput e
   public function getRuntimeVersion()
   {
     return $this->runtimeVersion;
-  }
-  public function setSignatureName($signatureName)
-  {
-    $this->signatureName = $signatureName;
-  }
-  public function getSignatureName()
-  {
-    return $this->signatureName;
   }
   public function setUri($uri)
   {

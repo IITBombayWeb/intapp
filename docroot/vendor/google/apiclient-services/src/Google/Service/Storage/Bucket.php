@@ -24,7 +24,6 @@ class Google_Service_Storage_Bucket extends Google_Collection
   protected $billingDataType = '';
   protected $corsType = 'Google_Service_Storage_BucketCors';
   protected $corsDataType = 'array';
-  public $defaultEventBasedHold;
   protected $defaultObjectAclType = 'Google_Service_Storage_ObjectAccessControl';
   protected $defaultObjectAclDataType = 'array';
   protected $encryptionType = 'Google_Service_Storage_BucketEncryption';
@@ -43,8 +42,6 @@ class Google_Service_Storage_Bucket extends Google_Collection
   protected $ownerType = 'Google_Service_Storage_BucketOwner';
   protected $ownerDataType = '';
   public $projectNumber;
-  protected $retentionPolicyType = 'Google_Service_Storage_BucketRetentionPolicy';
-  protected $retentionPolicyDataType = '';
   public $selfLink;
   public $storageClass;
   public $timeCreated;
@@ -95,14 +92,6 @@ class Google_Service_Storage_Bucket extends Google_Collection
   public function getCors()
   {
     return $this->cors;
-  }
-  public function setDefaultEventBasedHold($defaultEventBasedHold)
-  {
-    $this->defaultEventBasedHold = $defaultEventBasedHold;
-  }
-  public function getDefaultEventBasedHold()
-  {
-    return $this->defaultEventBasedHold;
   }
   /**
    * @param Google_Service_Storage_ObjectAccessControl
@@ -237,20 +226,6 @@ class Google_Service_Storage_Bucket extends Google_Collection
   public function getProjectNumber()
   {
     return $this->projectNumber;
-  }
-  /**
-   * @param Google_Service_Storage_BucketRetentionPolicy
-   */
-  public function setRetentionPolicy(Google_Service_Storage_BucketRetentionPolicy $retentionPolicy)
-  {
-    $this->retentionPolicy = $retentionPolicy;
-  }
-  /**
-   * @return Google_Service_Storage_BucketRetentionPolicy
-   */
-  public function getRetentionPolicy()
-  {
-    return $this->retentionPolicy;
   }
   public function setSelfLink($selfLink)
   {

@@ -24,8 +24,6 @@ class Google_Service_Compute_RegionAutoscalerList extends Google_Collection
   public $kind;
   public $nextPageToken;
   public $selfLink;
-  protected $warningType = 'Google_Service_Compute_RegionAutoscalerListWarning';
-  protected $warningDataType = '';
 
   public function setId($id)
   {
@@ -72,19 +70,5 @@ class Google_Service_Compute_RegionAutoscalerList extends Google_Collection
   public function getSelfLink()
   {
     return $this->selfLink;
-  }
-  /**
-   * @param Google_Service_Compute_RegionAutoscalerListWarning
-   */
-  public function setWarning(Google_Service_Compute_RegionAutoscalerListWarning $warning)
-  {
-    $this->warning = $warning;
-  }
-  /**
-   * @return Google_Service_Compute_RegionAutoscalerListWarning
-   */
-  public function getWarning()
-  {
-    return $this->warning;
   }
 }

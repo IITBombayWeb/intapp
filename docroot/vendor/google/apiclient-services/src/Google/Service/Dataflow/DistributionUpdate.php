@@ -15,12 +15,13 @@
  * the License.
  */
 
-class Google_Service_Dataflow_DistributionUpdate extends Google_Model
+class Google_Service_Dataflow_DistributionUpdate extends Google_Collection
 {
+  protected $collection_key = 'logBuckets';
   protected $countType = 'Google_Service_Dataflow_SplitInt64';
   protected $countDataType = '';
-  protected $histogramType = 'Google_Service_Dataflow_Histogram';
-  protected $histogramDataType = '';
+  protected $logBucketsType = 'Google_Service_Dataflow_LogBucket';
+  protected $logBucketsDataType = 'array';
   protected $maxType = 'Google_Service_Dataflow_SplitInt64';
   protected $maxDataType = '';
   protected $minType = 'Google_Service_Dataflow_SplitInt64';
@@ -44,18 +45,18 @@ class Google_Service_Dataflow_DistributionUpdate extends Google_Model
     return $this->count;
   }
   /**
-   * @param Google_Service_Dataflow_Histogram
+   * @param Google_Service_Dataflow_LogBucket
    */
-  public function setHistogram(Google_Service_Dataflow_Histogram $histogram)
+  public function setLogBuckets($logBuckets)
   {
-    $this->histogram = $histogram;
+    $this->logBuckets = $logBuckets;
   }
   /**
-   * @return Google_Service_Dataflow_Histogram
+   * @return Google_Service_Dataflow_LogBucket
    */
-  public function getHistogram()
+  public function getLogBuckets()
   {
-    return $this->histogram;
+    return $this->logBuckets;
   }
   /**
    * @param Google_Service_Dataflow_SplitInt64

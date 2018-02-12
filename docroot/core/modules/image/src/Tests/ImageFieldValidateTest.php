@@ -119,7 +119,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/add/article', $edit, t('Save'));
+    $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
 
     $this->assertNoText(t('Alternative text field is required.'));
     $this->assertNoText(t('Title field is required.'));
@@ -132,7 +132,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/add/article', $edit, t('Save'));
+    $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
 
     $this->assertNoText(t('Alternative text field is required.'));
     $this->assertNoText(t('Title field is required.'));
@@ -155,8 +155,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       'alt_field' => 0,
     ];
   }
-
-  /**
+/**
    * Test the validation message is displayed only once for ajax uploads.
    */
   public function testAJAXValidationMessage() {

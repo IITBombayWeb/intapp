@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "d6_taxonomy_term",
- *   source_module = "taxonomy"
+ *   source_provider = "taxonomy"
  * )
  */
 class Term extends DrupalSqlBase {
@@ -45,10 +45,6 @@ class Term extends DrupalSqlBase {
       'weight' => $this->t('Weight'),
       'parent' => $this->t("The Drupal term IDs of the term's parents."),
     ];
-    if (isset($this->configuration['translations'])) {
-      $fields['language'] = $this->t('The term language.');
-      $fields['trid'] = $this->t('Translation ID.');
-    }
     return $fields;
   }
 

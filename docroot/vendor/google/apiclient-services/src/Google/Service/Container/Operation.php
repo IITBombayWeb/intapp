@@ -18,11 +18,9 @@
 class Google_Service_Container_Operation extends Google_Model
 {
   public $detail;
-  public $endTime;
   public $name;
   public $operationType;
   public $selfLink;
-  public $startTime;
   public $status;
   public $statusMessage;
   public $targetLink;
@@ -35,14 +33,6 @@ class Google_Service_Container_Operation extends Google_Model
   public function getDetail()
   {
     return $this->detail;
-  }
-  public function setEndTime($endTime)
-  {
-    $this->endTime = $endTime;
-  }
-  public function getEndTime()
-  {
-    return $this->endTime;
   }
   public function setName($name)
   {
@@ -67,14 +57,6 @@ class Google_Service_Container_Operation extends Google_Model
   public function getSelfLink()
   {
     return $this->selfLink;
-  }
-  public function setStartTime($startTime)
-  {
-    $this->startTime = $startTime;
-  }
-  public function getStartTime()
-  {
-    return $this->startTime;
   }
   public function setStatus($status)
   {

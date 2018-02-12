@@ -18,7 +18,6 @@
 class Google_Service_CloudKMS_CryptoKey extends Google_Model
 {
   public $createTime;
-  public $labels;
   public $name;
   public $nextRotationTime;
   protected $primaryType = 'Google_Service_CloudKMS_CryptoKeyVersion';
@@ -33,14 +32,6 @@ class Google_Service_CloudKMS_CryptoKey extends Google_Model
   public function getCreateTime()
   {
     return $this->createTime;
-  }
-  public function setLabels($labels)
-  {
-    $this->labels = $labels;
-  }
-  public function getLabels()
-  {
-    return $this->labels;
   }
   public function setName($name)
   {

@@ -21,7 +21,9 @@ use Drupal\Core\Form\FormStateInterface;
 class Grid extends StylePluginBase {
 
   /**
-   * {@inheritdoc}
+   * Does the style plugin allows to use style plugins.
+   *
+   * @var bool
    */
   protected $usesRowPlugin = TRUE;
 

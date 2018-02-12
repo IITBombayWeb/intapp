@@ -6,9 +6,6 @@ use Drupal\views\Tests\ViewTestBase;
 
 /**
  * Provides a base class for testing the Views UI.
- *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.x.
- *   Use \Drupal\Tests\views_ui\Functional\UITestBase.
  */
 abstract class UITestBase extends ViewTestBase {
 
@@ -51,8 +48,6 @@ abstract class UITestBase extends ViewTestBase {
       'administer permissions',
     ]);
     $this->drupalLogin($this->fullAdminUser);
-
-    @trigger_error('\Drupal\views_ui\Tests\UITestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.x. Instead, use \Drupal\Tests\views_ui\Functional\UITestBase', E_USER_DEPRECATED);
   }
 
   /**

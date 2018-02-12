@@ -18,9 +18,8 @@
 namespace Google\Auth\Tests;
 
 use Google\Auth\Cache\Item;
-use PHPUnit\Framework\TestCase;
 
-class ItemTest extends TestCase
+class ItemTest extends \PHPUnit_Framework_TestCase
 {
     public function getItem($key)
     {

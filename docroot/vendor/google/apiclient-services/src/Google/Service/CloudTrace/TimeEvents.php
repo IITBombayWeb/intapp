@@ -19,7 +19,7 @@ class Google_Service_CloudTrace_TimeEvents extends Google_Collection
 {
   protected $collection_key = 'timeEvent';
   public $droppedAnnotationsCount;
-  public $droppedMessageEventsCount;
+  public $droppedNetworkEventsCount;
   protected $timeEventType = 'Google_Service_CloudTrace_TimeEvent';
   protected $timeEventDataType = 'array';
 
@@ -31,13 +31,13 @@ class Google_Service_CloudTrace_TimeEvents extends Google_Collection
   {
     return $this->droppedAnnotationsCount;
   }
-  public function setDroppedMessageEventsCount($droppedMessageEventsCount)
+  public function setDroppedNetworkEventsCount($droppedNetworkEventsCount)
   {
-    $this->droppedMessageEventsCount = $droppedMessageEventsCount;
+    $this->droppedNetworkEventsCount = $droppedNetworkEventsCount;
   }
-  public function getDroppedMessageEventsCount()
+  public function getDroppedNetworkEventsCount()
   {
-    return $this->droppedMessageEventsCount;
+    return $this->droppedNetworkEventsCount;
   }
   /**
    * @param Google_Service_CloudTrace_TimeEvent

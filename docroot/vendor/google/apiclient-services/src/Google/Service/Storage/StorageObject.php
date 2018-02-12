@@ -31,7 +31,6 @@ class Google_Service_Storage_StorageObject extends Google_Collection
   protected $customerEncryptionType = 'Google_Service_Storage_StorageObjectCustomerEncryption';
   protected $customerEncryptionDataType = '';
   public $etag;
-  public $eventBasedHold;
   public $generation;
   public $id;
   public $kind;
@@ -43,11 +42,9 @@ class Google_Service_Storage_StorageObject extends Google_Collection
   public $name;
   protected $ownerType = 'Google_Service_Storage_StorageObjectOwner';
   protected $ownerDataType = '';
-  public $retentionExpirationTime;
   public $selfLink;
   public $size;
   public $storageClass;
-  public $temporaryHold;
   public $timeCreated;
   public $timeDeleted;
   public $timeStorageClassUpdated;
@@ -153,14 +150,6 @@ class Google_Service_Storage_StorageObject extends Google_Collection
   {
     return $this->etag;
   }
-  public function setEventBasedHold($eventBasedHold)
-  {
-    $this->eventBasedHold = $eventBasedHold;
-  }
-  public function getEventBasedHold()
-  {
-    return $this->eventBasedHold;
-  }
   public function setGeneration($generation)
   {
     $this->generation = $generation;
@@ -247,14 +236,6 @@ class Google_Service_Storage_StorageObject extends Google_Collection
   {
     return $this->owner;
   }
-  public function setRetentionExpirationTime($retentionExpirationTime)
-  {
-    $this->retentionExpirationTime = $retentionExpirationTime;
-  }
-  public function getRetentionExpirationTime()
-  {
-    return $this->retentionExpirationTime;
-  }
   public function setSelfLink($selfLink)
   {
     $this->selfLink = $selfLink;
@@ -278,14 +259,6 @@ class Google_Service_Storage_StorageObject extends Google_Collection
   public function getStorageClass()
   {
     return $this->storageClass;
-  }
-  public function setTemporaryHold($temporaryHold)
-  {
-    $this->temporaryHold = $temporaryHold;
-  }
-  public function getTemporaryHold()
-  {
-    return $this->temporaryHold;
   }
   public function setTimeCreated($timeCreated)
   {

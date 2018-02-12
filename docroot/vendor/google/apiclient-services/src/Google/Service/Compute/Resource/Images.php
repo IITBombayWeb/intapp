@@ -31,19 +31,6 @@ class Google_Service_Compute_Resource_Images extends Google_Service_Resource
    * @param string $project Project ID for this request.
    * @param string $image Name of the image resource to delete.
    * @param array $optParams Optional parameters.
-   *
-   * @opt_param string requestId An optional request ID to identify requests.
-   * Specify a unique request ID so that if you must retry your request, the
-   * server will know to ignore the request if it has already been completed.
-   *
-   * For example, consider a situation where you make an initial request and the
-   * request times out. If you make the request again with the same request ID,
-   * the server can check if original operation with the same request ID was
-   * received, and if so, will ignore the second request. This prevents clients
-   * from accidentally creating duplicate commitments.
-   *
-   * The request ID must be a valid UUID with the exception that zero UUID is not
-   * supported (00000000-0000-0000-0000-000000000000).
    * @return Google_Service_Compute_Operation
    */
   public function delete($project, $image, $optParams = array())
@@ -62,19 +49,6 @@ class Google_Service_Compute_Resource_Images extends Google_Service_Resource
    * @param string $image Image name.
    * @param Google_Service_Compute_DeprecationStatus $postBody
    * @param array $optParams Optional parameters.
-   *
-   * @opt_param string requestId An optional request ID to identify requests.
-   * Specify a unique request ID so that if you must retry your request, the
-   * server will know to ignore the request if it has already been completed.
-   *
-   * For example, consider a situation where you make an initial request and the
-   * request times out. If you make the request again with the same request ID,
-   * the server can check if original operation with the same request ID was
-   * received, and if so, will ignore the second request. This prevents clients
-   * from accidentally creating duplicate commitments.
-   *
-   * The request ID must be a valid UUID with the exception that zero UUID is not
-   * supported (00000000-0000-0000-0000-000000000000).
    * @return Google_Service_Compute_Operation
    */
   public function deprecate($project, $image, Google_Service_Compute_DeprecationStatus $postBody, $optParams = array())
@@ -122,18 +96,6 @@ class Google_Service_Compute_Resource_Images extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    *
    * @opt_param bool forceCreate Force image creation if true.
-   * @opt_param string requestId An optional request ID to identify requests.
-   * Specify a unique request ID so that if you must retry your request, the
-   * server will know to ignore the request if it has already been completed.
-   *
-   * For example, consider a situation where you make an initial request and the
-   * request times out. If you make the request again with the same request ID,
-   * the server can check if original operation with the same request ID was
-   * received, and if so, will ignore the second request. This prevents clients
-   * from accidentally creating duplicate commitments.
-   *
-   * The request ID must be a valid UUID with the exception that zero UUID is not
-   * supported (00000000-0000-0000-0000-000000000000).
    * @return Google_Service_Compute_Operation
    */
   public function insert($project, Google_Service_Compute_Image $postBody, $optParams = array())
@@ -143,8 +105,8 @@ class Google_Service_Compute_Resource_Images extends Google_Service_Resource
     return $this->call('insert', array($params), "Google_Service_Compute_Operation");
   }
   /**
-   * Retrieves the list of custom images available to the specified project.
-   * Custom images are images you create that belong to your project. This method
+   * Retrieves the list of private images available to the specified project.
+   * Private images are images you create that belong to your project. This method
    * does not get any images that belong to other projects, including publicly-
    * available images, like Debian 8. If you want to get a list of publicly-
    * available images, use this method to make a request to the respective image

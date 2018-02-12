@@ -19,8 +19,10 @@
  * Service definition for Safebrowsing (v4).
  *
  * <p>
- * Enables client applications to check web resources (most commonly URLs)
- * against Google-generated lists of unsafe web resources.</p>
+ * The Safe Browsing API is an experimental API that allows client applications
+ * to check URLs against Google's constantly-updated blacklists of suspected
+ * phishing and malware pages. Your client application can use the API to
+ * download an encrypted table for local, client-side lookups of URLs.</p>
  *
  * <p>
  * For more information about this service, see the API
@@ -36,7 +38,6 @@ class Google_Service_Safebrowsing extends Google_Service
   public $encodedFullHashes;
   public $encodedUpdates;
   public $fullHashes;
-  public $threatHits;
   public $threatListUpdates;
   public $threatLists;
   public $threatMatches;
@@ -118,20 +119,6 @@ class Google_Service_Safebrowsing extends Google_Service
           'methods' => array(
             'find' => array(
               'path' => 'v4/fullHashes:find',
-              'httpMethod' => 'POST',
-              'parameters' => array(),
-            ),
-          )
-        )
-    );
-    $this->threatHits = new Google_Service_Safebrowsing_Resource_ThreatHits(
-        $this,
-        $this->serviceName,
-        'threatHits',
-        array(
-          'methods' => array(
-            'create' => array(
-              'path' => 'v4/threatHits',
               'httpMethod' => 'POST',
               'parameters' => array(),
             ),

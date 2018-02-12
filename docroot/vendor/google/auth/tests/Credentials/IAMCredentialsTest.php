@@ -18,9 +18,8 @@
 namespace Google\Auth\Tests;
 
 use Google\Auth\Credentials\IAMCredentials;
-use PHPUnit\Framework\TestCase;
 
-class IAMConstructorTest extends TestCase
+class IAMConstructorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException InvalidArgumentException
@@ -54,7 +53,7 @@ class IAMConstructorTest extends TestCase
     }
 }
 
-class IAMUpdateMetadataCallbackTest extends TestCase
+class IAMUpdateMetadataCallbackTest extends \PHPUnit_Framework_TestCase
 {
     public function testUpdateMetadataFunc()
     {
@@ -66,15 +65,17 @@ class IAMUpdateMetadataCallbackTest extends TestCase
         );
 
         $update_metadata = $iam->getUpdateMetadataFunc();
-        $this->assertInternalType('callable', $update_metadata);
+        $this->assertTrue(is_callable($update_metadata));
 
         $actual_metadata = call_user_func($update_metadata,
             $metadata = array('foo' => 'bar'));
-        $this->assertArrayHasKey(IAMCredentials::SELECTOR_KEY, $actual_metadata);
+        $this->assertTrue(
+            isset($actual_metadata[IAMCredentials::SELECTOR_KEY]));
         $this->assertEquals(
             $actual_metadata[IAMCredentials::SELECTOR_KEY],
             $selector);
-        $this->assertArrayHasKey(IAMCredentials::TOKEN_KEY, $actual_metadata);
+        $this->assertTrue(
+            isset($actual_metadata[IAMCredentials::TOKEN_KEY]));
         $this->assertEquals(
             $actual_metadata[IAMCredentials::TOKEN_KEY],
             $token);

@@ -6,7 +6,7 @@ use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\ImageStyle\ImageStyleResourceTestBase;
 
 /**
- * @group hal
+ * @group rest
  */
 class ImageStyleHalJsonBasicAuthTest extends ImageStyleResourceTestBase {
 

@@ -15,9 +15,8 @@
  * the License.
  */
 
-class Google_Service_Compute_Subnetwork extends Google_Collection
+class Google_Service_Compute_Subnetwork extends Google_Model
 {
-  protected $collection_key = 'secondaryIpRanges';
   public $creationTimestamp;
   public $description;
   public $gatewayAddress;
@@ -28,8 +27,6 @@ class Google_Service_Compute_Subnetwork extends Google_Collection
   public $network;
   public $privateIpGoogleAccess;
   public $region;
-  protected $secondaryIpRangesType = 'Google_Service_Compute_SubnetworkSecondaryRange';
-  protected $secondaryIpRangesDataType = 'array';
   public $selfLink;
 
   public function setCreationTimestamp($creationTimestamp)
@@ -111,20 +108,6 @@ class Google_Service_Compute_Subnetwork extends Google_Collection
   public function getRegion()
   {
     return $this->region;
-  }
-  /**
-   * @param Google_Service_Compute_SubnetworkSecondaryRange
-   */
-  public function setSecondaryIpRanges($secondaryIpRanges)
-  {
-    $this->secondaryIpRanges = $secondaryIpRanges;
-  }
-  /**
-   * @return Google_Service_Compute_SubnetworkSecondaryRange
-   */
-  public function getSecondaryIpRanges()
-  {
-    return $this->secondaryIpRanges;
   }
   public function setSelfLink($selfLink)
   {

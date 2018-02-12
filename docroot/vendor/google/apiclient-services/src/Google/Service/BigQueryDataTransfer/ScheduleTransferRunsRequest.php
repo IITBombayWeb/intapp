@@ -17,23 +17,23 @@
 
 class Google_Service_BigQueryDataTransfer_ScheduleTransferRunsRequest extends Google_Model
 {
-  public $endTime;
-  public $startTime;
+  public $rangeEndTime;
+  public $rangeStartTime;
 
-  public function setEndTime($endTime)
+  public function setRangeEndTime($rangeEndTime)
   {
-    $this->endTime = $endTime;
+    $this->rangeEndTime = $rangeEndTime;
   }
-  public function getEndTime()
+  public function getRangeEndTime()
   {
-    return $this->endTime;
+    return $this->rangeEndTime;
   }
-  public function setStartTime($startTime)
+  public function setRangeStartTime($rangeStartTime)
   {
-    $this->startTime = $startTime;
+    $this->rangeStartTime = $rangeStartTime;
   }
-  public function getStartTime()
+  public function getRangeStartTime()
   {
-    return $this->startTime;
+    return $this->rangeStartTime;
   }
 }

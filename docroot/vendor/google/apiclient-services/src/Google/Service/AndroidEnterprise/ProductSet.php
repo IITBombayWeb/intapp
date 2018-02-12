@@ -17,12 +17,10 @@
 
 class Google_Service_AndroidEnterprise_ProductSet extends Google_Collection
 {
-  protected $collection_key = 'productVisibility';
+  protected $collection_key = 'productId';
   public $kind;
   public $productId;
   public $productSetBehavior;
-  protected $productVisibilityType = 'Google_Service_AndroidEnterprise_ProductVisibility';
-  protected $productVisibilityDataType = 'array';
 
   public function setKind($kind)
   {
@@ -47,19 +45,5 @@ class Google_Service_AndroidEnterprise_ProductSet extends Google_Collection
   public function getProductSetBehavior()
   {
     return $this->productSetBehavior;
-  }
-  /**
-   * @param Google_Service_AndroidEnterprise_ProductVisibility
-   */
-  public function setProductVisibility($productVisibility)
-  {
-    $this->productVisibility = $productVisibility;
-  }
-  /**
-   * @return Google_Service_AndroidEnterprise_ProductVisibility
-   */
-  public function getProductVisibility()
-  {
-    return $this->productVisibility;
   }
 }

@@ -18,9 +18,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ViewAjaxControllerTest extends UnitTestCase {
 
-  const USE_AJAX = TRUE;
-  const USE_NO_AJAX = FALSE;
-
   /**
    * The mocked view entity storage.
    *
@@ -74,7 +71,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
     $this->renderer->expects($this->any())
       ->method('render')
-      ->will($this->returnCallback(function (array &$elements) {
+      ->will($this->returnCallback(function(array &$elements) {
         $elements['#attached'] = [];
         return isset($elements['#markup']) ? $elements['#markup'] : '';
       }));
@@ -189,6 +186,23 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     list($view, $executable) = $this->setupValidMocks();
 
+    $display_handler = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    // Ensure that the pager element is not set.
+    $display_handler->expects($this->never())
+      ->method('setOption');
+
+    $display_collection = $this->getMockBuilder('Drupal\views\DisplayPluginCollection')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $display_collection->expects($this->any())
+      ->method('get')
+      ->with('page_1')
+      ->will($this->returnValue($display_handler));
+
+    $executable->displayHandlers = $display_collection;
+
     $this->redirectDestination->expects($this->atLeastOnce())
       ->method('set')
       ->with('/test-page?type=article');
@@ -199,24 +213,6 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->assertSame($response->getView(), $executable);
 
     $this->assertViewResultCommand($response);
-  }
-
-  /**
-   * Tests a valid view without ajax enabled.
-   */
-  public function testAjaxViewWithoutAjax() {
-    $request = new Request();
-    $request->request->set('view_name', 'test_view');
-    $request->request->set('view_display_id', 'page_1');
-    $request->request->set('view_path', '/test-page');
-    $request->request->set('_wrapper_format', 'ajax');
-    $request->request->set('ajax_page_state', 'drupal.settings[]');
-    $request->request->set('type', 'article');
-
-    $this->setupValidMocks(static::USE_NO_AJAX);
-
-    $this->setExpectedException(AccessDeniedHttpException::class);
-    $this->viewAjaxController->ajaxView($request);
   }
 
   /**
@@ -301,15 +297,8 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
   /**
    * Sets up a bunch of valid mocks like the view entity and executable.
-   *
-   * @param bool $use_ajax
-   *   Whether the 'use_ajax' option is set on the view display. Defaults to
-   *   using ajax (TRUE).
-   *
-   * @return array
-   *   A pair of view storage entity and executable.
    */
-  protected function setupValidMocks($use_ajax = self::USE_AJAX) {
+  protected function setupValidMocks() {
     $view = $this->getMockBuilder('Drupal\views\Entity\View')
       ->disableOriginalConstructor()
       ->getMock();
@@ -325,10 +314,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $executable->expects($this->once())
       ->method('access')
       ->will($this->returnValue(TRUE));
-    $executable->expects($this->any())
-      ->method('setDisplay')
-      ->willReturn(TRUE);
-    $executable->expects($this->atMost(1))
+    $executable->expects($this->once())
       ->method('preview')
       ->will($this->returnValue(['#markup' => 'View result']));
 
@@ -336,27 +322,6 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->method('get')
       ->with($view)
       ->will($this->returnValue($executable));
-
-    $display_handler = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
-      ->disableOriginalConstructor()
-      ->getMock();
-    // Ensure that the pager element is not set.
-    $display_handler->expects($this->never())
-      ->method('setOption');
-    $display_handler->expects($this->any())
-      ->method('ajaxEnabled')
-      ->willReturn($use_ajax);
-
-    $display_collection = $this->getMockBuilder('Drupal\views\DisplayPluginCollection')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $display_collection->expects($this->any())
-      ->method('get')
-      ->with('page_1')
-      ->will($this->returnValue($display_handler));
-
-    $executable->display_handler = $display_handler;
-    $executable->displayHandlers = $display_collection;
 
     return [$view, $executable];
   }

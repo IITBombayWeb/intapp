@@ -302,7 +302,6 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
       'bundle' => '',
       'langcode' => '',
       'default_langcode' => 'default_langcode',
-      'revision_translation_affected' => 'revision_translation_affected',
     ];
     $this->handlers += [
       'access' => 'Drupal\Core\Entity\EntityAccessControlHandler',
@@ -313,7 +312,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
 
     // Automatically add the EntityChanged constraint if the entity type tracks
     // the changed time.
-    if ($this->entityClassImplements(EntityChangedInterface::class)) {
+    if ($this->entityClassImplements(EntityChangedInterface::class) ) {
       $this->addConstraint('EntityChanged');
     }
 

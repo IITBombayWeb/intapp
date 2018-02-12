@@ -43,9 +43,9 @@ class Google_Service_PeopleService_Resource_PeopleConnections extends Google_Ser
    * fields on each person are returned. Valid values are:
    *
    * * addresses * ageRanges * biographies * birthdays * braggingRights *
-   * coverPhotos * emailAddresses * events * genders * imClients * locales *
-   * memberships * metadata * names * nicknames * occupations * organizations *
-   * phoneNumbers * photos * relations * relationshipInterests *
+   * coverPhotos * emailAddresses * events * genders * imClients * interests *
+   * locales * memberships * metadata * names * nicknames * occupations *
+   * organizations * phoneNumbers * photos * relations * relationshipInterests *
    * relationshipStatuses * residences * skills * taglines * urls
    * @opt_param string sortOrder The order in which the connections should be
    * sorted. Defaults to `LAST_MODIFIED_ASCENDING`.

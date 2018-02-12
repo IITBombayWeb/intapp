@@ -31,8 +31,6 @@ class Google_Service_Compute_Network extends Google_Collection
   public $name;
   protected $peeringsType = 'Google_Service_Compute_NetworkPeering';
   protected $peeringsDataType = 'array';
-  protected $routingConfigType = 'Google_Service_Compute_NetworkRoutingConfig';
-  protected $routingConfigDataType = '';
   public $selfLink;
   public $subnetworks;
 
@@ -113,20 +111,6 @@ class Google_Service_Compute_Network extends Google_Collection
   public function getPeerings()
   {
     return $this->peerings;
-  }
-  /**
-   * @param Google_Service_Compute_NetworkRoutingConfig
-   */
-  public function setRoutingConfig(Google_Service_Compute_NetworkRoutingConfig $routingConfig)
-  {
-    $this->routingConfig = $routingConfig;
-  }
-  /**
-   * @return Google_Service_Compute_NetworkRoutingConfig
-   */
-  public function getRoutingConfig()
-  {
-    return $this->routingConfig;
   }
   public function setSelfLink($selfLink)
   {

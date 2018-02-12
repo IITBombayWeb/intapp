@@ -309,17 +309,7 @@ class Google_Service_Bigquery extends Google_Service
         'projects',
         array(
           'methods' => array(
-            'getServiceAccount' => array(
-              'path' => 'projects/{projectId}/serviceAccount',
-              'httpMethod' => 'GET',
-              'parameters' => array(
-                'projectId' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-              ),
-            ),'list' => array(
+            'list' => array(
               'path' => 'projects',
               'httpMethod' => 'GET',
               'parameters' => array(

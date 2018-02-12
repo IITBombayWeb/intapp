@@ -9,7 +9,6 @@
  */
 namespace org\bovigo\vfs;
 use org\bovigo\vfs\content\LargeFileContent;
-use org\bovigo\vfs\content\FileContent;
 use org\bovigo\vfs\visitor\vfsStreamVisitor;
 /**
  * Some utility methods for vfsStream.
@@ -242,10 +241,6 @@ class vfsStream
                 } else {
                     self::newFile($name)->withContent($data)->at($baseDir);
                 }
-            } elseif ($data instanceof FileContent) {
-                self::newFile($name)->withContent($data)->at($baseDir);
-            } elseif ($data instanceof vfsStreamFile) {
-                $baseDir->addChild($data);
             }
         }
 

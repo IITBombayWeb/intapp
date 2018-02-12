@@ -18,7 +18,6 @@
 class Google_Service_Speech_RecognitionConfig extends Google_Collection
 {
   protected $collection_key = 'speechContexts';
-  public $enableWordTimeOffsets;
   public $encoding;
   public $languageCode;
   public $maxAlternatives;
@@ -27,14 +26,6 @@ class Google_Service_Speech_RecognitionConfig extends Google_Collection
   protected $speechContextsType = 'Google_Service_Speech_SpeechContext';
   protected $speechContextsDataType = 'array';
 
-  public function setEnableWordTimeOffsets($enableWordTimeOffsets)
-  {
-    $this->enableWordTimeOffsets = $enableWordTimeOffsets;
-  }
-  public function getEnableWordTimeOffsets()
-  {
-    return $this->enableWordTimeOffsets;
-  }
   public function setEncoding($encoding)
   {
     $this->encoding = $encoding;

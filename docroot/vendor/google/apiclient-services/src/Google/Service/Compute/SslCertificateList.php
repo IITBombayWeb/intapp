@@ -24,8 +24,6 @@ class Google_Service_Compute_SslCertificateList extends Google_Collection
   public $kind;
   public $nextPageToken;
   public $selfLink;
-  protected $warningType = 'Google_Service_Compute_SslCertificateListWarning';
-  protected $warningDataType = '';
 
   public function setId($id)
   {
@@ -72,19 +70,5 @@ class Google_Service_Compute_SslCertificateList extends Google_Collection
   public function getSelfLink()
   {
     return $this->selfLink;
-  }
-  /**
-   * @param Google_Service_Compute_SslCertificateListWarning
-   */
-  public function setWarning(Google_Service_Compute_SslCertificateListWarning $warning)
-  {
-    $this->warning = $warning;
-  }
-  /**
-   * @return Google_Service_Compute_SslCertificateListWarning
-   */
-  public function getWarning()
-  {
-    return $this->warning;
   }
 }

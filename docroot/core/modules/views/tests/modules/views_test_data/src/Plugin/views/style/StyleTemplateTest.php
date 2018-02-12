@@ -20,7 +20,9 @@ use Drupal\views\Plugin\views\style\StylePluginBase;
 class StyleTemplateTest extends StylePluginBase {
 
   /**
-   * {@inheritdoc}
+   * Can the style plugin use row plugins.
+   *
+   * @var bool
    */
   protected $usesRowPlugin = TRUE;
 

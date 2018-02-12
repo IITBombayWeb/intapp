@@ -65,17 +65,11 @@ class Google_Service_Classroom_Resource_CoursesCourseWorkStudentSubmissions exte
    *
    * @param string $courseId Identifier of the course. This identifier can be
    * either the Classroom-assigned identifier or an alias.
-   * @param string $courseWorkId Identifier of the student work to request. This
+   * @param string $courseWorkId Identifer of the student work to request. This
    * may be set to the string literal `"-"` to request student work for all course
    * work in the specified course.
    * @param array $optParams Optional parameters.
    *
-   * @opt_param int pageSize Maximum number of items to return. Zero or
-   * unspecified indicates that the server may assign a maximum.
-   *
-   * The server may return fewer than the specified number of results.
-   * @opt_param string states Requested submission states. If specified, returned
-   * student submissions match one of the specified submission states.
    * @opt_param string userId Optional argument to restrict returned student work
    * to those owned by the student with the specified identifier. The identifier
    * can be one of the following:
@@ -90,6 +84,12 @@ class Google_Service_Classroom_Resource_CoursesCourseWorkStudentSubmissions exte
    *
    * The list request must be otherwise identical to the one that resulted in this
    * token.
+   * @opt_param int pageSize Maximum number of items to return. Zero or
+   * unspecified indicates that the server may assign a maximum.
+   *
+   * The server may return fewer than the specified number of results.
+   * @opt_param string states Requested submission states. If specified, returned
+   * student submissions match one of the specified submission states.
    * @return Google_Service_Classroom_ListStudentSubmissionsResponse
    */
   public function listCoursesCourseWorkStudentSubmissions($courseId, $courseWorkId, $optParams = array())
@@ -161,9 +161,8 @@ class Google_Service_Classroom_Resource_CoursesCourseWorkStudentSubmissions exte
    * submission to update. This field is required to do an update. The update
    * fails if invalid fields are specified.
    *
-   * The following fields may be specified by teachers:
-   *
-   * * `draft_grade` * `assigned_grade`
+   * The following fields may be specified by teachers: * `draft_grade` *
+   * `assigned_grade`
    * @return Google_Service_Classroom_StudentSubmission
    */
   public function patch($courseId, $courseWorkId, $id, Google_Service_Classroom_StudentSubmission $postBody, $optParams = array())

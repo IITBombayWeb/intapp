@@ -15,10 +15,8 @@
  * the License.
  */
 
-class Google_Service_Compute_Zone extends Google_Collection
+class Google_Service_Compute_Zone extends Google_Model
 {
-  protected $collection_key = 'availableCpuPlatforms';
-  public $availableCpuPlatforms;
   public $creationTimestamp;
   protected $deprecatedType = 'Google_Service_Compute_DeprecationStatus';
   protected $deprecatedDataType = '';
@@ -30,14 +28,6 @@ class Google_Service_Compute_Zone extends Google_Collection
   public $selfLink;
   public $status;
 
-  public function setAvailableCpuPlatforms($availableCpuPlatforms)
-  {
-    $this->availableCpuPlatforms = $availableCpuPlatforms;
-  }
-  public function getAvailableCpuPlatforms()
-  {
-    return $this->availableCpuPlatforms;
-  }
   public function setCreationTimestamp($creationTimestamp)
   {
     $this->creationTimestamp = $creationTimestamp;

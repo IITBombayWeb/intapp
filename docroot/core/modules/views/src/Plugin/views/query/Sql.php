@@ -5,7 +5,6 @@ namespace Drupal\views\Plugin\views\query;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -61,8 +60,6 @@ class Sql extends QueryPluginBase {
   /**
    * The default operator to use when connecting the WHERE groups. May be
    * AND or OR.
-   *
-   * @var string
    */
   protected $groupOperator = 'AND';
 
@@ -84,14 +81,9 @@ class Sql extends QueryPluginBase {
 
   /**
    * A flag as to whether or not to make the primary field distinct.
-   *
-   * @var bool
    */
   public $distinct = FALSE;
 
-  /**
-   * @var bool
-   */
   protected $hasAggregate = FALSE;
 
   /**
@@ -838,7 +830,7 @@ class Sql extends QueryPluginBase {
    * @code
    * $this->query->addWhere(
    *   $this->options['group'],
-   *   (new Condition('OR'))
+   *   db_or()
    *     ->condition($field, $value, 'NOT IN')
    *     ->condition($field, $value, 'IS NULL')
    * );
@@ -1064,13 +1056,13 @@ class Sql extends QueryPluginBase {
     $has_arguments = FALSE;
     $has_filter = FALSE;
 
-    $main_group = new Condition('AND');
-    $filter_group = $this->groupOperator == 'OR' ? new Condition('OR') : new Condition('AND');
+    $main_group = db_and();
+    $filter_group = $this->groupOperator == 'OR' ? db_or() : db_and();
 
     foreach ($this->$where as $group => $info) {
 
       if (!empty($info['conditions'])) {
-        $sub_group = $info['type'] == 'OR' ? new Condition('OR') : new Condition('AND');
+        $sub_group = $info['type'] == 'OR' ? db_or() : db_and();
         foreach ($info['conditions'] as $clause) {
           if ($clause['operator'] == 'formula') {
             $has_condition = TRUE;
@@ -1476,7 +1468,7 @@ class Sql extends QueryPluginBase {
 
         // Setup the result row objects.
         $view->result = iterator_to_array($result);
-        array_walk($view->result, function (ResultRow $row, $index) {
+        array_walk($view->result, function(ResultRow $row, $index) {
           $row->index = $index;
         });
 

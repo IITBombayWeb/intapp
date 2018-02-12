@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\datetime\Plugin\views\argument;
+namespace Drupal\datetime\Plugin\views\Argument;
 
 use Drupal\views\Plugin\views\argument\Date as NumericDate;
 

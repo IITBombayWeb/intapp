@@ -29,7 +29,9 @@ class StyleTest extends StylePluginBase {
   public $output;
 
   /**
-   * {@inheritdoc}
+   * Can the style plugin use row plugins.
+   *
+   * @var bool
    */
   protected $usesRowPlugin = TRUE;
 

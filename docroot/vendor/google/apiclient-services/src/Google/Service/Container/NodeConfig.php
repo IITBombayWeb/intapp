@@ -26,7 +26,6 @@ class Google_Service_Container_NodeConfig extends Google_Collection
   public $localSsdCount;
   public $machineType;
   public $metadata;
-  public $minCpuPlatform;
   public $oauthScopes;
   public $preemptible;
   public $serviceAccount;
@@ -93,14 +92,6 @@ class Google_Service_Container_NodeConfig extends Google_Collection
   public function getMetadata()
   {
     return $this->metadata;
-  }
-  public function setMinCpuPlatform($minCpuPlatform)
-  {
-    $this->minCpuPlatform = $minCpuPlatform;
-  }
-  public function getMinCpuPlatform()
-  {
-    return $this->minCpuPlatform;
   }
   public function setOauthScopes($oauthScopes)
   {

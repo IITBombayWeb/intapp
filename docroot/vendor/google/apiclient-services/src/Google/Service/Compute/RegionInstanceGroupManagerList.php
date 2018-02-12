@@ -24,8 +24,6 @@ class Google_Service_Compute_RegionInstanceGroupManagerList extends Google_Colle
   public $kind;
   public $nextPageToken;
   public $selfLink;
-  protected $warningType = 'Google_Service_Compute_RegionInstanceGroupManagerListWarning';
-  protected $warningDataType = '';
 
   public function setId($id)
   {
@@ -72,19 +70,5 @@ class Google_Service_Compute_RegionInstanceGroupManagerList extends Google_Colle
   public function getSelfLink()
   {
     return $this->selfLink;
-  }
-  /**
-   * @param Google_Service_Compute_RegionInstanceGroupManagerListWarning
-   */
-  public function setWarning(Google_Service_Compute_RegionInstanceGroupManagerListWarning $warning)
-  {
-    $this->warning = $warning;
-  }
-  /**
-   * @return Google_Service_Compute_RegionInstanceGroupManagerListWarning
-   */
-  public function getWarning()
-  {
-    return $this->warning;
   }
 }

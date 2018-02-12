@@ -96,7 +96,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to run.
    * @param \Drupal\migrate\MigrateMessageInterface $message
-   *   The migrate message service.
+   *   The message to record.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    *
@@ -386,14 +386,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $multiple = $plugin->multiple();
         }
       }
-      // Ensure all values, including nulls, are migrated.
-      if ($plugins) {
-        if (isset($value)) {
-          $row->setDestinationProperty($destination, $value);
-        }
-        else {
-          $row->setEmptyDestinationProperty($destination);
-        }
+      // No plugins or no value means do not set.
+      if ($plugins && !is_null($value)) {
+        $row->setDestinationProperty($destination, $value);
       }
       // Reset the value.
       $value = NULL;
@@ -538,9 +533,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
     }
 
     // @TODO: explore resetting the container.
-
-    // Run garbage collector to further reduce memory.
-    gc_collect_cycles();
 
     return memory_get_usage();
   }

@@ -15,9 +15,8 @@
  * the License.
  */
 
-class Google_Service_Classroom_StudentSubmission extends Google_Collection
+class Google_Service_Classroom_StudentSubmission extends Google_Model
 {
-  protected $collection_key = 'submissionHistory';
   public $alternateLink;
   public $assignedGrade;
   protected $assignmentSubmissionType = 'Google_Service_Classroom_AssignmentSubmission';
@@ -35,8 +34,6 @@ class Google_Service_Classroom_StudentSubmission extends Google_Collection
   protected $shortAnswerSubmissionType = 'Google_Service_Classroom_ShortAnswerSubmission';
   protected $shortAnswerSubmissionDataType = '';
   public $state;
-  protected $submissionHistoryType = 'Google_Service_Classroom_SubmissionHistory';
-  protected $submissionHistoryDataType = 'array';
   public $updateTime;
   public $userId;
 
@@ -169,20 +166,6 @@ class Google_Service_Classroom_StudentSubmission extends Google_Collection
   public function getState()
   {
     return $this->state;
-  }
-  /**
-   * @param Google_Service_Classroom_SubmissionHistory
-   */
-  public function setSubmissionHistory($submissionHistory)
-  {
-    $this->submissionHistory = $submissionHistory;
-  }
-  /**
-   * @return Google_Service_Classroom_SubmissionHistory
-   */
-  public function getSubmissionHistory()
-  {
-    return $this->submissionHistory;
   }
   public function setUpdateTime($updateTime)
   {

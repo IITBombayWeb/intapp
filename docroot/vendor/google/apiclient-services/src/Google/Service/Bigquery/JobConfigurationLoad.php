@@ -22,8 +22,6 @@ class Google_Service_Bigquery_JobConfigurationLoad extends Google_Collection
   public $allowQuotedNewlines;
   public $autodetect;
   public $createDisposition;
-  protected $destinationEncryptionConfigurationType = 'Google_Service_Bigquery_EncryptionConfiguration';
-  protected $destinationEncryptionConfigurationDataType = '';
   protected $destinationTableType = 'Google_Service_Bigquery_TableReference';
   protected $destinationTableDataType = '';
   public $encoding;
@@ -41,8 +39,6 @@ class Google_Service_Bigquery_JobConfigurationLoad extends Google_Collection
   public $skipLeadingRows;
   public $sourceFormat;
   public $sourceUris;
-  protected $timePartitioningType = 'Google_Service_Bigquery_TimePartitioning';
-  protected $timePartitioningDataType = '';
   public $writeDisposition;
 
   public function setAllowJaggedRows($allowJaggedRows)
@@ -76,20 +72,6 @@ class Google_Service_Bigquery_JobConfigurationLoad extends Google_Collection
   public function getCreateDisposition()
   {
     return $this->createDisposition;
-  }
-  /**
-   * @param Google_Service_Bigquery_EncryptionConfiguration
-   */
-  public function setDestinationEncryptionConfiguration(Google_Service_Bigquery_EncryptionConfiguration $destinationEncryptionConfiguration)
-  {
-    $this->destinationEncryptionConfiguration = $destinationEncryptionConfiguration;
-  }
-  /**
-   * @return Google_Service_Bigquery_EncryptionConfiguration
-   */
-  public function getDestinationEncryptionConfiguration()
-  {
-    return $this->destinationEncryptionConfiguration;
   }
   /**
    * @param Google_Service_Bigquery_TableReference
@@ -222,20 +204,6 @@ class Google_Service_Bigquery_JobConfigurationLoad extends Google_Collection
   public function getSourceUris()
   {
     return $this->sourceUris;
-  }
-  /**
-   * @param Google_Service_Bigquery_TimePartitioning
-   */
-  public function setTimePartitioning(Google_Service_Bigquery_TimePartitioning $timePartitioning)
-  {
-    $this->timePartitioning = $timePartitioning;
-  }
-  /**
-   * @return Google_Service_Bigquery_TimePartitioning
-   */
-  public function getTimePartitioning()
-  {
-    return $this->timePartitioning;
   }
   public function setWriteDisposition($writeDisposition)
   {

@@ -26,24 +26,21 @@
 class Google_Service_CloudTrace_Resource_ProjectsTracesSpans extends Google_Service_Resource
 {
   /**
-   * Creates a new span. (spans.createSpan)
+   * Creates a new Span. (spans.create)
    *
    * @param string $name The resource name of the span in the following format:
    *
-   *     projects/[PROJECT_ID]/traces/[TRACE_ID]/spans/SPAN_ID is a unique
-   * identifier for a trace within a project; it is a 32-character hexadecimal
-   * encoding of a 16-byte array.
-   *
-   * [SPAN_ID] is a unique identifier for a span within a trace; it is a
-   * 16-character hexadecimal encoding of an 8-byte array.
+   *     projects/[PROJECT_ID]traces/[TRACE_ID]/spans/SPAN_ID is a unique
+   * identifier for a trace within a project. [SPAN_ID] is a unique identifier for
+   * a span within a trace, assigned when the span is created.
    * @param Google_Service_CloudTrace_Span $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_CloudTrace_Span
    */
-  public function createSpan($name, Google_Service_CloudTrace_Span $postBody, $optParams = array())
+  public function create($name, Google_Service_CloudTrace_Span $postBody, $optParams = array())
   {
     $params = array('name' => $name, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
-    return $this->call('createSpan', array($params), "Google_Service_CloudTrace_Span");
+    return $this->call('create', array($params), "Google_Service_CloudTrace_Span");
   }
 }

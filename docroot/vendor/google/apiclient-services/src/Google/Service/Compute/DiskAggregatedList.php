@@ -23,8 +23,6 @@ class Google_Service_Compute_DiskAggregatedList extends Google_Model
   public $kind;
   public $nextPageToken;
   public $selfLink;
-  protected $warningType = 'Google_Service_Compute_DiskAggregatedListWarning';
-  protected $warningDataType = '';
 
   public function setId($id)
   {
@@ -71,19 +69,5 @@ class Google_Service_Compute_DiskAggregatedList extends Google_Model
   public function getSelfLink()
   {
     return $this->selfLink;
-  }
-  /**
-   * @param Google_Service_Compute_DiskAggregatedListWarning
-   */
-  public function setWarning(Google_Service_Compute_DiskAggregatedListWarning $warning)
-  {
-    $this->warning = $warning;
-  }
-  /**
-   * @return Google_Service_Compute_DiskAggregatedListWarning
-   */
-  public function getWarning()
-  {
-    return $this->warning;
   }
 }

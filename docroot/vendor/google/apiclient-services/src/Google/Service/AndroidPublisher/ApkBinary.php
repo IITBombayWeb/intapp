@@ -18,7 +18,6 @@
 class Google_Service_AndroidPublisher_ApkBinary extends Google_Model
 {
   public $sha1;
-  public $sha256;
 
   public function setSha1($sha1)
   {
@@ -27,13 +26,5 @@ class Google_Service_AndroidPublisher_ApkBinary extends Google_Model
   public function getSha1()
   {
     return $this->sha1;
-  }
-  public function setSha256($sha256)
-  {
-    $this->sha256 = $sha256;
-  }
-  public function getSha256()
-  {
-    return $this->sha256;
   }
 }

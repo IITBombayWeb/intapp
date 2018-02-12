@@ -17,18 +17,9 @@
 
 class Google_Service_AndroidEnterprise_AppVersion extends Google_Model
 {
-  public $track;
   public $versionCode;
   public $versionString;
 
-  public function setTrack($track)
-  {
-    $this->track = $track;
-  }
-  public function getTrack()
-  {
-    return $this->track;
-  }
   public function setVersionCode($versionCode)
   {
     $this->versionCode = $versionCode;

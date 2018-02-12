@@ -18,13 +18,6 @@ abstract class NormalizerBase extends SerializerAwareNormalizer implements Norma
   protected $supportedInterfaceOrClass;
 
   /**
-   * List of formats which supports (de-)normalization.
-   *
-   * @var string|string[]
-   */
-  protected $format;
-
-  /**
    * {@inheritdoc}
    */
   public function supportsNormalization($data, $format = NULL) {
@@ -36,7 +29,7 @@ abstract class NormalizerBase extends SerializerAwareNormalizer implements Norma
 
     $supported = (array) $this->supportedInterfaceOrClass;
 
-    return (bool) array_filter($supported, function ($name) use ($data) {
+    return (bool) array_filter($supported, function($name) use ($data) {
       return $data instanceof $name;
     });
   }
@@ -56,7 +49,7 @@ abstract class NormalizerBase extends SerializerAwareNormalizer implements Norma
 
     $supported = (array) $this->supportedInterfaceOrClass;
 
-    $subclass_check = function ($name) use ($type) {
+    $subclass_check = function($name) use ($type) {
       return (class_exists($name) || interface_exists($name)) && is_subclass_of($type, $name, TRUE);
     };
 
@@ -78,7 +71,7 @@ abstract class NormalizerBase extends SerializerAwareNormalizer implements Norma
       return TRUE;
     }
 
-    return in_array($format, (array) $this->format, TRUE);
+    return in_array($format, (array) $this->format);
   }
 
 }

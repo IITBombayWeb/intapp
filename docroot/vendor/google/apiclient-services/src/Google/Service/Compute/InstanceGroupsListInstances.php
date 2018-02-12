@@ -24,8 +24,6 @@ class Google_Service_Compute_InstanceGroupsListInstances extends Google_Collecti
   public $kind;
   public $nextPageToken;
   public $selfLink;
-  protected $warningType = 'Google_Service_Compute_InstanceGroupsListInstancesWarning';
-  protected $warningDataType = '';
 
   public function setId($id)
   {
@@ -72,19 +70,5 @@ class Google_Service_Compute_InstanceGroupsListInstances extends Google_Collecti
   public function getSelfLink()
   {
     return $this->selfLink;
-  }
-  /**
-   * @param Google_Service_Compute_InstanceGroupsListInstancesWarning
-   */
-  public function setWarning(Google_Service_Compute_InstanceGroupsListInstancesWarning $warning)
-  {
-    $this->warning = $warning;
-  }
-  /**
-   * @return Google_Service_Compute_InstanceGroupsListInstancesWarning
-   */
-  public function getWarning()
-  {
-    return $this->warning;
   }
 }

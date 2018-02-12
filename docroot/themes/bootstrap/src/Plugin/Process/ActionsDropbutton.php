@@ -21,9 +21,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @see \Drupal\Core\Render\Element\Actions::preRenderActionsDropbutton()
  *
- * @todo Remove once core is fixed.
- *
- * @see https://www.drupal.org/node/2855458
+ * @todo This may become a #pre_render callback.
  */
 class ActionsDropbutton extends ProcessBase implements ProcessInterface {
 
@@ -39,7 +37,7 @@ class ActionsDropbutton extends ProcessBase implements ProcessInterface {
           $dropbuttons->$dropbutton = ['#type' => 'dropbutton'];
         }
 
-        $dropbuttons[$dropbutton]['#links'][$key] = ['title' => $child->getArray()];
+        $dropbuttons[$dropbutton]['#links'][$key] = $child->getArray();
 
         // Remove original child from the element so it's not rendered twice.
         $child->setProperty('printed', TRUE);

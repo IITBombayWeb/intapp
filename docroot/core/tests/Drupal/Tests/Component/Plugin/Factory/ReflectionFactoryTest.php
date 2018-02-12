@@ -10,13 +10,13 @@
 namespace Drupal\Tests\Component\Plugin\Factory;
 
 use Drupal\Component\Plugin\Factory\ReflectionFactory;
-use PHPUnit\Framework\TestCase;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * @group Plugin
  * @coversDefaultClass \Drupal\Component\Plugin\Factory\ReflectionFactory
  */
-class ReflectionFactoryTest extends TestCase {
+class ReflectionFactoryTest extends UnitTestCase {
 
   /**
    * Data provider for testGetInstanceArguments.
@@ -172,7 +172,9 @@ class ArgumentsPluginId {
  */
 class ArgumentsMany {
 
-  public function __construct($configuration, $plugin_definition, $plugin_id, $foo = 'default_value', $what_am_i_doing_here = 'what_default') {
+  public function __construct(
+  $configuration, $plugin_definition, $plugin_id, $foo = 'default_value', $what_am_i_doing_here = 'what_default'
+  ) {
     // No-op.
   }
 

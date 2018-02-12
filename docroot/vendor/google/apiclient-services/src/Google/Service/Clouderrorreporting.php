@@ -89,18 +89,6 @@ class Google_Service_Clouderrorreporting extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'serviceFilter.service' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'pageSize' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
                 'serviceFilter.version' => array(
                   'location' => 'query',
                   'type' => 'string',
@@ -116,6 +104,18 @@ class Google_Service_Clouderrorreporting extends Google_Service
                 'groupId' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+                'serviceFilter.service' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
                 ),
               ),
             ),'report' => array(

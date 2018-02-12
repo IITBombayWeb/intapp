@@ -18,9 +18,8 @@
 namespace Google\Auth\Tests;
 
 use Google\Auth\CacheTrait;
-use PHPUnit\Framework\TestCase;
 
-class CacheTraitTest extends TestCase
+class CacheTraitTest extends \PHPUnit_Framework_TestCase
 {
     private $mockFetcher;
     private $mockCacheItem;

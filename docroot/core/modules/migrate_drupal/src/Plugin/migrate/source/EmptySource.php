@@ -10,6 +10,7 @@ use Drupal\migrate\Plugin\migrate\source\EmptySource as BaseEmptySource;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 
+
 /**
  * Source returning an empty row with Drupal specific config dependencies.
  *

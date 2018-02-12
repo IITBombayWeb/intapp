@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Render;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -16,8 +17,7 @@ class RenderTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'common_test', 'theme_test'];
-
+   public static $modules = ['system', 'common_test', 'theme_test'];
   /**
    * Tests theme preprocess functions being able to attach assets.
    */
@@ -42,8 +42,7 @@ class RenderTest extends KernelTestBase {
 
     \Drupal::state()->set('theme_preprocess_attached_test', FALSE);
   }
-
-  /**
+     /**
    * Ensures that render array children are processed correctly.
    */
   public function testRenderChildren() {

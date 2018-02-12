@@ -240,7 +240,8 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     // Match templates based on the 'template' filename.
     foreach ($cache as $hook => $info) {
       if (isset($info['template'])) {
-        if ($template === $info['template']) {
+        $template_candidates = [$info['template'], str_replace($info['theme path'] . '/templates/', '', $info['template'])];
+        if (in_array($template, $template_candidates)) {
           $implementations[$hook] = [
             'template' => $template,
             'path' => dirname($file->uri),
@@ -461,7 +462,7 @@ function theme_render_and_autoescape($arg) {
  *
  * @param array $theme_settings
  *   An array of theme settings from system setting form or a Drupal 7 variable.
- * @param \Drupal\Core\Config\Config $config
+ * @param Config $config
  *   The configuration object to update.
  *
  * @return

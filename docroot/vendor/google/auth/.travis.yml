@@ -11,18 +11,17 @@ php:
   - 5.6
   - 7.0
   - 7.1
-  - 7.2
 
 env:
-  -
-  - COMPOSER_ARGS="--prefer-lowest"
+  - COMPOSER_CMD="composer install"
+  - COMPOSER_CMD="composer update --prefer-lowest"
 matrix:
   include:
-    - php: "7.2"
-      env: RUN_CS_FIXER=true
+    - php: "7.0"
+      env: RUN_CS_FIXER=true COMPOSER_CMD="composer install"
 
 before_script:
-  - composer update $COMPOSER_ARGS
+  - $COMPOSER_CMD
 
 script:
   - if [ "${RUN_CS_FIXER}" = "true" ]; then

@@ -19,7 +19,6 @@ class Google_Service_ServiceControl_CheckError extends Google_Model
 {
   public $code;
   public $detail;
-  public $subject;
 
   public function setCode($code)
   {
@@ -36,13 +35,5 @@ class Google_Service_ServiceControl_CheckError extends Google_Model
   public function getDetail()
   {
     return $this->detail;
-  }
-  public function setSubject($subject)
-  {
-    $this->subject = $subject;
-  }
-  public function getSubject()
-  {
-    return $this->subject;
   }
 }

@@ -18,17 +18,16 @@
 class Google_Service_BigQueryDataTransfer_TransferRun extends Google_Model
 {
   public $dataSourceId;
+  public $datasetRegion;
   public $destinationDatasetId;
   public $endTime;
-  protected $errorStatusType = 'Google_Service_BigQueryDataTransfer_Status';
-  protected $errorStatusDataType = '';
   public $name;
   public $params;
   public $runTime;
   public $schedule;
   public $scheduleTime;
   public $startTime;
-  public $state;
+  public $status;
   public $updateTime;
   public $userId;
 
@@ -39,6 +38,14 @@ class Google_Service_BigQueryDataTransfer_TransferRun extends Google_Model
   public function getDataSourceId()
   {
     return $this->dataSourceId;
+  }
+  public function setDatasetRegion($datasetRegion)
+  {
+    $this->datasetRegion = $datasetRegion;
+  }
+  public function getDatasetRegion()
+  {
+    return $this->datasetRegion;
   }
   public function setDestinationDatasetId($destinationDatasetId)
   {
@@ -55,20 +62,6 @@ class Google_Service_BigQueryDataTransfer_TransferRun extends Google_Model
   public function getEndTime()
   {
     return $this->endTime;
-  }
-  /**
-   * @param Google_Service_BigQueryDataTransfer_Status
-   */
-  public function setErrorStatus(Google_Service_BigQueryDataTransfer_Status $errorStatus)
-  {
-    $this->errorStatus = $errorStatus;
-  }
-  /**
-   * @return Google_Service_BigQueryDataTransfer_Status
-   */
-  public function getErrorStatus()
-  {
-    return $this->errorStatus;
   }
   public function setName($name)
   {
@@ -118,13 +111,13 @@ class Google_Service_BigQueryDataTransfer_TransferRun extends Google_Model
   {
     return $this->startTime;
   }
-  public function setState($state)
+  public function setStatus($status)
   {
-    $this->state = $state;
+    $this->status = $status;
   }
-  public function getState()
+  public function getStatus()
   {
-    return $this->state;
+    return $this->status;
   }
   public function setUpdateTime($updateTime)
   {

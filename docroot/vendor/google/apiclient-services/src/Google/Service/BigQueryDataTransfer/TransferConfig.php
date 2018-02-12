@@ -27,7 +27,7 @@ class Google_Service_BigQueryDataTransfer_TransferConfig extends Google_Model
   public $nextRunTime;
   public $params;
   public $schedule;
-  public $state;
+  public $status;
   public $updateTime;
   public $userId;
 
@@ -111,13 +111,13 @@ class Google_Service_BigQueryDataTransfer_TransferConfig extends Google_Model
   {
     return $this->schedule;
   }
-  public function setState($state)
+  public function setStatus($status)
   {
-    $this->state = $state;
+    $this->status = $status;
   }
-  public function getState()
+  public function getStatus()
   {
-    return $this->state;
+    return $this->status;
   }
   public function setUpdateTime($updateTime)
   {

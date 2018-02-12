@@ -17,8 +17,6 @@
 
 class Google_Service_Bigquery_TableListTables extends Google_Model
 {
-  public $creationTime;
-  public $expirationTime;
   public $friendlyName;
   public $id;
   public $kind;
@@ -31,22 +29,6 @@ class Google_Service_Bigquery_TableListTables extends Google_Model
   protected $viewType = 'Google_Service_Bigquery_TableListTablesView';
   protected $viewDataType = '';
 
-  public function setCreationTime($creationTime)
-  {
-    $this->creationTime = $creationTime;
-  }
-  public function getCreationTime()
-  {
-    return $this->creationTime;
-  }
-  public function setExpirationTime($expirationTime)
-  {
-    $this->expirationTime = $expirationTime;
-  }
-  public function getExpirationTime()
-  {
-    return $this->expirationTime;
-  }
   public function setFriendlyName($friendlyName)
   {
     $this->friendlyName = $friendlyName;

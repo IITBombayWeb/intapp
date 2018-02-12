@@ -18,7 +18,6 @@
 class Google_Service_ServiceControl_RequestMetadata extends Google_Model
 {
   public $callerIp;
-  public $callerNetwork;
   public $callerSuppliedUserAgent;
 
   public function setCallerIp($callerIp)
@@ -28,14 +27,6 @@ class Google_Service_ServiceControl_RequestMetadata extends Google_Model
   public function getCallerIp()
   {
     return $this->callerIp;
-  }
-  public function setCallerNetwork($callerNetwork)
-  {
-    $this->callerNetwork = $callerNetwork;
-  }
-  public function getCallerNetwork()
-  {
-    return $this->callerNetwork;
   }
   public function setCallerSuppliedUserAgent($callerSuppliedUserAgent)
   {

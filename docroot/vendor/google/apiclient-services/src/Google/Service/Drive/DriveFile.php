@@ -51,7 +51,6 @@ class Google_Service_Drive_DriveFile extends Google_Collection
   protected $ownersType = 'Google_Service_Drive_User';
   protected $ownersDataType = 'array';
   public $parents;
-  public $permissionIds;
   protected $permissionsType = 'Google_Service_Drive_Permission';
   protected $permissionsDataType = 'array';
   public $properties;
@@ -333,14 +332,6 @@ class Google_Service_Drive_DriveFile extends Google_Collection
   public function getParents()
   {
     return $this->parents;
-  }
-  public function setPermissionIds($permissionIds)
-  {
-    $this->permissionIds = $permissionIds;
-  }
-  public function getPermissionIds()
-  {
-    return $this->permissionIds;
   }
   /**
    * @param Google_Service_Drive_Permission

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\rdf\Functional;
 
-use Drupal\Tests\taxonomy\Functional\TaxonomyTestBase;
+use Drupal\taxonomy\Tests\TaxonomyTestBase;
 
 /**
  * Tests the RDFa markup of Taxonomy terms.

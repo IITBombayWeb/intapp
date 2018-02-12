@@ -17,7 +17,7 @@
 
 class Google_Service_Analytics_CustomDataSource extends Google_Collection
 {
-  protected $collection_key = 'schema';
+  protected $collection_key = 'profilesLinked';
   public $accountId;
   protected $childLinkType = 'Google_Service_Analytics_CustomDataSourceChildLink';
   protected $childLinkDataType = '';
@@ -30,7 +30,6 @@ class Google_Service_Analytics_CustomDataSource extends Google_Collection
   protected $parentLinkType = 'Google_Service_Analytics_CustomDataSourceParentLink';
   protected $parentLinkDataType = '';
   public $profilesLinked;
-  public $schema;
   public $selfLink;
   public $type;
   public $updated;
@@ -128,14 +127,6 @@ class Google_Service_Analytics_CustomDataSource extends Google_Collection
   public function getProfilesLinked()
   {
     return $this->profilesLinked;
-  }
-  public function setSchema($schema)
-  {
-    $this->schema = $schema;
-  }
-  public function getSchema()
-  {
-    return $this->schema;
   }
   public function setSelfLink($selfLink)
   {

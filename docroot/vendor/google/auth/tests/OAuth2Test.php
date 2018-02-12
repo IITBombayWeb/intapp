@@ -20,9 +20,8 @@ namespace Google\Auth\Tests;
 use Google\Auth\OAuth2;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit\Framework\TestCase;
 
-class OAuth2AuthorizationUriTest extends TestCase
+class OAuth2AuthorizationUriTest extends \PHPUnit_Framework_TestCase
 {
     private $minimal = [
         'authorizationUri' => 'https://accounts.test.org/insecure/url',
@@ -171,7 +170,7 @@ class OAuth2AuthorizationUriTest extends TestCase
     }
 }
 
-class OAuth2GrantTypeTest extends TestCase
+class OAuth2GrantTypeTest extends \PHPUnit_Framework_TestCase
 {
     private $minimal = [
         'authorizationUri' => 'https://accounts.test.org/insecure/url',
@@ -233,7 +232,7 @@ class OAuth2GrantTypeTest extends TestCase
     }
 }
 
-class OAuth2GetCacheKeyTest extends TestCase
+class OAuth2GetCacheKeyTest extends \PHPUnit_Framework_TestCase
 {
     private $minimal = [
         'clientID' => 'aClientID',
@@ -260,7 +259,7 @@ class OAuth2GetCacheKeyTest extends TestCase
     }
 }
 
-class OAuth2TimingTest extends TestCase
+class OAuth2TimingTest extends \PHPUnit_Framework_TestCase
 {
     private $minimal = [
         'authorizationUri' => 'https://accounts.test.org/insecure/url',
@@ -320,7 +319,7 @@ class OAuth2TimingTest extends TestCase
     }
 }
 
-class OAuth2GeneralTest extends TestCase
+class OAuth2GeneralTest extends \PHPUnit_Framework_TestCase
 {
     private $minimal = [
         'authorizationUri' => 'https://accounts.test.org/insecure/url',
@@ -364,7 +363,7 @@ class OAuth2GeneralTest extends TestCase
     }
 }
 
-class OAuth2JwtTest extends TestCase
+class OAuth2JwtTest extends \PHPUnit_Framework_TestCase
 {
     private $signingMinimal = [
         'signingKey' => 'example_key',
@@ -455,21 +454,6 @@ class OAuth2JwtTest extends TestCase
         $this->assertEquals($roundTrip->scope, $testConfig['scope']);
     }
 
-    public function testCanHaveAdditionalClaims()
-    {
-        $publicKey = file_get_contents(__DIR__ . '/fixtures' . '/public.pem');
-        $privateKey = file_get_contents(__DIR__ . '/fixtures' . '/private.pem');
-        $testConfig = $this->signingMinimal;
-        $targetAud = '123@456.com';
-        $testConfig['additionalClaims'] = ['target_audience' => $targetAud];
-        $o = new OAuth2($testConfig);
-        $o->setSigningAlgorithm('RS256');
-        $o->setSigningKey($privateKey);
-        $payload = $o->toJwt();
-        $roundTrip = $this->jwtDecode($payload, $publicKey, array('RS256'));
-        $this->assertEquals($roundTrip->target_audience, $targetAud);
-    }
-
     private function jwtDecode()
     {
         $args = func_get_args();
@@ -482,7 +466,7 @@ class OAuth2JwtTest extends TestCase
     }
 }
 
-class OAuth2GenerateAccessTokenRequestTest extends TestCase
+class OAuth2GenerateAccessTokenRequestTest extends \PHPUnit_Framework_TestCase
 {
     private $tokenRequestMinimal = [
         'tokenCredentialUri' => 'https://tokens_r_us/test',
@@ -610,7 +594,7 @@ class OAuth2GenerateAccessTokenRequestTest extends TestCase
         $this->assertEquals('POST', $req->getMethod());
         $fields = Psr7\parse_query((string)$req->getBody());
         $this->assertEquals(OAuth2::JWT_URN, $fields['grant_type']);
-        $this->assertArrayHasKey('assertion', $fields);
+        $this->assertTrue(array_key_exists('assertion', $fields));
     }
 
     public function testGeneratesExtendedRequests()
@@ -630,7 +614,7 @@ class OAuth2GenerateAccessTokenRequestTest extends TestCase
     }
 }
 
-class OAuth2FetchAuthTokenTest extends TestCase
+class OAuth2FetchAuthTokenTest extends \PHPUnit_Framework_TestCase
 {
     private $fetchAuthTokenMinimal = [
         'tokenCredentialUri' => 'https://tokens_r_us/test',
@@ -775,7 +759,7 @@ class OAuth2FetchAuthTokenTest extends TestCase
     }
 }
 
-class OAuth2VerifyIdTokenTest extends TestCase
+class OAuth2VerifyIdTokenTest extends \PHPUnit_Framework_TestCase
 {
     private $publicKey;
     private $privateKey;

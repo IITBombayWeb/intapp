@@ -18,9 +18,7 @@
 class Google_Service_ShoppingContent_DatafeedstatusesCustomBatchRequestEntry extends Google_Model
 {
   public $batchId;
-  public $country;
   public $datafeedId;
-  public $language;
   public $merchantId;
   public $method;
 
@@ -32,14 +30,6 @@ class Google_Service_ShoppingContent_DatafeedstatusesCustomBatchRequestEntry ext
   {
     return $this->batchId;
   }
-  public function setCountry($country)
-  {
-    $this->country = $country;
-  }
-  public function getCountry()
-  {
-    return $this->country;
-  }
   public function setDatafeedId($datafeedId)
   {
     $this->datafeedId = $datafeedId;
@@ -47,14 +37,6 @@ class Google_Service_ShoppingContent_DatafeedstatusesCustomBatchRequestEntry ext
   public function getDatafeedId()
   {
     return $this->datafeedId;
-  }
-  public function setLanguage($language)
-  {
-    $this->language = $language;
-  }
-  public function getLanguage()
-  {
-    return $this->language;
   }
   public function setMerchantId($merchantId)
   {

@@ -24,8 +24,6 @@ class Google_Service_Compute_AcceleratorTypeList extends Google_Collection
   public $kind;
   public $nextPageToken;
   public $selfLink;
-  protected $warningType = 'Google_Service_Compute_AcceleratorTypeListWarning';
-  protected $warningDataType = '';
 
   public function setId($id)
   {
@@ -72,19 +70,5 @@ class Google_Service_Compute_AcceleratorTypeList extends Google_Collection
   public function getSelfLink()
   {
     return $this->selfLink;
-  }
-  /**
-   * @param Google_Service_Compute_AcceleratorTypeListWarning
-   */
-  public function setWarning(Google_Service_Compute_AcceleratorTypeListWarning $warning)
-  {
-    $this->warning = $warning;
-  }
-  /**
-   * @return Google_Service_Compute_AcceleratorTypeListWarning
-   */
-  public function getWarning()
-  {
-    return $this->warning;
   }
 }

@@ -19,8 +19,6 @@ class Google_Service_Bigquery_JobConfigurationTableCopy extends Google_Collectio
 {
   protected $collection_key = 'sourceTables';
   public $createDisposition;
-  protected $destinationEncryptionConfigurationType = 'Google_Service_Bigquery_EncryptionConfiguration';
-  protected $destinationEncryptionConfigurationDataType = '';
   protected $destinationTableType = 'Google_Service_Bigquery_TableReference';
   protected $destinationTableDataType = '';
   protected $sourceTableType = 'Google_Service_Bigquery_TableReference';
@@ -36,20 +34,6 @@ class Google_Service_Bigquery_JobConfigurationTableCopy extends Google_Collectio
   public function getCreateDisposition()
   {
     return $this->createDisposition;
-  }
-  /**
-   * @param Google_Service_Bigquery_EncryptionConfiguration
-   */
-  public function setDestinationEncryptionConfiguration(Google_Service_Bigquery_EncryptionConfiguration $destinationEncryptionConfiguration)
-  {
-    $this->destinationEncryptionConfiguration = $destinationEncryptionConfiguration;
-  }
-  /**
-   * @return Google_Service_Bigquery_EncryptionConfiguration
-   */
-  public function getDestinationEncryptionConfiguration()
-  {
-    return $this->destinationEncryptionConfiguration;
   }
   /**
    * @param Google_Service_Bigquery_TableReference

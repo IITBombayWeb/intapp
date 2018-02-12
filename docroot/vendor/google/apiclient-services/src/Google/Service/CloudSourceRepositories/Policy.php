@@ -17,13 +17,15 @@
 
 class Google_Service_CloudSourceRepositories_Policy extends Google_Collection
 {
-  protected $collection_key = 'bindings';
+  protected $collection_key = 'rules';
   protected $auditConfigsType = 'Google_Service_CloudSourceRepositories_AuditConfig';
   protected $auditConfigsDataType = 'array';
   protected $bindingsType = 'Google_Service_CloudSourceRepositories_Binding';
   protected $bindingsDataType = 'array';
   public $etag;
   public $iamOwned;
+  protected $rulesType = 'Google_Service_CloudSourceRepositories_Rule';
+  protected $rulesDataType = 'array';
   public $version;
 
   /**
@@ -69,6 +71,20 @@ class Google_Service_CloudSourceRepositories_Policy extends Google_Collection
   public function getIamOwned()
   {
     return $this->iamOwned;
+  }
+  /**
+   * @param Google_Service_CloudSourceRepositories_Rule
+   */
+  public function setRules($rules)
+  {
+    $this->rules = $rules;
+  }
+  /**
+   * @return Google_Service_CloudSourceRepositories_Rule
+   */
+  public function getRules()
+  {
+    return $this->rules;
   }
   public function setVersion($version)
   {

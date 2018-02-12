@@ -3,7 +3,7 @@
 namespace Drupal\Tests\image\Functional;
 
 use Drupal\image\Entity\ImageStyle;
-use Drupal\FunctionalTests\Image\ToolkitTestBase;
+use Drupal\system\Tests\Image\ToolkitTestBase;
 
 /**
  * Tests that the image effects pass parameters to the toolkit correctly.

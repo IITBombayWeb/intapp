@@ -21,7 +21,7 @@ class SharedTempStoreFactory {
   /**
    * The lock object used for this data.
    *
-   * @var \Drupal\Core\Lock\LockBackendInterface
+   * @var \Drupal\Core\Lock\LockBackendInterface $lockBackend
    */
   protected $lockBackend;
 
