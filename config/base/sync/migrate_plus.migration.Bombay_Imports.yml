@@ -22,6 +22,7 @@ process:
   field_specialisation: Specialisation
   field_course_duration: 'Course Duration(In Months)'
   add_to_cart: 'Send to Packet'
+  add_to_cart_price: Price
   type:
     plugin: default_value
     default_value: programme

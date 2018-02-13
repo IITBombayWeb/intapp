@@ -1,8 +1,0 @@
-uuid: 82c17710-6bfa-4e92-9d4b-c2caa71f80cb
-langcode: en
-status: true
-dependencies: {  }
-id: cus_date
-label: 'cus date'
-locked: false
-pattern: 'Y - m - d'

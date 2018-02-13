@@ -1,23 +1,19 @@
 uuid: 760abfc6-7da7-44fc-a543-88126ec10b18
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - system.menu.footer
   module:
-    - block_class
     - system
   theme:
     - capit
-third_party_settings:
-  block_class:
-    classes: ft-mnu
 _core:
   default_config_hash: kkISXE1LT2FJEoYnqCrCpeFB-2pmGmMxMklVk7rQcfg
 id: capit_footer
 theme: capit
-region: footer
-weight: -7
+region: '-1'
+weight: -10
 provider: null
 plugin: 'system_menu_block:footer'
 settings:

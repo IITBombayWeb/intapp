@@ -1,0 +1,29 @@
+uuid: b9653c0a-f40d-42bb-a82b-132a3ed80e25
+langcode: en
+status: true
+dependencies:
+  module:
+    - facets
+    - workflow
+  theme:
+    - capit
+_core:
+  default_config_hash: Vlu0W1a-S5N7EuSAx6SrVtfAkv0TdnMZV5WagVaBvJk
+id: capit_workflowtransitionform
+theme: capit
+region: sidebar_second
+weight: -10
+provider: null
+plugin: workflow_transition_form_block
+settings:
+  id: workflow_transition_form_block
+  label: 'Workflow Transition form'
+  provider: workflow
+  label_display: visible
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }

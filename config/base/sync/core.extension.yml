@@ -1,46 +1,47 @@
 module:
   action: 0
-  admin_toolbar: 0
   automated_cron: 0
   ban: 0
   basiccart: 0
   blazy: 0
   block: 0
-  block_class: 0
   block_content: 0
   breakpoint: 0
+  captcha: 0
   ckeditor: 0
   color: 0
   comment: 0
+  composer_manager: 0
   config: 0
   contact: 0
   contextual: 0
   ctools: 0
-  custom_pdf_download: 0
-  custom_zip_download: 0
   datetime: 0
   dblog: 0
   devel: 0
   devel_generate: 0
+  devel_node_access: 0
   dynamic_page_cache: 0
   editor: 0
   entity: 0
-  entity_print: 0
   excel_import_export: 0
   facets: 0
   faq: 0
   faq_ask: 0
   field: 0
-  field_group: 0
   field_ui: 0
   file: 0
   filter: 0
   flag: 0
+  flag_bookmark: 0
+  flag_follower: 0
+  google_oauth: 0
   help: 0
   history: 0
   iitinap: 0
   iitinap_general: 0
   image: 0
+  image_captcha: 0
   kint: 0
   libraries: 0
   link: 0
@@ -54,15 +55,13 @@ module:
   options: 0
   page_cache: 0
   path: 0
-  paypal: 0
-  php: 0
   phpexcel: 0
-  plugin: 0
   profile: 0
   quickedit: 0
   rdf: 0
   registration_role: 0
   search_api: 0
+  search_api_page: 0
   search_api_solr: 0
   shortcut: 0
   simple_fb_connect: 0
@@ -70,9 +69,6 @@ module:
   slick_ui: 0
   slick_views: 0
   smtp: 0
-  social_api: 0
-  social_auth: 0
-  social_auth_google: 0
   statistics: 0
   system: 0
   tablefield: 0
@@ -86,6 +82,7 @@ module:
   user: 0
   views_php: 0
   views_ui: 0
+  webprofiler: 0
   workflow: 0
   workflow_access: 0
   workflow_cleanup: 0
@@ -93,6 +90,7 @@ module:
   workflow_mail: 0
   workflow_operations: 0
   workflow_ui: 0
+  workflowfield: 0
   menu_link_content: 1
   pathauto: 1
   views: 10
@@ -107,4 +105,3 @@ theme:
   capit: 0
 _core:
   default_config_hash: m2GVq11UAOVuNgj8x0t5fMOPujpvQQ_zxLoaly1BMEU
-profile: standard

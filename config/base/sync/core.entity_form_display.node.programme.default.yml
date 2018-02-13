@@ -31,29 +31,25 @@ mode: default
 content:
   add_to_cart:
     type: addtocart
-    weight: 37
+    weight: 27
     settings: {  }
     third_party_settings: {  }
-    region: content
   add_to_cart_price:
     type: number
-    weight: 36
+    weight: 26
     settings:
       placeholder: ''
     third_party_settings: {  }
-    region: content
   created:
     type: datetime_timestamp
     weight: 2
     settings: {  }
     third_party_settings: {  }
-    region: content
   field_course_duration:
     weight: 15
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
   field_course_fees:
     weight: 14
     settings:
@@ -61,19 +57,16 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_degree:
     weight: 10
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
   field_departments:
     weight: 9
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
   field_description:
     weight: 12
     settings:
@@ -81,7 +74,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textarea
-    region: content
   field_e:
     weight: 17
     settings:
@@ -89,20 +81,17 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textarea
-    region: content
   field_enter_number_of_supporting:
     weight: 16
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
-    region: content
   field_institute:
     weight: 7
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
   field_institute_link:
     weight: 8
     settings:
@@ -110,7 +99,6 @@ content:
       placeholder_title: 'Enter Link Text'
     third_party_settings: {  }
     type: link_default
-    region: content
   field_specialisation:
     weight: 11
     settings:
@@ -118,7 +106,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_supporting_documents:
     weight: 13
     settings:
@@ -126,7 +113,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textarea
-    region: content
   field_thumb:
     weight: 6
     settings:
@@ -134,27 +120,23 @@ content:
       preview_image_style: thumbnail
     third_party_settings: {  }
     type: image_image
-    region: content
   path:
     type: path
     weight: 5
     settings: {  }
     third_party_settings: {  }
-    region: content
   promote:
     type: boolean_checkbox
     settings:
       display_label: true
     weight: 3
     third_party_settings: {  }
-    region: content
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
     weight: 4
     third_party_settings: {  }
-    region: content
   title:
     type: string_textfield
     weight: 0
@@ -162,7 +144,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    region: content
   uid:
     type: entity_reference_autocomplete
     weight: 1
@@ -171,5 +152,4 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    region: content
 hidden: {  }

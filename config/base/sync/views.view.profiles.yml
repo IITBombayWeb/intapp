@@ -50,12 +50,16 @@ display:
         options:
           offset: 0
       style:
-        type: default
+        type: grid
         options:
           grouping: {  }
-          row_class: ''
-          default_row_class: true
-          uses_fields: false
+          columns: 4
+          automatic_width: true
+          alignment: horizontal
+          col_class_default: true
+          col_class_custom: ''
+          row_class_default: true
+          row_class_custom: ''
       row:
         type: fields
         options:
@@ -290,7 +294,6 @@ display:
           plugin_id: numeric
       display_extenders: {  }
       title: Profiles
-      css_class: ''
     cache_metadata:
       max-age: -1
       contexts:
@@ -307,8 +310,6 @@ display:
     display_options:
       display_extenders: {  }
       display_description: ''
-      defaults:
-        css_class: true
     cache_metadata:
       max-age: -1
       contexts:
@@ -378,9 +379,7 @@ display:
           plugin_id: rendered_entity
       defaults:
         fields: false
-        css_class: false
       display_description: ''
-      css_class: usr-profile
     cache_metadata:
       max-age: -1
       contexts:

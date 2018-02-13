@@ -8,7 +8,7 @@ _core:
   default_config_hash: X9I1OB0W3WlWtrK-CNcg6hNWwa8wficanpH8pYnDZDE
 id: business_local_tasks
 theme: business
-region: header
+region: '-1'
 weight: -6
 provider: null
 plugin: local_tasks_block

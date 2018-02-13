@@ -1030,9 +1030,6 @@ display:
             value: 'No recent imports.'
             format: basic_html
           plugin_id: text
-      menu:
-        enabled: true
-        expanded: false
     cache_metadata:
       max-age: 0
       contexts:
@@ -1490,9 +1487,6 @@ display:
             value: 'No recent imports '
             format: basic_html
           plugin_id: text
-      menu:
-        enabled: true
-        expanded: false
     cache_metadata:
       max-age: 0
       contexts:

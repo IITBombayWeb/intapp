@@ -9,9 +9,9 @@ id: profile.student_application_.field_first_name
 field_name: field_first_name
 entity_type: profile
 bundle: student_application_
-label: 'First/Given Name'
+label: 'First/given name'
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''

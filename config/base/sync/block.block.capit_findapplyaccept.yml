@@ -1,0 +1,33 @@
+uuid: b05dc68f-8663-475c-8b88-97857128bdb6
+langcode: en
+status: true
+dependencies:
+  module:
+    - facets
+    - iitinap_general
+    - system
+  theme:
+    - capit
+id: capit_findapplyaccept
+theme: capit
+region: content
+weight: -6
+provider: null
+plugin: landing_block
+settings:
+  id: landing_block
+  label: 'Find, Apply, Accept'
+  provider: iitinap_general
+  label_display: visible
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

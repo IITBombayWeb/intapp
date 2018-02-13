@@ -6,7 +6,6 @@ dependencies:
     - node.type.programme
   module:
     - node
-    - statistics
     - user
 id: most_viewed
 label: 'Most Viewed'
@@ -187,7 +186,7 @@ display:
           plugin_id: numeric
       filters:
         status:
-          value: '1'
+          value: true
           table: node_field_data
           field: status
           plugin_id: boolean

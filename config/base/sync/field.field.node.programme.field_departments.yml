@@ -10,7 +10,7 @@ id: node.programme.field_departments
 field_name: field_departments
 entity_type: node
 bundle: programme
-label: Department
+label: Departments
 description: ''
 required: false
 translatable: false

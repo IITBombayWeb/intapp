@@ -1,0 +1,36 @@
+uuid: c4bb77d4-dfc0-40e4-965a-ddc1e91e74a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api_page.search_api_page.search_programme
+  module:
+    - facets
+    - search_api_page
+    - system
+  theme:
+    - bartik
+id: searchapipagesearchblockform
+theme: bartik
+region: content
+weight: -9
+provider: null
+plugin: search_api_page_form_block
+settings:
+  id: search_api_page_form_block
+  label: 'Search Api Page search block form'
+  provider: search_api_page
+  label_display: '0'
+  search_api_page: search_programme
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

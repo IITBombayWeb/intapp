@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.iit_institute.field_iit_app_price
     - field.field.taxonomy_term.iit_institute.field_short_code
     - taxonomy.vocabulary.iit_institute
   module:
@@ -21,14 +20,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    region: content
-  field_iit_app_price:
-    weight: 32
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
   field_short_code:
     weight: 31
     settings:
@@ -36,7 +27,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   name:
     type: string_textfield
     weight: -5
@@ -44,11 +34,9 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    region: content
   path:
     type: path
     weight: 30
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden: {  }

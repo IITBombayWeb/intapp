@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.profile.student_application_.field_application_path
     - field.field.profile.student_application_.field_city
     - field.field.profile.student_application_.field_city_school
     - field.field.profile.student_application_.field_country
@@ -35,211 +34,53 @@ dependencies:
     - profile.type.student_application_
   module:
     - datetime
-    - field_group
     - file
     - tablefield
     - telephone
-third_party_settings:
-  field_group:
-    group_user_username:
-      children:
-        - field_first_name
-        - field_surname
-      parent_name: ''
-      weight: 0
-      format_type: html_element
-      format_settings:
-        id: ''
-        classes: 'fid-w-m fid-w-c dmb'
-        element: div
-        show_label: false
-        label_element: h3
-        required_fields: true
-        attributes: ''
-        effect: none
-        speed: fast
-      label: user-username
-    group_dateofbirth_gender:
-      children:
-        - field_date_of_birth
-        - field_gender
-      parent_name: ''
-      weight: 1
-      format_type: html_element
-      format_settings:
-        id: ''
-        classes: 'fid-w-s2 fid-w-c dmb'
-        element: div
-        show_label: false
-        label_element: h3
-        required_fields: true
-        attributes: ''
-        effect: none
-        speed: fast
-      label: dateofbirth-gender
-    group_address_group:
-      children:
-        - field_permanent_address
-      parent_name: ''
-      weight: 2
-      format_type: html_element
-      format_settings:
-        id: ''
-        classes: 'address-group fid-w-s1 fid-w-c dmb'
-        element: div
-        show_label: false
-        label_element: h3
-        required_fields: true
-        attributes: ''
-        effect: none
-        speed: fast
-      label: address-group
-    group_state_group_2:
-      children:
-        - field_city
-        - field_state
-        - field_country
-        - field_pin
-      parent_name: ''
-      weight: 3
-      format_type: html_element
-      format_settings:
-        id: ''
-        classes: 'state-group fid-w-s4 fid-w-c dmb'
-        element: div
-        show_label: false
-        label_element: h3
-        required_fields: true
-        attributes: ''
-        effect: none
-        speed: fast
-      label: state-group-2
-    group_mob_group:
-      children:
-        - field_mobile_num_com
-        - field_telephone_num_com
-      parent_name: ''
-      weight: 4
-      format_type: html_element
-      format_settings:
-        id: ''
-        classes: 'fid-w-s3 fid-w-c dmb'
-        element: div
-        show_label: false
-        label_element: h3
-        required_fields: true
-        attributes: ''
-        effect: none
-        speed: fast
-      label: mob-group
-    group_qualification_group:
-      children:
-        - field_name_of_the_qualifying_exa
-        - field_name_of_the_board_universi
-      parent_name: ''
-      weight: 5
-      format_type: html_element
-      format_settings:
-        id: ''
-        classes: 'fid-w-m fid-w-c dmb'
-        element: div
-        show_label: false
-        label_element: h3
-        required_fields: true
-        attributes: ''
-        effect: none
-        speed: fast
-      label: qualification-group
-    group_qualification_group_2:
-      children:
-        - field_year_of_passing
-        - field_school
-        - field_medium_of_instruction_
-      parent_name: ''
-      weight: 6
-      format_type: html_element
-      format_settings:
-        id: ''
-        classes: 'fid-w-m fid-w-c dmb'
-        element: div
-        show_label: false
-        label_element: h3
-        required_fields: true
-        attributes: ''
-        effect: none
-        speed: fast
-      label: qualification-group-2
-    group_city_group:
-      children:
-        - field_city_school
-        - field_state_school
-        - field_country_school
-        - field_pincode_school
-      parent_name: ''
-      weight: 7
-      format_type: html_element
-      format_settings:
-        id: ''
-        classes: 'fid-w-s4 fid-w-c dmb pb'
-        element: div
-        show_label: false
-        label_element: h3
-        required_fields: true
-        attributes: ''
-        effect: none
-        speed: fast
-      label: city-group
 id: profile.student_application_.default
 targetEntityType: profile
 bundle: student_application_
 mode: default
 content:
   field_city:
-    weight: 10
+    weight: 5
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_city_school:
-    weight: 4
+    weight: 15
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_country:
-    weight: 12
+    weight: 7
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
   field_country_school:
-    weight: 6
+    weight: 18
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
   field_date_of_birth:
     weight: 2
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
-    region: content
   field_details_of_academic_record:
-    weight: 10
+    weight: 27
     settings: {  }
     third_party_settings: {  }
     type: tablefield
-    region: content
   field_employment_details:
-    weight: 12
+    weight: 24
     settings: {  }
     third_party_settings: {  }
     type: tablefield
-    region: content
   field_first_name:
     weight: 0
     settings:
@@ -247,57 +88,49 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_gender:
     weight: 3
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
   field_general_documents:
-    weight: 13
+    weight: 25
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
     type: file_generic
-    region: content
   field_medium_of_instruction_:
-    weight: 4
+    weight: 19
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_mobile_num_com:
     weight: 9
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: telephone_default
-    region: content
   field_name_of_the_board_universi:
-    weight: 1
+    weight: 12
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_name_of_the_qualifying_exa:
-    weight: 0
+    weight: 11
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_performance_in_competitive:
-    weight: 8
+    weight: 20
     settings: {  }
     third_party_settings: {  }
     type: tablefield
-    region: content
   field_permanent_address:
     weight: 4
     settings:
@@ -305,66 +138,57 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textarea
-    region: content
   field_pin:
-    weight: 13
+    weight: 8
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_pincode_school:
-    weight: 7
+    weight: 17
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_proficiency_in_english:
-    weight: 9
+    weight: 21
     settings: {  }
     third_party_settings: {  }
     type: tablefield
-    region: content
   field_research_professional_expe:
-    weight: 11
+    weight: 23
     settings: {  }
     third_party_settings: {  }
     type: tablefield
-    region: content
   field_school:
-    weight: 3
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_state:
-    weight: 11
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_state_school:
-    weight: 5
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_supporting_d:
     weight: 14
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_state:
+    weight: 6
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_state_school:
+    weight: 16
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_supporting_d:
+    weight: 26
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
     type: file_generic
-    region: content
   field_surname:
     weight: 1
     settings:
@@ -372,20 +196,16 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_telephone_num_com:
     weight: 10
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: telephone_default
-    region: content
   field_year_of_passing:
-    weight: 2
+    weight: 13
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
 hidden:
-  field_application_path: true
   field_file: true

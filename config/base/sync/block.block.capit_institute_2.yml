@@ -1,0 +1,34 @@
+uuid: 8c64a3a0-94bc-4d23-9e61-beaf56036c0e
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.institute
+  module:
+    - facets
+    - system
+  theme:
+    - capit
+id: capit_institute_2
+theme: capit
+region: sidebar_first
+weight: -13
+provider: null
+plugin: 'facet_block:institute'
+settings:
+  id: 'facet_block:institute'
+  label: Institute
+  provider: facets
+  label_display: visible
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: "/search\r\n/search/*\r\n<front>"
+    negate: false
+    context_mapping: {  }

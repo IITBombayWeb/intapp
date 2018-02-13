@@ -1,29 +1,26 @@
+cdn_provider: jsdelivr
 _core:
   default_config_hash: _5qrDuRmWmRVjW00si3U1s1NrgrocA4N653EYGRfgEE
 favicon:
   mimetype: image/vnd.microsoft.icon
   path: ''
-  url: 'http://iitinapdev.unimity.com/themes/capit/favicon.ico'
+  url: 'http://dev-intapp.iitb.ac.in/themes/capit/favicon.ico'
   use_default: true
 schemas:
   bootstrap: 8000
   capit: 8000
 logo:
-  path: 'public://logo_0.png'
+  path: 'public://logo3_0.jpg'
   url: ''
   use_default: true
 region_wells:
   header: ''
-  header_first: ''
-  header_second: ''
-  header_third: ''
   primary_menu: ''
   secondary_menu: ''
   highlighted: ''
   featured_top: ''
   navigation: ''
   content: ''
-  content_top: ''
   sidebar_first: ''
   sidebar_second: ''
   footer: ''

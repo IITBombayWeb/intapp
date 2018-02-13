@@ -16,20 +16,18 @@ bundle: user
 mode: default
 content:
   account:
+    weight: -10
+  contact:
+    weight: 5
+  language:
     weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
+  timezone:
+    weight: 6
   user_picture:
     type: image_image
-    weight: 1
-    region: content
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
-hidden:
-  contact: true
-  language: true
-  path: true
-  timezone: true
+    weight: -1
+hidden: {  }

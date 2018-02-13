@@ -1,0 +1,37 @@
+uuid: 940e77f2-d08a-4717-977e-9713093d2195
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.most_viewed
+  module:
+    - facets
+    - system
+    - views
+  theme:
+    - capit
+id: capit_views_block__most_viewed_block_1
+theme: capit
+region: sidebar_first
+weight: -10
+provider: null
+plugin: 'views_block:most_viewed-block_1'
+settings:
+  id: 'views_block:most_viewed-block_1'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: "<front>\r\n/search-programme\r\n/search-programme/*"
+    negate: false
+    context_mapping: {  }

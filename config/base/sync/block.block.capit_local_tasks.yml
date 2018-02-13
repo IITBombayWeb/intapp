@@ -9,7 +9,7 @@ _core:
 id: capit_local_tasks
 theme: capit
 region: content
-weight: -11
+weight: -10
 provider: null
 plugin: local_tasks_block
 settings:

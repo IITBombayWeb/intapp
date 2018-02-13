@@ -4,7 +4,7 @@ status: true
 dependencies:
   module:
     - node
-    - workflow
+    - workflowfield
 id: node.field_status
 field_name: field_status
 entity_type: node
@@ -13,7 +13,7 @@ settings:
   workflow_type: apply
   allowed_values_function: workflow_state_allowed_values
   allowed_values: {  }
-module: workflow
+module: workflowfield
 locked: false
 cardinality: 1
 translatable: true

@@ -5,19 +5,15 @@ dependencies:
   config:
     - system.menu.main
   module:
-    - block_class
     - system
   theme:
     - capit
-third_party_settings:
-  block_class:
-    classes: user-menus
 _core:
   default_config_hash: rx9IrdDv7Ldc4kpalZAxdhIPZfYIeOMh1N-qKoQZwHo
 id: capit_main_menu
 theme: capit
-region: header_second
-weight: -10
+region: primary_menu
+weight: 0
 provider: null
 plugin: 'system_menu_block:main'
 settings:

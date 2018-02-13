@@ -1,4 +1,4 @@
-uuid: 515cad43-699a-4263-9082-51d764c977e0
+uuid: e156e2e4-1a59-4161-802d-c100c682840c
 langcode: en
 status: true
 dependencies:
@@ -18,19 +18,18 @@ translatable: false
 default_value:
   -
     rebuild:
-      cols: '8'
-      rows: '5'
+      cols: '7'
+      rows: '4'
     value:
-      0:
-        - 'University/ Institute'
-        - Branch
-        - Subject
-        - "Month\_of Passing"
-        - " Year\_of Passing"
-        - 'Class/ Division'
-        - '% of Marks'
-        - Grade/CPI/CGPA
-      1:
+      -
+        - 'Name of the Exam/Degree'
+        - Branch/Subject
+        - University/Board
+        - Year
+        - Month
+        - Grade/Marks
+        - Maximum
+      -
         - ''
         - ''
         - ''
@@ -38,9 +37,7 @@ default_value:
         - ''
         - ''
         - ''
-        - ''
-      2:
-        - ''
+      -
         - ''
         - ''
         - ''
@@ -48,7 +45,7 @@ default_value:
         - ''
         - ''
         - ''
-      3:
+      -
         - ''
         - ''
         - ''
@@ -56,26 +53,13 @@ default_value:
         - ''
         - ''
         - ''
-        - ''
-      4:
-        - ''
-        - ''
-        - ''
-        - ''
-        - ''
-        - ''
-        - ''
-        - ''
-      setrow: 5
     format: null
 default_value_callback: ''
 settings:
   export: 0
   restrict_rebuild: 1
   restrict_import: 1
-  restrict_addrow: 1
-  restrict_addcolumn: 1
-  lock_values: 1
+  lock_values: 0
   cell_processing: '0'
   empty_rules:
     ignore_table_structure: 0

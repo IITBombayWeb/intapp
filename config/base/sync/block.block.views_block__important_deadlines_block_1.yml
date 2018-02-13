@@ -1,22 +1,19 @@
-uuid: d1f75eb1-9659-4e0e-b80d-c147b4fa55aa
+uuid: 5b7098ef-8301-4ea4-b007-4fa4a294f27f
 langcode: en
 status: true
 dependencies:
   config:
     - views.view.important_deadlines
   module:
-    - block_class
+    - facets
     - system
     - views
   theme:
-    - capit
-third_party_settings:
-  block_class:
-    classes: ''
+    - bartik
 id: views_block__important_deadlines_block_1
-theme: capit
-region: content
-weight: -8
+theme: bartik
+region: sidebar_second
+weight: -9
 provider: null
 plugin: 'views_block:important_deadlines-block_1'
 settings:
@@ -27,8 +24,14 @@ settings:
   views_label: ''
   items_per_page: none
 visibility:
+  other_facet:
+    id: other_facet
+    facets: ''
+    facet_value: ''
+    negate: false
+    context_mapping: {  }
   request_path:
     id: request_path
-    pages: "<front>\r\n"
+    pages: '<front>'
     negate: false
     context_mapping: {  }
