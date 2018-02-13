@@ -43,13 +43,9 @@ function capit_preprocess_block(&$vars) {
 function capit_preprocess_page(&$variables) {
   $utility = \Drupal\basiccart\Utility::get_cart();
 	$variables['cntcart'] = count($utility['cart']);
-<<<<<<< HEAD
 	// $userCurrent = \Drupal::currentUser();
  //  if($userCurrent->isAnonymous()){
  //    $variables['anony'] = 'no-view-anyms';
  //   }
-=======
-	
->>>>>>> origin/development
 }
 

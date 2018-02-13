@@ -26,11 +26,7 @@ class ZipDownload extends ActionBase {
    * {@inheritdoc}
    */
   public function executeMultiple(array $entities) {
-<<<<<<< HEAD
      //global $base_url;
-=======
-     global $base_url;
->>>>>>> origin/development
     # create new zip opbject
     $zip = new \ZipArchive();
     # create a temp file & open it
@@ -43,7 +39,6 @@ class ZipDownload extends ActionBase {
           $application_path = $get_path[0]['value'];
           $filename = explode('/', $application_path);
           $filename = end($filename);
-<<<<<<< HEAD
           //$download_file    = file_get_contents($base_url . '/sites/default/files/applications/' . $filename);
         $base_path  = 'sites/default/private/';
         $download_file  = file_get_contents($base_path . 'applications/' . $filename);
@@ -52,12 +47,6 @@ class ZipDownload extends ActionBase {
           
     }
 
-=======
-          $download_file    = file_get_contents($base_url . '/sites/default/files/applications/' . $filename);
-        #add it to the zip
-        $zip->addFromString(basename($filename),$download_file);
-    }
->>>>>>> origin/development
     # close zip
     $zip->close();
     # send the file to the browser as a download
