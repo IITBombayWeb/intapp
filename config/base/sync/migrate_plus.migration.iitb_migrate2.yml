@@ -1,0 +1,29 @@
+uuid: dbfa7f0d-d63f-433a-999a-7b1b79589b65
+langcode: en
+status: true
+dependencies: {  }
+id: iitb_migrate2
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: null
+label: 'Import articles'
+source:
+  plugin: csv
+  path: sites/default/files/iitb1.csv
+  header_row_count: 1
+  keys:
+    - Id0
+process:
+  title: title
+  body: body
+  type:
+    plugin: default_value
+    default_value: test
+  uid:
+    plugin: default_value
+    default_value: 1
+destination:
+  plugin: 'entity:node'
+migration_dependencies: null

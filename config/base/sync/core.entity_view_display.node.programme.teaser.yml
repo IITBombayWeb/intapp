@@ -33,6 +33,7 @@ content:
     type: addtocart
     settings: {  }
     third_party_settings: {  }
+    region: content
   add_to_cart_price:
     label: inline
     type: number_decimal
@@ -43,13 +44,19 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
+    region: content
   flag_bookmark:
     weight: 10
+    region: content
   links:
     weight: 100
     settings: {  }
     third_party_settings: {  }
+    region: content
 hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
   field_course_duration: true
   field_course_fees: true
   field_degree: true

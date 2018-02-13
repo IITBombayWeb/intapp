@@ -11,7 +11,7 @@ entity_type: profile
 bundle: student_application_
 label: 'Name of the Board/University and Country'
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''

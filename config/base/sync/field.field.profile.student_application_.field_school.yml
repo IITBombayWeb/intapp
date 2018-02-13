@@ -9,9 +9,9 @@ id: profile.student_application_.field_school
 field_name: field_school
 entity_type: profile
 bundle: student_application_
-label: 'School/Institution last studied'
+label: 'School/Institution Last Studied'
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''

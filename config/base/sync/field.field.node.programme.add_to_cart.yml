@@ -11,7 +11,7 @@ id: node.programme.add_to_cart
 field_name: add_to_cart
 entity_type: node
 bundle: programme
-label: 'Add to Packet'
+label: 'Send to packet'
 description: ''
 required: false
 translatable: true

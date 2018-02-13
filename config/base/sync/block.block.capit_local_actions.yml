@@ -9,7 +9,7 @@ _core:
 id: capit_local_actions
 theme: capit
 region: content
-weight: -11
+weight: -12
 provider: null
 plugin: local_actions_block
 settings:

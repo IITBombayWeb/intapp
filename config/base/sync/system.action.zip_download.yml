@@ -1,0 +1,13 @@
+uuid: a5fcd6c7-7052-4808-bdeb-cd9ee2825d69
+langcode: en
+status: true
+dependencies:
+  module:
+    - custom_zip_download
+_core:
+  default_config_hash: vcbu7J1S9PRx6LxJZEefoWL4pTXw11KjGrYX7lm3Buw
+id: zip_download
+label: 'Zip download'
+type: node
+plugin: zip_download
+configuration: {  }

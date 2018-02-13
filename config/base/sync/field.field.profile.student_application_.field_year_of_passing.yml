@@ -11,9 +11,9 @@ id: profile.student_application_.field_year_of_passing
 field_name: field_year_of_passing
 entity_type: profile
 bundle: student_application_
-label: 'Year of passing/appearing in above exam'
+label: 'Year of Passing/Appearing in Above Exam'
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
