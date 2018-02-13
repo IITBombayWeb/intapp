@@ -78,7 +78,11 @@ $(document).ready(function() {
   }
 });
 
+<<<<<<< HEAD
 $(window).on('load', function(){
+=======
+$(window).load(function(){
+>>>>>>> origin/development
   $(".srch-blk, .bscart-pop").mCustomScrollbar({
     scrollButtons:{enable:true},
     theme: "dark-thick",

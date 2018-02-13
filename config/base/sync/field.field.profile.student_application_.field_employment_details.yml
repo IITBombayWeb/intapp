@@ -11,7 +11,7 @@ id: profile.student_application_.field_employment_details
 field_name: field_employment_details
 entity_type: profile
 bundle: student_application_
-label: 'Employment details'
+label: 'Employment Details'
 description: ''
 required: false
 translatable: false
@@ -62,7 +62,6 @@ settings:
   export: 0
   restrict_rebuild: 1
   restrict_import: 1
-  restrict_addrow: 1
   lock_values: 1
   cell_processing: '0'
   empty_rules:

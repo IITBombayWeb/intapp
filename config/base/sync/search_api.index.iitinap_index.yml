@@ -1,0 +1,125 @@
+uuid: 6adcea2b-a750-4043-8986-812e50ee7710
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_degree
+    - field.storage.node.field_course_duration
+    - field.storage.node.field_course_fees
+    - field.storage.node.field_description
+    - field.storage.node.field_thumb
+    - field.storage.node.field_institute
+    - field.storage.node.field_departments
+    - search_api.server.iitinap
+  module:
+    - file
+    - taxonomy
+    - search_api
+    - node
+id: iitinap_index
+name: 'iitinap index'
+description: ''
+read_only: false
+field_settings:
+  aggregated_field:
+    label: 'Aggregated field'
+    property_path: aggregated_field
+    type: text
+    configuration:
+      type: union
+      fields:
+        - 'entity:node/title'
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: string
+  field_degree:
+    label: Degree
+    datasource_id: 'entity:node'
+    property_path: field_degree
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_degree
+  field_course_duration:
+    label: 'Course duration'
+    datasource_id: 'entity:node'
+    property_path: field_course_duration
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_course_duration
+  field_course_fees:
+    label: 'Course fees'
+    datasource_id: 'entity:node'
+    property_path: field_course_fees
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_course_fees
+  field_description:
+    label: Description
+    datasource_id: 'entity:node'
+    property_path: field_description
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_description
+  uri:
+    label: 'Thumb » File » URI'
+    datasource_id: 'entity:node'
+    property_path: 'field_thumb:entity:uri'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_thumb
+      module:
+        - file
+  alt:
+    label: 'Thumb » Alternative text'
+    datasource_id: 'entity:node'
+    property_path: 'field_thumb:alt'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_thumb
+  name:
+    label: 'Institute » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_institute:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_institute
+      module:
+        - taxonomy
+  name_1:
+    label: 'Department » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_departments:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_departments
+      module:
+        - taxonomy
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: false
+      selected:
+        - programme
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  rendered_item: {  }
+tracker_settings:
+  default: {  }
+options:
+  index_directly: true
+  cron_limit: 50
+server: iitinap

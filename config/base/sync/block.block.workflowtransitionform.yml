@@ -1,29 +1,24 @@
-uuid: 18eae237-3ef3-42d9-8bea-0ff358212e6e
+uuid: a5fff326-f411-4f61-9c8b-852660663dac
 langcode: en
 status: true
 dependencies:
   module:
-    - facets
+    - block_class
     - workflow
   theme:
-    - bartik
-_core:
-  default_config_hash: Vlu0W1a-S5N7EuSAx6SrVtfAkv0TdnMZV5WagVaBvJk
+    - capit
+third_party_settings:
+  block_class:
+    classes: ''
 id: workflowtransitionform
-theme: bartik
+theme: capit
 region: sidebar_second
-weight: -10
+weight: -12
 provider: null
 plugin: workflow_transition_form_block
 settings:
   id: workflow_transition_form_block
-  label: 'Workflow Transition form'
+  label: 'Application Status Update'
   provider: workflow
   label_display: visible
-visibility:
-  other_facet:
-    id: other_facet
-    facets: ''
-    facet_value: ''
-    negate: false
-    context_mapping: {  }
+visibility: {  }

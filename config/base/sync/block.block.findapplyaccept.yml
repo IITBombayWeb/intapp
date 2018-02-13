@@ -1,17 +1,20 @@
-uuid: 4ba0f900-ab4f-42d6-8c94-dcd8b9d5bbfc
+uuid: 5972a034-1864-4b7b-9dd5-b3091691bcf6
 langcode: en
 status: true
 dependencies:
   module:
-    - facets
+    - block_class
     - iitinap_general
     - system
   theme:
-    - bartik
+    - capit
+third_party_settings:
+  block_class:
+    classes: ''
 id: findapplyaccept
-theme: bartik
-region: content
-weight: -6
+theme: capit
+region: sidebar_first
+weight: -9
 provider: null
 plugin: landing_block
 settings:
@@ -20,12 +23,6 @@ settings:
   provider: iitinap_general
   label_display: visible
 visibility:
-  other_facet:
-    id: other_facet
-    facets: ''
-    facet_value: ''
-    negate: false
-    context_mapping: {  }
   request_path:
     id: request_path
     pages: '<front>'

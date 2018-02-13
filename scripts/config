@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo ""
+echo "Switching to project docroot."
+cd /var/www/html/intapp/dev
+echo ""
+echo "Pulling down the latest code."
+git pull origin development
+echo ""
+echo "Clearing drush caches."
+drush cache-clear drush
+echo ""
+echo "Clearing drush caches."
+cd /var/www/html/intapp/dev/docroot
+drush cr
+echo ""
+echo "Deployment complete."
