@@ -1,0 +1,28 @@
+uuid: eb60d0c6-7af8-4d09-924e-2dd8d1eadd8e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_programme
+    - node.type.application
+    - node.type.programme
+id: node.application.field_programme
+field_name: field_programme
+entity_type: node
+bundle: application
+label: 'Programs Applied For'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      programme: programme
+    sort:
+      field: _none
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

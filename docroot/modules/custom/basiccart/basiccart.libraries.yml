@@ -1,0 +1,10 @@
+basiccart:
+ version: 1.x
+ css:
+  theme:
+   css/basiccart.css: {}
+ js: 
+  js/basiccart.js: {}
+ dependencies:
+  - core/jquery
+     

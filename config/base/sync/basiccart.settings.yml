@@ -1,0 +1,33 @@
+cart_page_title: 'Application Packet'
+empty_cart: '(Your application packet is now <b>empty</b>. Search and add programs to this packet. You can add and apply any number of times till the deadline ends).'
+cart_block_title: 'Application Packet'
+view_cart_button: 'View Packet'
+cart_update_button: 'Update Packet'
+cart_updated_message: 'Packet Updated'
+quantity_status: 0
+quantity_label: Quantity
+price_status: 1
+price_label: Price
+total_price_status: 1
+total_price_label: 'Total Price'
+currency_status: 1
+currency: USD
+price_format: '1'
+vat_state: 0
+vat_value: !!float 0
+add_to_cart_button: 'Send to packet'
+add_to_cart_redirect: home
+content_type:
+  programme: programme
+  application: null
+  article: null
+  faq: null
+  page: null
+  slideshow: null
+  important_deadlines: null
+  test: null
+order_status: 0
+langcode: en
+_core:
+  default_config_hash: Uk82Ox5KzR5fsgH_qhIWt7oO1rRvdbhxh5nAwFqLlxc
+added_to_cart_message: Sent

@@ -1,0 +1,22 @@
+uuid: fd5d5aef-c885-4142-a886-7d4486c3c83d
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: uY_IPhzWFpF-2EUROdLu2dZuPi4H4YrFQv3YQVSIiDw
+id: node.basiccart_vat
+field_name: basiccart_vat
+entity_type: node
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

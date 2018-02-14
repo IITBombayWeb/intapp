@@ -1,0 +1,11 @@
+id: pdf_download
+label: 'PDF download'
+status: true
+langcode: en
+type: node
+plugin: pdf_download
+dependencies:
+  module:
+    - node
+    - custom_pdf_download
+

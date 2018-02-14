@@ -1,0 +1,38 @@
+uuid: 383e868c-b73c-46b9-810d-7a4a8bf83d88
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: dJ0L2DNSj5q6XVZAGsuVDpJTh5UeYkIPwKrUOOpr8YI
+id: authenticated
+label: 'Authenticated user'
+weight: 1
+is_admin: false
+permissions:
+  - 'access any apply workflow_transion overview'
+  - 'access apply workflow_transition form'
+  - 'access comments'
+  - 'access content'
+  - 'access own apply workflow_transion overview'
+  - 'access shortcuts'
+  - 'access site-wide contact form'
+  - 'access user profiles'
+  - 'add own student_application_ profile'
+  - 'addcolumn tablefield'
+  - 'addonerow tablefield'
+  - 'basiccart use_cart'
+  - 'create application content'
+  - 'create apply workflow_transition'
+  - 'delete own application content'
+  - 'edit own application content'
+  - 'edit own apply workflow_transition'
+  - 'post comments'
+  - 'revert own apply workflow_transition'
+  - 'search content'
+  - 'select tablefield'
+  - 'skip comment approval'
+  - 'use text format basic_html'
+  - 'view application revisions'
+  - 'view faq page'
+  - 'view own unpublished content'
+  - 'view search api pages'

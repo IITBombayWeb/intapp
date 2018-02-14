@@ -1,0 +1,19 @@
+uuid: c681d612-4dec-4401-b8fc-7bcca9b9454f
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
+id: anonymous
+label: 'Anonymous user'
+weight: 0
+is_admin: false
+permissions:
+  - 'access comments'
+  - 'access content'
+  - 'access site-wide contact form'
+  - 'basiccart use_cart'
+  - 'search content'
+  - 'use text format restricted_html'
+  - 'view faq page'
+  - 'view search api pages'

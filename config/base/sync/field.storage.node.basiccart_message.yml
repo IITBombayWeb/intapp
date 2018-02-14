@@ -1,0 +1,21 @@
+uuid: 37546242-08b6-4332-9d44-a8837d318232
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: Vsw-JZwlLkUck8Y0qhHB6CoRDWs6V1eSDrWN4jL5Li4
+id: node.basiccart_message
+field_name: basiccart_message
+entity_type: node
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

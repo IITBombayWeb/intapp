@@ -1,0 +1,10 @@
+uuid: 88c52f50-33de-4ef9-af08-9e04d804bbee
+langcode: en
+status: true
+dependencies: {  }
+id: apply_application_rejected_application_rejected
+label: 'Application Rejected'
+module: null
+from_sid: apply_application_rejected
+to_sid: apply_application_rejected
+roles: {  }

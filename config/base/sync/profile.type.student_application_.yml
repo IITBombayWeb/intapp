@@ -1,0 +1,15 @@
+uuid: f56183ad-ebc3-4a34-94dc-39ce753c0bd5
+langcode: en
+status: true
+dependencies: {  }
+id: student_application_
+label: 'Application Details '
+registration: false
+multiple: false
+roles:
+  authenticated: authenticated
+  student: student
+  administrator: '0'
+  office: '0'
+  developer: '0'
+weight: 0

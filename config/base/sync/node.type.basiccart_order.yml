@@ -1,0 +1,22 @@
+uuid: 503b9682-e744-410f-b9d1-4e09cbb76c47
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - basiccart
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+_core:
+  default_config_hash: Bvc1LAt6G5E_K1csnCTAzqJAuewYzGGqmQyEvjuM4HA
+name: Order
+type: basiccart_order
+description: 'Orders created by Basic Cart Module'
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: false

@@ -1,0 +1,15 @@
+iitinap_general.content:
+  path: '/homepage'
+  defaults:
+    _controller: '\Drupal\iitinap_general\Controller\IitpController::content'
+    _title: ''
+  requirements:
+    _permission: 'access content'
+
+iitinap_general.config:
+  path: '/admin/config/landing/instruction'
+  defaults:
+    _form: '\Drupal\iitinap_general\Form\LandingConfigForm'
+    _title: 'Landing Customize Page'
+  requirements:
+    _permission: 'administer site configuration'

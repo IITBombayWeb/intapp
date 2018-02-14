@@ -1,0 +1,25 @@
+uuid: 22f58b42-0edf-4e6d-bf29-246506365c6e
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - capit
+_core:
+  default_config_hash: NDwadleLD3YVSbDUaakxyYZyINYtkFtOVGShfq4kWy8
+id: capit_branding
+theme: capit
+region: header_first
+weight: -12
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site branding'
+  provider: system
+  label_display: '0'
+  use_site_logo: true
+  use_site_name: true
+  use_site_slogan: true
+visibility: {  }

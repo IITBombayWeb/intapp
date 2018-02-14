@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\paypal.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function paypal_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'paypal/paypal';
+}

@@ -1,0 +1,21 @@
+uuid: 98e7b1e4-dad7-4bcf-bdbd-e7782c1b337d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_mobile_num_com
+    - profile.type.student_application_
+  module:
+    - telephone
+id: profile.student_application_.field_mobile_num_com
+field_name: field_mobile_num_com
+entity_type: profile
+bundle: student_application_
+label: 'Mobile No'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: telephone
