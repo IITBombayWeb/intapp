@@ -1,9 +1,0 @@
-uuid: b63cc2c3-2b5c-40d2-bab5-1fadecf16777
-langcode: en
-status: true
-dependencies: {  }
-name: 'IIT Institute'
-vid: iit_institute
-description: 'List of iit institutes'
-hierarchy: 0
-weight: 0

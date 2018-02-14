@@ -1,9 +1,0 @@
-uuid: de32092c-5345-42b2-8e45-3ff5c2307998
-langcode: en
-status: true
-dependencies: {  }
-name: Departments
-vid: departments
-description: 'List of Departments'
-hierarchy: 0
-weight: 0

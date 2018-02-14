@@ -1,6 +1,0 @@
-paypal.settings_file:
-  title: 'Paypal Configuration'
-  route_name: paypal.settings_file
-  description: 'A description for the menu entry'
-  parent: system.admin_config_system
-  weight: 98

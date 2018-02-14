@@ -1,7 +1,0 @@
-name: Paypal
-description: description for paypal Integration.
-core: 8.x
-package: Custom
-type: module
-
-configure: paypal.settings_file
