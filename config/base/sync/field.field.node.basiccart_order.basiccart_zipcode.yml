@@ -1,0 +1,21 @@
+uuid: b1e1406a-296e-4005-924e-e39861432b28
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.basiccart_zipcode
+    - node.type.basiccart_order
+_core:
+  default_config_hash: yji4Q4OYB-YiCfYnSwBDToEDs_0712uerZq8FdpouGs
+id: node.basiccart_order.basiccart_zipcode
+field_name: basiccart_zipcode
+entity_type: node
+bundle: basiccart_order
+label: 'Zip Code'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

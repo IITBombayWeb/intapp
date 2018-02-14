@@ -1,0 +1,15 @@
+uuid: 07f0005d-898d-4a8e-aecc-97fa88d568ab
+langcode: en
+status: true
+dependencies: {  }
+id: apply_offer_given_downloaded_for_department_processing
+label: null
+module: null
+from_sid: apply_offer_given
+to_sid: apply_downloaded_for_department_processing
+roles:
+  workflow_author: 0
+  authenticated: 0
+  administrator: 0
+  student: 0
+  office: 0

@@ -1,0 +1,10 @@
+uuid: 63326c42-8bec-4385-a96f-b72d9c9592f3
+langcode: en
+status: '1'
+dependencies: {  }
+id: apply_offer_given
+label: 'Offer Given'
+module: null
+wid: apply
+weight: '-4'
+sysid: 0

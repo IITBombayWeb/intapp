@@ -1,0 +1,22 @@
+uuid: b002ed7f-9a3f-4713-b97d-9c8c5e4c26af
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.important_deadlines
+id: node.important_deadlines.promote
+field_name: promote
+entity_type: node
+bundle: important_deadlines
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

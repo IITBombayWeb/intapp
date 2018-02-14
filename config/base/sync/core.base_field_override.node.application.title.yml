@@ -1,0 +1,18 @@
+uuid: 5b8891a7-10ee-4e4d-a888-fffc55b446ff
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.application
+id: node.application.title
+field_name: title
+entity_type: node
+bundle: application
+label: 'First/ Given name(s)'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

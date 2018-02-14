@@ -1,0 +1,21 @@
+uuid: d41476a5-bff8-4921-98e8-2ae02cc076d2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_specific_d
+    - node.type.application
+  module:
+    - options
+id: node.application.field_specific_d
+field_name: field_specific_d
+entity_type: node
+bundle: application
+label: 'Specific Documents'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_integer

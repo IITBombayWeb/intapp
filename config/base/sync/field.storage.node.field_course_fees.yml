@@ -1,0 +1,21 @@
+uuid: 5f9303d4-7aa7-4fe8-b8b7-1226e6910c4f
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_course_fees
+field_name: field_course_fees
+entity_type: node
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

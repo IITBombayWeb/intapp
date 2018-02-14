@@ -1,0 +1,81 @@
+uuid: c82b5221-c2ee-4367-ba60-9edc77a2d951
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.application.field_application_path
+    - field.field.node.application.field_documents_uploaded
+    - field.field.node.application.field_general_documents
+    - field.field.node.application.field_programme
+    - field.field.node.application.field_specific_d
+    - field.field.node.application.field_status
+    - node.type.application
+  module:
+    - path
+id: node.application.default
+targetEntityType: node
+bundle: application
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+  field_application_path:
+    weight: 30
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_documents_uploaded:
+    weight: 29
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+  field_general_documents:
+    weight: 26
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+  field_programme:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+  field_specific_d:
+    weight: 27
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+  path:
+    type: path
+    weight: 6
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 4
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 5
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  field_status: true
+  title: true

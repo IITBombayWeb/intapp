@@ -1,0 +1,15 @@
+uuid: da95516f-877f-4450-a62d-74d7ff252a30
+langcode: en
+status: true
+dependencies: {  }
+id: office
+label: office
+registration: false
+multiple: false
+roles:
+  authenticated: authenticated
+  office: office
+  administrator: '0'
+  student: '0'
+  developer: '0'
+weight: 0

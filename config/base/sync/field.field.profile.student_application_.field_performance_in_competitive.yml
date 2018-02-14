@@ -1,0 +1,43 @@
+uuid: 921dae7b-fd58-47f8-9ee6-faf48d786cb1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_performance_in_competitive
+    - profile.type.student_application_
+  module:
+    - tablefield
+id: profile.student_application_.field_performance_in_competitive
+field_name: field_performance_in_competitive
+entity_type: profile
+bundle: student_application_
+label: 'Performance in Competitive Examination (such as GRE, GMAT)'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    rebuild:
+      cols: '3'
+      rows: '2'
+    value:
+      -
+        - 'Name of the Exam'
+        - Year
+        - Score
+      -
+        - ''
+        - ''
+        - ''
+    format: null
+default_value_callback: ''
+settings:
+  export: 0
+  restrict_rebuild: 1
+  restrict_import: 1
+  lock_values: 1
+  cell_processing: '0'
+  empty_rules:
+    ignore_table_structure: 0
+    ignore_table_header: 0
+field_type: tablefield

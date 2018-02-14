@@ -1,0 +1,29 @@
+uuid: ec6ef191-3587-4b8c-8562-b95ce7c01781
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:1bc76801-032e-4944-87e7-3d12873f9699'
+  module:
+    - block_class
+    - block_content
+  theme:
+    - capit
+third_party_settings:
+  block_class:
+    classes: 'mst-vw-cnt ft-cm'
+id: mostviewed
+theme: capit
+region: featured_iner
+weight: -11
+provider: null
+plugin: 'block_content:1bc76801-032e-4944-87e7-3d12873f9699'
+settings:
+  id: 'block_content:1bc76801-032e-4944-87e7-3d12873f9699'
+  label: 'Most Viewed'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

@@ -1,0 +1,28 @@
+uuid: 5646ee34-6288-41bd-a34d-c96d1895c08e
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.account
+  module:
+    - block_class
+    - system
+  theme:
+    - capit
+third_party_settings:
+  block_class:
+    classes: user-login
+id: useraccountmenu
+theme: capit
+region: header_second
+weight: -12
+provider: null
+plugin: 'system_menu_block:account'
+settings:
+  id: 'system_menu_block:account'
+  label: 'User account menu'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 1
+visibility: {  }

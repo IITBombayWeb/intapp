@@ -1,0 +1,27 @@
+uuid: 23350ed8-8256-4236-9745-f51f8bf9d477
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.basiccart_total_price
+    - node.type.basiccart_order
+_core:
+  default_config_hash: ogLroeoiQP_bKyDrmunnPiql04e1BaIGvcXHwi8d7Ns
+id: node.basiccart_order.basiccart_total_price
+field_name: basiccart_total_price
+entity_type: node
+bundle: basiccart_order
+label: 'Total price'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: !!float 0
+default_value_callback: ''
+settings:
+  min: !!float 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

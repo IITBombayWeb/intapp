@@ -1,0 +1,22 @@
+uuid: 9130ad2e-4251-4df6-a556-6166bcc8cc0f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.important_deadlines
+  module:
+    - text
+id: node.important_deadlines.body
+field_name: body
+entity_type: node
+bundle: important_deadlines
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+field_type: text_with_summary

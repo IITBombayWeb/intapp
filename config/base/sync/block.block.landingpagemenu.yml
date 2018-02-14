@@ -1,0 +1,33 @@
+uuid: 2decd154-e0c2-40e0-ac2b-fbaaaa039423
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.landing-page-menu
+  module:
+    - block_class
+    - system
+  theme:
+    - capit
+third_party_settings:
+  block_class:
+    classes: knw-abt
+id: landingpagemenu
+theme: capit
+region: sidebar_second
+weight: -12
+provider: null
+plugin: 'system_menu_block:landing-page-menu'
+settings:
+  id: 'system_menu_block:landing-page-menu'
+  label: 'I want to know about'
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

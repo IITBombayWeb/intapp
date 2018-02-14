@@ -1,0 +1,26 @@
+uuid: da63ddec-a4c9-4d13-88b9-3c8810947694
+langcode: en
+status: true
+dependencies:
+  module:
+    - profile
+    - tablefield
+id: profile.field_employment_details
+field_name: field_employment_details
+entity_type: profile
+type: tablefield
+settings:
+  cols: '6'
+  column_date: '0'
+  column_select: '2'
+  numbers: '3,5'
+  col_opt:
+    - "Jan|Jan\r\nFeb|Feb\r\nMar|Mar\r\nApr|Apr\r\nMay|May\r\nJun|Jun\r\nJul|Jul\r\nAug|Aug\r\nSep|Sep\r\nOct|Oct\r\nNov|Nov\r\nDec|Dec"
+    - "Jan|Jan\r\nFeb|Feb\r\nMar|Mar\r\nApr|Apr\r\nMay|May\r\nJun|Jun\r\nJul|Jul\r\nAug|Aug\r\nSep|Sep\r\nOct|Oct\r\nNov|Nov\r\nDec|Dec"
+module: tablefield
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

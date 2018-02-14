@@ -1,0 +1,21 @@
+uuid: e07798d3-0908-434a-b7ce-a3a11630c4e0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_year_of_passing
+    - profile.type.student_application_
+  module:
+    - options
+id: profile.student_application_.field_year_of_passing
+field_name: field_year_of_passing
+entity_type: profile
+bundle: student_application_
+label: 'Year of Passing/Appearing in Above Exam'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_float

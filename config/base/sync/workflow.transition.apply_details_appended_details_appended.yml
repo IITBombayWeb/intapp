@@ -1,0 +1,10 @@
+uuid: 9499f36a-3c43-4593-82fa-3890e4f93f8c
+langcode: en
+status: true
+dependencies: {  }
+id: apply_details_appended_details_appended
+label: 'Details to Review'
+module: null
+from_sid: apply_details_appended
+to_sid: apply_details_appended
+roles: {  }

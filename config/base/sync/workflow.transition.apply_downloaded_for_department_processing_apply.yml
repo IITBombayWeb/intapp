@@ -1,0 +1,15 @@
+uuid: b3d5c044-8032-4be7-baf4-c4323e3330e9
+langcode: en
+status: true
+dependencies: {  }
+id: apply_downloaded_for_department_processing_apply
+label: null
+module: null
+from_sid: apply_downloaded_for_department_processing
+to_sid: apply_apply
+roles:
+  workflow_author: 0
+  authenticated: 0
+  administrator: 0
+  student: 0
+  office: 0

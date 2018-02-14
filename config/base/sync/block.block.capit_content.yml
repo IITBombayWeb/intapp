@@ -1,0 +1,22 @@
+uuid: c7b35f4d-d02b-42bb-8164-cbc1dbad07b6
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - capit
+_core:
+  default_config_hash: 9EoWV2Lot6FVSr50t4hoKgiz1LIXYWNG-IIPYsWxBqo
+id: capit_content
+theme: capit
+region: content
+weight: -10
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+visibility: {  }

@@ -1,0 +1,10 @@
+uuid: e6812b94-9b46-45f5-9b18-c11351498450
+langcode: en
+status: true
+dependencies: {  }
+id: apply_offer_rejected_offer_rejected
+label: 'Offer Rejected'
+module: null
+from_sid: apply_offer_rejected
+to_sid: apply_offer_rejected
+roles: {  }

@@ -1,0 +1,19 @@
+uuid: 9733643b-b541-4911-9af6-ce454af4ce15
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_first_name
+    - profile.type.student_application_
+id: profile.student_application_.field_first_name
+field_name: field_first_name
+entity_type: profile
+bundle: student_application_
+label: 'First/Given Name'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,21 @@
+uuid: 30d360d7-eb8d-4ce4-8594-c4c36c94dfa2
+langcode: en
+status: true
+dependencies:
+  module:
+    - profile
+id: profile.field_application_path
+field_name: field_application_path
+entity_type: profile
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
