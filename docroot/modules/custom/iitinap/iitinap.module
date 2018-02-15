@@ -393,6 +393,165 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
  *Implements form_validation() for registration.
  */
 function form_validate_data2($form, &$form_state){
+	if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest') {
+		if($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
+	  $form_state->setError($form['document_checkbox'],"Please select all files");
+       }
+       
+       if($form['field_supporting_d']['#type']!='hidden'){
+	if($form['field_supporting_d']['widget']['#file_upload_delta']<$form['field_supporting_d']['#no_doc']) {
+	    $form_state->setError($form['field_supporting_d'],"Please upload all files");
+	    }
+       }
+  
+       //First Name
+       $field_first_name = $form['field_first_name']['widget'][0]['value']['#value'];
+       if(!empty($field_first_name)){
+	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_first_name)){
+	     	 $form_state->setError($form['field_first_name']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed.");
+	      }
+       }
+       //Sure Name
+       $field_surname = $form['field_surname']['widget'][0]['value']['#value'];
+       if(!empty($field_surname)){
+	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_surname)){
+	     	 $form_state->setError($form['field_surname']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed.");
+	      }
+       }
+       
+       //Date of Birth
+       if(!empty($form['field_date_of_birth']['widget'][0]['value']['#value']['date'])){
+         $Date_of_birth = date(strtotime($form['field_date_of_birth']['widget'][0]['value']['#value']['date']));
+         $cur_date = date('Y-m-d', strtotime("-18 year"));
+         $restrict_date = date(strtotime($cur_date));
+	      if(!($Date_of_birth < $restrict_date)){
+	          $form_state->setError($form['field_date_of_birth']['widget'][0]['value'],"DOB should be above 18 years.");
+	      }
+       }
+       
+       //Mobile No
+       $field_mobile_num_com = $form['field_mobile_num_com']['widget'][0]['value']['#value'];
+       if(!empty($field_mobile_num_com)){
+          if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_mobile_num_com)){
+	      $form_state->setError($form['field_mobile_num_com']['widget'][0]['value'],"Please Enter Valid Mobile Number.");
+          }
+       }
+       //Telephone no
+       $field_telephone_num_com = $form['field_telephone_num_com']['widget'][0]['value']['#value'];
+       if(!empty($field_telephone_num_com)){
+           if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_telephone_num_com)){
+	        $form_state->setError($form['field_telephone_num_com']['widget'][0]['value'],"Please Enter Valid Phone Number.");
+           }
+       }
+       //city
+       $city = $form['field_city']['widget'][0]['value']['#value'];
+       if(!empty($city)){
+          if(!preg_match("/^[\pL\pM\p{Zs}.-]+$/u",$city)){
+	      $form_state->setError($form['field_city']['widget'][0]['value'],"Please Enter Valid City Name.");
+          }
+       }
+       
+       //school city
+       $city_school= $form['field_city_school']['widget'][0]['value']['#value'];
+       if(!empty($city_school)){
+          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$city_school)){
+	      $form_state->setError($form['field_city_school']['widget'][0]['value'],"Please Enter Valid City Name.");
+          }
+       }
+       //State
+       $state = $form['field_state']['widget'][0]['value']['#value'];
+       if(!empty($state)){
+          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$state)){
+	      $form_state->setError($form['field_state']['widget'][0]['value'],"Please Enter Valid State Name. ");
+          }
+       }
+       //State School
+       $state_school = $form['field_state_school']['widget'][0]['value']['#value'];
+       if(!empty($state_school)){
+          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$state_school)){
+	      $form_state->setError($form['field_state_school']['widget'][0]['value'],"Please Enter Valid State Name.");
+          }
+       }
+       //Pincode
+       $pincode=$form['field_pin']['widget'][0]['value']['#value'];
+       if(!empty($pincode)){
+       	if(!preg_match("/^[a-zA-Z0-9]+/", $pincode)){
+       	$form_state->setError($form['field_pin']['widget'][0]['value'],"Please Enter Valid Pincode.");
+       	}
+       }
+	   //Pincode School
+       $pincode_school=$form['field_pincode_school']['widget'][0]['value']['#value'];
+       if(!empty($pincode_school)){
+       	if(!preg_match("/^[a-zA-Z0-9]+/", $pincode_school)){
+	 $form_state->setError($form['field_pincode_school']['widget'][0]['value'],"Please Enter Valid  Pincode.");
+       }
+       }
+       //Name of the Qualifying Examination
+       $Qulify_exam = $form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'];
+       if(!empty($form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'])){
+            if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/",$Qulify_exam)){
+	      $form_state->setError($form['field_name_of_the_qualifying_exa']['widget'][0]['value'],"Please Enter Name of the Qualifying Examination.");
+	    }
+       }
+       
+       // Name of the Board/University and Country
+       $board_uni = $form['field_name_of_the_board_universi']['widget'][0]['value']['#value'];
+       if(!empty($form['field_name_of_the_board_universi']['widget'][0]['value']['#value'])){
+	       if(!preg_match("/^[\pL\pM\p{Zs}.-]+$/u",$board_uni)){
+	 $form_state->setError($form['field_name_of_the_board_universi']['widget'][0]['value'],"Please Enter Name of the Board/University and Country.");
+       }
+   }
+       
+       // School/Institution Last Studied
+       $school = $form['field_school']['widget'][0]['value']['#value'];
+       if(!empty($form['field_school']['widget'][0]['value']['#value'])){
+	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.|\&)?([A-Za-z])+))*$/",$school)){
+	         $form_state->setError($form['field_school']['widget'][0]['value'],"Please Enter School/Institution Last Studied.");
+	      }
+       }
+       //country
+       $country1=$form['field_country']['widget']['#value'];
+       if(empty($country1)){
+       	$form_state->setError($form['field_country']['widget']['#value'],"Please select the Country");
+       }
+       //gender
+       $gender=$form['field_gender']['widget']['#value'];
+       if(empty($gender)){
+       	$form_state->setError($form['field_gender']['widget']['#value'],"Please select the Gender");
+       }
+       //Medium of Instruction
+       $medium_ins = $form['field_medium_of_instruction_']['widget'][0]['value']['#value'];
+        if(!empty($form['field_medium_of_instruction_']['widget'][0]['value']['#value'])){
+	        if(!preg_match("/^[A-Za-z]+((\s)?([A-Za-z])+)*$/",$medium_ins)){
+		     $form_state->setError($form['field_medium_of_instruction_']['widget'][0]['value'],"Please Enter Medium of Instruction.");
+	         }
+	      }
+       
+       // if(empty($form['field_general_documents']['widget']['#file_upload_delta'])){
+       //  $form_state->setError($form['field_general_documents'],"Please upload general document");
+       // }
+       
+        // Performance in Competitive Examination (such as GRE, GMAT) 
+       $comp_per = $form['field_performance_in_competitive']['widget'][0]['#value']['tablefield']['table'];
+       foreach ($comp_per as $cp_clm_key => $cp_clm_value){   
+           foreach ($cp_clm_value as $cp_row_key => $cp_row_value){
+	      if(empty($cp_row_value)){
+	           $form_state->setError($form['field_performance_in_competitive']['widget'][0]['tablefield']['table'][$cp_clm_key][$cp_row_key],"Please Fill Performance in Competitive Examination.");
+	      }
+          }   
+       }
+       
+       // Proficiency in English (TOEFL / IELTS)
+       $eng_prof = $form['field_proficiency_in_english']['widget'][0]['#value']['tablefield']['table'];
+       foreach ($eng_prof as $cp_clm_key => $cp_clm_value){   
+           foreach ($cp_clm_value as $cp_row_key => $cp_row_value){
+	      if(empty($cp_row_value)){
+	           $form_state->setError($form['field_proficiency_in_english']['widget'][0]['tablefield']['table'][$cp_clm_key][$cp_row_key],"Please Fill Proficiency in English.");
+	      }
+          }   
+       }
+	}
+}
        /*
               $email = filter_var($form['account']['mail']['#value'], FILTER_VALIDATE_EMAIL);
        if(!($email)){
@@ -411,174 +570,17 @@ function form_validate_data2($form, &$form_state){
            $form_state->setError($form['account']['pass']['pass2'],"Password Should Match with below Requirement(s)"); 
        }
        */
-}
+
 /**
  *Implements form_validation() for application.
  */
 
-// function form_validate_data1($form, &$form_state) {
+function form_validate_data1($form, &$form_state) {
 
-// 	if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest') {
-// 		if($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
-// 	  $form_state->setError($form['document_checkbox'],"Please select all files");
-//        }
-       
-//        if($form['field_supporting_d']['#type']!='hidden'){
-// 	if($form['field_supporting_d']['widget']['#file_upload_delta']<$form['field_supporting_d']['#no_doc']) {
-// 	    $form_state->setError($form['field_supporting_d'],"Please upload all files");
-// 	    }
-//        }
-  
-//        //First Name
-//        $field_first_name = $form['field_first_name']['widget'][0]['value']['#value'];
-//        if(!empty($field_first_name)){
-// 	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_first_name)){
-// 	     	 $form_state->setError($form['field_first_name']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed.");
-// 	      }
-//        }
-//        //Sure Name
-//        $field_surname = $form['field_surname']['widget'][0]['value']['#value'];
-//        if(!empty($field_surname)){
-// 	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_surname)){
-// 	     	 $form_state->setError($form['field_surname']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed.");
-// 	      }
-//        }
-       
-//        //Date of Birth
-//        if(!empty($form['field_date_of_birth']['widget'][0]['value']['#value']['date'])){
-//          $Date_of_birth = date(strtotime($form['field_date_of_birth']['widget'][0]['value']['#value']['date']));
-//          $cur_date = date('Y-m-d', strtotime("-18 year"));
-//          $restrict_date = date(strtotime($cur_date));
-// 	      if(!($Date_of_birth < $restrict_date)){
-// 	          $form_state->setError($form['field_date_of_birth']['widget'][0]['value'],"DOB should be above 18 years.");
-// 	      }
-//        }
-       
-//        //Mobile No
-//        $field_mobile_num_com = $form['field_mobile_num_com']['widget'][0]['value']['#value'];
-//        if(!empty($field_mobile_num_com)){
-//           if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_mobile_num_com)){
-// 	      $form_state->setError($form['field_mobile_num_com']['widget'][0]['value'],"Please Enter Valid Mobile Number.");
-//           }
-//        }
-//        //Telephone no
-//        $field_telephone_num_com = $form['field_telephone_num_com']['widget'][0]['value']['#value'];
-//        if(!empty($field_telephone_num_com)){
-//            if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_telephone_num_com)){
-// 	        $form_state->setError($form['field_telephone_num_com']['widget'][0]['value'],"Please Enter Valid Phone Number.");
-//            }
-//        }
-//        //city
-//        $city = $form['field_city']['widget'][0]['value']['#value'];
-//        if(!empty($city)){
-//           if(!preg_match("/^[\pL\pM\p{Zs}.-]+$/u",$city)){
-// 	      $form_state->setError($form['field_city']['widget'][0]['value'],"Please Enter Valid City Name.");
-//           }
-//        }
-       
-//        //school city
-//        $city_school= $form['field_city_school']['widget'][0]['value']['#value'];
-//        if(!empty($city_school)){
-//           if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$city_school)){
-// 	      $form_state->setError($form['field_city_school']['widget'][0]['value'],"Please Enter Valid City Name.");
-//           }
-//        }
-//        //State
-//        $state = $form['field_state']['widget'][0]['value']['#value'];
-//        if(!empty($state)){
-//           if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$state)){
-// 	      $form_state->setError($form['field_state']['widget'][0]['value'],"Please Enter Valid State Name. ");
-//           }
-//        }
-//        //State School
-//        $state_school = $form['field_state_school']['widget'][0]['value']['#value'];
-//        if(!empty($state_school)){
-//           if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$state_school)){
-// 	      $form_state->setError($form['field_state_school']['widget'][0]['value'],"Please Enter Valid State Name.");
-//           }
-//        }
-//        //Pincode
-//        $pincode=$form['field_pin']['widget'][0]['value']['#value'];
-//        if(!empty($pincode)){
-//        	if(!preg_match("/^[a-zA-Z0-9]+/", $pincode)){
-//        	$form_state->setError($form['field_pin']['widget'][0]['value'],"Please Enter Valid Pincode.");
-//        	}
-//        }
-// 	   //Pincode School
-//        $pincode_school=$form['field_pincode_school']['widget'][0]['value']['#value'];
-//        if(!empty($pincode_school)){
-//        	if(!preg_match("/^[a-zA-Z0-9]+/", $pincode_school)){
-// 	 $form_state->setError($form['field_pincode_school']['widget'][0]['value'],"Please Enter Valid  Pincode.");
-//        }
-//        }
-//        //Name of the Qualifying Examination
-//        $Qulify_exam = $form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'];
-//        if(!empty($form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'])){
-//             if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/",$Qulify_exam)){
-// 	      $form_state->setError($form['field_name_of_the_qualifying_exa']['widget'][0]['value'],"Please Enter Name of the Qualifying Examination.");
-// 	    }
-//        }
-       
-//        // Name of the Board/University and Country
-//        $board_uni = $form['field_name_of_the_board_universi']['widget'][0]['value']['#value'];
-//        if(!empty($form['field_name_of_the_board_universi']['widget'][0]['value']['#value'])){
-// 	       if(!preg_match("/^[\pL\pM\p{Zs}.-]+$/u",$board_uni)){
-// 	 $form_state->setError($form['field_name_of_the_board_universi']['widget'][0]['value'],"Please Enter Name of the Board/University and Country.");
-//        }
-//    }
-       
-//        // School/Institution Last Studied
-//        $school = $form['field_school']['widget'][0]['value']['#value'];
-//        if(!empty($form['field_school']['widget'][0]['value']['#value'])){
-// 	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.|\&)?([A-Za-z])+))*$/",$school)){
-// 	         $form_state->setError($form['field_school']['widget'][0]['value'],"Please Enter School/Institution Last Studied.");
-// 	      }
-//        }
-//        //country
-//        $country1=$form['field_country']['widget']['#value'];
-//        if(empty($country1)){
-//        	$form_state->setError($form['field_country']['widget']['#value'],"Please select the Country");
-//        }
-//        //gender
-//        $gender=$form['field_gender']['widget']['#value'];
-//        if(empty($gender)){
-//        	$form_state->setError($form['field_gender']['widget']['#value'],"Please select the Gender");
-//        }
-//        //Medium of Instruction
-//        $medium_ins = $form['field_medium_of_instruction_']['widget'][0]['value']['#value'];
-//         if(!empty($form['field_medium_of_instruction_']['widget'][0]['value']['#value'])){
-// 	        if(!preg_match("/^[A-Za-z]+((\s)?([A-Za-z])+)*$/",$medium_ins)){
-// 		     $form_state->setError($form['field_medium_of_instruction_']['widget'][0]['value'],"Please Enter Medium of Instruction.");
-// 	         }
-// 	      }
-       
-//        // if(empty($form['field_general_documents']['widget']['#file_upload_delta'])){
-//        //  $form_state->setError($form['field_general_documents'],"Please upload general document");
-//        // }
-       
-//         // Performance in Competitive Examination (such as GRE, GMAT) 
-//        $comp_per = $form['field_performance_in_competitive']['widget'][0]['#value']['tablefield']['table'];
-//        foreach ($comp_per as $cp_clm_key => $cp_clm_value){   
-//            foreach ($cp_clm_value as $cp_row_key => $cp_row_value){
-// 	      if(empty($cp_row_value)){
-// 	           $form_state->setError($form['field_performance_in_competitive']['widget'][0]['tablefield']['table'][$cp_clm_key][$cp_row_key],"Please Fill Performance in Competitive Examination.");
-// 	      }
-//           }   
-//        }
-       
-//        // Proficiency in English (TOEFL / IELTS)
-//        $eng_prof = $form['field_proficiency_in_english']['widget'][0]['#value']['tablefield']['table'];
-//        foreach ($eng_prof as $cp_clm_key => $cp_clm_value){   
-//            foreach ($cp_clm_value as $cp_row_key => $cp_row_value){
-// 	      if(empty($cp_row_value)){
-// 	           $form_state->setError($form['field_proficiency_in_english']['widget'][0]['tablefield']['table'][$cp_clm_key][$cp_row_key],"Please Fill Proficiency in English.");
-// 	      }
-//           }   
-//        }
-// 	}
+	
        
        
-//  }
+ }
        /*
        // Details of Academic Record (Secondary onwards) 
        $academic_rec = $form['field_details_of_academic_record']['widget'][0]['#value']['tablefield']['table'];
