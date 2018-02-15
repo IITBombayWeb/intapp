@@ -420,9 +420,9 @@ function form_validate_data1($form, &$form_state) {
      //dpm($form);
    if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest') {
        
-       if($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
-	  $form_state->setError($form['document_checkbox'],"Please select all files");
-       }
+   //     if($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
+	  // $form_state->setError($form['document_checkbox'],"Please select all files");
+   //     }
        
        if($form['field_supporting_d']['#type']!='hidden'){
 	if($form['field_supporting_d']['widget']['#file_upload_delta']<$form['field_supporting_d']['#no_doc']) {
