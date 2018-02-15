@@ -393,8 +393,34 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
  *Implements form_validation() for registration.
  */
 function form_validate_data2($form, &$form_state){
-	if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest') {
-		if($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
+       /*
+              $email = filter_var($form['account']['mail']['#value'], FILTER_VALIDATE_EMAIL);
+       if(!($email)){
+	      $form_state->setError($form['account']['mail'],"Invalid Email Format");
+       }
+       if (preg_match('/[^a-z-0-9_-]/i', $form['account']['name']['#value'])) {
+	      $form_state->setError($form['account']['name'],"Please use - or _ character to split username");
+       }
+       $password = $form['account']['pass']['#value']['pass1'];
+       $uppercase = preg_match('@[A-Z]@', $password);
+       $lowercase = preg_match('@[a-z]@', $password);
+       $number    = preg_match('@[0-9]@', $password);
+       $special   = preg_match('@[\W]+@', $password); 
+       if(!$uppercase || !$lowercase || !$number || strlen($password) < 6 || !$special) {
+           $form_state->setError($form['account']['pass']['pass1'],"Password Should Match with below Requirement(s)");
+           $form_state->setError($form['account']['pass']['pass2'],"Password Should Match with below Requirement(s)"); 
+       }
+       */
+}
+/**
+ *Implements form_validation() for application.
+ */
+
+function form_validate_data1($form, &$form_state) {
+     //dpm($form);
+   if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest') {
+       
+       if($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
 	  $form_state->setError($form['document_checkbox'],"Please select all files");
        }
        
@@ -500,7 +526,6 @@ function form_validate_data2($form, &$form_state){
 	       if(!preg_match("/^[\pL\pM\p{Zs}.-]+$/u",$board_uni)){
 	 $form_state->setError($form['field_name_of_the_board_universi']['widget'][0]['value'],"Please Enter Name of the Board/University and Country.");
        }
-   }
        
        // School/Institution Last Studied
        $school = $form['field_school']['widget'][0]['value']['#value'];
@@ -526,7 +551,7 @@ function form_validate_data2($form, &$form_state){
 		     $form_state->setError($form['field_medium_of_instruction_']['widget'][0]['value'],"Please Enter Medium of Instruction.");
 	         }
 	      }
-       
+       }
        // if(empty($form['field_general_documents']['widget']['#file_upload_delta'])){
        //  $form_state->setError($form['field_general_documents'],"Please upload general document");
        // }
@@ -550,37 +575,6 @@ function form_validate_data2($form, &$form_state){
 	      }
           }   
        }
-	}
-}
-       /*
-              $email = filter_var($form['account']['mail']['#value'], FILTER_VALIDATE_EMAIL);
-       if(!($email)){
-	      $form_state->setError($form['account']['mail'],"Invalid Email Format");
-       }
-       if (preg_match('/[^a-z-0-9_-]/i', $form['account']['name']['#value'])) {
-	      $form_state->setError($form['account']['name'],"Please use - or _ character to split username");
-       }
-       $password = $form['account']['pass']['#value']['pass1'];
-       $uppercase = preg_match('@[A-Z]@', $password);
-       $lowercase = preg_match('@[a-z]@', $password);
-       $number    = preg_match('@[0-9]@', $password);
-       $special   = preg_match('@[\W]+@', $password); 
-       if(!$uppercase || !$lowercase || !$number || strlen($password) < 6 || !$special) {
-           $form_state->setError($form['account']['pass']['pass1'],"Password Should Match with below Requirement(s)");
-           $form_state->setError($form['account']['pass']['pass2'],"Password Should Match with below Requirement(s)"); 
-       }
-       */
-
-/**
- *Implements form_validation() for application.
- */
-
-function form_validate_data1($form, &$form_state) {
-
-	
-       
-       
- }
        /*
        // Details of Academic Record (Secondary onwards) 
        $academic_rec = $form['field_details_of_academic_record']['widget'][0]['#value']['tablefield']['table'];
@@ -611,14 +605,8 @@ function form_validate_data1($form, &$form_state) {
           }   
        }*/
       
-
-
-
-
-     //dpm($form);
-   
-    
- 
+    }
+ } 
  
  /*
  * Implements hook_alter_submit().
