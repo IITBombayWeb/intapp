@@ -93,18 +93,18 @@ class UrlProcessorPluginManagerTest extends UnitTestCase {
   public function testConstruct() {
     $namespaces = new ArrayObject();
     $sut = new UrlProcessorPluginManager($namespaces, $this->cache, $this->moduleHandler, $this->translator);
-    $this->assertInstanceOf('\Drupal\facets\UrlProcessor\UrlProcessorPluginManager', $sut);
+    $this->assertInstanceOf(UrlProcessorPluginManager::class, $sut);
   }
 
   /**
    * Tests plugin manager's getDefinitions method.
    */
   public function testGetDefinitions() {
-    $definitions = array(
-      'foo' => array(
+    $definitions = [
+      'foo' => [
         'label' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $this->discovery->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($definitions);

@@ -19,6 +19,7 @@ use Drupal\user\UserInterface;
  *     plural = "@count Workflow config transitions",
  *   ),
  *   module = "workflow",
+ *   translatable = FALSE,
  *   handlers = {
  *     "form" = {
  *        "delete" = "\Drupal\Core\Entity\EntityDeleteForm",
@@ -43,13 +44,13 @@ use Drupal\user\UserInterface;
  *   },
  * )
  */
-class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfigTransitionInterface{
+class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfigTransitionInterface {
 
   // Transition data.
   public $id;
   public $from_sid;
   public $to_sid;
-  public $roles = array();
+  public $roles = [];
 
   // Extra fields.
   protected $wid;
@@ -57,19 +58,22 @@ class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfi
   // when exporting with json_encode().
   protected $workflow = NULL;
 
-  /**
+  /*
    * Entity class functions.
    */
 
-  public function __construct(array $values = array(), $entityType = NULL) {
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $values = [], $entityType = NULL) {
     // Please be aware that $entity_type and $entityType are different things!
-    $result = parent::__construct($values, $entity_type = 'workflow_config_transition');
-
-    return $result;
+    return parent::__construct($values, $entity_type = 'workflow_config_transition');
   }
 
   /**
    * Helper function for __construct. Used for all children of WorkflowTransition (aka WorkflowScheduledTransition)
+   * @param $from_sid
+   * @param $to_sid
    */
   public function setValues($from_sid, $to_sid) {
     $this->from_sid = $from_sid;
@@ -79,15 +83,6 @@ class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfi
   /**
    * {@inheritdoc}
    */
-//  public static function loadMultiple(array $ids = NULL, $wid = '') {
-//    foreach ($transitions = parent::loadMultiple($ids) as $key =>$transition) {
-//      if ($wid && $transition->getWorkflowId() != $wid) {
-//        unset($transitions[$key]);
-//      }
-//    }
-//    return $transitions;
-//  }
-
   public function save() {
     $workflow = $this->getWorkflow();
 
@@ -122,16 +117,15 @@ class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfi
     return $status;
   }
 
-  /**
+  /** @noinspection PhpMissingParentCallCommonInspection
    * {@inheritdoc}
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
     // Sort the entities using the entity class's sort() method.
     // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
 
-    /* @var $a WorkflowTransitionInterface */
-    /* @var $b WorkflowTransitionInterface */
-
+    /** @var WorkflowTransitionInterface $a */
+    /** @var WorkflowTransitionInterface $b */
     if (!$a->getFromSid() || !$b->getFromSid()) {
       return 0;
     }
@@ -155,13 +149,7 @@ class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfi
    */
 
   /**
-   * Returns the Workflow object of this State.
-   *
-   * @param Workflow $workflow
-   *   An optional workflow object. Can be used as a setter.
-   *
-   * @return Workflow
-   *   Workflow object.
+   * {@inheritdoc}
    */
   public function getWorkflow() {
     if (!$this->workflow && $wid = $this->getWorkflowId()) {
@@ -215,14 +203,12 @@ class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfi
    * {@inheritdoc}
    */
   public function isAllowed(UserInterface $user, $force = FALSE) {
-    $result = FALSE;
 
     $type_id = $this->getWorkflowId();
     if ($user->hasPermission("bypass $type_id workflow_transition access")) {
       // Superuser is special. And $force allows Rules to cause transition.
       return TRUE;
     }
-
     if ($force) {
       return TRUE;
     }

@@ -16,13 +16,28 @@
 
   /**
    * Turns all facet links into a dropdown with options for every link.
+   *
+   * @param {object} context
+   *   Context.
+   * @param {object} settings
+   *   Settings.
    */
   Drupal.facets.makeDropdown = function (context, settings) {
     // Find all dropdown facet links and turn them into an option.
     $('.js-facets-dropdown-links').once('facets-dropdown-transform').each(function () {
       var $ul = $(this);
       var $links = $ul.find('.facet-item a');
-      var $dropdown = $('<select class="facets-dropdown" />').data($ul.data());
+      var $dropdown = $('<select />');
+      // Preserve all attributes of the list.
+      $ul.each(function() {
+        $.each(this.attributes,function(idx, elem) {
+            $dropdown.attr(elem.name, elem.value);
+        });
+      });
+      // Remove the class which we are using for .once().
+      $dropdown.removeClass('js-facets-dropdown-links');
+
+      $dropdown.addClass('facets-dropdown');
 
       var id = $(this).data('drupal-facet-id');
       var default_option_label = settings.facets.dropdown_widget[id]['facet-default-option-label'];

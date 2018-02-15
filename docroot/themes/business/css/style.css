@@ -537,7 +537,10 @@ li.sfHover > a > .sf-sub-indicator {
 #footer-wrap{
 	margin-top: 40px;
 }
-
+#footer-saran {
+  border-top: 1px solid #eee;
+  margin: 20px 0 0;
+}
 #footer-saran h2 {
   font-size: 14px;
   font-weight: bold;

@@ -44,10 +44,10 @@ class Google_Service_Iam_Resource_ProjectsServiceAccounts extends Google_Service
    * Deletes a ServiceAccount. (serviceAccounts.delete)
    *
    * @param string $name The resource name of the service account in the following
-   * format: `projects/{PROJECT_ID}/serviceAccounts/{SERVICE_ACCOUNT_EMAIL}`.
-   * Using `-` as a wildcard for the project will infer the project from the
-   * account. The `account` value can be the `email` address or the `unique_id` of
-   * the service account.
+   * format: `projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}`. Using `-` as a
+   * wildcard for the `PROJECT_ID` will infer the project from the account. The
+   * `ACCOUNT` value can be the `email` address or the `unique_id` of the service
+   * account.
    * @param array $optParams Optional parameters.
    * @return Google_Service_Iam_IamEmpty
    */
@@ -61,10 +61,10 @@ class Google_Service_Iam_Resource_ProjectsServiceAccounts extends Google_Service
    * Gets a ServiceAccount. (serviceAccounts.get)
    *
    * @param string $name The resource name of the service account in the following
-   * format: `projects/{PROJECT_ID}/serviceAccounts/{SERVICE_ACCOUNT_EMAIL}`.
-   * Using `-` as a wildcard for the project will infer the project from the
-   * account. The `account` value can be the `email` address or the `unique_id` of
-   * the service account.
+   * format: `projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}`. Using `-` as a
+   * wildcard for the `PROJECT_ID` will infer the project from the account. The
+   * `ACCOUNT` value can be the `email` address or the `unique_id` of the service
+   * account.
    * @param array $optParams Optional parameters.
    * @return Google_Service_Iam_ServiceAccount
    */
@@ -98,12 +98,12 @@ class Google_Service_Iam_Resource_ProjectsServiceAccounts extends Google_Service
    * with the service accounts, such as `projects/my-project-123`.
    * @param array $optParams Optional parameters.
    *
+   * @opt_param string pageToken Optional pagination token returned in an earlier
+   * ListServiceAccountsResponse.next_page_token.
    * @opt_param int pageSize Optional limit on the number of service accounts to
    * include in the response. Further accounts can subsequently be obtained by
    * including the ListServiceAccountsResponse.next_page_token in a subsequent
    * request.
-   * @opt_param string pageToken Optional pagination token returned in an earlier
-   * ListServiceAccountsResponse.next_page_token.
    * @return Google_Service_Iam_ListServiceAccountsResponse
    */
   public function listProjectsServiceAccounts($name, $optParams = array())
@@ -134,10 +134,10 @@ class Google_Service_Iam_Resource_ProjectsServiceAccounts extends Google_Service
    * (serviceAccounts.signBlob)
    *
    * @param string $name The resource name of the service account in the following
-   * format: `projects/{PROJECT_ID}/serviceAccounts/{SERVICE_ACCOUNT_EMAIL}`.
-   * Using `-` as a wildcard for the project will infer the project from the
-   * account. The `account` value can be the `email` address or the `unique_id` of
-   * the service account.
+   * format: `projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}`. Using `-` as a
+   * wildcard for the `PROJECT_ID` will infer the project from the account. The
+   * `ACCOUNT` value can be the `email` address or the `unique_id` of the service
+   * account.
    * @param Google_Service_Iam_SignBlobRequest $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_Iam_SignBlobResponse
@@ -156,10 +156,10 @@ class Google_Service_Iam_Resource_ProjectsServiceAccounts extends Google_Service
    * than one hour, the request will fail. (serviceAccounts.signJwt)
    *
    * @param string $name The resource name of the service account in the following
-   * format: `projects/{PROJECT_ID}/serviceAccounts/{SERVICE_ACCOUNT_EMAIL}`.
-   * Using `-` as a wildcard for the project will infer the project from the
-   * account. The `account` value can be the `email` address or the `unique_id` of
-   * the service account.
+   * format: `projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}`. Using `-` as a
+   * wildcard for the `PROJECT_ID` will infer the project from the account. The
+   * `ACCOUNT` value can be the `email` address or the `unique_id` of the service
+   * account.
    * @param Google_Service_Iam_SignJwtRequest $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_Iam_SignJwtResponse
@@ -194,14 +194,14 @@ class Google_Service_Iam_Resource_ProjectsServiceAccounts extends Google_Service
    * `etag` is mandatory. (serviceAccounts.update)
    *
    * @param string $name The resource name of the service account in the following
-   * format: `projects/{PROJECT_ID}/serviceAccounts/{SERVICE_ACCOUNT_EMAIL}`.
+   * format: `projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}`.
    *
-   * Requests using `-` as a wildcard for the project will infer the project from
-   * the `account` and the `account` value can be the `email` address or the
+   * Requests using `-` as a wildcard for the `PROJECT_ID` will infer the project
+   * from the `account` and the `ACCOUNT` value can be the `email` address or the
    * `unique_id` of the service account.
    *
    * In responses the resource name will always be in the format
-   * `projects/{PROJECT_ID}/serviceAccounts/{SERVICE_ACCOUNT_EMAIL}`.
+   * `projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}`.
    * @param Google_Service_Iam_ServiceAccount $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_Iam_ServiceAccount

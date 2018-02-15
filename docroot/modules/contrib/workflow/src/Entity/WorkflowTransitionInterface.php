@@ -26,8 +26,9 @@ interface WorkflowTransitionInterface extends WorkflowConfigTransitionInterface,
    * @param int $uid
    * @param int $timestamp
    * @param string $comment
+   * @param bool $force_create
    */
-  public function setValues($to_sid, $uid = NULL, $timestamp = REQUEST_TIME, $comment = '');
+  public function setValues($to_sid, $uid = NULL, $timestamp = NULL, $comment = '', $force_create = FALSE);
 
   /**
    * Load (Scheduled) WorkflowTransitions, most recent first.
@@ -40,8 +41,8 @@ interface WorkflowTransitionInterface extends WorkflowConfigTransitionInterface,
    * @param string $sort
    * @param string $transition_type
    *
-   * @return \Drupal\workflow\Entity\WorkflowTransitionInterface object representing one row from the {workflow_transition_history} table.
-   * object representing one row from the {workflow_transition_history} table.
+   * @return \Drupal\workflow\Entity\WorkflowTransitionInterface
+   *   Object representing one row from the {workflow_transition_history} table.
    */
   public static function loadByProperties($entity_type, $entity_id, array $revision_ids = [], $field_name = '', $langcode = '', $sort = 'ASC', $transition_type = '');
 
@@ -62,12 +63,12 @@ interface WorkflowTransitionInterface extends WorkflowConfigTransitionInterface,
    * @param string $sort
    *   Optional sort order. {'ASC'|'DESC'}
    * @param string $transition_type
-   *   The type trnastion to be fetched.
+   *   The type of the transition to be fetched.
    *
-   * @return WorkflowTransitionInterface[] $transitions
+   * @return WorkflowTransitionInterface[]
    *   An array of transitions.
    */
-  public static function loadMultipleByProperties($entity_type, array $entity_ids, array $revision_ids = [], $field_name = '', $langcode = '',$limit = NULL, $sort = 'ASC', $transition_type = '');
+  public static function loadMultipleByProperties($entity_type, array $entity_ids, array $revision_ids = [], $field_name = '', $langcode = '', $limit = NULL, $sort = 'ASC', $transition_type = '');
 
   /**
    * Execute a transition (change state of an entity).
@@ -81,10 +82,38 @@ interface WorkflowTransitionInterface extends WorkflowConfigTransitionInterface,
    * @param bool $force
    *   If set to TRUE, workflow permissions will be ignored.
    *
-   * @return $sid
+   * @return
    *   New state ID. If execution failed, old state ID is returned,
    */
   public function execute($force = FALSE);
+
+  /**
+   * Executes a transition (change state of an entity), from OUTSIDE the entity.
+   *
+   * Use $transition->executeAndUpdateEntity() to start a State Change from
+   *   outside an entity, e.g., workflow_cron().
+   * Use $transition->execute() to start a State Change from within an entity.
+   *
+   * A Scheduled Transition ($transition->isScheduled() == TRUE) will be
+   *   un-scheduled and saved in the history table.
+   *   The entity will not be updated.
+   * If $transition->isScheduled() == FALSE, the Transition will be
+   *   removed from the {workflow_transition_scheduled} table (if necessary),
+   *   and added to {workflow_transition_history} table.
+   *   Then the entity wil be updated to reflect the new status.
+   *
+   * @usage
+   *   $to_sid = $transition->->executeAndUpdateEntity($force);
+   *
+   * @see workflow_execute_transition()
+   *
+   * @param bool $force
+   *   If set to TRUE, workflow permissions will be ignored.
+   *
+   * @return string
+   *   The resulting WorkflowState id.
+   */
+  public function executeAndUpdateEntity($force = FALSE);
 
   /**
    * Invokes 'transition post'.
@@ -101,7 +130,7 @@ interface WorkflowTransitionInterface extends WorkflowConfigTransitionInterface,
    * @param EntityInterface $entity
    *   The Entity ID or the Entity object, to add to the Transition.
    *
-   * @return object $entity
+   * @return object
    *   The Entity, that is added to the Transition.
    */
   public function setTargetEntity($entity);
@@ -133,7 +162,7 @@ interface WorkflowTransitionInterface extends WorkflowConfigTransitionInterface,
   /**
    * Get the field_name for which the Transition is valid.
    *
-   * @return string $field_name
+   * @return string
    *   The field_name, that is added to the Transition.
    */
   public function getFieldName();
@@ -190,8 +219,17 @@ interface WorkflowTransitionInterface extends WorkflowConfigTransitionInterface,
 
   /**
    * Returns if this is a Scheduled Transition.
+   *
+   * @return bool
    */
   public function isScheduled();
+
+  /**
+   * Sets the Transition to be scheduled or not.
+   *
+   * @param bool $schedule
+   * @return WorkflowTransitionInterface
+   */
   public function schedule($schedule = TRUE);
 
   /**
@@ -217,6 +255,16 @@ interface WorkflowTransitionInterface extends WorkflowConfigTransitionInterface,
    *  If the transition is forced. (Allow not-configured transitions).
    */
   public function isForced();
+
+  /**
+   * Set if a transition must be executed, even if transition is invalid
+   * or user not authorized.
+   *
+   * @param bool $force
+   *
+   * @return object
+   *   The transition itself
+   */
   public function force($force = TRUE);
 
   /**
@@ -225,4 +273,5 @@ interface WorkflowTransitionInterface extends WorkflowConfigTransitionInterface,
    * @param string $function
    */
   public function dpm($function = '');
+
 }

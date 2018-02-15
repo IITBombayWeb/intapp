@@ -37,15 +37,15 @@ function business_preprocess_page(&$vars) {
   }
 
   else {
-    $vars['contentlayout'] = 'col-lg-12 col-lg-offset-1 centered ';
+    $vars['contentlayout'] = 'col-lg-12 centered ';
   }
   $show_slideshow = theme_get_setting('slideshow_display', 'business');
   if ($vars['is_front'] && $show_slideshow) {
     $vars['slider'] = array();
     for ($i = 1; $i <= SLIDESHOW_COUNT; $i++) {
       $fid = theme_get_setting("slide_image_{$i}", "business");
-      if (!empty($fid)) {
-        $file = \Drupal\file\Entity\File::load($fid[0]);
+      $file = \Drupal\file\Entity\File::load($fid[0]);
+      if (!empty($file)) {
         $uri = $file->getFileUri();
         $image_path = file_create_url($uri);
       }
@@ -150,6 +150,8 @@ function business_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\For
       '#default_value' => theme_get_setting("slide_url_{$i}", "business"),
     );
   }
+  $filename = drupal_get_path('theme', 'business') . '/business.theme';
+  $form_state->addBuildInfo('files', array($filename));
   // Custom submit to save the file permenant.
   $form['#submit'][] = 'business_settings_form_submit';
 }

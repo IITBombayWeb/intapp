@@ -3,7 +3,6 @@
 namespace Drupal\search_api\Form;
 
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Form\SubformState;
@@ -32,7 +31,7 @@ class ServerForm extends EntityForm {
    * @param \Drupal\search_api\Backend\BackendPluginManager $backend_plugin_manager
    *   The backend plugin manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, BackendPluginManager $backend_plugin_manager) {
+  public function __construct(BackendPluginManager $backend_plugin_manager) {
     $this->backendPluginManager = $backend_plugin_manager;
   }
 
@@ -40,11 +39,7 @@ class ServerForm extends EntityForm {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
-    $entity_type_manager = $container->get('entity_type.manager');
-    /** @var \Drupal\search_api\Backend\BackendPluginManager $backend_plugin_manager */
-    $backend_plugin_manager = $container->get('plugin.manager.search_api.backend');
-    return new static($entity_type_manager, $backend_plugin_manager);
+    return new static($container->get('plugin.manager.search_api.backend'));
   }
 
   /**
@@ -199,10 +194,10 @@ class ServerForm extends EntityForm {
       drupal_set_message($this->t('The backend plugin is missing or invalid.'), 'error');
       return;
     }
-    $form['backend_config'] += ['#type' => 'container'];
-    $form['backend_config']['#attributes'] = [
-      'id' => 'search-api-backend-config-form',
+    $form['backend_config'] += [
+      '#type' => 'container',
     ];
+    $form['backend_config']['#attributes']['id'] = 'search-api-backend-config-form';
     $form['backend_config']['#tree'] = TRUE;
   }
 

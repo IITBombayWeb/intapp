@@ -267,8 +267,8 @@ class Google_Service_AndroidEnterprise_Resource_Enterprises extends Google_Servi
     return $this->call('pullNotificationSet', array($params), "Google_Service_AndroidEnterprise_NotificationSet");
   }
   /**
-   * Sends a test push notification to validate the EMM integration with the
-   * Google Cloud Pub/Sub service for this enterprise.
+   * Sends a test notification to validate the EMM integration with the Google
+   * Cloud Pub/Sub service for this enterprise.
    * (enterprises.sendTestPushNotification)
    *
    * @param string $enterpriseId The ID of the enterprise.
@@ -297,9 +297,10 @@ class Google_Service_AndroidEnterprise_Resource_Enterprises extends Google_Servi
     return $this->call('setAccount', array($params), "Google_Service_AndroidEnterprise_EnterpriseAccount");
   }
   /**
-   * Sets the Android Device Policy config resource. EMM may use this API to
+   * Sets the Android Device Policy config resource. EMM may use this method to
    * enable or disable Android Device Policy support for the specified enterprise.
-   * (enterprises.setAndroidDevicePolicyConfig)
+   * To learn more about managing devices and apps with Android Device Policy, see
+   * the Android Management API. (enterprises.setAndroidDevicePolicyConfig)
    *
    * @param string $enterpriseId The ID of the enterprise.
    * @param Google_Service_AndroidEnterprise_AndroidDevicePolicyConfig $postBody

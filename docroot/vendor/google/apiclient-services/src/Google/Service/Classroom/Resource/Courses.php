@@ -92,7 +92,8 @@ class Google_Service_Classroom_Resource_Courses extends Google_Service_Resource
   }
   /**
    * Returns a list of courses that the requesting user is permitted to view,
-   * restricted to those that match the request.
+   * restricted to those that match the request. Returned courses are ordered by
+   * creation time, with the most recently created coming first.
    *
    * This method returns the following error codes:
    *
@@ -102,6 +103,10 @@ class Google_Service_Classroom_Resource_Courses extends Google_Service_Resource
    *
    * @param array $optParams Optional parameters.
    *
+   * @opt_param int pageSize Maximum number of items to return. Zero or
+   * unspecified indicates that the server may assign a maximum.
+   *
+   * The server may return fewer than the specified number of results.
    * @opt_param string teacherId Restricts returned courses to those having a
    * teacher with the specified identifier. The identifier can be one of the
    * following:
@@ -122,10 +127,6 @@ class Google_Service_Classroom_Resource_Courses extends Google_Service_Resource
    *
    * The list request must be otherwise identical to the one that resulted in this
    * token.
-   * @opt_param int pageSize Maximum number of items to return. Zero or
-   * unspecified indicates that the server may assign a maximum.
-   *
-   * The server may return fewer than the specified number of results.
    * @return Google_Service_Classroom_ListCoursesResponse
    */
   public function listCourses($optParams = array())
@@ -155,7 +156,11 @@ class Google_Service_Classroom_Resource_Courses extends Google_Service_Resource
    * invalid fields are specified. The following fields are valid:
    *
    * * `name` * `section` * `descriptionHeading` * `description` * `room` *
-   * `courseState`
+   * `courseState` * `ownerId`
+   *
+   * Note: patches to ownerId are treated as being effective immediately, but in
+   * practice it may take some time for the ownership transfer of all affected
+   * resources to complete.
    *
    * When set in a query parameter, this field should be specified as
    *

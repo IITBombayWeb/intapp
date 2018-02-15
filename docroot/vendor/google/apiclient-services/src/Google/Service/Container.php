@@ -19,7 +19,7 @@
  * Service definition for Container (v1).
  *
  * <p>
- * The Google Container Engine API is used for building and managing container
+ * The Google Kubernetes Engine API is used for building and managing container
  * based applications, powered by the open source Kubernetes technology.</p>
  *
  * <p>
@@ -296,6 +296,26 @@ class Google_Service_Container extends Google_Service
               ),
             ),'resourceLabels' => array(
               'path' => 'v1/projects/{projectId}/zones/{zone}/clusters/{clusterId}/resourceLabels',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'projectId' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'zone' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'clusterId' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'setMaintenancePolicy' => array(
+              'path' => 'v1/projects/{projectId}/zones/{zone}/clusters/{clusterId}:setMaintenancePolicy',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'projectId' => array(

@@ -93,6 +93,25 @@ class Google_Service_FirebaseRules_Resource_ProjectsReleases extends Google_Serv
     return $this->call('get', array($params), "Google_Service_FirebaseRules_Release");
   }
   /**
+   * Get the `Release` executable to use when enforcing rules.
+   * (releases.getExecutable)
+   *
+   * @param string $name Resource name of the `Release`.
+   *
+   * Format: `projects/{project_id}/releases/{release_id}`
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param string executableVersion The requested runtime executable version.
+   * Defaults to FIREBASE_RULES_EXECUTABLE_V1
+   * @return Google_Service_FirebaseRules_GetReleaseExecutableResponse
+   */
+  public function getExecutable($name, $optParams = array())
+  {
+    $params = array('name' => $name);
+    $params = array_merge($params, $optParams);
+    return $this->call('getExecutable', array($params), "Google_Service_FirebaseRules_GetReleaseExecutableResponse");
+  }
+  /**
    * List the `Release` values for a project. This list may optionally be filtered
    * by `Release` name, `Ruleset` name, `TestSuite` name, or any combination
    * thereof. (releases.listProjectsReleases)
@@ -141,6 +160,26 @@ class Google_Service_FirebaseRules_Resource_ProjectsReleases extends Google_Serv
     $params = array('name' => $name);
     $params = array_merge($params, $optParams);
     return $this->call('list', array($params), "Google_Service_FirebaseRules_ListReleasesResponse");
+  }
+  /**
+   * Update a `Release` via PATCH.
+   *
+   * Only updates to the `ruleset_name` and `test_suite_name` fields will be
+   * honored. `Release` rename is not supported. To create a `Release` use the
+   * CreateRelease method. (releases.patch)
+   *
+   * @param string $name Resource name for the project which owns this `Release`.
+   *
+   * Format: `projects/{project_id}`
+   * @param Google_Service_FirebaseRules_UpdateReleaseRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_FirebaseRules_Release
+   */
+  public function patch($name, Google_Service_FirebaseRules_UpdateReleaseRequest $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('patch', array($params), "Google_Service_FirebaseRules_Release");
   }
   /**
    * Update a `Release`.

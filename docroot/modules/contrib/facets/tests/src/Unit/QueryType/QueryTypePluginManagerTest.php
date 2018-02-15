@@ -83,18 +83,18 @@ class QueryTypePluginManagerTest extends UnitTestCase {
   public function testConstruct() {
     $namespaces = new ArrayObject();
     $sut = new QueryTypePluginManager($namespaces, $this->cache, $this->moduleHandler);
-    $this->assertInstanceOf('\Drupal\facets\QueryType\QueryTypePluginManager', $sut);
+    $this->assertInstanceOf(QueryTypePluginManager::class, $sut);
   }
 
   /**
    * Tests plugin manager's getDefinitions method.
    */
   public function testGetDefinitions() {
-    $definitions = array(
-      'foo' => array(
+    $definitions = [
+      'foo' => [
         'label' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $this->discovery->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($definitions);

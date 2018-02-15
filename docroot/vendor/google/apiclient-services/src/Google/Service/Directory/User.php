@@ -29,6 +29,7 @@ class Google_Service_Directory_User extends Google_Collection
   public $emails;
   public $etag;
   public $externalIds;
+  public $gender;
   public $hashFunction;
   public $id;
   public $ims;
@@ -39,6 +40,7 @@ class Google_Service_Directory_User extends Google_Collection
   public $isEnforcedIn2Sv;
   public $isEnrolledIn2Sv;
   public $isMailboxSetup;
+  public $keywords;
   public $kind;
   public $languages;
   public $lastLoginTime;
@@ -149,6 +151,14 @@ class Google_Service_Directory_User extends Google_Collection
   {
     return $this->externalIds;
   }
+  public function setGender($gender)
+  {
+    $this->gender = $gender;
+  }
+  public function getGender()
+  {
+    return $this->gender;
+  }
   public function setHashFunction($hashFunction)
   {
     $this->hashFunction = $hashFunction;
@@ -228,6 +238,14 @@ class Google_Service_Directory_User extends Google_Collection
   public function getIsMailboxSetup()
   {
     return $this->isMailboxSetup;
+  }
+  public function setKeywords($keywords)
+  {
+    $this->keywords = $keywords;
+  }
+  public function getKeywords()
+  {
+    return $this->keywords;
   }
   public function setKind($kind)
   {

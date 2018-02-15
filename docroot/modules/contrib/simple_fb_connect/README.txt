@@ -3,7 +3,7 @@ SIMPLE FB CONNECT MODULE
 Simple FB Connect module allows users to register and login to your Drupal
 site with their Facebook account.
 
-INSTALLATION INSTURCTIONS AND MODULE HANDBOOK
+INSTALLATION INSTRUCTIONS AND MODULE HANDBOOK
 ---------------------------------------------
 Installation instructions and other documentation for Drupal 8 can be found
 from the module handbook:
@@ -16,7 +16,9 @@ The post login path can be defined dynamically by setting postLoginPath
 query parameter.
 
 The module also dispatches events that other modules can subscribe to using
-EventSubscriber. You can also use Rules module to react on these events.
+EventSubscriber. You can also use Rules module to react to these events. If
+you want to use Rules, you need to enable Simple FB Connect - Rules Integration
+sub module.
 
 You can easily extend Facebook integrations with a custom module.
 

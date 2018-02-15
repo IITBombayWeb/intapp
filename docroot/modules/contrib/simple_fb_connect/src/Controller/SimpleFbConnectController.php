@@ -69,7 +69,7 @@ class SimpleFbConnectController extends ControllerBase {
   public function redirectToFb() {
     // Try to get an instance of Facebook service.
     if (!$facebook = $this->fbFactory->getFbService()) {
-      drupal_set_message($this->t('Simple FB Connect not configured properly. Contact site administrator.'), 'error');
+      drupal_set_message($this->t('Simple FB Connect is not configured properly. Please contact site administrator.'), 'error');
       return $this->redirect('user.login');
     }
 
@@ -100,7 +100,7 @@ class SimpleFbConnectController extends ControllerBase {
   public function returnFromFb() {
     // Try to get an instance of Facebook service.
     if (!$facebook = $this->fbFactory->getFbService()) {
-      drupal_set_message($this->t('Simple FB Connect not configured properly. Contact site administrator.'), 'error');
+      drupal_set_message($this->t('Simple FB Connect is not configured properly. Please contact site administrator.'), 'error');
       return $this->redirect('user.login');
     }
 
@@ -115,14 +115,19 @@ class SimpleFbConnectController extends ControllerBase {
 
     // Check that user authorized our app to access user's email address.
     if (!$this->fbManager->checkPermission('email')) {
-      drupal_set_message($this->t('Facebook login failed. This site requires permission to get your email address from Facebook. Please try again.'), 'error');
+      if ($site_name = $this->config('system.site')->get('name')) {
+        drupal_set_message($this->t('Facebook login failed. @site_name requires permission to get your email address from Facebook. Please try again and give the permission.', ['@site_name' => $site_name]), 'error');
+      }
+      else {
+        drupal_set_message($this->t('Facebook login failed. This site requires permission to get your email address from Facebook. Please try again and give the permission.'), 'error');
+      }
       $this->persistentDataHandler->set('reprompt', TRUE);
       return $this->redirect('user.login');
     }
 
     // Get user's FB profile from Facebook API.
     if (!$fb_profile = $this->fbManager->getFbProfile()) {
-      drupal_set_message($this->t('Facebook login failed, could not load Facebook profile. Contact site administrator.'), 'error');
+      drupal_set_message($this->t('Facebook login failed, Facebook profile could not be loaded. Please contact site administrator.'), 'error');
       return $this->redirect('user.login');
     }
 
@@ -150,18 +155,14 @@ class SimpleFbConnectController extends ControllerBase {
 
     // If there was no existing user, try to create a new user.
     $fbid = $fb_profile->getField('id');
-    if ($drupal_user = $this->userManager->createUser($fb_profile->getField('name'), $email, $fbid)) {
-
-      // Download profile picture for the newly created user.
-      if ($picture_url = $this->fbManager->getFbProfilePicUrl()) {
-        $this->userManager->setProfilePic($drupal_user, $picture_url, $fbid);
-      }
+    $fb_profile_pic = $this->fbManager->getFbProfilePic();
+    if ($drupal_user = $this->userManager->createUser($fb_profile->getField('name'), $email, $fbid, $fb_profile_pic)) {
 
       // Log the newly created user in.
       if ($this->userManager->loginUser($drupal_user)) {
         // Check if new users should be redirected to Drupal user form.
         if ($this->postLoginManager->getRedirectNewUsersToUserFormSetting()) {
-          drupal_set_message($this->t("Please check your account details. Since you logged in with Facebook, you don't need to update your password."));
+          drupal_set_message($this->t("Please take a moment to confirm your account details. Since you logged in with Facebook, you don't need to update your password."));
           return new RedirectResponse($this->postLoginManager->getPathToUserForm($drupal_user));
         }
 
@@ -173,7 +174,7 @@ class SimpleFbConnectController extends ControllerBase {
         // New user was created but the account is pending approval.
         // Unset access token from session.
         $this->persistentDataHandler->set('access_token', NULL);
-        drupal_set_message($this->t('You will receive an email when site administrator activates your account.'), 'warning');
+        drupal_set_message($this->t('You will receive an email when a site administrator activates your account.'), 'warning');
         return $this->redirect('user.login');
       }
     }

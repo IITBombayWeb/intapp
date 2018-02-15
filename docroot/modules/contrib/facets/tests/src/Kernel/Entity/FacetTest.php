@@ -2,9 +2,13 @@
 
 namespace Drupal\Tests\facets\Kernel\Entity;
 
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\facets\Entity\Facet;
+use Drupal\facets\Exception\Exception;
 use Drupal\facets\Exception\InvalidProcessorException;
 use Drupal\facets\Hierarchy\HierarchyPluginManager;
+use Drupal\facets\Plugin\facets\hierarchy\Taxonomy;
+use Drupal\facets\Plugin\facets\processor\HideNonNarrowingResultProcessor;
 use Drupal\facets\Plugin\facets\widget\LinksWidget;
 use Drupal\facets\Processor\ProcessorInterface;
 use Drupal\facets\Result\Result;
@@ -65,9 +69,16 @@ class FacetTest extends KernelTestBase {
     $manager = $entity->getWidgetManager();
     $this->assertInstanceOf(WidgetPluginManager::class, $manager);
 
-    $config = ['soft_limit' => 0, 'show_numbers' => FALSE];
+    $config = [
+      'soft_limit' => 0,
+      'show_numbers' => FALSE,
+      'soft_limit_settings' => [
+        'show_less_label' => 'Show less',
+        'show_more_label' => 'Show more',
+      ],
+    ];
     $this->assertEquals(['type' => 'links', 'config' => $config], $entity->getWidget());
-    $this->assertInstanceOf('\Drupal\facets\Plugin\facets\widget\LinksWidget', $entity->getWidgetInstance());
+    $this->assertInstanceOf(LinksWidget::class, $entity->getWidgetInstance());
     $this->assertFalse($entity->getWidgetInstance()->getConfiguration()['show_numbers']);
 
     $config['show_numbers'] = TRUE;
@@ -124,7 +135,7 @@ class FacetTest extends KernelTestBase {
     $this->assertEmpty($entity->getProcessorsByStage(ProcessorInterface::STAGE_SORT));
     $processors = $entity->getProcessors();
     $this->assertArrayHasKey('hide_non_narrowing_result_processor', $processors);
-    $this->assertInstanceOf('\Drupal\facets\Plugin\facets\processor\HideNonNarrowingResultProcessor', $processors['hide_non_narrowing_result_processor']);
+    $this->assertInstanceOf(HideNonNarrowingResultProcessor::class, $processors['hide_non_narrowing_result_processor']);
 
     $entity->removeProcessor($id);
     $this->assertEmpty($entity->getProcessorsByStage(ProcessorInterface::STAGE_BUILD));
@@ -139,7 +150,7 @@ class FacetTest extends KernelTestBase {
   public function testGetQueryTypeWithNoFacetSource() {
     $entity = new Facet([], 'facets_facet');
 
-    $this->setExpectedException('\Drupal\facets\Exception\Exception', 'No facet source defined for facet.');
+    $this->setExpectedException(Exception::class, 'No facet source defined for facet.');
     $entity->getQueryType();
   }
 
@@ -240,14 +251,14 @@ class FacetTest extends KernelTestBase {
    * @covers ::isActiveValue
    */
   public function testResults() {
+    $entity = new Facet([], 'facets_facet');
     /** @var \Drupal\facets\Result\ResultInterface[] $results */
     $results = [
-      new Result('llama', 'llama', 10),
-      new Result('badger', 'badger', 15),
-      new Result('owl', 'owl', 5),
+      new Result($entity, 'llama', 'llama', 10),
+      new Result($entity, 'badger', 'badger', 15),
+      new Result($entity, 'owl', 'owl', 5),
     ];
 
-    $entity = new Facet([], 'facets_facet');
     $this->assertEmpty($entity->getResults());
 
     $entity->setResults($results);
@@ -366,10 +377,46 @@ class FacetTest extends KernelTestBase {
 
     $manager = $entity->getHierarchyManager();
     $this->assertInstanceOf(HierarchyPluginManager::class, $manager);
-
-    $this->assertInstanceOf('\Drupal\facets\Plugin\facets\hierarchy\Taxonomy', $entity->getHierarchyInstance());
+    $this->assertInstanceOf(Taxonomy::class, $entity->getHierarchyInstance());
 
     $this->assertEquals(['type' => 'taxonomy', 'config' => []], $entity->getHierarchy());
+  }
+
+  /**
+   * Tests that the block caches are cleared from API calls.
+   *
+   * @covers ::postSave
+   * @covers ::postDelete
+   * @covers ::clearBlockCache
+   */
+  public function testBlockCache() {
+    // Block processing requires the system module.
+    $this->enableModules(['system']);
+
+    // Create our facet.
+    $entity = Facet::create([
+      'id' => 'test_facet',
+      'name' => 'Test facet',
+    ]);
+    $entity->setWidget('links');
+    $entity->setEmptyBehavior(['behavior' => 'none']);
+
+    $block_id = 'facet_block' . PluginBase::DERIVATIVE_SEPARATOR . $entity->id();
+
+    // Check we don't have a block yet.
+    $this->assertFalse($this->container->get('plugin.manager.block')->hasDefinition($block_id));
+
+    // Save our facet.
+    $entity->save();
+
+    // Check our block exists.
+    $this->assertTrue($this->container->get('plugin.manager.block')->hasDefinition($block_id));
+
+    // Delete our facet.
+    $entity->delete();
+
+    // Check our block exists.
+    $this->assertFalse($this->container->get('plugin.manager.block')->hasDefinition($block_id));
   }
 
 }

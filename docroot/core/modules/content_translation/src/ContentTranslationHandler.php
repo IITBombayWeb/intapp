@@ -116,6 +116,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       ->setLabel(t('Translation source'))
       ->setDescription(t('The source language from which this translation was created.'))
       ->setDefaultValue(LanguageInterface::LANGCODE_NOT_SPECIFIED)
+      ->setInitialValue(LanguageInterface::LANGCODE_NOT_SPECIFIED)
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
 
@@ -123,6 +124,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       ->setLabel(t('Translation outdated'))
       ->setDescription(t('A boolean indicating whether this translation needs to be updated.'))
       ->setDefaultValue(FALSE)
+      ->setInitialValue(FALSE)
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
 
@@ -142,6 +144,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         ->setLabel(t('Translation status'))
         ->setDescription(t('A boolean indicating whether the translation is visible to non-translators.'))
         ->setDefaultValue(TRUE)
+        ->setInitialValue(TRUE)
         ->setRevisionable(TRUE)
         ->setTranslatable(TRUE);
     }
@@ -465,7 +468,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         '#type' => 'textfield',
         '#title' => t('Authored on'),
         '#maxlength' => 25,
-        '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the date and time of form submission.', array('%time' => format_date(REQUEST_TIME, 'custom', 'Y-m-d H:i:s O'), '%timezone' => format_date(REQUEST_TIME, 'custom', 'O'))),
+        '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', ['%time' => format_date(REQUEST_TIME, 'custom', 'Y-m-d H:i:s O'), '%timezone' => format_date(REQUEST_TIME, 'custom', 'O')]),
         '#default_value' => $new_translation || !$date ? '' : format_date($date, 'custom', 'Y-m-d H:i:s O'),
       ];
 

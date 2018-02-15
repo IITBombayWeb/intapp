@@ -24,18 +24,18 @@ class SimpleFbConnectPostLoginManagerTest extends UnitTestCase {
     parent::setUp();
 
     $this->configFactory = $this->getConfigFactoryStub(
-      array(
-        'simple_fb_connect.settings' => array(
+      [
+        'simple_fb_connect.settings' => [
           'post_login_path' => '<front>',
-        ),
-      )
+        ],
+      ]
     );
 
     $this->requestContext = $this->getMock('Drupal\Core\Routing\RequestContext');
 
     $this->pathValidator = $this->getMockBuilder('Drupal\Core\Path\PathValidatorInterface')
       ->disableOriginalConstructor()
-      ->setMethods(array('getUrlIfValid', 'toString'))
+      ->setMethods(['getUrlIfValid', 'toString'])
       ->getMockForAbstractClass();
 
     $this->persistentDataHandler = $this->getMockBuilder('Drupal\simple_fb_connect\SimpleFbConnectPersistentDataHandler')
@@ -75,13 +75,13 @@ class SimpleFbConnectPostLoginManagerTest extends UnitTestCase {
    * @see ::testGetPostLoginPathFromRequest()
    */
   public function getPostLoginPathFromRequestDataProvider() {
-    return array(
-      array('postLoginPath=<front>', '<front>'),
-      array('postLoginPath=node', 'node'),
-      array('', FALSE),
-      array(NULL, FALSE),
-      array('something=else', FALSE),
-    );
+    return [
+      ['postLoginPath=<front>', '<front>'],
+      ['postLoginPath=node', 'node'],
+      ['', FALSE],
+      [NULL, FALSE],
+      ['something=else', FALSE],
+    ];
   }
 
   /**
@@ -217,7 +217,7 @@ class SimpleFbConnectPostLoginManagerTest extends UnitTestCase {
   protected function generateStubUrl($external, $path) {
     $url = $this->getMockBuilder('Drupal\Core\Url')
       ->disableOriginalConstructor()
-      ->setMethods(array('isExternal', 'toString'))
+      ->setMethods(['isExternal', 'toString'])
       ->getMock();
 
     $url

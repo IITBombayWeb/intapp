@@ -99,7 +99,7 @@ abstract class FacetsTestBase extends BrowserTestBase {
    * @return \Drupal\search_api\ServerInterface
    *   A search server.
    */
-  public function getTestServer($name = 'WebTest server', $id = 'webtest_server', $backend_id = 'search_api_test_backend', array $backend_config = [], $reset = FALSE) {
+  public function getTestServer($name = 'WebTest server', $id = 'webtest_server', $backend_id = 'search_api_db', array $backend_config = [], $reset = FALSE) {
     if ($reset) {
       $server = Server::load($id);
       if ($server) {
@@ -107,13 +107,13 @@ abstract class FacetsTestBase extends BrowserTestBase {
       }
     }
     else {
-      $server = Server::create(array(
+      $server = Server::create([
         'id' => $id,
         'name' => $name,
         'description' => $name,
         'backend' => $backend_id,
         'backend_config' => $backend_config,
-      ));
+      ]);
       $server->save();
     }
 
@@ -146,13 +146,13 @@ abstract class FacetsTestBase extends BrowserTestBase {
       }
     }
     else {
-      $index = Index::create(array(
+      $index = Index::create([
         'id' => $id,
         'name' => $name,
         'description' => $name,
         'server' => $server_id,
-        'datasources' => array($datasource_id),
-      ));
+        'datasources' => [$datasource_id],
+      ]);
       $index->save();
       $this->indexId = $index->id();
     }

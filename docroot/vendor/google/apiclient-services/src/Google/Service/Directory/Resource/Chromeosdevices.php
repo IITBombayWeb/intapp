@@ -65,7 +65,7 @@ class Google_Service_Directory_Resource_Chromeosdevices extends Google_Service_R
    *
    * @opt_param int maxResults Maximum number of results to return. Default is 100
    * @opt_param string orderBy Column to use for sorting results
-   * @opt_param string orgUnitPath Full path of the organization unit or its Id
+   * @opt_param string orgUnitPath Full path of the organizational unit or its ID
    * @opt_param string pageToken Token to specify next page in the list
    * @opt_param string projection Restrict information returned to a set of
    * selected fields.
@@ -80,6 +80,22 @@ class Google_Service_Directory_Resource_Chromeosdevices extends Google_Service_R
     $params = array('customerId' => $customerId);
     $params = array_merge($params, $optParams);
     return $this->call('list', array($params), "Google_Service_Directory_ChromeOsDevices");
+  }
+  /**
+   * Move or insert multiple Chrome OS Devices to organizational unit
+   * (chromeosdevices.moveDevicesToOu)
+   *
+   * @param string $customerId Immutable ID of the G Suite account
+   * @param string $orgUnitPath Full path of the target organizational unit or its
+   * ID
+   * @param Google_Service_Directory_ChromeOsMoveDevicesToOu $postBody
+   * @param array $optParams Optional parameters.
+   */
+  public function moveDevicesToOu($customerId, $orgUnitPath, Google_Service_Directory_ChromeOsMoveDevicesToOu $postBody, $optParams = array())
+  {
+    $params = array('customerId' => $customerId, 'orgUnitPath' => $orgUnitPath, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('moveDevicesToOu', array($params));
   }
   /**
    * Update Chrome OS Device. This method supports patch semantics.

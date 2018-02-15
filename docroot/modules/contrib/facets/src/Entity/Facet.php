@@ -3,8 +3,10 @@
 namespace Drupal\facets\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\facets\Exception\Exception;
 use Drupal\facets\Exception\InvalidProcessorException;
+use Drupal\facets\Exception\InvalidQueryTypeException;
 use Drupal\facets\FacetInterface;
 
 /**
@@ -21,7 +23,7 @@ use Drupal\facets\FacetInterface;
  *       "edit" = "Drupal\facets\Form\FacetForm",
  *       "settings" = "Drupal\facets\Form\FacetSettingsForm",
  *       "clone" = "Drupal\facets\Form\FacetCloneForm",
- *       "delete" = "Drupal\facets\Form\FacetDeleteConfirmForm",
+ *       "delete" = "Drupal\Core\Entity\EntityDeleteForm",
  *     },
  *   },
  *   admin_permission = "administer facets",
@@ -54,6 +56,7 @@ use Drupal\facets\FacetInterface;
  *     "empty_behavior"
  *   },
  *   links = {
+ *     "collection" = "/admin/config/search/facets",
  *     "add-form" = "/admin/config/search/facets/add-facet",
  *     "edit-form" = "/admin/config/search/facets/{facets_facet}/edit",
  *     "settings-form" = "/admin/config/search/facets/{facets_facet}/settings",
@@ -379,7 +382,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     // TODO: do not hardcode on taxonomy, make this configurable (or better,
     // autoselected depending field type).
     return ['type' => 'taxonomy', 'config' => []];
-    return $this->hierarchy;
   }
 
   /**
@@ -421,10 +423,10 @@ class Facet extends ConfigEntityBase implements FacetInterface {
       }
       elseif (!class_exists($processor_definition['class'])) {
         \Drupal::logger('facets')
-          ->warning('Processor @id specifies a non-existing @class.', array(
+          ->warning('Processor @id specifies a non-existing @class.', [
             '@id' => $name,
             '@class' => $processor_definition['class'],
-          ));
+          ]);
       }
     }
 
@@ -454,9 +456,59 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     $widget = $this->getWidgetInstance();
 
     // Give the widget the chance to select a preferred query type. This is
-    // useful for widget that have different query type. See the date widget,
-    // that needs to select the date query type.
-    return $widget->getQueryType($query_types);
+    // needed for widget that have different query type. For example the need
+    // for a range query.
+    $widgetQueryType = $widget->getQueryType();
+
+    // Allow widgets to also specify a query type.
+    $processorQueryTypes = [];
+    foreach ($this->getProcessors() as $processor) {
+      $pqt = $processor->getQueryType();
+      if ($pqt !== NULL) {
+        $processorQueryTypes[] = $pqt;
+      }
+    }
+    $processorQueryTypes = array_flip($processorQueryTypes);
+
+    // The widget has made no decision and neither have the processors.
+    if ($widgetQueryType === NULL && count($processorQueryTypes) === 0) {
+      return $this->pickQueryType($query_types, 'string');
+    }
+    // The widget has made no decision but the processors have made 1 decision.
+    if ($widgetQueryType === NULL && count($processorQueryTypes) === 1) {
+      return $this->pickQueryType($query_types, key($processorQueryTypes));
+    }
+    // The widget has made a decision and the processors have not.
+    if ($widgetQueryType !== NULL && count($processorQueryTypes) === 0) {
+      return $this->pickQueryType($query_types, $widgetQueryType);
+    }
+    // The widget has made a decision and the processors have 1, being the same.
+    if ($widgetQueryType !== NULL && count($processorQueryTypes) === 1 && key($processorQueryTypes) === $widgetQueryType) {
+      return $this->pickQueryType($query_types, $widgetQueryType);
+    }
+
+    // Invalid choice.
+    throw new InvalidQueryTypeException("Invalid query type combination in widget / processors. Widget: {$widgetQueryType}, Processors: " . implode(', ', array_keys($processorQueryTypes)) . ".");
+  }
+
+  /**
+   * Choose the query type.
+   *
+   * @param array $allTypes
+   *   An array of query type definitions.
+   * @param string $type
+   *   The chose query type.
+   *
+   * @return string
+   *   The class name of the chose query type.
+   *
+   * @throws \Drupal\facets\Exception\InvalidQueryTypeException
+   */
+  protected function pickQueryType(array $allTypes, $type) {
+    if (!isset($allTypes[$type])) {
+      throw new InvalidQueryTypeException("Query type {$type} doesn't exist.");
+    }
+    return $allTypes[$type];
   }
 
   /**
@@ -527,6 +579,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function getHardLimit() {
     return $this->hard_limit ?: 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDataDefinition() {
+    return $this->getFacetSource()->getDataDefinition($this->field_identifier);
   }
 
   /**
@@ -799,7 +858,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     // Sort requested processors by weight.
     asort($processor_weights);
 
-    $return_processors = array();
+    $return_processors = [];
     foreach ($processor_weights as $name => $weight) {
       $return_processors[$name] = $processors[$name];
     }
@@ -899,6 +958,42 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     }
 
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+    if (!$update) {
+      self::clearBlockCache();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
+    self::clearBlockCache();
+  }
+
+  /**
+   * Clear the block cache.
+   *
+   * This includes resetting the shared plugin block manager as this can result
+   * in the block definition cache being rebuilt in the same request with stale
+   * static caches in the deriver.
+   */
+  protected static function clearBlockCache() {
+    $container = \Drupal::getContainer();
+
+    // If the block manager has already been loaded, we may have stale static
+    // caches in the facet deriver, so lets clear it out.
+    $container->set('plugin.manager.block', NULL);
+
+    // Now rebuild the cache to force a fresh set of data.
+    $container->get('plugin.manager.block')->clearCachedDefinitions();
   }
 
 }

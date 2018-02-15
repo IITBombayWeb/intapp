@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @FacetsProcessor(
  *   id = "list_item",
  *   label = @Translation("List item label"),
- *   description = @Translation("Fields that are a list (such as list (integer), list (text)) or a bundle field can use this processor to show the value instead of the key."),
+ *   description = @Translation("Display the label instead of the key of fields that are a list (such as <em>List (integer)</em>) or <em>List (text)</em>) or a bundle field."),
  *   stages = {
  *     "build" = 5
  *   }
@@ -35,21 +35,21 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
    *
    * @var \Drupal\Core\Config\ConfigManagerInterface
    */
-  private $configManager;
+  protected $configManager;
 
   /**
    * The entity field manager.
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
-  private $entityFieldManager;
+  protected $entityFieldManager;
 
   /**
    * The entity_type bundle info service.
    *
    * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
-  private $entityTypeBundleInfo;
+  protected $entityTypeBundleInfo;
 
   /**
    * Constructs a Drupal\Component\Plugin\PluginBase object.
@@ -123,7 +123,7 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
     elseif ($this->configManager->loadConfigEntityByName($config_entity_name) !== NULL) {
       $field = $this->configManager->loadConfigEntityByName($config_entity_name);
     }
-    // Fields defined in code don't cant be loaded from storage so check the
+    // Fields defined in code don't can't be loaded from storage so check the
     // fields property path and see if its part of the base fields.
     elseif ($field->getDataDefinition() instanceof FieldItemDataDefinition) {
       $fieldDefinition = $field->getDataDefinition()

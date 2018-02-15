@@ -42,7 +42,8 @@ interface FacetSourcePluginInterface extends PluginFormInterface, DependentPlugi
   /**
    * Returns the path of the facet source, used to build the facet url.
    *
-   * @return string The path.
+   * @return string
+   *   The path.
    */
   public function getPath();
 
@@ -95,5 +96,13 @@ interface FacetSourcePluginInterface extends PluginFormInterface, DependentPlugi
    *   The search keys, or query text, submitted by the user.
    */
   public function getSearchKeys();
+
+  /**
+   * Returns a single field's data definition from the facet source.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface
+   *   A typed data definition.
+   */
+  public function getDataDefinition($field_name);
 
 }
