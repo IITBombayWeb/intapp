@@ -1,0 +1,13 @@
+uuid: 0067a896-54c4-47a0-a63c-b888abba47f9
+langcode: en
+status: true
+dependencies:
+  module:
+    - custom_pdf_download
+_core:
+  default_config_hash: IeUsdPqiMmRuACEOjZa-LF1kD2MEsPwic_LpMV9XDeo
+id: pdf_download
+label: 'PDF download'
+type: node
+plugin: pdf_download
+configuration: {  }

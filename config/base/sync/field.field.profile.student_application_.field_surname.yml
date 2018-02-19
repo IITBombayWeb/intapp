@@ -9,9 +9,9 @@ id: profile.student_application_.field_surname
 field_name: field_surname
 entity_type: profile
 bundle: student_application_
-label: 'Surname/ family name'
+label: 'Surname/ Family Name'
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''

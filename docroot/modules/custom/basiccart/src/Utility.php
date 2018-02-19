@@ -408,7 +408,7 @@ public static function price_format($price) {
     $cart_cart = isset($cart['cart']) ? $cart['cart'] : array();
     $output = '';
  if (empty($cart_cart)){
-  $output .= '<div class="basiccart-grid basic-cart-block empt-cart">'.t($config->get('empty_cart')).'</div>';
+  $output .= '<div class="basiccart-grid basic-cart-block empt-cart welcome">'.t($config->get('empty_cart')).'</div>';
   } 
 else {
 

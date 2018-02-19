@@ -21,7 +21,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'access content overview'
+          perm: 'access content'
       cache:
         type: tag
       query:
@@ -39,12 +39,24 @@ display:
       pager:
         type: full
         options:
-          items_per_page: 50
+          items_per_page: 100
+          offset: 0
+          id: 0
+          total_pages: null
           tags:
             previous: '‹ Previous'
             next: 'Next ›'
             first: '« First'
             last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
       style:
         type: table
         options:
@@ -373,7 +385,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: true
           expose:
@@ -583,6 +595,8 @@ display:
         menu_name: admin
         weight: -10
         context: ''
+        enabled: true
+        expanded: false
       tab_options:
         type: normal
         title: Content
@@ -590,6 +604,12 @@ display:
         menu_name: admin
         weight: -10
       display_extenders: {  }
+      access:
+        type: perm
+        options:
+          perm: 'access content overview'
+      defaults:
+        access: false
     display_plugin: page
     display_title: Page
     id: page_1

@@ -13,7 +13,7 @@ dependencies:
     - options
     - profile
     - user
-    - workflowfield
+    - workflow
 id: view_application_list
 label: 'View Application List'
 module: views
@@ -1712,6 +1712,9 @@ display:
           required: false
           entity_type: user
           plugin_id: standard
+      menu:
+        enabled: true
+        expanded: false
     cache_metadata:
       max-age: 0
       contexts:

@@ -1,0 +1,29 @@
+uuid: f1879ddf-fec7-48b7-a58c-002d76a20d08
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:457fcfe5-885c-49c9-86bc-794bb9886081'
+  module:
+    - block_class
+    - block_content
+  theme:
+    - capit
+third_party_settings:
+  block_class:
+    classes: ft-ste
+id: copyright
+theme: capit
+region: footer
+weight: 0
+provider: null
+plugin: 'block_content:457fcfe5-885c-49c9-86bc-794bb9886081'
+settings:
+  id: 'block_content:457fcfe5-885c-49c9-86bc-794bb9886081'
+  label: Copyright
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

@@ -1,34 +1,29 @@
-uuid: 18b762c7-4dcd-4489-8382-7eef3f52786a
+uuid: 3374ee9b-8312-4aa6-a2f0-09d73257e6be
 langcode: en
 status: true
 dependencies:
-  config:
-    - facets.facet.degree
+  content:
+    - 'block_content:basic:a1be8830-8ce8-46cc-99e3-2b0edb62aa64'
   module:
-    - facets
-    - system
+    - block_class
+    - block_content
   theme:
-    - business
+    - capit
+third_party_settings:
+  block_class:
+    classes: 'deg-cont ft-cm'
 id: degree
-theme: business
-region: sidebar_first
-weight: -10
+theme: capit
+region: featured_iner
+weight: -12
 provider: null
-plugin: 'facet_block:degree'
+plugin: 'block_content:a1be8830-8ce8-46cc-99e3-2b0edb62aa64'
 settings:
-  id: 'facet_block:degree'
+  id: 'block_content:a1be8830-8ce8-46cc-99e3-2b0edb62aa64'
   label: Degree
-  provider: facets
-  label_display: visible
-visibility:
-  other_facet:
-    id: other_facet
-    facets: ''
-    facet_value: ''
-    negate: false
-    context_mapping: {  }
-  request_path:
-    id: request_path
-    pages: "/search-programme\r\n/search-programme/*"
-    negate: false
-    context_mapping: {  }
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

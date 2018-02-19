@@ -1,0 +1,35 @@
+uuid: 50595a5c-bc49-45fe-88bb-0e959728354c
+langcode: en
+status: false
+dependencies:
+  config:
+    - core.entity_view_mode.node.pdf
+    - field.field.node.application.field_application_path
+    - field.field.node.application.field_documents_uploaded
+    - field.field.node.application.field_general_documents
+    - field.field.node.application.field_programme
+    - field.field.node.application.field_specific_d
+    - field.field.node.application.field_status
+    - node.type.application
+  module:
+    - entity_print
+    - user
+third_party_settings:
+  entity_print:
+    pdf_label: 'View PDF'
+id: node.application.pdf
+targetEntityType: node
+bundle: application
+mode: pdf
+content: {  }
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_application_path: true
+  field_documents_uploaded: true
+  field_general_documents: true
+  field_programme: true
+  field_specific_d: true
+  field_status: true
+  links: true
