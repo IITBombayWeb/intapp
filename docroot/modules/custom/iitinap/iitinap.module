@@ -463,12 +463,12 @@ function form_validate_data1($form, &$form_state) {
           }
        }
        //Telephone no
-       $field_telephone_num_com = $form['field_telephone_num_com']['widget'][0]['value']['#value'];
-       if(!empty($field_telephone_num_com)){
-           if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_telephone_num_com)){
-	        $form_state->setError($form['field_telephone_num_com']['widget'][0]['value'],"Please Enter Valid Phone Number.");
-           }
-       }
+       // $field_telephone_num_com = $form['field_telephone_num_com']['widget'][0]['value']['#value'];
+       // if(!empty($field_telephone_num_com)){
+       //     if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_telephone_num_com)){
+	      //   $form_state->setError($form['field_telephone_num_com']['widget'][0]['value'],"Please Enter Valid Phone Number.");
+       //     }
+       // }
        //city
        $city = $form['field_city']['widget'][0]['value']['#value'];
        if(!empty($city)){
