@@ -106,18 +106,18 @@ ul li {
   top: 12px;
   margin-right: 40px;
   position: relative;
-  }
-  .lgn-lst span {
-    font-size: 25px;
-    color: rgba(0,0,0,0.7);
-    cursor: pointer;
-  }
-  .lgn-lst span i {
-    padding-left: 8px;
-  }
-  .mbl-lgn {
-    float: left;
-  }
+}
+.lgn-lst span {
+  font-size: 25px;
+  color: rgba(0,0,0,0.7);
+  cursor: pointer;
+}
+.lgn-lst span i {
+  padding-left: 8px;
+}
+.mbl-lgn {
+  float: left;
+}
 .menu-icn {
   float: left;
   padding: 0;
@@ -447,7 +447,6 @@ ul li {
   text-align: center;
   padding: 0;
   margin: 15px 0 0;
-  cursor: pointer;
 }
 .featured-inn .ft-cm {
   font-family: 'Roboto Condensed', sans-serif;
@@ -459,6 +458,10 @@ ul li {
   position: relative;
   border: 0;
   z-index: 0;
+}
+.featured-inn .ftd-lnk a {
+  color: #fff;
+  text-decoration: none;
 }
 .featured-inn .ft-cm .ins-cnt span {
   font-size: 8em;
