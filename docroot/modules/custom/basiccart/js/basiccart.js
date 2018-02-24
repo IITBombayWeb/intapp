@@ -82,6 +82,16 @@
           });
          $(this).removeAttr("href");
       });
+      if($('span').hasClass('basiccart-delete-image-image')){
+$('.basiccart-delete-image-image a').click(function(e){
+e.preventDefault();
+var cc = confirm("Do you wish to remove the packet from the cart?");
+if(cc){
+window.location.href = jQuery(this).attr('href');
+}
+//console.log(cc);
+});
+}
   })
 })(jQuery);
           
