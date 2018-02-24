@@ -48,7 +48,9 @@
          //$('#forquantitydynamictext_'+id_splited[1]).closest('article').parent().addClass('testing');
          $('#forquantitydynamictext_'+id_splited[1]).closest('article').removeClass('pct-hvr');
          //alert("hi");
-         $.ajax({url: this.href+quantity, success: function(result){
+         $.ajax({
+          url: this.href+quantity, 
+          success: function(result){
               $(".basiccart-grid").each(function(){
                 //console.log(result.block);
                 $(this).html(result.block);               
@@ -64,9 +66,32 @@
                 theme: "dark-thick",
                 set_height: "auto",
               });
-          }});
+          }
+          ,
+          complete: function(){
+                $('.basiccart-delete-image-image a').click(function(e){
+                e.preventDefault();
+                var cc = confirm("Do you wish to remove the packet from the cart?");
+                if(cc){
+                window.location.href = jQuery(this).attr('href');
+                 }
+                //console.log(cc);
+               });
+          }
+         
+          });
          $(this).removeAttr("href");
       });
+      if($('span').hasClass('basiccart-delete-image-image')){
+$('.basiccart-delete-image-image a').click(function(e){
+e.preventDefault();
+var cc = confirm("Do you wish to remove the packet from the cart?");
+if(cc){
+window.location.href = jQuery(this).attr('href');
+}
+//console.log(cc);
+});
+}
   })
 })(jQuery);
           
