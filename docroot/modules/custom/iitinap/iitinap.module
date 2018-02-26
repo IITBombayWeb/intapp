@@ -434,14 +434,14 @@ function form_validate_data1($form, &$form_state) {
        $field_first_name = $form['field_first_name']['widget'][0]['value']['#value'];
        if(!empty($field_first_name)){
 	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_first_name)){
-	     	 $form_state->setError($form['field_first_name']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed.");
+	     	 $form_state->setError($form['field_first_name']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed in first name.");
 	      }
        }
        //Sure Name
        $field_surname = $form['field_surname']['widget'][0]['value']['#value'];
        if(!empty($field_surname)){
 	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_surname)){
-	     	 $form_state->setError($form['field_surname']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed.");
+	     	 $form_state->setError($form['field_surname']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed in surname.");
 	      }
        }
        
