@@ -831,7 +831,7 @@ select.form-select, .profile-form .form-date,
 	padding: 10px 0;
 }
 .panel-default > .panel-heading {
-	background-color: none !important;
+	background-color: #fff !important;
 }
 .panel-default > .panel-heading .panel-title {
 	padding: 15px 0 !important;
