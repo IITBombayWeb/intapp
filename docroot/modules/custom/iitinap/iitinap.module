@@ -366,6 +366,7 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
        $node = \Drupal::routeMatch()->getParameter('node');
        if ($form_id == 'profile_student_application__form' && $current_path = '/node/'.$node.'/edit_application') {
 	      $form['actions']['submit']['#submit'][] = 'form_submit';
+	      dpm($form);
        }
        if ($form_id == 'basiccart_cart_form') {
 	      $form['buttons']['update']['#value'] = t('Apply');
