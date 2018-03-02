@@ -830,12 +830,12 @@ select.form-select, .profile-form .form-date,
 	box-shadow: none;
 	padding: 10px 0;
 }
-.panel-default .panel-heading {
+.panel-default > .panel-heading {
 	background-color: none !important;
 }
-.panel-default .panel-heading .pane-title {
+.panel-default > .panel-heading .panel-title {
 	padding: 15px 0 !important;
-	font-weight: bold;
+	font-weight: bold ;
 }
 .profile-form .field--type-file .panel-default > .panel-heading a {
 	font-weight: 700;
