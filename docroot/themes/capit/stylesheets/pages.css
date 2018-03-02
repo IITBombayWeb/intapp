@@ -834,8 +834,9 @@ select.form-select, .profile-form .form-date,
 	font-weight: 700;
 }
 .profile-form .field--type-file .panel-default > .panel-heading .panel-title {
-	padding: 10px 0;
+	padding: 15px 0 !important;
 	margin: 0;
+	font-weight: bold;
 	border-bottom: 1px solid #cbcbcb;
 }
 .profile-form .field--type-file .panel-body .table-responsive {
@@ -933,7 +934,7 @@ input[type="file"] {
 	font-weight: 400;
 }
 .user-form .panel-default > .panel-heading {
-	background: none;
+	background: none !important;
 	border: none;
 }
 .user-form .panel-default .panel-title {
@@ -1143,6 +1144,10 @@ input[type="file"] {
 	}
 	.fid-w-c .form-group {
 		margin-bottom: 0;
+	}
+	.fid-w-c .form-group .control-label {
+		font-weight: normal;
+		margin: 5px 0;
 	}
 	.profile-form .form-item-field-performance-in-competitive-0 .form-item-field-performance-in-competitive-0-tablefield-table-1-2,
 	.profile-form .js-form-item-field-proficiency-in-english-0 .form-item-field-proficiency-in-english-0-tablefield-table-1-2 {
