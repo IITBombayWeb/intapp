@@ -366,14 +366,16 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
        $node = \Drupal::routeMatch()->getParameter('node');
        if ($form_id == 'profile_student_application__form' && $current_path = '/node/'.$node.'/edit_application') {
 	      $form['actions']['submit']['#submit'][] = 'form_submit';
-	     
+
        }
        if ($form_id == 'basiccart_cart_form') {
 	      $form['buttons']['update']['#value'] = t('Apply');
 	      $form['#submit'][] = 'iitnap_basiccart_alter_submit'; 
 	      $form['actions']['submit']['#submit'][] = 'form_submit';
        }
-       if ($form['#form_id'] == 'user_register_form' || $form['#form_id'] == 'user_form') {
+       if ($form['#form_id'] == 'user_register_form' || $form['#form_id'] == 'user_form')
+           dpm($form);
+        {
 	      $form['pass_condition'] = array(
 		     '#type' => 'markup',
 		     '#markup' => '<div class="password_chk"><h4 class="programs-apply">Password has following Requirement(s):</h4><br>
@@ -384,7 +386,7 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
 			&#8226;  Password must be at least 6 characters in length.<br><br><br>',
 		     '#suffix' => '</div>',
 	      );
-	       dpm($form);
+	       
 	           $form['#validate'][] = 'form_validate_data2';
        }
 }
