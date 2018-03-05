@@ -1297,6 +1297,10 @@ input[type="file"] {
 	.user-form .field--name-user-picture {
 		width: 280px;
 	}
+	.user-form .field--name-user-picture + .form-actions.form-group {
+		margin-top: 20px;
+		margin-left: 52px;
+	}
 	.user-form .panel-default {
 		width: 280px;
 	}
