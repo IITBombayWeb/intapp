@@ -145,7 +145,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           action_title: Action
-          include_exclude: include
+          include_exclude: exclude
           selected_actions:
             - pdf_download
             - zip_download
@@ -340,7 +340,7 @@ display:
           group_type: group
           admin_label: ''
           label: 'Operations links'
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''

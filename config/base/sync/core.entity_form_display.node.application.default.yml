@@ -22,7 +22,6 @@ content:
     weight: 3
     settings: {  }
     third_party_settings: {  }
-    region: content
   field_application_path:
     weight: 30
     settings:
@@ -30,7 +29,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_documents_uploaded:
     weight: 29
     settings:
@@ -38,52 +36,38 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   field_general_documents:
     weight: 26
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
-    region: content
   field_programme:
     weight: 0
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
   field_specific_d:
     weight: 27
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
-    region: content
   path:
     type: path
     weight: 6
     settings: {  }
     third_party_settings: {  }
-    region: content
   promote:
     type: boolean_checkbox
     settings:
       display_label: true
     weight: 4
     third_party_settings: {  }
-    region: content
-  status:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 121
-    third_party_settings: {  }
-    region: content
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
     weight: 5
     third_party_settings: {  }
-    region: content
   uid:
     type: entity_reference_autocomplete
     weight: 2
@@ -92,7 +76,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    region: content
 hidden:
   field_status: true
   title: true

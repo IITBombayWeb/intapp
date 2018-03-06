@@ -1,6 +1,0 @@
-ignored_config_entities:
-  0: simple_fb_connect.settings
-  2: smtp.settings
-  4: social_auth_google.settings
-_core:
-  default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk

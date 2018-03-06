@@ -31,13 +31,13 @@ mode: default
 content:
   add_to_cart:
     type: addtocart
-    weight: 127
+    weight: 37
     settings: {  }
     third_party_settings: {  }
     region: content
   add_to_cart_price:
     type: number
-    weight: 126
+    weight: 36
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -146,13 +146,6 @@ content:
     settings:
       display_label: true
     weight: 3
-    third_party_settings: {  }
-    region: content
-  status:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 121
     third_party_settings: {  }
     region: content
   sticky:
