@@ -1,5 +1,5 @@
 cart_page_title: 'Application Packet'
-empty_cart: '(Your application packet is now <b>empty</b>. Search and add programs to this packet. You can add and apply any number of times till the deadline ends).'
+empty_cart: '(Your application packet is now <b>empty</b>. Search and add programs to this packet. You can add and apply any number of times till the deadline ends).<div class= "clse-ico"><i class="fa fa-times"></i></div>'
 cart_block_title: 'Application Packet'
 view_cart_button: 'View Packet'
 cart_update_button: 'Update Packet'

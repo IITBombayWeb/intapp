@@ -12,50 +12,152 @@ type: list_float
 settings:
   allowed_values:
     -
-      value: !!float 2016
-      label: '2016'
+      value: !!float 1970
+      label: '1970'
     -
-      value: !!float 2015
-      label: '2015'
+      value: !!float 1971
+      label: '1971'
     -
-      value: !!float 2014
-      label: '2014'
+      value: !!float 1972
+      label: '1972'
     -
-      value: !!float 2013
-      label: '2013'
+      value: !!float 1973
+      label: '1973'
     -
-      value: !!float 2012
-      label: '2012'
+      value: !!float 1974
+      label: '1974'
     -
-      value: !!float 2010
-      label: '2010'
+      value: !!float 1975
+      label: '1975'
     -
-      value: !!float 2009
-      label: '2009'
+      value: !!float 1976
+      label: '1976'
     -
-      value: !!float 2008
-      label: '2008'
+      value: !!float 1977
+      label: '1977'
     -
-      value: !!float 2007
-      label: '2007'
+      value: !!float 1978
+      label: '1978'
     -
-      value: !!float 2006
-      label: '2006'
+      value: !!float 1979
+      label: '1979'
     -
-      value: !!float 2005
-      label: '2005'
+      value: !!float 1980
+      label: '1980'
     -
-      value: !!float 2004
-      label: '2004'
+      value: !!float 1981
+      label: '1981'
     -
-      value: !!float 2003
-      label: '2003'
+      value: !!float 1982
+      label: '1982'
+    -
+      value: !!float 1983
+      label: '1983'
+    -
+      value: !!float 1984
+      label: '1984'
+    -
+      value: !!float 1985
+      label: '1985'
+    -
+      value: !!float 1986
+      label: '1986'
+    -
+      value: !!float 1987
+      label: '1987'
+    -
+      value: !!float 1988
+      label: '1988'
+    -
+      value: !!float 1989
+      label: '1989'
+    -
+      value: !!float 1990
+      label: '1990'
+    -
+      value: !!float 1991
+      label: '1991'
+    -
+      value: !!float 1992
+      label: '1992'
+    -
+      value: !!float 1993
+      label: '1993'
+    -
+      value: !!float 1994
+      label: '1994'
+    -
+      value: !!float 1995
+      label: '1995'
+    -
+      value: !!float 1996
+      label: '1996'
+    -
+      value: !!float 1997
+      label: '1997'
+    -
+      value: !!float 1998
+      label: '1998'
+    -
+      value: !!float 1999
+      label: '1999'
+    -
+      value: !!float 2000
+      label: '2000'
+    -
+      value: !!float 2001
+      label: '2001'
     -
       value: !!float 2002
       label: '2002'
     -
-      value: !!float 2001
-      label: '2001'
+      value: !!float 2003
+      label: '2003'
+    -
+      value: !!float 2004
+      label: '2004'
+    -
+      value: !!float 2005
+      label: '2005'
+    -
+      value: !!float 2006
+      label: '2006'
+    -
+      value: !!float 2007
+      label: '2007'
+    -
+      value: !!float 2008
+      label: '2008'
+    -
+      value: !!float 2009
+      label: '2009'
+    -
+      value: !!float 2010
+      label: '2010'
+    -
+      value: !!float 2011
+      label: '2011'
+    -
+      value: !!float 2012
+      label: '2012'
+    -
+      value: !!float 2013
+      label: '2013'
+    -
+      value: !!float 2014
+      label: '2014'
+    -
+      value: !!float 2015
+      label: '2015'
+    -
+      value: !!float 2016
+      label: '2016'
+    -
+      value: !!float 2017
+      label: '2017'
+    -
+      value: !!float 2018
+      label: '2018'
   allowed_values_function: ''
 module: options
 locked: false
