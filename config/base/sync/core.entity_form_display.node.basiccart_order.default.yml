@@ -28,7 +28,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   basiccart_city:
     weight: 5
     settings:
@@ -36,7 +35,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
   basiccart_email:
     weight: 1
     settings:
@@ -44,7 +42,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: email_default
-    region: content
   basiccart_message:
     weight: 2
     settings:
@@ -52,28 +49,24 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textarea
-    region: content
   basiccart_phone:
     weight: 3
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: telephone_default
-    region: content
   basiccart_total_price:
     weight: 7
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
-    region: content
   basiccart_vat:
     weight: 8
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
-    region: content
   basiccart_zipcode:
     weight: 6
     settings:
@@ -81,14 +74,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
-  status:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 121
-    third_party_settings: {  }
-    region: content
   title:
     type: string_textfield
     weight: 0
@@ -96,7 +81,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    region: content
 hidden:
   created: true
   path: true

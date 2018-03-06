@@ -34,5 +34,4 @@ permissions:
   - 'excel export'
   - 'excel import'
   - 'revert own apply workflow_transition'
-  - 'view all revisions'
   - 'view webprofiler toolbar'

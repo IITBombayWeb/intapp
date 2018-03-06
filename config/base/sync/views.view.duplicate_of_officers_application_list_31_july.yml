@@ -1,6 +1,6 @@
-uuid: f3bca43e-e9b7-4ef1-85c6-c1acaaec746a
+uuid: 8a89ddd5-a855-4aa2-b6d2-704db25a5e8d
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - field.storage.node.field_degree
@@ -18,8 +18,8 @@ dependencies:
     - taxonomy
     - user
     - workflow
-id: officers_application_list
-label: 'Officers Application List'
+id: duplicate_of_officers_application_list_31_july
+label: 'Duplicate of Officers Application List 31 july'
 module: views
 description: ''
 tag: ''
@@ -1400,7 +1400,7 @@ display:
           relationship: field_programme
           group_type: group
           admin_label: ''
-          label: Department
+          label: Departments
           exclude: false
           alter:
             alter_text: false
@@ -1637,7 +1637,6 @@ display:
         header: false
         arguments: false
         css_class: false
-        show_admin_links: false
       relationships:
         field_programme:
           id: field_programme
@@ -1838,6 +1837,19 @@ display:
           empty: false
           content: 'Displaying @start - @end'
           plugin_id: result
+        entity_taxonomy_term:
+          id: entity_taxonomy_term
+          table: views
+          field: entity_taxonomy_term
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          tokenize: true
+          target: '{{ arguments.field_institute_target_id }}'
+          view_mode: default
+          bypass_access: false
+          plugin_id: entity
       arguments:
         field_institute_target_id:
           id: field_institute_target_id
@@ -1855,7 +1867,42 @@ display:
           title: ''
           default_argument_type: php
           default_argument_options:
-            code: "use Drupal\\profile\\Entity\\Profile;\n$account = \\Drupal::currentUser()->id();\n$query = \\Drupal::entityQuery('profile')\n   ->condition('status', 1)\n   ->condition('uid', $account );\n$nids = $query->execute();\n$nid_key=array_keys($nids);\n$profile = Profile::load($nid_key[0]);\n$ins_id = $profile->get('field_institute')->getValue()[0][target_id];\n\nif(!empty($ins_id)){\nreturn 12;\n}"
+            code: "use Drupal\\profile\\Entity\\Profile;\n$account = \\Drupal::currentUser()->id();\n$query = \\Drupal::entityQuery('profile')\n   ->condition('status', 1)\n   ->condition('uid', $account );\n$nids = $query->execute();\n$nid_key=array_keys($nids);\n$profile = Profile::load($nid_key[0]);\n$ins_id = $profile->get('field_institute')->getValue()[0][target_id];\n\nif(!empty($ins_id)){\nreturn $ins_id;\n}"
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            items_per_page: 25
+            override: false
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          break_phrase: false
+          not: false
+          plugin_id: numeric
+        field_departments_target_id:
+          id: field_departments_target_id
+          table: node__field_departments
+          field: field_departments_target_id
+          relationship: field_programme
+          group_type: group
+          admin_label: ''
+          default_action: ignore
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: fixed
+          default_argument_options:
+            argument: ''
           default_argument_skip_url: false
           summary_options:
             base_path: ''
@@ -1878,7 +1925,6 @@ display:
         enabled: true
         expanded: false
       css_class: apl-frm
-      show_admin_links: true
     cache_metadata:
       max-age: 0
       contexts:

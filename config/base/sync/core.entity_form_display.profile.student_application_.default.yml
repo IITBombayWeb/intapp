@@ -10,7 +10,6 @@ dependencies:
     - field.field.profile.student_application_.field_country_school
     - field.field.profile.student_application_.field_date_of_birth
     - field.field.profile.student_application_.field_details_of_academic_record
-    - field.field.profile.student_application_.field_e
     - field.field.profile.student_application_.field_employment_details
     - field.field.profile.student_application_.field_file
     - field.field.profile.student_application_.field_first_name
@@ -46,8 +45,8 @@ third_party_settings:
       children:
         - field_first_name
         - field_surname
-      parent_name: group_personal_details
-      weight: 1
+      parent_name: ''
+      weight: 0
       format_type: html_element
       format_settings:
         id: ''
@@ -64,8 +63,8 @@ third_party_settings:
       children:
         - field_date_of_birth
         - field_gender
-      parent_name: group_personal_details
-      weight: 2
+      parent_name: ''
+      weight: 1
       format_type: html_element
       format_settings:
         id: ''
@@ -81,8 +80,8 @@ third_party_settings:
     group_address_group:
       children:
         - field_permanent_address
-      parent_name: group_personal_details
-      weight: 3
+      parent_name: ''
+      weight: 2
       format_type: html_element
       format_settings:
         id: ''
@@ -101,8 +100,8 @@ third_party_settings:
         - field_state
         - field_country
         - field_pin
-      parent_name: group_personal_details
-      weight: 4
+      parent_name: ''
+      weight: 3
       format_type: html_element
       format_settings:
         id: ''
@@ -119,8 +118,8 @@ third_party_settings:
       children:
         - field_mobile_num_com
         - field_telephone_num_com
-      parent_name: group_personal_details
-      weight: 5
+      parent_name: ''
+      weight: 4
       format_type: html_element
       format_settings:
         id: ''
@@ -137,8 +136,8 @@ third_party_settings:
       children:
         - field_name_of_the_qualifying_exa
         - field_name_of_the_board_universi
-      parent_name: group_qualifying_examination
-      weight: 2
+      parent_name: ''
+      weight: 5
       format_type: html_element
       format_settings:
         id: ''
@@ -156,8 +155,8 @@ third_party_settings:
         - field_year_of_passing
         - field_school
         - field_medium_of_instruction_
-      parent_name: group_qualifying_examination
-      weight: 3
+      parent_name: ''
+      weight: 6
       format_type: html_element
       format_settings:
         id: ''
@@ -176,8 +175,8 @@ third_party_settings:
         - field_state_school
         - field_country_school
         - field_pincode_school
-      parent_name: group_qualifying_examination
-      weight: 4
+      parent_name: ''
+      weight: 7
       format_type: html_element
       format_settings:
         id: ''
@@ -190,38 +189,6 @@ third_party_settings:
         effect: none
         speed: fast
       label: city-group
-    group_personal_details:
-      children:
-        - group_user_username
-        - group_dateofbirth_gender
-        - group_address_group
-        - group_state_group_2
-        - group_mob_group
-      parent_name: ''
-      weight: 0
-      format_type: fieldset
-      format_settings:
-        label: 'Personal Details'
-        description: ''
-        required_fields: true
-        id: ''
-        classes: psnl-qld
-      label: 'Personal Details'
-    group_qualifying_examination:
-      children:
-        - group_qualification_group
-        - group_qualification_group_2
-        - group_city_group
-      parent_name: ''
-      weight: 1
-      format_type: fieldset
-      format_settings:
-        label: 'Qualifying Examination'
-        description: ''
-        required_fields: true
-        id: ''
-        classes: psnl-qld
-      label: 'Qualifying Examination'
 id: profile.student_application_.default
 targetEntityType: profile
 bundle: student_application_
@@ -262,21 +229,13 @@ content:
     type: datetime_default
     region: content
   field_details_of_academic_record:
-    weight: 7
+    weight: 10
     settings: {  }
     third_party_settings: {  }
     type: tablefield
     region: content
-  field_e:
-    weight: 11
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textarea
-    region: content
   field_employment_details:
-    weight: 9
+    weight: 12
     settings: {  }
     third_party_settings: {  }
     type: tablefield
@@ -296,7 +255,7 @@ content:
     type: options_select
     region: content
   field_general_documents:
-    weight: 10
+    weight: 13
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
@@ -334,7 +293,7 @@ content:
     type: string_textfield
     region: content
   field_performance_in_competitive:
-    weight: 5
+    weight: 8
     settings: {  }
     third_party_settings: {  }
     type: tablefield
@@ -364,13 +323,13 @@ content:
     type: string_textfield
     region: content
   field_proficiency_in_english:
-    weight: 6
+    weight: 9
     settings: {  }
     third_party_settings: {  }
     type: tablefield
     region: content
   field_research_professional_expe:
-    weight: 8
+    weight: 11
     settings: {  }
     third_party_settings: {  }
     type: tablefield
@@ -400,7 +359,7 @@ content:
     type: string_textfield
     region: content
   field_supporting_d:
-    weight: 12
+    weight: 14
     settings:
       progress_indicator: throbber
     third_party_settings: {  }

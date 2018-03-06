@@ -48,14 +48,14 @@ content:
     third_party_settings: {  }
     region: content
   field_course_duration:
-    weight: 11
+    weight: 110
     label: above
     settings: {  }
     third_party_settings: {  }
     type: list_default
     region: content
   field_course_fees:
-    weight: 10
+    weight: 109
     label: above
     settings:
       link_to_entity: false
@@ -63,14 +63,14 @@ content:
     type: string
     region: content
   field_degree:
-    weight: 5
+    weight: 105
     label: above
     settings: {  }
     third_party_settings: {  }
     type: list_default
     region: content
   field_departments:
-    weight: 4
+    weight: 104
     label: above
     settings:
       link: false
@@ -78,21 +78,21 @@ content:
     type: entity_reference_label
     region: content
   field_description:
-    weight: 8
+    weight: 107
     label: above
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
   field_e:
-    weight: 13
+    weight: 112
     label: above
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
   field_enter_number_of_supporting:
-    weight: 12
+    weight: 111
     label: above
     settings:
       thousand_separator: ''
@@ -101,27 +101,27 @@ content:
     type: number_integer
     region: content
   field_institute:
-    weight: 3
+    weight: 103
     label: above
     settings:
-      link: false
+      link: true
     third_party_settings: {  }
     type: entity_reference_label
     region: content
   field_institute_link:
-    weight: 7
+    weight: 114
     label: above
     settings:
-      trim_length: null
-      url_only: true
-      target: _blank
+      trim_length: 80
+      url_only: false
       url_plain: false
-      rel: '0'
+      rel: ''
+      target: ''
     third_party_settings: {  }
     type: link
     region: content
   field_specialisation:
-    weight: 6
+    weight: 113
     label: above
     settings:
       link_to_entity: false
@@ -129,14 +129,14 @@ content:
     type: string
     region: content
   field_supporting_documents:
-    weight: 9
+    weight: 108
     label: above
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
   field_thumb:
-    weight: 2
+    weight: 102
     label: above
     settings:
       image_style: ''
@@ -148,7 +148,7 @@ content:
     weight: 10
     region: content
   links:
-    weight: 1
+    weight: 100
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -15,7 +15,7 @@ third_party_settings:
 id: iitscount
 theme: capit
 region: featured_iner
-weight: -13
+weight: -14
 provider: null
 plugin: 'block_content:08604d07-41a5-40a0-8e37-5ec2e57808ea'
 settings:

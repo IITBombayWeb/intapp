@@ -21,7 +21,7 @@ provider: null
 plugin: 'facet_block:institute'
 settings:
   id: 'facet_block:institute'
-  label: Institutes
+  label: Institute
   provider: facets
   label_display: visible
 visibility:

@@ -21,7 +21,7 @@ provider: null
 plugin: 'facet_block:degree1'
 settings:
   id: 'facet_block:degree1'
-  label: Degrees
+  label: Degree
   provider: facets
   label_display: visible
 visibility:
