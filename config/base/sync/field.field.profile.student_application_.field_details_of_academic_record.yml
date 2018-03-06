@@ -18,19 +18,20 @@ translatable: false
 default_value:
   -
     rebuild:
-      cols: '8'
+      cols: '9'
       rows: '5'
     value:
-      0:
-        - 'University/ Institute'
-        - Branch
-        - Subject
-        - "Month\_of Passing"
-        - " Year\_of Passing"
-        - 'Class/ Division'
-        - '% of Marks'
-        - Grade/CPI/CGPA
-      1:
+      -
+        8: ' Exam Passed/ Appeared'
+        0: 'University/ Institute'
+        1: Branch
+        2: Subject
+        3: "Month\_of Passing"
+        4: " Year\_of Passing"
+        5: 'Class/ Division'
+        6: '% of Marks'
+        7: Grade/CPI/CGPA
+      -
         - ''
         - ''
         - ''
@@ -39,7 +40,8 @@ default_value:
         - ''
         - ''
         - ''
-      2:
+        - ''
+      -
         - ''
         - ''
         - ''
@@ -48,7 +50,8 @@ default_value:
         - ''
         - ''
         - ''
-      3:
+        - ''
+      -
         - ''
         - ''
         - ''
@@ -57,7 +60,8 @@ default_value:
         - ''
         - ''
         - ''
-      4:
+        - ''
+      -
         - ''
         - ''
         - ''
@@ -66,15 +70,13 @@ default_value:
         - ''
         - ''
         - ''
-      setrow: 5
+        - ''
     format: null
 default_value_callback: ''
 settings:
   export: 0
   restrict_rebuild: 1
   restrict_import: 1
-  restrict_addrow: 1
-  restrict_addcolumn: 1
   lock_values: 1
   cell_processing: '0'
   empty_rules:

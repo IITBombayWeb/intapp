@@ -6,8 +6,8 @@ id: dompdf
 settings:
   orientation: portrait
   default_paper_size: a4
-  username: ''
-  password: ''
+  username: admin
+  password: Drup@l123
   enable_html5_parser: true
   enable_remote: true
   cafile: ''

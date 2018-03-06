@@ -1,21 +1,19 @@
-uuid: b8e868f6-f1fb-419e-be56-9c238f5b86b3
+uuid: 5e2276f2-a8a1-4cd0-9810-d70bc108ffd5
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.profile.field_telephone_num_com
+    - field.storage.profile.field_e
     - profile.type.student_application_
-  module:
-    - telephone
-id: profile.student_application_.field_telephone_num_com
-field_name: field_telephone_num_com
+id: profile.student_application_.field_e
+field_name: field_e
 entity_type: profile
 bundle: student_application_
-label: 'Phone No'
+label: 'Essential Documents List'
 description: ''
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: telephone
+field_type: string_long
