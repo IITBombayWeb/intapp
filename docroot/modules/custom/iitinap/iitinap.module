@@ -366,13 +366,16 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
        $node = \Drupal::routeMatch()->getParameter('node');
        if ($form_id == 'profile_student_application__form' && $current_path = '/node/'.$node.'/edit_application') {
 	      $form['actions']['submit']['#submit'][] = 'form_submit';
+
        }
        if ($form_id == 'basiccart_cart_form') {
 	      $form['buttons']['update']['#value'] = t('Apply');
 	      $form['#submit'][] = 'iitnap_basiccart_alter_submit'; 
 	      $form['actions']['submit']['#submit'][] = 'form_submit';
        }
-       if ($form['#form_id'] == 'user_register_form' || $form['#form_id'] == 'user_form') {
+       if ($form['#form_id'] == 'user_register_form' || $form['#form_id'] == 'user_form')
+           
+        {
 	      $form['pass_condition'] = array(
 		     '#type' => 'markup',
 		     '#markup' => '<div class="password_chk"><h4 class="programs-apply">Password has following Requirement(s):</h4><br>
@@ -383,7 +386,7 @@ function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
 			&#8226;  Password must be at least 6 characters in length.<br><br><br>',
 		     '#suffix' => '</div>',
 	      );
-	      
+	       
 	           $form['#validate'][] = 'form_validate_data2';
        }
 }
@@ -463,12 +466,12 @@ function form_validate_data1($form, &$form_state) {
           }
        }
        //Telephone no
-       $field_telephone_num_com = $form['field_telephone_num_com']['widget'][0]['value']['#value'];
-       if(!empty($field_telephone_num_com)){
-           if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_telephone_num_com)){
-	        $form_state->setError($form['field_telephone_num_com']['widget'][0]['value'],"Please Enter Valid Phone Number.");
-           }
-       }
+       // $field_telephone_num_com = $form['field_telephone_num_com']['widget'][0]['value']['#value'];
+       // if(!empty($field_telephone_num_com)){
+       //     if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_telephone_num_com)){
+	      //   $form_state->setError($form['field_telephone_num_com']['widget'][0]['value'],"Please Enter Valid Phone Number.");
+       //     }
+       // }
        //city
        $city = $form['field_city']['widget'][0]['value']['#value'];
        if(!empty($city)){
