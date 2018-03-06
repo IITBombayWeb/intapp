@@ -830,12 +830,21 @@ select.form-select, .profile-form .form-date,
 	box-shadow: none;
 	padding: 10px 0;
 }
+.panel-default > .panel-heading {
+	background-color: #fff !important;
+	color: #000 !important;
+}
+.panel-default > .panel-heading .panel-title {
+	padding: 15px 0 !important;
+	font-weight: bold ;
+}
 .profile-form .field--type-file .panel-default > .panel-heading a {
 	font-weight: 700;
 }
 .profile-form .field--type-file .panel-default > .panel-heading .panel-title {
-	padding: 10px 0;
+	padding: 15px 0 !important;
 	margin: 0;
+	font-weight: bold;
 	border-bottom: 1px solid #cbcbcb;
 }
 .profile-form .field--type-file .panel-body .table-responsive {
@@ -933,7 +942,7 @@ input[type="file"] {
 	font-weight: 400;
 }
 .user-form .panel-default > .panel-heading {
-	background: none;
+	background: none !important;
 	border: none;
 }
 .user-form .panel-default .panel-title {
@@ -1144,6 +1153,10 @@ input[type="file"] {
 	.fid-w-c .form-group {
 		margin-bottom: 0;
 	}
+	.fid-w-c .form-group .control-label {
+		font-weight: normal;
+		margin: 5px 0;
+	}
 	.profile-form .form-item-field-performance-in-competitive-0 .form-item-field-performance-in-competitive-0-tablefield-table-1-2,
 	.profile-form .js-form-item-field-proficiency-in-english-0 .form-item-field-proficiency-in-english-0-tablefield-table-1-2 {
 		width: 130px;
@@ -1283,6 +1296,10 @@ input[type="file"] {
 	}
 	.user-form .field--name-user-picture {
 		width: 280px;
+	}
+	.user-form .field--name-user-picture + .form-actions.form-group {
+		margin-top: 20px;
+		margin-left: 52px;
 	}
 	.user-form .panel-default {
 		width: 280px;
