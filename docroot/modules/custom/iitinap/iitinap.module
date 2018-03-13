@@ -721,6 +721,11 @@ function iitinap_form_views_exposed_form_alter(array &$form, FormStateInterface 
 function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
     // Alter login form and add own custom submit handler.
     $form['#submit'][] = '_iitinap_user_login_form_submit';
+    $form['social_login']=array(
+          '#type' => 'markup',
+          '#markup' => '<div class="social_login"><a href="/user/simple-fb-connect">Continue with Facebook</a><a href="/user/login/google">Continue with Google</a></div>',
+
+    	);
 }
 
 /**
