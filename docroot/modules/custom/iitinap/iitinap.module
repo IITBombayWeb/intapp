@@ -779,13 +779,13 @@ function iitinap_user_insert($account) {
 }
 
 
-function iitinap_mail_alter(&$message) {
+/*function iitinap_mail_alter(&$message) {
      if($message[id] == 'user_register_no_approval_required'){
        $message['send'] = FALSE;
        return; 
      }
     
-}
+}*/
 
 
 function iitinap_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
