@@ -338,9 +338,9 @@ html.js .ajax-new-content:empty {
  * Icon styles.
  */
 /* line 5, ../sass/component/_icon.scss */
-/*a.icon-before .glyphicon {
+a.icon-before .glyphicon {
   margin-right: .25em;
-}*/
+}
 /* line 8, ../sass/component/_icon.scss */
 a.icon-after .glyphicon {
   margin-left: .25em;
