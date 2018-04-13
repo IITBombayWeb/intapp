@@ -62,6 +62,8 @@ source:
     Degree: Name of the Degree.
     Specialisation: Specialisation
     Packet: Send to packet
+    field_description: Description
+    field_enter_number_of_supporting: Additional Supporting Documents
   # Static values for the migration.
   #
   # We can assign hard-coded values to certain properties using constants.
@@ -111,6 +113,8 @@ process:
   field_institute_link/title: constants/text
   field_course_duration: Course Duration
   add_to_cart: constants/packet
+  field_description: Description
+  field_enter_number_of_supporting: Additional Supporting Documents
   # There are certain destination fields which do not have
   # corresponding source fields. for these, we defined constants
   # in the "source" parameter. We can refer to them here as
