@@ -92,7 +92,7 @@ class Thankyoupage extends FormBase {
                 $test = explode('//', $path);
                 $path_array = $test[1];
                 $base_path = 'sites/default/files/' . $path_array;
-                $image = '<img src = "'.$base_path.'" alt="My Logo" height="42" width="42" />';
+                $image = '<img src = "'.$base_path.'" alt="My Logo" height="70" width="70" />';
                }
               else{
                 $default_image = 'sites/default/files/pictures/Icon-user.png';

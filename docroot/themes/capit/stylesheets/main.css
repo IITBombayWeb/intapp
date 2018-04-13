@@ -319,8 +319,9 @@ ul li {
 .ft-mnu ul li:last-child a:after {
   display: none;
 }
-.ft-mnu ul li a:hover {
+.ft-mnu ul li a:hover, .ft-mnu ul li a:focus {
   background: none !important;
+  outline: none;
 }
 .ft-ste {
   padding:0;
