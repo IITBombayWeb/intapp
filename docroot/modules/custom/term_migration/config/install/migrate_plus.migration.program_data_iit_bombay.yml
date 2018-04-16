@@ -228,6 +228,13 @@ process:
     bundle_key: vid
     bundle: iit_institute
     value_key: name
+  field_degree:
+    plugin: entity_generate
+    source: Degree
+    entity_type: taxonomy_term
+    bundle_key: vid
+    bundle: degree
+    value_key: name
   #field_specialisation:
     #plugin: entity_generate
     #source: Specialisation
