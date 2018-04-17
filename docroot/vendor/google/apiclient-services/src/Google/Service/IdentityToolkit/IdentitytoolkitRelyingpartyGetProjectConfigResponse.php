@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -60,16 +60,10 @@ class Google_Service_IdentityToolkit_IdentitytoolkitRelyingpartyGetProjectConfig
   {
     return $this->authorizedDomains;
   }
-  /**
-   * @param Google_Service_IdentityToolkit_EmailTemplate
-   */
   public function setChangeEmailTemplate(Google_Service_IdentityToolkit_EmailTemplate $changeEmailTemplate)
   {
     $this->changeEmailTemplate = $changeEmailTemplate;
   }
-  /**
-   * @return Google_Service_IdentityToolkit_EmailTemplate
-   */
   public function getChangeEmailTemplate()
   {
     return $this->changeEmailTemplate;
@@ -90,30 +84,18 @@ class Google_Service_IdentityToolkit_IdentitytoolkitRelyingpartyGetProjectConfig
   {
     return $this->enableAnonymousUser;
   }
-  /**
-   * @param Google_Service_IdentityToolkit_IdpConfig
-   */
   public function setIdpConfig($idpConfig)
   {
     $this->idpConfig = $idpConfig;
   }
-  /**
-   * @return Google_Service_IdentityToolkit_IdpConfig
-   */
   public function getIdpConfig()
   {
     return $this->idpConfig;
   }
-  /**
-   * @param Google_Service_IdentityToolkit_EmailTemplate
-   */
   public function setLegacyResetPasswordTemplate(Google_Service_IdentityToolkit_EmailTemplate $legacyResetPasswordTemplate)
   {
     $this->legacyResetPasswordTemplate = $legacyResetPasswordTemplate;
   }
-  /**
-   * @return Google_Service_IdentityToolkit_EmailTemplate
-   */
   public function getLegacyResetPasswordTemplate()
   {
     return $this->legacyResetPasswordTemplate;
@@ -126,16 +108,10 @@ class Google_Service_IdentityToolkit_IdentitytoolkitRelyingpartyGetProjectConfig
   {
     return $this->projectId;
   }
-  /**
-   * @param Google_Service_IdentityToolkit_EmailTemplate
-   */
   public function setResetPasswordTemplate(Google_Service_IdentityToolkit_EmailTemplate $resetPasswordTemplate)
   {
     $this->resetPasswordTemplate = $resetPasswordTemplate;
   }
-  /**
-   * @return Google_Service_IdentityToolkit_EmailTemplate
-   */
   public function getResetPasswordTemplate()
   {
     return $this->resetPasswordTemplate;
@@ -148,16 +124,10 @@ class Google_Service_IdentityToolkit_IdentitytoolkitRelyingpartyGetProjectConfig
   {
     return $this->useEmailSending;
   }
-  /**
-   * @param Google_Service_IdentityToolkit_EmailTemplate
-   */
   public function setVerifyEmailTemplate(Google_Service_IdentityToolkit_EmailTemplate $verifyEmailTemplate)
   {
     $this->verifyEmailTemplate = $verifyEmailTemplate;
   }
-  /**
-   * @return Google_Service_IdentityToolkit_EmailTemplate
-   */
   public function getVerifyEmailTemplate()
   {
     return $this->verifyEmailTemplate;

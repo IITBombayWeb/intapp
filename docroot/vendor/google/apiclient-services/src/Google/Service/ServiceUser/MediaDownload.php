@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,21 +17,9 @@
 
 class Google_Service_ServiceUser_MediaDownload extends Google_Model
 {
-  public $completeNotification;
   public $downloadService;
-  public $dropzone;
   public $enabled;
-  public $maxDirectDownloadSize;
-  public $useDirectDownload;
 
-  public function setCompleteNotification($completeNotification)
-  {
-    $this->completeNotification = $completeNotification;
-  }
-  public function getCompleteNotification()
-  {
-    return $this->completeNotification;
-  }
   public function setDownloadService($downloadService)
   {
     $this->downloadService = $downloadService;
@@ -40,14 +28,6 @@ class Google_Service_ServiceUser_MediaDownload extends Google_Model
   {
     return $this->downloadService;
   }
-  public function setDropzone($dropzone)
-  {
-    $this->dropzone = $dropzone;
-  }
-  public function getDropzone()
-  {
-    return $this->dropzone;
-  }
   public function setEnabled($enabled)
   {
     $this->enabled = $enabled;
@@ -55,21 +35,5 @@ class Google_Service_ServiceUser_MediaDownload extends Google_Model
   public function getEnabled()
   {
     return $this->enabled;
-  }
-  public function setMaxDirectDownloadSize($maxDirectDownloadSize)
-  {
-    $this->maxDirectDownloadSize = $maxDirectDownloadSize;
-  }
-  public function getMaxDirectDownloadSize()
-  {
-    return $this->maxDirectDownloadSize;
-  }
-  public function setUseDirectDownload($useDirectDownload)
-  {
-    $this->useDirectDownload = $useDirectDownload;
-  }
-  public function getUseDirectDownload()
-  {
-    return $this->useDirectDownload;
   }
 }

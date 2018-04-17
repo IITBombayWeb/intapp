@@ -57,47 +57,51 @@
  */
 #}
 {% set container = theme.settings.fluid_container ? 'container-fluid' : 'container' %}
-<div id="page" class="bg-colr">
+<div id="page">
 <header>
   <div class="header-wrp">
-   <div class="pge-wdt clearfix js-quickedit-main-content">
-    {# Header #}
-    {%if page.header %}
-     {% block header %}
-       {{ page.header }}
-       {% endblock %}
-     {% endif %}        
-    {% if page.header_first %}
-     {% block header_first %}
-      <div class="logo-wrp clearfix">
-        {{ page.header_first }}
-       </div>
-      {% endblock %}
-     {% endif %}
-     {% if page.header_second %}
+  <div class="pge-wdt clearfix js-quickedit-main-content">
+      {# Header #}
+      {%if page.header %}
+      {% block header %}
+        {{ page.header }}
+        {% endblock %}
+      {% endif %}        
+      {% if page.header_first %}
+      {% block header_first %}
+          <div class="logo-wrp">
+            {{ page.header_first }}
+          </div>
+        {% endblock %}
+      {% endif %}
+      {% if page.header_second %}
       {% block header_second %}
-       <div class="mnu-lst clearfix">
-         <div class="msg-pck">
-          <a><img src="/themes/capit/images/packet-icon.png"><span class="circle" id="cnt">{{cntcart}}</span></a>
-         </div>
-         {% if logged_in %}
-          <div class="lgn-lst">
-            <span class="dsk-lgn">Settings<i class="fa fa-caret-down"></i></span>
-            <span class="mbl-lgn"><i class="fa fa-user"></i></span>
+          <div class="mnu-lst">
+              <div class="msg-pck">
+                  <a><img src="/themes/capit/images/packet-icon.png"><span class="circle" id="cnt">{{cntcart}}</span></a>
+                </div>
+                  {% if logged_in %}
+                      <div class="lgn-lst">
+                        <span class="dsk-lgn">Settings<i class="fa fa-caret-down"></i></span>
+                          <span class="mbl-lgn"><i class="fa fa-user"></i></span>
+                      </div>
+                  {% else %}
+                      <div class="lgn-lst">
+                        <span class="dsk-lgn">Login<i class="fa fa-caret-down"></i></span>
+                        <span class="mbl-lgn"><i class="fa fa-user"></i></span>
+                      </div>
+                  {% endif %}
+              {{ page.header_second }}
+               <div class="menu-icn">
+                    <a><i class="fa fa-bars"></i></a>
+                </div>
           </div>
-         {% else %}
-          <div class="lgn-lst">
-            <span class="dsk-lgn">Login<i class="fa fa-caret-down"></i></span>
-            <span class="mbl-lgn"><i class="fa fa-user"></i></span>
-          </div>
-         {% endif %}
-        {{ page.header_second }}
-         <div class="menu-icn">
-           <a><i class="fa fa-bars"></i></a>
-         </div>
-       </div>
-     {% endblock %}
-   {% endif %}
+        {% endblock %}
+      {% endif %}
+       {% if page.header_third %}
+      {% block header_third %}
+          {% endblock %}
+      {% endif %} 
   </div> 
   </div>
 </header>
@@ -108,35 +112,47 @@
   </aside>
 </div>
 {% endif %}
-<div class="banner-section">
   {% if page.content_top %}
-  <div class="content-top frm-hd srch-frm">
-   <div class="pge-wdt clearfix hd-in">
-    {{ page.content_top }}
-   </div>
-  </div>
+      <div class="content-top frm-hd">
+          <div class="pge-wdt clearfix">
+              {{ page.content_top }}
+          </div>
+      </div>
   {% endif %}
 {% if page.featured_top %}
 <div class="featured-top">
- {{ page.featured_top }}
-  <div class="featured-wrap pge-in-wdt clearfix">
- {% if page.featured_iner %}
-  <div class="featured-inn clearfix">
-    {{ page.featured_iner }}
+      <div class="pge-wdt clearfix">
+  <div class="video-banner-wrapper slider">
+  <video poster="" loop="" id="bgvid" autoplay="">
+    <source type="video/webm" src="/themes/capit/videos/books.mp4">
+  </video>
+  <div class="slider-content">
+    <div class="video-content">
+      <h3 class="video-content-title">Over 1000 Programs, 23 Institutes, Single Interface</h3>
+    </div>
   </div>
- {% endif %}
+</div>
+
+  <aside class="featured-top__inner section layout-container clearfix" role="complementary">
+    {{ page.featured_top }}
+  </aside>
+{% if site_slogan1 %}
+    <div class="title">
+      <h1>{{ site_slogan1 }}</h1>
+    </div>
+  {% endif %}
+      </div>
 </div>
 {% endif %}
-</div>
-</div>
 {# Main #}
 {% block main %}
   <div role="main" class="main-container pge-in-wdt js-quickedit-main-content">
-     <div class="main-inner main-frnt clearfix">
+    <div class="row">
+     <div class="main-inner">
       {# Sidebar First #}
       {% if page.sidebar_first %}
         {% block sidebar_first %}
-          <aside class="sidebar-left sidebar" role="complementary">
+          <aside class="col-sm-3 leftMobMenu" role="complementary">
             <div class="sidebar-first">
             	{{ page.sidebar_first }}
             </div>
@@ -153,31 +169,36 @@
           page.sidebar_first is empty and page.sidebar_second is empty ? 'col-sm-12'
         ]
       %}
-      <section class="main-page">
+      <section{{ content_attributes.addClass(content_classes,'container')}}>
+
         {# Highlighted #}
         {% if page.highlighted %}
           {% block highlighted %}
             <div class="highlighted">{{ page.highlighted }}</div>
           {% endblock %}
         {% endif %}
+
         {# Breadcrumbs #}
         {% if breadcrumb %}
           {% block breadcrumb %}
             {{ breadcrumb }}
           {% endblock %}
         {% endif %}
+
         {# Action Links #}
         {% if action_links %}
           {% block action_links %}
             <ul class="action-links">{{ action_links }}</ul>
           {% endblock %}
         {% endif %}
+
         {# Help #}
         {% if page.help %}
           {% block help %}
             {{ page.help }}
           {% endblock %}
         {% endif %}
+
         {# Content #}
         {% block content %}
           <a id="main-content"></a>
@@ -186,10 +207,11 @@
           </div>
         {% endblock %}
       </section>
+
       {# Sidebar Second #}
       {% if page.sidebar_second %}
         {% block sidebar_second %}
-          <aside class="sidebar-right sidebar" role="complementary">
+          <aside class="col-sm-3" role="complementary">
            <div class="sidebar-second">
             	{{ page.sidebar_second }}
            </div>
@@ -197,8 +219,11 @@
         {% endblock %}
       {% endif %}
       </div>
+    </div>
   </div>
 {% endblock %}
+
+
   {% block footer %}
     <footer class="footer" role="contentinfo">
       <div class="pge-wdt clearfix">

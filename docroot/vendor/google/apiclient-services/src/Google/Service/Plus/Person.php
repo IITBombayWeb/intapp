@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -65,16 +65,10 @@ class Google_Service_Plus_Person extends Google_Collection
   {
     return $this->aboutMe;
   }
-  /**
-   * @param Google_Service_Plus_PersonAgeRange
-   */
   public function setAgeRange(Google_Service_Plus_PersonAgeRange $ageRange)
   {
     $this->ageRange = $ageRange;
   }
-  /**
-   * @return Google_Service_Plus_PersonAgeRange
-   */
   public function getAgeRange()
   {
     return $this->ageRange;
@@ -103,16 +97,10 @@ class Google_Service_Plus_Person extends Google_Collection
   {
     return $this->circledByCount;
   }
-  /**
-   * @param Google_Service_Plus_PersonCover
-   */
   public function setCover(Google_Service_Plus_PersonCover $cover)
   {
     $this->cover = $cover;
   }
-  /**
-   * @return Google_Service_Plus_PersonCover
-   */
   public function getCover()
   {
     return $this->cover;
@@ -141,16 +129,10 @@ class Google_Service_Plus_Person extends Google_Collection
   {
     return $this->domain;
   }
-  /**
-   * @param Google_Service_Plus_PersonEmails
-   */
   public function setEmails($emails)
   {
     $this->emails = $emails;
   }
-  /**
-   * @return Google_Service_Plus_PersonEmails
-   */
   public function getEmails()
   {
     return $this->emails;
@@ -179,16 +161,10 @@ class Google_Service_Plus_Person extends Google_Collection
   {
     return $this->id;
   }
-  /**
-   * @param Google_Service_Plus_PersonImage
-   */
   public function setImage(Google_Service_Plus_PersonImage $image)
   {
     $this->image = $image;
   }
-  /**
-   * @return Google_Service_Plus_PersonImage
-   */
   public function getImage()
   {
     return $this->image;
@@ -217,16 +193,10 @@ class Google_Service_Plus_Person extends Google_Collection
   {
     return $this->language;
   }
-  /**
-   * @param Google_Service_Plus_PersonName
-   */
   public function setName(Google_Service_Plus_PersonName $name)
   {
     $this->name = $name;
   }
-  /**
-   * @return Google_Service_Plus_PersonName
-   */
   public function getName()
   {
     return $this->name;
@@ -255,30 +225,18 @@ class Google_Service_Plus_Person extends Google_Collection
   {
     return $this->occupation;
   }
-  /**
-   * @param Google_Service_Plus_PersonOrganizations
-   */
   public function setOrganizations($organizations)
   {
     $this->organizations = $organizations;
   }
-  /**
-   * @return Google_Service_Plus_PersonOrganizations
-   */
   public function getOrganizations()
   {
     return $this->organizations;
   }
-  /**
-   * @param Google_Service_Plus_PersonPlacesLived
-   */
   public function setPlacesLived($placesLived)
   {
     $this->placesLived = $placesLived;
   }
-  /**
-   * @return Google_Service_Plus_PersonPlacesLived
-   */
   public function getPlacesLived()
   {
     return $this->placesLived;
@@ -323,16 +281,10 @@ class Google_Service_Plus_Person extends Google_Collection
   {
     return $this->url;
   }
-  /**
-   * @param Google_Service_Plus_PersonUrls
-   */
   public function setUrls($urls)
   {
     $this->urls = $urls;
   }
-  /**
-   * @return Google_Service_Plus_PersonUrls
-   */
   public function getUrls()
   {
     return $this->urls;

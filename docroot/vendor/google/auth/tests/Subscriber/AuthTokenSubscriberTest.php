@@ -61,7 +61,7 @@ class AuthTokenSubscriberTest extends BaseTest
             ['auth' => 'not_google_auth']);
         $before = new BeforeEvent(new Transaction($client, $request));
         $s->onBefore($before);
-        $this->assertSame($request->getHeader('authorization'), '');
+        $this->assertSame($request->getHeader('Authorization'), '');
     }
 
     public function testAddsTheTokenAsAnAuthorizationHeader()
@@ -79,7 +79,7 @@ class AuthTokenSubscriberTest extends BaseTest
             ['auth' => 'google_auth']);
         $before = new BeforeEvent(new Transaction($client, $request));
         $a->onBefore($before);
-        $this->assertSame($request->getHeader('authorization'),
+        $this->assertSame($request->getHeader('Authorization'),
             'Bearer 1/abcdef1234567890');
     }
 
@@ -98,17 +98,13 @@ class AuthTokenSubscriberTest extends BaseTest
             ['auth' => 'google_auth']);
         $before = new BeforeEvent(new Transaction($client, $request));
         $a->onBefore($before);
-        $this->assertSame($request->getHeader('authorization'), '');
+        $this->assertSame($request->getHeader('Authorization'), '');
     }
 
     public function testUsesCachedAuthToken()
     {
         $cacheKey = 'myKey';
         $cachedValue = '2/abcdef1234567890';
-        $this->mockCacheItem
-            ->expects($this->once())
-            ->method('isHit')
-            ->will($this->returnValue(true));
         $this->mockCacheItem
             ->expects($this->once())
             ->method('get')
@@ -138,7 +134,7 @@ class AuthTokenSubscriberTest extends BaseTest
             ['auth' => 'google_auth']);
         $before = new BeforeEvent(new Transaction($client, $request));
         $a->onBefore($before);
-        $this->assertSame($request->getHeader('authorization'),
+        $this->assertSame($request->getHeader('Authorization'),
             'Bearer 2/abcdef1234567890');
     }
 
@@ -147,10 +143,6 @@ class AuthTokenSubscriberTest extends BaseTest
         $prefix = 'test_prefix_';
         $cacheKey = 'myKey';
         $cachedValue = '2/abcdef1234567890';
-        $this->mockCacheItem
-            ->expects($this->once())
-            ->method('isHit')
-            ->will($this->returnValue(true));
         $this->mockCacheItem
             ->expects($this->once())
             ->method('get')
@@ -180,7 +172,7 @@ class AuthTokenSubscriberTest extends BaseTest
             ['auth' => 'google_auth']);
         $before = new BeforeEvent(new Transaction($client, $request));
         $a->onBefore($before);
-        $this->assertSame($request->getHeader('authorization'),
+        $this->assertSame($request->getHeader('Authorization'),
             'Bearer 2/abcdef1234567890');
     }
 
@@ -230,7 +222,7 @@ class AuthTokenSubscriberTest extends BaseTest
             ['auth' => 'google_auth']);
         $before = new BeforeEvent(new Transaction($client, $request));
         $a->onBefore($before);
-        $this->assertSame($request->getHeader('authorization'),
+        $this->assertSame($request->getHeader('Authorization'),
             'Bearer 1/abcdef1234567890');
     }
 

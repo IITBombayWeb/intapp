@@ -381,15 +381,6 @@ body.navbar-is-fixed-bottom {
   body {
     margin-top: 15px;
   }
-  /* contact us */
- .cnt-us .cnt-us-lt {
-  float: left;
-  width: 50%;
- }
- .cnt-us .cnt-us-rt {
-  float: right;
-  width: 50%;
- }
 }
 @media screen and (max-width: 767px) {
   /* line 31, ../sass/component/_navbar.scss */

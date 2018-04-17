@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -48,16 +48,10 @@ class Google_Service_YouTube_LiveChatMessageListResponse extends Google_Collecti
   {
     return $this->eventId;
   }
-  /**
-   * @param Google_Service_YouTube_LiveChatMessage
-   */
   public function setItems($items)
   {
     $this->items = $items;
   }
-  /**
-   * @return Google_Service_YouTube_LiveChatMessage
-   */
   public function getItems()
   {
     return $this->items;
@@ -86,16 +80,10 @@ class Google_Service_YouTube_LiveChatMessageListResponse extends Google_Collecti
   {
     return $this->offlineAt;
   }
-  /**
-   * @param Google_Service_YouTube_PageInfo
-   */
   public function setPageInfo(Google_Service_YouTube_PageInfo $pageInfo)
   {
     $this->pageInfo = $pageInfo;
   }
-  /**
-   * @return Google_Service_YouTube_PageInfo
-   */
   public function getPageInfo()
   {
     return $this->pageInfo;
@@ -108,16 +96,10 @@ class Google_Service_YouTube_LiveChatMessageListResponse extends Google_Collecti
   {
     return $this->pollingIntervalMillis;
   }
-  /**
-   * @param Google_Service_YouTube_TokenPagination
-   */
   public function setTokenPagination(Google_Service_YouTube_TokenPagination $tokenPagination)
   {
     $this->tokenPagination = $tokenPagination;
   }
-  /**
-   * @return Google_Service_YouTube_TokenPagination
-   */
   public function getTokenPagination()
   {
     return $this->tokenPagination;

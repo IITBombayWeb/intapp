@@ -145,23 +145,7 @@ class RC4 extends Base
     function isValidEngine($engine)
     {
         if ($engine == Base::ENGINE_OPENSSL) {
-            if (version_compare(PHP_VERSION, '5.3.7') >= 0) {
-                $this->cipher_name_openssl = 'rc4-40';
-            } else {
-                switch (strlen($this->key)) {
-                    case 5:
-                        $this->cipher_name_openssl = 'rc4-40';
-                        break;
-                    case 8:
-                        $this->cipher_name_openssl = 'rc4-64';
-                        break;
-                    case 16:
-                        $this->cipher_name_openssl = 'rc4';
-                        break;
-                    default:
-                        return false;
-                }
-            }
+            $this->cipher_name_openssl = 'rc4-40';
         }
 
         return parent::isValidEngine($engine);

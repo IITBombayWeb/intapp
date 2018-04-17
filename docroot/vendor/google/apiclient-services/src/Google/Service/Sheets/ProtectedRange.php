@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,16 +38,10 @@ class Google_Service_Sheets_ProtectedRange extends Google_Collection
   {
     return $this->description;
   }
-  /**
-   * @param Google_Service_Sheets_Editors
-   */
   public function setEditors(Google_Service_Sheets_Editors $editors)
   {
     $this->editors = $editors;
   }
-  /**
-   * @return Google_Service_Sheets_Editors
-   */
   public function getEditors()
   {
     return $this->editors;
@@ -68,16 +62,10 @@ class Google_Service_Sheets_ProtectedRange extends Google_Collection
   {
     return $this->protectedRangeId;
   }
-  /**
-   * @param Google_Service_Sheets_GridRange
-   */
   public function setRange(Google_Service_Sheets_GridRange $range)
   {
     $this->range = $range;
   }
-  /**
-   * @return Google_Service_Sheets_GridRange
-   */
   public function getRange()
   {
     return $this->range;
@@ -90,16 +78,10 @@ class Google_Service_Sheets_ProtectedRange extends Google_Collection
   {
     return $this->requestingUserCanEdit;
   }
-  /**
-   * @param Google_Service_Sheets_GridRange
-   */
   public function setUnprotectedRanges($unprotectedRanges)
   {
     $this->unprotectedRanges = $unprotectedRanges;
   }
-  /**
-   * @return Google_Service_Sheets_GridRange
-   */
   public function getUnprotectedRanges()
   {
     return $this->unprotectedRanges;

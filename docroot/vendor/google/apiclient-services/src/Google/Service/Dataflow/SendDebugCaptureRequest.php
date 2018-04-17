@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ class Google_Service_Dataflow_SendDebugCaptureRequest extends Google_Model
 {
   public $componentId;
   public $data;
-  public $location;
   public $workerId;
 
   public function setComponentId($componentId)
@@ -37,14 +36,6 @@ class Google_Service_Dataflow_SendDebugCaptureRequest extends Google_Model
   public function getData()
   {
     return $this->data;
-  }
-  public function setLocation($location)
-  {
-    $this->location = $location;
-  }
-  public function getLocation()
-  {
-    return $this->location;
   }
   public function setWorkerId($workerId)
   {

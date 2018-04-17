@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,8 +19,6 @@ class Google_Service_ServiceUser_AuthenticationRule extends Google_Collection
 {
   protected $collection_key = 'requirements';
   public $allowWithoutCredential;
-  protected $customAuthType = 'Google_Service_ServiceUser_CustomAuthRequirements';
-  protected $customAuthDataType = '';
   protected $oauthType = 'Google_Service_ServiceUser_OAuthRequirements';
   protected $oauthDataType = '';
   protected $requirementsType = 'Google_Service_ServiceUser_AuthRequirement';
@@ -35,44 +33,18 @@ class Google_Service_ServiceUser_AuthenticationRule extends Google_Collection
   {
     return $this->allowWithoutCredential;
   }
-  /**
-   * @param Google_Service_ServiceUser_CustomAuthRequirements
-   */
-  public function setCustomAuth(Google_Service_ServiceUser_CustomAuthRequirements $customAuth)
-  {
-    $this->customAuth = $customAuth;
-  }
-  /**
-   * @return Google_Service_ServiceUser_CustomAuthRequirements
-   */
-  public function getCustomAuth()
-  {
-    return $this->customAuth;
-  }
-  /**
-   * @param Google_Service_ServiceUser_OAuthRequirements
-   */
   public function setOauth(Google_Service_ServiceUser_OAuthRequirements $oauth)
   {
     $this->oauth = $oauth;
   }
-  /**
-   * @return Google_Service_ServiceUser_OAuthRequirements
-   */
   public function getOauth()
   {
     return $this->oauth;
   }
-  /**
-   * @param Google_Service_ServiceUser_AuthRequirement
-   */
   public function setRequirements($requirements)
   {
     $this->requirements = $requirements;
   }
-  /**
-   * @return Google_Service_ServiceUser_AuthRequirement
-   */
   public function getRequirements()
   {
     return $this->requirements;

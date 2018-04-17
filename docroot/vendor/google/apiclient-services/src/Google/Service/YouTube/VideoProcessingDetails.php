@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -59,16 +59,10 @@ class Google_Service_YouTube_VideoProcessingDetails extends Google_Model
   {
     return $this->processingIssuesAvailability;
   }
-  /**
-   * @param Google_Service_YouTube_VideoProcessingDetailsProcessingProgress
-   */
   public function setProcessingProgress(Google_Service_YouTube_VideoProcessingDetailsProcessingProgress $processingProgress)
   {
     $this->processingProgress = $processingProgress;
   }
-  /**
-   * @return Google_Service_YouTube_VideoProcessingDetailsProcessingProgress
-   */
   public function getProcessingProgress()
   {
     return $this->processingProgress;

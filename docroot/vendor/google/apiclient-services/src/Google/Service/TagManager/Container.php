@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,12 +21,13 @@ class Google_Service_TagManager_Container extends Google_Collection
   public $accountId;
   public $containerId;
   public $domainName;
+  public $enabledBuiltInVariable;
   public $fingerprint;
   public $name;
   public $notes;
-  public $path;
   public $publicId;
-  public $tagManagerUrl;
+  public $timeZoneCountryId;
+  public $timeZoneId;
   public $usageContext;
 
   public function setAccountId($accountId)
@@ -53,6 +54,14 @@ class Google_Service_TagManager_Container extends Google_Collection
   {
     return $this->domainName;
   }
+  public function setEnabledBuiltInVariable($enabledBuiltInVariable)
+  {
+    $this->enabledBuiltInVariable = $enabledBuiltInVariable;
+  }
+  public function getEnabledBuiltInVariable()
+  {
+    return $this->enabledBuiltInVariable;
+  }
   public function setFingerprint($fingerprint)
   {
     $this->fingerprint = $fingerprint;
@@ -77,14 +86,6 @@ class Google_Service_TagManager_Container extends Google_Collection
   {
     return $this->notes;
   }
-  public function setPath($path)
-  {
-    $this->path = $path;
-  }
-  public function getPath()
-  {
-    return $this->path;
-  }
   public function setPublicId($publicId)
   {
     $this->publicId = $publicId;
@@ -93,13 +94,21 @@ class Google_Service_TagManager_Container extends Google_Collection
   {
     return $this->publicId;
   }
-  public function setTagManagerUrl($tagManagerUrl)
+  public function setTimeZoneCountryId($timeZoneCountryId)
   {
-    $this->tagManagerUrl = $tagManagerUrl;
+    $this->timeZoneCountryId = $timeZoneCountryId;
   }
-  public function getTagManagerUrl()
+  public function getTimeZoneCountryId()
   {
-    return $this->tagManagerUrl;
+    return $this->timeZoneCountryId;
+  }
+  public function setTimeZoneId($timeZoneId)
+  {
+    $this->timeZoneId = $timeZoneId;
+  }
+  public function getTimeZoneId()
+  {
+    return $this->timeZoneId;
   }
   public function setUsageContext($usageContext)
   {

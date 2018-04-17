@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
  */
 
 /**
- * Service definition for Dfareporting (v2.8).
+ * Service definition for Dfareporting (v2.7).
  *
  * <p>
  * Manages your DoubleClick Campaign Manager ad campaigns and reports.</p>
@@ -112,8 +112,8 @@ class Google_Service_Dfareporting extends Google_Service
   {
     parent::__construct($client);
     $this->rootUrl = 'https://www.googleapis.com/';
-    $this->servicePath = 'dfareporting/v2.8/';
-    $this->version = 'v2.8';
+    $this->servicePath = 'dfareporting/v2.7/';
+    $this->version = 'v2.7';
     $this->serviceName = 'dfareporting';
 
     $this->accountActiveAdSummaries = new Google_Service_Dfareporting_Resource_AccountActiveAdSummaries(
@@ -1296,16 +1296,6 @@ class Google_Service_Dfareporting extends Google_Service
                   'required' => true,
                 ),
               ),
-            ),'batchupdate' => array(
-              'path' => 'userprofiles/{profileId}/conversions/batchupdate',
-              'httpMethod' => 'POST',
-              'parameters' => array(
-                'profileId' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-              ),
             ),
           )
         )
@@ -2022,7 +2012,7 @@ class Google_Service_Dfareporting extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'dfpNetworkCode' => array(
+                'dfp_network_code' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),

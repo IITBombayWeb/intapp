@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,16 +15,15 @@
  * the License.
  */
 
-class Google_Service_Speech_RecognitionConfig extends Google_Collection
+class Google_Service_Speech_RecognitionConfig extends Google_Model
 {
-  protected $collection_key = 'speechContexts';
   public $encoding;
   public $languageCode;
   public $maxAlternatives;
   public $profanityFilter;
-  public $sampleRateHertz;
-  protected $speechContextsType = 'Google_Service_Speech_SpeechContext';
-  protected $speechContextsDataType = 'array';
+  public $sampleRate;
+  protected $speechContextType = 'Google_Service_Speech_SpeechContext';
+  protected $speechContextDataType = '';
 
   public function setEncoding($encoding)
   {
@@ -58,26 +57,20 @@ class Google_Service_Speech_RecognitionConfig extends Google_Collection
   {
     return $this->profanityFilter;
   }
-  public function setSampleRateHertz($sampleRateHertz)
+  public function setSampleRate($sampleRate)
   {
-    $this->sampleRateHertz = $sampleRateHertz;
+    $this->sampleRate = $sampleRate;
   }
-  public function getSampleRateHertz()
+  public function getSampleRate()
   {
-    return $this->sampleRateHertz;
+    return $this->sampleRate;
   }
-  /**
-   * @param Google_Service_Speech_SpeechContext
-   */
-  public function setSpeechContexts($speechContexts)
+  public function setSpeechContext(Google_Service_Speech_SpeechContext $speechContext)
   {
-    $this->speechContexts = $speechContexts;
+    $this->speechContext = $speechContext;
   }
-  /**
-   * @return Google_Service_Speech_SpeechContext
-   */
-  public function getSpeechContexts()
+  public function getSpeechContext()
   {
-    return $this->speechContexts;
+    return $this->speechContext;
   }
 }

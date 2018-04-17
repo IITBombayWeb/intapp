@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -68,8 +68,6 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   protected $loyaltyPointsType = 'Google_Service_ShoppingContent_LoyaltyPoints';
   protected $loyaltyPointsDataType = '';
   public $material;
-  public $maxHandlingTime;
-  public $minHandlingTime;
   public $mobileLink;
   public $mpn;
   public $multipack;
@@ -166,16 +164,10 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->ageGroup;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductAspect
-   */
   public function setAspects($aspects)
   {
     $this->aspects = $aspects;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductAspect
-   */
   public function getAspects()
   {
     return $this->aspects;
@@ -236,30 +228,18 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->contentLanguage;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductCustomAttribute
-   */
   public function setCustomAttributes($customAttributes)
   {
     $this->customAttributes = $customAttributes;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductCustomAttribute
-   */
   public function getCustomAttributes()
   {
     return $this->customAttributes;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductCustomGroup
-   */
   public function setCustomGroups($customGroups)
   {
     $this->customGroups = $customGroups;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductCustomGroup
-   */
   public function getCustomGroups()
   {
     return $this->customGroups;
@@ -312,16 +292,10 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->description;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductDestination
-   */
   public function setDestinations($destinations)
   {
     $this->destinations = $destinations;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductDestination
-   */
   public function getDestinations()
   {
     return $this->destinations;
@@ -430,16 +404,10 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->imageLink;
   }
-  /**
-   * @param Google_Service_ShoppingContent_Installment
-   */
   public function setInstallment(Google_Service_ShoppingContent_Installment $installment)
   {
     $this->installment = $installment;
   }
-  /**
-   * @return Google_Service_ShoppingContent_Installment
-   */
   public function getInstallment()
   {
     return $this->installment;
@@ -476,16 +444,10 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->link;
   }
-  /**
-   * @param Google_Service_ShoppingContent_LoyaltyPoints
-   */
   public function setLoyaltyPoints(Google_Service_ShoppingContent_LoyaltyPoints $loyaltyPoints)
   {
     $this->loyaltyPoints = $loyaltyPoints;
   }
-  /**
-   * @return Google_Service_ShoppingContent_LoyaltyPoints
-   */
   public function getLoyaltyPoints()
   {
     return $this->loyaltyPoints;
@@ -497,22 +459,6 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   public function getMaterial()
   {
     return $this->material;
-  }
-  public function setMaxHandlingTime($maxHandlingTime)
-  {
-    $this->maxHandlingTime = $maxHandlingTime;
-  }
-  public function getMaxHandlingTime()
-  {
-    return $this->maxHandlingTime;
-  }
-  public function setMinHandlingTime($minHandlingTime)
-  {
-    $this->minHandlingTime = $minHandlingTime;
-  }
-  public function getMinHandlingTime()
-  {
-    return $this->minHandlingTime;
   }
   public function setMobileLink($mobileLink)
   {
@@ -562,16 +508,10 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->pattern;
   }
-  /**
-   * @param Google_Service_ShoppingContent_Price
-   */
   public function setPrice(Google_Service_ShoppingContent_Price $price)
   {
     $this->price = $price;
   }
-  /**
-   * @return Google_Service_ShoppingContent_Price
-   */
   public function getPrice()
   {
     return $this->price;
@@ -592,16 +532,10 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->promotionIds;
   }
-  /**
-   * @param Google_Service_ShoppingContent_Price
-   */
   public function setSalePrice(Google_Service_ShoppingContent_Price $salePrice)
   {
     $this->salePrice = $salePrice;
   }
-  /**
-   * @return Google_Service_ShoppingContent_Price
-   */
   public function getSalePrice()
   {
     return $this->salePrice;
@@ -622,30 +556,18 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->sellOnGoogleQuantity;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductShipping
-   */
   public function setShipping($shipping)
   {
     $this->shipping = $shipping;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductShipping
-   */
   public function getShipping()
   {
     return $this->shipping;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductShippingDimension
-   */
   public function setShippingHeight(Google_Service_ShoppingContent_ProductShippingDimension $shippingHeight)
   {
     $this->shippingHeight = $shippingHeight;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductShippingDimension
-   */
   public function getShippingHeight()
   {
     return $this->shippingHeight;
@@ -658,44 +580,26 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->shippingLabel;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductShippingDimension
-   */
   public function setShippingLength(Google_Service_ShoppingContent_ProductShippingDimension $shippingLength)
   {
     $this->shippingLength = $shippingLength;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductShippingDimension
-   */
   public function getShippingLength()
   {
     return $this->shippingLength;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductShippingWeight
-   */
   public function setShippingWeight(Google_Service_ShoppingContent_ProductShippingWeight $shippingWeight)
   {
     $this->shippingWeight = $shippingWeight;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductShippingWeight
-   */
   public function getShippingWeight()
   {
     return $this->shippingWeight;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductShippingDimension
-   */
   public function setShippingWidth(Google_Service_ShoppingContent_ProductShippingDimension $shippingWidth)
   {
     $this->shippingWidth = $shippingWidth;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductShippingDimension
-   */
   public function getShippingWidth()
   {
     return $this->shippingWidth;
@@ -732,16 +636,10 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->targetCountry;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductTax
-   */
   public function setTaxes($taxes)
   {
     $this->taxes = $taxes;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductTax
-   */
   public function getTaxes()
   {
     return $this->taxes;
@@ -754,30 +652,18 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->title;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductUnitPricingBaseMeasure
-   */
   public function setUnitPricingBaseMeasure(Google_Service_ShoppingContent_ProductUnitPricingBaseMeasure $unitPricingBaseMeasure)
   {
     $this->unitPricingBaseMeasure = $unitPricingBaseMeasure;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductUnitPricingBaseMeasure
-   */
   public function getUnitPricingBaseMeasure()
   {
     return $this->unitPricingBaseMeasure;
   }
-  /**
-   * @param Google_Service_ShoppingContent_ProductUnitPricingMeasure
-   */
   public function setUnitPricingMeasure(Google_Service_ShoppingContent_ProductUnitPricingMeasure $unitPricingMeasure)
   {
     $this->unitPricingMeasure = $unitPricingMeasure;
   }
-  /**
-   * @return Google_Service_ShoppingContent_ProductUnitPricingMeasure
-   */
   public function getUnitPricingMeasure()
   {
     return $this->unitPricingMeasure;
@@ -790,16 +676,10 @@ class Google_Service_ShoppingContent_Product extends Google_Collection
   {
     return $this->validatedDestinations;
   }
-  /**
-   * @param Google_Service_ShoppingContent_Error
-   */
   public function setWarnings($warnings)
   {
     $this->warnings = $warnings;
   }
-  /**
-   * @return Google_Service_ShoppingContent_Error
-   */
   public function getWarnings()
   {
     return $this->warnings;

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,31 +17,16 @@
 
 class Google_Service_TagManager_ListFoldersResponse extends Google_Collection
 {
-  protected $collection_key = 'folder';
-  protected $folderType = 'Google_Service_TagManager_Folder';
-  protected $folderDataType = 'array';
-  public $nextPageToken;
+  protected $collection_key = 'folders';
+  protected $foldersType = 'Google_Service_TagManager_Folder';
+  protected $foldersDataType = 'array';
 
-  /**
-   * @param Google_Service_TagManager_Folder
-   */
-  public function setFolder($folder)
+  public function setFolders($folders)
   {
-    $this->folder = $folder;
+    $this->folders = $folders;
   }
-  /**
-   * @return Google_Service_TagManager_Folder
-   */
-  public function getFolder()
+  public function getFolders()
   {
-    return $this->folder;
-  }
-  public function setNextPageToken($nextPageToken)
-  {
-    $this->nextPageToken = $nextPageToken;
-  }
-  public function getNextPageToken()
-  {
-    return $this->nextPageToken;
+    return $this->folders;
   }
 }

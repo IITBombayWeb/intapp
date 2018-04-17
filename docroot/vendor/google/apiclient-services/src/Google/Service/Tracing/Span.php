@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,27 +15,27 @@
  * the License.
  */
 
-class Google_Service_Tracing_Span extends Google_Model
+class Google_Service_Tracing_Span extends Google_Collection
 {
-  protected $attributesType = 'Google_Service_Tracing_Attributes';
-  protected $attributesDataType = '';
-  protected $displayNameType = 'Google_Service_Tracing_TruncatableString';
-  protected $displayNameDataType = '';
-  public $endTime;
-  protected $linksType = 'Google_Service_Tracing_Links';
-  protected $linksDataType = '';
+  protected $collection_key = 'timeEvents';
+  protected $attributesType = 'Google_Service_Tracing_AttributeValue';
+  protected $attributesDataType = 'map';
+  public $hasRemoteParent;
+  public $id;
+  protected $linksType = 'Google_Service_Tracing_Link';
+  protected $linksDataType = 'array';
+  public $localEndTime;
+  public $localStartTime;
   public $name;
-  public $parentSpanId;
-  public $spanId;
+  public $parentId;
   protected $stackTraceType = 'Google_Service_Tracing_StackTrace';
   protected $stackTraceDataType = '';
-  public $startTime;
   protected $statusType = 'Google_Service_Tracing_Status';
   protected $statusDataType = '';
-  protected $timeEventsType = 'Google_Service_Tracing_TimeEvents';
-  protected $timeEventsDataType = '';
+  protected $timeEventsType = 'Google_Service_Tracing_TimeEvent';
+  protected $timeEventsDataType = 'array';
 
-  public function setAttributes(Google_Service_Tracing_Attributes $attributes)
+  public function setAttributes($attributes)
   {
     $this->attributes = $attributes;
   }
@@ -43,29 +43,45 @@ class Google_Service_Tracing_Span extends Google_Model
   {
     return $this->attributes;
   }
-  public function setDisplayName(Google_Service_Tracing_TruncatableString $displayName)
+  public function setHasRemoteParent($hasRemoteParent)
   {
-    $this->displayName = $displayName;
+    $this->hasRemoteParent = $hasRemoteParent;
   }
-  public function getDisplayName()
+  public function getHasRemoteParent()
   {
-    return $this->displayName;
+    return $this->hasRemoteParent;
   }
-  public function setEndTime($endTime)
+  public function setId($id)
   {
-    $this->endTime = $endTime;
+    $this->id = $id;
   }
-  public function getEndTime()
+  public function getId()
   {
-    return $this->endTime;
+    return $this->id;
   }
-  public function setLinks(Google_Service_Tracing_Links $links)
+  public function setLinks($links)
   {
     $this->links = $links;
   }
   public function getLinks()
   {
     return $this->links;
+  }
+  public function setLocalEndTime($localEndTime)
+  {
+    $this->localEndTime = $localEndTime;
+  }
+  public function getLocalEndTime()
+  {
+    return $this->localEndTime;
+  }
+  public function setLocalStartTime($localStartTime)
+  {
+    $this->localStartTime = $localStartTime;
+  }
+  public function getLocalStartTime()
+  {
+    return $this->localStartTime;
   }
   public function setName($name)
   {
@@ -75,21 +91,13 @@ class Google_Service_Tracing_Span extends Google_Model
   {
     return $this->name;
   }
-  public function setParentSpanId($parentSpanId)
+  public function setParentId($parentId)
   {
-    $this->parentSpanId = $parentSpanId;
+    $this->parentId = $parentId;
   }
-  public function getParentSpanId()
+  public function getParentId()
   {
-    return $this->parentSpanId;
-  }
-  public function setSpanId($spanId)
-  {
-    $this->spanId = $spanId;
-  }
-  public function getSpanId()
-  {
-    return $this->spanId;
+    return $this->parentId;
   }
   public function setStackTrace(Google_Service_Tracing_StackTrace $stackTrace)
   {
@@ -99,14 +107,6 @@ class Google_Service_Tracing_Span extends Google_Model
   {
     return $this->stackTrace;
   }
-  public function setStartTime($startTime)
-  {
-    $this->startTime = $startTime;
-  }
-  public function getStartTime()
-  {
-    return $this->startTime;
-  }
   public function setStatus(Google_Service_Tracing_Status $status)
   {
     $this->status = $status;
@@ -115,7 +115,7 @@ class Google_Service_Tracing_Span extends Google_Model
   {
     return $this->status;
   }
-  public function setTimeEvents(Google_Service_Tracing_TimeEvents $timeEvents)
+  public function setTimeEvents($timeEvents)
   {
     $this->timeEvents = $timeEvents;
   }

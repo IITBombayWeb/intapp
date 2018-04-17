@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,16 +15,36 @@
  * the License.
  */
 
-class Google_Service_CloudTrace_Trace extends Google_Model
+class Google_Service_CloudTrace_Trace extends Google_Collection
 {
-  public $name;
+  protected $collection_key = 'spans';
+  public $projectId;
+  protected $spansType = 'Google_Service_CloudTrace_TraceSpan';
+  protected $spansDataType = 'array';
+  public $traceId;
 
-  public function setName($name)
+  public function setProjectId($projectId)
   {
-    $this->name = $name;
+    $this->projectId = $projectId;
   }
-  public function getName()
+  public function getProjectId()
   {
-    return $this->name;
+    return $this->projectId;
+  }
+  public function setSpans($spans)
+  {
+    $this->spans = $spans;
+  }
+  public function getSpans()
+  {
+    return $this->spans;
+  }
+  public function setTraceId($traceId)
+  {
+    $this->traceId = $traceId;
+  }
+  public function getTraceId()
+  {
+    return $this->traceId;
   }
 }

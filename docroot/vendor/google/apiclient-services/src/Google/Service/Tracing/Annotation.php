@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,12 +17,11 @@
 
 class Google_Service_Tracing_Annotation extends Google_Model
 {
-  protected $attributesType = 'Google_Service_Tracing_Attributes';
-  protected $attributesDataType = '';
-  protected $descriptionType = 'Google_Service_Tracing_TruncatableString';
-  protected $descriptionDataType = '';
+  protected $attributesType = 'Google_Service_Tracing_AttributeValue';
+  protected $attributesDataType = 'map';
+  public $description;
 
-  public function setAttributes(Google_Service_Tracing_Attributes $attributes)
+  public function setAttributes($attributes)
   {
     $this->attributes = $attributes;
   }
@@ -30,7 +29,7 @@ class Google_Service_Tracing_Annotation extends Google_Model
   {
     return $this->attributes;
   }
-  public function setDescription(Google_Service_Tracing_TruncatableString $description)
+  public function setDescription($description)
   {
     $this->description = $description;
   }

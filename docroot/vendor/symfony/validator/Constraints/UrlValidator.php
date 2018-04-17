@@ -48,7 +48,7 @@ class UrlValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\Url');
         }
 
-        if (null === $value || '' === $value) {
+        if (null === $value) {
             return;
         }
 

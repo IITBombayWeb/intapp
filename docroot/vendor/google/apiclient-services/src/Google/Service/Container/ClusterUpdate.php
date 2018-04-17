@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,8 +22,6 @@ class Google_Service_Container_ClusterUpdate extends Google_Collection
   protected $desiredAddonsConfigDataType = '';
   public $desiredImageType;
   public $desiredLocations;
-  protected $desiredMasterAuthorizedNetworksConfigType = 'Google_Service_Container_MasterAuthorizedNetworksConfig';
-  protected $desiredMasterAuthorizedNetworksConfigDataType = '';
   public $desiredMasterVersion;
   public $desiredMonitoringService;
   protected $desiredNodePoolAutoscalingType = 'Google_Service_Container_NodePoolAutoscaling';
@@ -31,16 +29,10 @@ class Google_Service_Container_ClusterUpdate extends Google_Collection
   public $desiredNodePoolId;
   public $desiredNodeVersion;
 
-  /**
-   * @param Google_Service_Container_AddonsConfig
-   */
   public function setDesiredAddonsConfig(Google_Service_Container_AddonsConfig $desiredAddonsConfig)
   {
     $this->desiredAddonsConfig = $desiredAddonsConfig;
   }
-  /**
-   * @return Google_Service_Container_AddonsConfig
-   */
   public function getDesiredAddonsConfig()
   {
     return $this->desiredAddonsConfig;
@@ -61,20 +53,6 @@ class Google_Service_Container_ClusterUpdate extends Google_Collection
   {
     return $this->desiredLocations;
   }
-  /**
-   * @param Google_Service_Container_MasterAuthorizedNetworksConfig
-   */
-  public function setDesiredMasterAuthorizedNetworksConfig(Google_Service_Container_MasterAuthorizedNetworksConfig $desiredMasterAuthorizedNetworksConfig)
-  {
-    $this->desiredMasterAuthorizedNetworksConfig = $desiredMasterAuthorizedNetworksConfig;
-  }
-  /**
-   * @return Google_Service_Container_MasterAuthorizedNetworksConfig
-   */
-  public function getDesiredMasterAuthorizedNetworksConfig()
-  {
-    return $this->desiredMasterAuthorizedNetworksConfig;
-  }
   public function setDesiredMasterVersion($desiredMasterVersion)
   {
     $this->desiredMasterVersion = $desiredMasterVersion;
@@ -91,16 +69,10 @@ class Google_Service_Container_ClusterUpdate extends Google_Collection
   {
     return $this->desiredMonitoringService;
   }
-  /**
-   * @param Google_Service_Container_NodePoolAutoscaling
-   */
   public function setDesiredNodePoolAutoscaling(Google_Service_Container_NodePoolAutoscaling $desiredNodePoolAutoscaling)
   {
     $this->desiredNodePoolAutoscaling = $desiredNodePoolAutoscaling;
   }
-  /**
-   * @return Google_Service_Container_NodePoolAutoscaling
-   */
   public function getDesiredNodePoolAutoscaling()
   {
     return $this->desiredNodePoolAutoscaling;

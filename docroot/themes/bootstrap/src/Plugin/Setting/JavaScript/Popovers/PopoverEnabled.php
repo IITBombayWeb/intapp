@@ -8,7 +8,6 @@ namespace Drupal\bootstrap\Plugin\Setting\JavaScript\Popovers;
 
 use Drupal\bootstrap\Annotation\BootstrapSetting;
 use Drupal\bootstrap\Plugin\Setting\SettingBase;
-use Drupal\bootstrap\Utility\Element;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -35,10 +34,10 @@ class PopoverEnabled extends SettingBase {
   /**
    * {@inheritdoc}
    */
-  public function alterFormElement(Element $form, FormStateInterface $form_state, $form_id = NULL) {
-    parent::alterFormElement($form, $form_state, $form_id);
+  public function alterForm(array &$form, FormStateInterface $form_state, $form_id = NULL) {
+    parent::alterForm($form, $form_state, $form_id);
 
-    $group = $this->getGroupElement($form, $form_state);
+    $group = $this->getGroup($form, $form_state);
     $group->setProperty('description', t('Add small overlays of content, like those on the iPad, to any element for housing secondary information.'));
   }
 

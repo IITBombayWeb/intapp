@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -64,16 +64,10 @@ class Google_Service_CloudDebugger_Breakpoint extends Google_Collection
   {
     return $this->createTime;
   }
-  /**
-   * @param Google_Service_CloudDebugger_Variable
-   */
   public function setEvaluatedExpressions($evaluatedExpressions)
   {
     $this->evaluatedExpressions = $evaluatedExpressions;
   }
-  /**
-   * @return Google_Service_CloudDebugger_Variable
-   */
   public function getEvaluatedExpressions()
   {
     return $this->evaluatedExpressions;
@@ -118,16 +112,10 @@ class Google_Service_CloudDebugger_Breakpoint extends Google_Collection
   {
     return $this->labels;
   }
-  /**
-   * @param Google_Service_CloudDebugger_SourceLocation
-   */
   public function setLocation(Google_Service_CloudDebugger_SourceLocation $location)
   {
     $this->location = $location;
   }
-  /**
-   * @return Google_Service_CloudDebugger_SourceLocation
-   */
   public function getLocation()
   {
     return $this->location;
@@ -148,30 +136,18 @@ class Google_Service_CloudDebugger_Breakpoint extends Google_Collection
   {
     return $this->logMessageFormat;
   }
-  /**
-   * @param Google_Service_CloudDebugger_StackFrame
-   */
   public function setStackFrames($stackFrames)
   {
     $this->stackFrames = $stackFrames;
   }
-  /**
-   * @return Google_Service_CloudDebugger_StackFrame
-   */
   public function getStackFrames()
   {
     return $this->stackFrames;
   }
-  /**
-   * @param Google_Service_CloudDebugger_StatusMessage
-   */
   public function setStatus(Google_Service_CloudDebugger_StatusMessage $status)
   {
     $this->status = $status;
   }
-  /**
-   * @return Google_Service_CloudDebugger_StatusMessage
-   */
   public function getStatus()
   {
     return $this->status;
@@ -184,16 +160,10 @@ class Google_Service_CloudDebugger_Breakpoint extends Google_Collection
   {
     return $this->userEmail;
   }
-  /**
-   * @param Google_Service_CloudDebugger_Variable
-   */
   public function setVariableTable($variableTable)
   {
     $this->variableTable = $variableTable;
   }
-  /**
-   * @return Google_Service_CloudDebugger_Variable
-   */
   public function getVariableTable()
   {
     return $this->variableTable;

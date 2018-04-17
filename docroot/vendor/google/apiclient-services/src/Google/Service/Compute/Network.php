@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,8 +29,6 @@ class Google_Service_Compute_Network extends Google_Collection
   public $id;
   public $kind;
   public $name;
-  protected $peeringsType = 'Google_Service_Compute_NetworkPeering';
-  protected $peeringsDataType = 'array';
   public $selfLink;
   public $subnetworks;
 
@@ -97,20 +95,6 @@ class Google_Service_Compute_Network extends Google_Collection
   public function getName()
   {
     return $this->name;
-  }
-  /**
-   * @param Google_Service_Compute_NetworkPeering
-   */
-  public function setPeerings($peerings)
-  {
-    $this->peerings = $peerings;
-  }
-  /**
-   * @return Google_Service_Compute_NetworkPeering
-   */
-  public function getPeerings()
-  {
-    return $this->peerings;
   }
   public function setSelfLink($selfLink)
   {

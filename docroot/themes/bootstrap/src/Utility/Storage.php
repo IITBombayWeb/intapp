@@ -192,12 +192,6 @@ class Storage extends MemoryStorage implements \Iterator {
 
   /**
    * Saves the data back to the database, if necessary, on shutdown.
-   *
-   * This method is automatically invoked during PHP shutdown.
-   *
-   * @internal
-   *
-   * @see \Drupal\bootstrap\Utility\Storage::__construct
    */
   public function save() {
     if ($this->changed) {

@@ -10,7 +10,7 @@ use Drupal\bootstrap\Annotation\BootstrapPreprocess;
 use Drupal\bootstrap\Bootstrap;
 use Drupal\bootstrap\Utility\Element;
 use Drupal\bootstrap\Utility\Variables;
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Pre-processes variables for the "menu_local_action" theme hook.
@@ -51,7 +51,8 @@ class MenuLocalAction extends PreprocessBase implements PreprocessInterface {
 
       $variables['link'] = [
         '#type' => 'link',
-        '#title' => $icon ? new FormattableMarkup(Element::create($icon)->renderPlain() . '@text', ['@text' => $link['title']]) : $link['title'],
+        '#title' => SafeMarkup::format(\Drupal::service('renderer')
+            ->render($icon) . '@text', ['@text' => $link['title']]),
         '#options' => $options,
         '#url' => $link['url'],
       ];

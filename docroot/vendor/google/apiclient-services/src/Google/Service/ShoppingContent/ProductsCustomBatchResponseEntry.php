@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,16 +32,10 @@ class Google_Service_ShoppingContent_ProductsCustomBatchResponseEntry extends Go
   {
     return $this->batchId;
   }
-  /**
-   * @param Google_Service_ShoppingContent_Errors
-   */
   public function setErrors(Google_Service_ShoppingContent_Errors $errors)
   {
     $this->errors = $errors;
   }
-  /**
-   * @return Google_Service_ShoppingContent_Errors
-   */
   public function getErrors()
   {
     return $this->errors;
@@ -54,16 +48,10 @@ class Google_Service_ShoppingContent_ProductsCustomBatchResponseEntry extends Go
   {
     return $this->kind;
   }
-  /**
-   * @param Google_Service_ShoppingContent_Product
-   */
   public function setProduct(Google_Service_ShoppingContent_Product $product)
   {
     $this->product = $product;
   }
-  /**
-   * @return Google_Service_ShoppingContent_Product
-   */
   public function getProduct()
   {
     return $this->product;

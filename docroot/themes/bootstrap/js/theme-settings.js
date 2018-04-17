@@ -58,7 +58,7 @@
         return summary.join(', ');
       });
 
-      // JavaScript.
+      // Javascript.
       $context.find('#edit-javascript').drupalSetSummary(function () {
         var summary = [];
         if ($context.find('input[name="modal_enabled"]').is(':checked')) {

@@ -29,7 +29,7 @@ use Psr\Http\Message\RequestInterface;
  *
  * Requests will be accessed with the authorization header:
  *
- * 'authorization' 'Bearer <value of auth_token>'
+ * 'Authorization' 'Bearer <value of auth_token>'
  */
 class AuthTokenMiddleware
 {
@@ -99,7 +99,7 @@ class AuthTokenMiddleware
                 return $handler($request, $options);
             }
 
-            $request = $request->withHeader('authorization', 'Bearer ' . $this->fetchToken());
+            $request = $request->withHeader('Authorization', 'Bearer ' . $this->fetchToken());
 
             return $handler($request, $options);
         };

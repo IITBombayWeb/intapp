@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@
 
 class Google_Service_CloudBuild_Build extends Google_Collection
 {
-  protected $collection_key = 'tags';
+  protected $collection_key = 'steps';
   public $buildTriggerId;
   public $createTime;
   public $finishTime;
@@ -30,8 +30,6 @@ class Google_Service_CloudBuild_Build extends Google_Collection
   public $projectId;
   protected $resultsType = 'Google_Service_CloudBuild_Results';
   protected $resultsDataType = '';
-  protected $secretsType = 'Google_Service_CloudBuild_Secret';
-  protected $secretsDataType = 'array';
   protected $sourceType = 'Google_Service_CloudBuild_Source';
   protected $sourceDataType = '';
   protected $sourceProvenanceType = 'Google_Service_CloudBuild_SourceProvenance';
@@ -42,7 +40,6 @@ class Google_Service_CloudBuild_Build extends Google_Collection
   protected $stepsType = 'Google_Service_CloudBuild_BuildStep';
   protected $stepsDataType = 'array';
   public $substitutions;
-  public $tags;
   public $timeout;
 
   public function setBuildTriggerId($buildTriggerId)
@@ -101,16 +98,10 @@ class Google_Service_CloudBuild_Build extends Google_Collection
   {
     return $this->logsBucket;
   }
-  /**
-   * @param Google_Service_CloudBuild_BuildOptions
-   */
   public function setOptions(Google_Service_CloudBuild_BuildOptions $options)
   {
     $this->options = $options;
   }
-  /**
-   * @return Google_Service_CloudBuild_BuildOptions
-   */
   public function getOptions()
   {
     return $this->options;
@@ -123,58 +114,26 @@ class Google_Service_CloudBuild_Build extends Google_Collection
   {
     return $this->projectId;
   }
-  /**
-   * @param Google_Service_CloudBuild_Results
-   */
   public function setResults(Google_Service_CloudBuild_Results $results)
   {
     $this->results = $results;
   }
-  /**
-   * @return Google_Service_CloudBuild_Results
-   */
   public function getResults()
   {
     return $this->results;
   }
-  /**
-   * @param Google_Service_CloudBuild_Secret
-   */
-  public function setSecrets($secrets)
-  {
-    $this->secrets = $secrets;
-  }
-  /**
-   * @return Google_Service_CloudBuild_Secret
-   */
-  public function getSecrets()
-  {
-    return $this->secrets;
-  }
-  /**
-   * @param Google_Service_CloudBuild_Source
-   */
   public function setSource(Google_Service_CloudBuild_Source $source)
   {
     $this->source = $source;
   }
-  /**
-   * @return Google_Service_CloudBuild_Source
-   */
   public function getSource()
   {
     return $this->source;
   }
-  /**
-   * @param Google_Service_CloudBuild_SourceProvenance
-   */
   public function setSourceProvenance(Google_Service_CloudBuild_SourceProvenance $sourceProvenance)
   {
     $this->sourceProvenance = $sourceProvenance;
   }
-  /**
-   * @return Google_Service_CloudBuild_SourceProvenance
-   */
   public function getSourceProvenance()
   {
     return $this->sourceProvenance;
@@ -203,16 +162,10 @@ class Google_Service_CloudBuild_Build extends Google_Collection
   {
     return $this->statusDetail;
   }
-  /**
-   * @param Google_Service_CloudBuild_BuildStep
-   */
   public function setSteps($steps)
   {
     $this->steps = $steps;
   }
-  /**
-   * @return Google_Service_CloudBuild_BuildStep
-   */
   public function getSteps()
   {
     return $this->steps;
@@ -224,14 +177,6 @@ class Google_Service_CloudBuild_Build extends Google_Collection
   public function getSubstitutions()
   {
     return $this->substitutions;
-  }
-  public function setTags($tags)
-  {
-    $this->tags = $tags;
-  }
-  public function getTags()
-  {
-    return $this->tags;
   }
   public function setTimeout($timeout)
   {

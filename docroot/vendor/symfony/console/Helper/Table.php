@@ -149,7 +149,7 @@ class Table
      */
     public function setColumnStyle($columnIndex, $name)
     {
-        $columnIndex = (int) $columnIndex;
+        $columnIndex = intval($columnIndex);
 
         $this->columnStyles[$columnIndex] = $this->resolveStyle($name);
 

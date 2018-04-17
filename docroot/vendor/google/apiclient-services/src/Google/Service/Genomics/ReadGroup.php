@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -47,16 +47,10 @@ class Google_Service_Genomics_ReadGroup extends Google_Collection
   {
     return $this->description;
   }
-  /**
-   * @param Google_Service_Genomics_Experiment
-   */
   public function setExperiment(Google_Service_Genomics_Experiment $experiment)
   {
     $this->experiment = $experiment;
   }
-  /**
-   * @return Google_Service_Genomics_Experiment
-   */
   public function getExperiment()
   {
     return $this->experiment;
@@ -93,16 +87,10 @@ class Google_Service_Genomics_ReadGroup extends Google_Collection
   {
     return $this->predictedInsertSize;
   }
-  /**
-   * @param Google_Service_Genomics_Program
-   */
   public function setPrograms($programs)
   {
     $this->programs = $programs;
   }
-  /**
-   * @return Google_Service_Genomics_Program
-   */
   public function getPrograms()
   {
     return $this->programs;

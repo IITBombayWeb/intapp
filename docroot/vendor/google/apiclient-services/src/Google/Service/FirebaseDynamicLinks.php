@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,8 @@
  * Service definition for FirebaseDynamicLinks (v1).
  *
  * <p>
- * Programmatically creates and manages Firebase Dynamic Links.</p>
+ * Firebase Dynamic Links API enables third party developers to programmatically
+ * create and manage Dynamic Links.</p>
  *
  * <p>
  * For more information about this service, see the API
@@ -35,7 +36,6 @@ class Google_Service_FirebaseDynamicLinks extends Google_Service
       "https://www.googleapis.com/auth/firebase";
 
   public $shortLinks;
-  public $v1;
   
   /**
    * Constructs the internal representation of the FirebaseDynamicLinks service.
@@ -60,30 +60,6 @@ class Google_Service_FirebaseDynamicLinks extends Google_Service
               'path' => 'v1/shortLinks',
               'httpMethod' => 'POST',
               'parameters' => array(),
-            ),
-          )
-        )
-    );
-    $this->v1 = new Google_Service_FirebaseDynamicLinks_Resource_V1(
-        $this,
-        $this->serviceName,
-        'v1',
-        array(
-          'methods' => array(
-            'getLinkStats' => array(
-              'path' => 'v1/{dynamicLink}/linkStats',
-              'httpMethod' => 'GET',
-              'parameters' => array(
-                'dynamicLink' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
-                ),
-                'durationDays' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-              ),
             ),
           )
         )

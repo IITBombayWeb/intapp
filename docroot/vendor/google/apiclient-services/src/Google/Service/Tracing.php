@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
  */
 
 /**
- * Service definition for Tracing (v2).
+ * Service definition for Tracing (v1).
  *
  * <p>
  * Send and retrieve trace data from Google Stackdriver Trace.</p>
@@ -41,7 +41,6 @@ class Google_Service_Tracing extends Google_Service
       "https://www.googleapis.com/auth/trace.readonly";
 
   public $projects_traces;
-  public $projects_traces_spans;
   
   /**
    * Constructs the internal representation of the Tracing service.
@@ -53,7 +52,7 @@ class Google_Service_Tracing extends Google_Service
     parent::__construct($client);
     $this->rootUrl = 'https://tracing.googleapis.com/';
     $this->servicePath = '';
-    $this->version = 'v2';
+    $this->version = 'v1';
     $this->serviceName = 'tracing';
 
     $this->projects_traces = new Google_Service_Tracing_Resource_ProjectsTraces(
@@ -62,9 +61,19 @@ class Google_Service_Tracing extends Google_Service
         'traces',
         array(
           'methods' => array(
-            'batchWrite' => array(
-              'path' => 'v2/{+name}/traces:batchWrite',
+            'batchUpdate' => array(
+              'path' => 'v1/{+parent}/traces:batchUpdate',
               'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'get' => array(
+              'path' => 'v1/{+name}',
+              'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
                   'location' => 'path',
@@ -73,7 +82,7 @@ class Google_Service_Tracing extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v2/{+parent}/traces',
+              'path' => 'v1/{+parent}/traces',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'parent' => array(
@@ -107,10 +116,10 @@ class Google_Service_Tracing extends Google_Service
                 ),
               ),
             ),'listSpans' => array(
-              'path' => 'v2/{+parent}:listSpans',
+              'path' => 'v1/{+name}:listSpans',
               'httpMethod' => 'GET',
               'parameters' => array(
-                'parent' => array(
+                'name' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
@@ -118,26 +127,6 @@ class Google_Service_Tracing extends Google_Service
                 'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),
-          )
-        )
-    );
-    $this->projects_traces_spans = new Google_Service_Tracing_Resource_ProjectsTracesSpans(
-        $this,
-        $this->serviceName,
-        'spans',
-        array(
-          'methods' => array(
-            'create' => array(
-              'path' => 'v2/{+name}',
-              'httpMethod' => 'PUT',
-              'parameters' => array(
-                'name' => array(
-                  'location' => 'path',
-                  'type' => 'string',
-                  'required' => true,
                 ),
               ),
             ),

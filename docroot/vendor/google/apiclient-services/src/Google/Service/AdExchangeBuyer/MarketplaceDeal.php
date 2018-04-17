@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,7 +33,6 @@ class Google_Service_AdExchangeBuyer_MarketplaceDeal extends Google_Collection
   public $flightStartTimeMs;
   public $inventoryDescription;
   public $isRfpTemplate;
-  public $isSetupComplete;
   public $kind;
   public $lastUpdateTimeMs;
   public $name;
@@ -50,16 +49,10 @@ class Google_Service_AdExchangeBuyer_MarketplaceDeal extends Google_Collection
   protected $termsDataType = '';
   public $webPropertyCode;
 
-  /**
-   * @param Google_Service_AdExchangeBuyer_PrivateData
-   */
   public function setBuyerPrivateData(Google_Service_AdExchangeBuyer_PrivateData $buyerPrivateData)
   {
     $this->buyerPrivateData = $buyerPrivateData;
   }
-  /**
-   * @return Google_Service_AdExchangeBuyer_PrivateData
-   */
   public function getBuyerPrivateData()
   {
     return $this->buyerPrivateData;
@@ -96,30 +89,18 @@ class Google_Service_AdExchangeBuyer_MarketplaceDeal extends Google_Collection
   {
     return $this->dealId;
   }
-  /**
-   * @param Google_Service_AdExchangeBuyer_DealServingMetadata
-   */
   public function setDealServingMetadata(Google_Service_AdExchangeBuyer_DealServingMetadata $dealServingMetadata)
   {
     $this->dealServingMetadata = $dealServingMetadata;
   }
-  /**
-   * @return Google_Service_AdExchangeBuyer_DealServingMetadata
-   */
   public function getDealServingMetadata()
   {
     return $this->dealServingMetadata;
   }
-  /**
-   * @param Google_Service_AdExchangeBuyer_DeliveryControl
-   */
   public function setDeliveryControl(Google_Service_AdExchangeBuyer_DeliveryControl $deliveryControl)
   {
     $this->deliveryControl = $deliveryControl;
   }
-  /**
-   * @return Google_Service_AdExchangeBuyer_DeliveryControl
-   */
   public function getDeliveryControl()
   {
     return $this->deliveryControl;
@@ -163,14 +144,6 @@ class Google_Service_AdExchangeBuyer_MarketplaceDeal extends Google_Collection
   public function getIsRfpTemplate()
   {
     return $this->isRfpTemplate;
-  }
-  public function setIsSetupComplete($isSetupComplete)
-  {
-    $this->isSetupComplete = $isSetupComplete;
-  }
-  public function getIsSetupComplete()
-  {
-    return $this->isSetupComplete;
   }
   public function setKind($kind)
   {
@@ -228,30 +201,18 @@ class Google_Service_AdExchangeBuyer_MarketplaceDeal extends Google_Collection
   {
     return $this->proposalId;
   }
-  /**
-   * @param Google_Service_AdExchangeBuyer_ContactInformation
-   */
   public function setSellerContacts($sellerContacts)
   {
     $this->sellerContacts = $sellerContacts;
   }
-  /**
-   * @return Google_Service_AdExchangeBuyer_ContactInformation
-   */
   public function getSellerContacts()
   {
     return $this->sellerContacts;
   }
-  /**
-   * @param Google_Service_AdExchangeBuyer_SharedTargeting
-   */
   public function setSharedTargetings($sharedTargetings)
   {
     $this->sharedTargetings = $sharedTargetings;
   }
-  /**
-   * @return Google_Service_AdExchangeBuyer_SharedTargeting
-   */
   public function getSharedTargetings()
   {
     return $this->sharedTargetings;
@@ -264,16 +225,10 @@ class Google_Service_AdExchangeBuyer_MarketplaceDeal extends Google_Collection
   {
     return $this->syndicationProduct;
   }
-  /**
-   * @param Google_Service_AdExchangeBuyer_DealTerms
-   */
   public function setTerms(Google_Service_AdExchangeBuyer_DealTerms $terms)
   {
     $this->terms = $terms;
   }
-  /**
-   * @return Google_Service_AdExchangeBuyer_DealTerms
-   */
   public function getTerms()
   {
     return $this->terms;

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,8 +23,6 @@ class Google_Service_Bigquery_TableListTables extends Google_Model
   public $labels;
   protected $tableReferenceType = 'Google_Service_Bigquery_TableReference';
   protected $tableReferenceDataType = '';
-  protected $timePartitioningType = 'Google_Service_Bigquery_TimePartitioning';
-  protected $timePartitioningDataType = '';
   public $type;
   protected $viewType = 'Google_Service_Bigquery_TableListTablesView';
   protected $viewDataType = '';
@@ -61,33 +59,13 @@ class Google_Service_Bigquery_TableListTables extends Google_Model
   {
     return $this->labels;
   }
-  /**
-   * @param Google_Service_Bigquery_TableReference
-   */
   public function setTableReference(Google_Service_Bigquery_TableReference $tableReference)
   {
     $this->tableReference = $tableReference;
   }
-  /**
-   * @return Google_Service_Bigquery_TableReference
-   */
   public function getTableReference()
   {
     return $this->tableReference;
-  }
-  /**
-   * @param Google_Service_Bigquery_TimePartitioning
-   */
-  public function setTimePartitioning(Google_Service_Bigquery_TimePartitioning $timePartitioning)
-  {
-    $this->timePartitioning = $timePartitioning;
-  }
-  /**
-   * @return Google_Service_Bigquery_TimePartitioning
-   */
-  public function getTimePartitioning()
-  {
-    return $this->timePartitioning;
   }
   public function setType($type)
   {
@@ -97,16 +75,10 @@ class Google_Service_Bigquery_TableListTables extends Google_Model
   {
     return $this->type;
   }
-  /**
-   * @param Google_Service_Bigquery_TableListTablesView
-   */
   public function setView(Google_Service_Bigquery_TableListTablesView $view)
   {
     $this->view = $view;
   }
-  /**
-   * @return Google_Service_Bigquery_TableListTablesView
-   */
   public function getView()
   {
     return $this->view;

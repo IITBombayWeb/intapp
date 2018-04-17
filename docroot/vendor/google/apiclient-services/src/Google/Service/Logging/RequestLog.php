@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -149,16 +149,10 @@ class Google_Service_Logging_RequestLog extends Google_Collection
   {
     return $this->latency;
   }
-  /**
-   * @param Google_Service_Logging_LogLine
-   */
   public function setLine($line)
   {
     $this->line = $line;
   }
-  /**
-   * @return Google_Service_Logging_LogLine
-   */
   public function getLine()
   {
     return $this->line;
@@ -235,16 +229,10 @@ class Google_Service_Logging_RequestLog extends Google_Collection
   {
     return $this->responseSize;
   }
-  /**
-   * @param Google_Service_Logging_SourceReference
-   */
   public function setSourceReference($sourceReference)
   {
     $this->sourceReference = $sourceReference;
   }
-  /**
-   * @return Google_Service_Logging_SourceReference
-   */
   public function getSourceReference()
   {
     return $this->sourceReference;

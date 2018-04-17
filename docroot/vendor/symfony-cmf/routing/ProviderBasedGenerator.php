@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2014 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,10 +15,11 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+
 use Psr\Log\LoggerInterface;
 
 /**
- * A Generator that uses a RouteProvider rather than a RouteCollection.
+ * A Generator that uses a RouteProvider rather than a RouteCollection
  *
  * @author Larry Garfield
  */
@@ -43,13 +44,13 @@ class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorI
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = array(), $absolute = false)
     {
         if ($name instanceof SymfonyRoute) {
             $route = $name;
-        } elseif (null === $route = $this->provider->getRouteByName($name)) {
+        } elseif (null === $route = $this->provider->getRouteByName($name, $parameters)) {
             throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
         }
 
@@ -59,13 +60,13 @@ class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorI
 
         $debug_message = $this->getRouteDebugMessage($name);
 
-        return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $debug_message, $referenceType, $hostTokens);
+        return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $debug_message, $absolute, $hostTokens);
     }
 
     /**
-     * Support a route object and any string as route name.
+     * Support a route object and any string as route name
      *
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function supports($name)
     {
@@ -73,7 +74,7 @@ class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorI
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getRouteDebugMessage($name, array $parameters = array())
     {
@@ -86,13 +87,14 @@ class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorI
         }
 
         if ($name instanceof RouteObjectInterface) {
-            return 'Route with key '.$name->getRouteKey();
+            return 'Route with key ' . $name->getRouteKey();
         }
 
         if ($name instanceof SymfonyRoute) {
-            return 'Route with path '.$name->getPath();
+            return 'Route with pattern ' . $name->getPattern();
         }
 
         return get_class($name);
     }
+
 }

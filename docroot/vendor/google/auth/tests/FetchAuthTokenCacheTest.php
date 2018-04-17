@@ -43,10 +43,6 @@ class FetchAuthTokenCacheTest extends BaseTest
         $cachedValue = '2/abcdef1234567890';
         $this->mockCacheItem
             ->expects($this->once())
-            ->method('isHit')
-            ->will($this->returnValue(true));
-        $this->mockCacheItem
-            ->expects($this->once())
             ->method('get')
             ->will($this->returnValue($cachedValue));
         $this->mockCache
@@ -77,10 +73,6 @@ class FetchAuthTokenCacheTest extends BaseTest
         $prefix = 'test_prefix_';
         $cacheKey = 'myKey';
         $cachedValue = '2/abcdef1234567890';
-        $this->mockCacheItem
-            ->expects($this->once())
-            ->method('isHit')
-            ->will($this->returnValue(true));
         $this->mockCacheItem
             ->expects($this->once())
             ->method('get')

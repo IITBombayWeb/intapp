@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,10 +16,10 @@
  */
 
 /**
- * Service definition for Speech (v1).
+ * Service definition for Speech (v1beta1).
  *
  * <p>
- * Converts audio to text by applying powerful neural network models.</p>
+ * Google Cloud Speech API.</p>
  *
  * <p>
  * For more information about this service, see the API
@@ -47,7 +47,7 @@ class Google_Service_Speech extends Google_Service
     parent::__construct($client);
     $this->rootUrl = 'https://speech.googleapis.com/';
     $this->servicePath = '';
-    $this->version = 'v1';
+    $this->version = 'v1beta1';
     $this->serviceName = 'speech';
 
     $this->operations = new Google_Service_Speech_Resource_Operations(
@@ -57,7 +57,7 @@ class Google_Service_Speech extends Google_Service
         array(
           'methods' => array(
             'cancel' => array(
-              'path' => 'v1/operations/{+name}:cancel',
+              'path' => 'v1beta1/operations/{+name}:cancel',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -67,7 +67,7 @@ class Google_Service_Speech extends Google_Service
                 ),
               ),
             ),'delete' => array(
-              'path' => 'v1/operations/{+name}',
+              'path' => 'v1beta1/operations/{+name}',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -77,7 +77,7 @@ class Google_Service_Speech extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v1/operations/{+name}',
+              'path' => 'v1beta1/operations/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -87,7 +87,7 @@ class Google_Service_Speech extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1/operations',
+              'path' => 'v1beta1/operations',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'filter' => array(
@@ -117,12 +117,12 @@ class Google_Service_Speech extends Google_Service
         'speech',
         array(
           'methods' => array(
-            'longrunningrecognize' => array(
-              'path' => 'v1/speech:longrunningrecognize',
+            'asyncrecognize' => array(
+              'path' => 'v1beta1/speech:asyncrecognize',
               'httpMethod' => 'POST',
               'parameters' => array(),
-            ),'recognize' => array(
-              'path' => 'v1/speech:recognize',
+            ),'syncrecognize' => array(
+              'path' => 'v1beta1/speech:syncrecognize',
               'httpMethod' => 'POST',
               'parameters' => array(),
             ),

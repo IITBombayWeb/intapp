@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,17 +18,13 @@
 class Google_Service_Tracing_StackFrame extends Google_Model
 {
   public $columnNumber;
-  protected $fileNameType = 'Google_Service_Tracing_TruncatableString';
-  protected $fileNameDataType = '';
-  protected $functionNameType = 'Google_Service_Tracing_TruncatableString';
-  protected $functionNameDataType = '';
+  public $fileName;
+  public $functionName;
   public $lineNumber;
   protected $loadModuleType = 'Google_Service_Tracing_Module';
   protected $loadModuleDataType = '';
-  protected $originalFunctionNameType = 'Google_Service_Tracing_TruncatableString';
-  protected $originalFunctionNameDataType = '';
-  protected $sourceVersionType = 'Google_Service_Tracing_TruncatableString';
-  protected $sourceVersionDataType = '';
+  public $originalFunctionName;
+  public $sourceVersion;
 
   public function setColumnNumber($columnNumber)
   {
@@ -38,7 +34,7 @@ class Google_Service_Tracing_StackFrame extends Google_Model
   {
     return $this->columnNumber;
   }
-  public function setFileName(Google_Service_Tracing_TruncatableString $fileName)
+  public function setFileName($fileName)
   {
     $this->fileName = $fileName;
   }
@@ -46,7 +42,7 @@ class Google_Service_Tracing_StackFrame extends Google_Model
   {
     return $this->fileName;
   }
-  public function setFunctionName(Google_Service_Tracing_TruncatableString $functionName)
+  public function setFunctionName($functionName)
   {
     $this->functionName = $functionName;
   }
@@ -70,7 +66,7 @@ class Google_Service_Tracing_StackFrame extends Google_Model
   {
     return $this->loadModule;
   }
-  public function setOriginalFunctionName(Google_Service_Tracing_TruncatableString $originalFunctionName)
+  public function setOriginalFunctionName($originalFunctionName)
   {
     $this->originalFunctionName = $originalFunctionName;
   }
@@ -78,7 +74,7 @@ class Google_Service_Tracing_StackFrame extends Google_Model
   {
     return $this->originalFunctionName;
   }
-  public function setSourceVersion(Google_Service_Tracing_TruncatableString $sourceVersion)
+  public function setSourceVersion($sourceVersion)
   {
     $this->sourceVersion = $sourceVersion;
   }

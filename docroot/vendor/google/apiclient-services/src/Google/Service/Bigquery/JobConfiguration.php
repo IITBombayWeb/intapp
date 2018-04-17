@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,16 +28,10 @@ class Google_Service_Bigquery_JobConfiguration extends Google_Model
   protected $queryType = 'Google_Service_Bigquery_JobConfigurationQuery';
   protected $queryDataType = '';
 
-  /**
-   * @param Google_Service_Bigquery_JobConfigurationTableCopy
-   */
   public function setCopy(Google_Service_Bigquery_JobConfigurationTableCopy $copy)
   {
     $this->copy = $copy;
   }
-  /**
-   * @return Google_Service_Bigquery_JobConfigurationTableCopy
-   */
   public function getCopy()
   {
     return $this->copy;
@@ -50,16 +44,10 @@ class Google_Service_Bigquery_JobConfiguration extends Google_Model
   {
     return $this->dryRun;
   }
-  /**
-   * @param Google_Service_Bigquery_JobConfigurationExtract
-   */
   public function setExtract(Google_Service_Bigquery_JobConfigurationExtract $extract)
   {
     $this->extract = $extract;
   }
-  /**
-   * @return Google_Service_Bigquery_JobConfigurationExtract
-   */
   public function getExtract()
   {
     return $this->extract;
@@ -72,30 +60,18 @@ class Google_Service_Bigquery_JobConfiguration extends Google_Model
   {
     return $this->labels;
   }
-  /**
-   * @param Google_Service_Bigquery_JobConfigurationLoad
-   */
   public function setLoad(Google_Service_Bigquery_JobConfigurationLoad $load)
   {
     $this->load = $load;
   }
-  /**
-   * @return Google_Service_Bigquery_JobConfigurationLoad
-   */
   public function getLoad()
   {
     return $this->load;
   }
-  /**
-   * @param Google_Service_Bigquery_JobConfigurationQuery
-   */
   public function setQuery(Google_Service_Bigquery_JobConfigurationQuery $query)
   {
     $this->query = $query;
   }
-  /**
-   * @return Google_Service_Bigquery_JobConfigurationQuery
-   */
   public function getQuery()
   {
     return $this->query;

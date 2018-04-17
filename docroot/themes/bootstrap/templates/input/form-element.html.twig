@@ -5,10 +5,6 @@
  *
  * Available variables:
  * - attributes: HTML attributes for the containing element.
- * - errors: (optional) Any inline error messages to display for this form
- *   element; may not be set.
- * - has_error: (optional) Flag indicating whether to add the "has_error"
- *   Bootstrap class for this form element.
  * - required: The required marker, or empty if the associated form element is
  *   not required.
  * - type: The type of the element.
@@ -61,7 +57,7 @@
     is_radio ? 'radio',
     is_checkbox ? 'checkbox',
     is_autocomplete ? 'form-autocomplete',
-    has_error ? 'error has-error'
+    errors ? 'error has-error'
   ]
 %}{%
   set description_classes = [
@@ -85,12 +81,6 @@
 
   {% if label_display == 'after' %}
     {{ label }}
-  {% endif %}
-
-  {% if errors %}
-    <div class="form-item--error-message alert alert-danger alert-sm">
-      {{ errors }}
-    </div>
   {% endif %}
 
   {% if description_display in ['after', 'invisible'] and description.content %}

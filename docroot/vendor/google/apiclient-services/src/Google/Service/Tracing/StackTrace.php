@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,19 +15,20 @@
  * the License.
  */
 
-class Google_Service_Tracing_StackTrace extends Google_Model
+class Google_Service_Tracing_StackTrace extends Google_Collection
 {
-  protected $stackFramesType = 'Google_Service_Tracing_StackFrames';
-  protected $stackFramesDataType = '';
+  protected $collection_key = 'stackFrame';
+  protected $stackFrameType = 'Google_Service_Tracing_StackFrame';
+  protected $stackFrameDataType = 'array';
   public $stackTraceHashId;
 
-  public function setStackFrames(Google_Service_Tracing_StackFrames $stackFrames)
+  public function setStackFrame($stackFrame)
   {
-    $this->stackFrames = $stackFrames;
+    $this->stackFrame = $stackFrame;
   }
-  public function getStackFrames()
+  public function getStackFrame()
   {
-    return $this->stackFrames;
+    return $this->stackFrame;
   }
   public function setStackTraceHashId($stackTraceHashId)
   {

@@ -89,5 +89,3 @@ class Twig_Cache_Filesystem implements Twig_CacheInterface
         return (int) @filemtime($key);
     }
 }
-
-class_alias('Twig_Cache_Filesystem', 'Twig\Cache\FilesystemCache', false);

@@ -35,11 +35,10 @@ Once you've selected one of the above starterkits, here's how to install it:
    directory inside it. For example, the primary file Drupal uses to determine
    if a theme exists is: `./THEMENAME/THEMENAME.info.yml`.
 3. Rename `./THEMENAME/THEMENAME.starterkit.yml` to match
-   `./THEMENAME/THEMENAME.info.yml`. Also, rename `./THEMENAME/THEMENAME.libraries.yml` 
-   and `./THEMENAME/THEMENAME.theme` as well.
+   `./THEMENAME/THEMENAME.info.yml`.
 4. Open `./THEMENAME/THEMENAME.info.yml` and change the name, description and any
    other properties to suite your needs. Make sure to rename the library name as
-   well:  `- THEMENAME/global-styling`.
+   well:  `- THEMENAME/globalstyling`.
 5. Rename the sub-theme configuration files, located at:
    `./THEMENAME/config/install/THEMENAME.settings.yml` and
    `./THEMENAME/config/schema/THEMENAME.schema.yml`.

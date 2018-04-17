@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,14 +28,13 @@ class Google_Service_TagManager_Resource_Accounts extends Google_Service_Resourc
   /**
    * Gets a GTM Account. (accounts.get)
    *
-   * @param string $path GTM Accounts's API relative path. Example:
-   * accounts/{account_id}
+   * @param string $accountId The GTM Account ID.
    * @param array $optParams Optional parameters.
    * @return Google_Service_TagManager_Account
    */
-  public function get($path, $optParams = array())
+  public function get($accountId, $optParams = array())
   {
-    $params = array('path' => $path);
+    $params = array('accountId' => $accountId);
     $params = array_merge($params, $optParams);
     return $this->call('get', array($params), "Google_Service_TagManager_Account");
   }
@@ -43,9 +42,6 @@ class Google_Service_TagManager_Resource_Accounts extends Google_Service_Resourc
    * Lists all GTM Accounts that a user has access to. (accounts.listAccounts)
    *
    * @param array $optParams Optional parameters.
-   *
-   * @opt_param string pageToken Continuation token for fetching the next page of
-   * results.
    * @return Google_Service_TagManager_ListAccountsResponse
    */
   public function listAccounts($optParams = array())
@@ -57,8 +53,7 @@ class Google_Service_TagManager_Resource_Accounts extends Google_Service_Resourc
   /**
    * Updates a GTM Account. (accounts.update)
    *
-   * @param string $path GTM Accounts's API relative path. Example:
-   * accounts/{account_id}
+   * @param string $accountId The GTM Account ID.
    * @param Google_Service_TagManager_Account $postBody
    * @param array $optParams Optional parameters.
    *
@@ -66,9 +61,9 @@ class Google_Service_TagManager_Resource_Accounts extends Google_Service_Resourc
    * fingerprint of the account in storage.
    * @return Google_Service_TagManager_Account
    */
-  public function update($path, Google_Service_TagManager_Account $postBody, $optParams = array())
+  public function update($accountId, Google_Service_TagManager_Account $postBody, $optParams = array())
   {
-    $params = array('path' => $path, 'postBody' => $postBody);
+    $params = array('accountId' => $accountId, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
     return $this->call('update', array($params), "Google_Service_TagManager_Account");
   }

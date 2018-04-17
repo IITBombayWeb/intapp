@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,16 +31,10 @@ class Google_Service_AndroidEnterprise_NotificationSet extends Google_Collection
   {
     return $this->kind;
   }
-  /**
-   * @param Google_Service_AndroidEnterprise_Notification
-   */
   public function setNotification($notification)
   {
     $this->notification = $notification;
   }
-  /**
-   * @return Google_Service_AndroidEnterprise_Notification
-   */
   public function getNotification()
   {
     return $this->notification;

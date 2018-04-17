@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,7 +31,6 @@ class Google_Service_TagManager_Tag extends Google_Collection
   protected $parameterType = 'Google_Service_TagManager_Parameter';
   protected $parameterDataType = 'array';
   public $parentFolderId;
-  public $path;
   protected $priorityType = 'Google_Service_TagManager_Parameter';
   protected $priorityDataType = '';
   public $scheduleEndMs;
@@ -40,11 +39,9 @@ class Google_Service_TagManager_Tag extends Google_Collection
   protected $setupTagDataType = 'array';
   public $tagFiringOption;
   public $tagId;
-  public $tagManagerUrl;
   protected $teardownTagType = 'Google_Service_TagManager_TeardownTag';
   protected $teardownTagDataType = 'array';
   public $type;
-  public $workspaceId;
 
   public function setAccountId($accountId)
   {
@@ -126,16 +123,10 @@ class Google_Service_TagManager_Tag extends Google_Collection
   {
     return $this->notes;
   }
-  /**
-   * @param Google_Service_TagManager_Parameter
-   */
   public function setParameter($parameter)
   {
     $this->parameter = $parameter;
   }
-  /**
-   * @return Google_Service_TagManager_Parameter
-   */
   public function getParameter()
   {
     return $this->parameter;
@@ -148,24 +139,10 @@ class Google_Service_TagManager_Tag extends Google_Collection
   {
     return $this->parentFolderId;
   }
-  public function setPath($path)
-  {
-    $this->path = $path;
-  }
-  public function getPath()
-  {
-    return $this->path;
-  }
-  /**
-   * @param Google_Service_TagManager_Parameter
-   */
   public function setPriority(Google_Service_TagManager_Parameter $priority)
   {
     $this->priority = $priority;
   }
-  /**
-   * @return Google_Service_TagManager_Parameter
-   */
   public function getPriority()
   {
     return $this->priority;
@@ -186,16 +163,10 @@ class Google_Service_TagManager_Tag extends Google_Collection
   {
     return $this->scheduleStartMs;
   }
-  /**
-   * @param Google_Service_TagManager_SetupTag
-   */
   public function setSetupTag($setupTag)
   {
     $this->setupTag = $setupTag;
   }
-  /**
-   * @return Google_Service_TagManager_SetupTag
-   */
   public function getSetupTag()
   {
     return $this->setupTag;
@@ -216,24 +187,10 @@ class Google_Service_TagManager_Tag extends Google_Collection
   {
     return $this->tagId;
   }
-  public function setTagManagerUrl($tagManagerUrl)
-  {
-    $this->tagManagerUrl = $tagManagerUrl;
-  }
-  public function getTagManagerUrl()
-  {
-    return $this->tagManagerUrl;
-  }
-  /**
-   * @param Google_Service_TagManager_TeardownTag
-   */
   public function setTeardownTag($teardownTag)
   {
     $this->teardownTag = $teardownTag;
   }
-  /**
-   * @return Google_Service_TagManager_TeardownTag
-   */
   public function getTeardownTag()
   {
     return $this->teardownTag;
@@ -245,13 +202,5 @@ class Google_Service_TagManager_Tag extends Google_Collection
   public function getType()
   {
     return $this->type;
-  }
-  public function setWorkspaceId($workspaceId)
-  {
-    $this->workspaceId = $workspaceId;
-  }
-  public function getWorkspaceId()
-  {
-    return $this->workspaceId;
   }
 }

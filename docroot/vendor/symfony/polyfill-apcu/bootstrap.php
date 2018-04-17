@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-if (!extension_loaded('apc') && !extension_loaded('apcu')) {
+if (!extension_loaded('apc')) {
     return;
 }
 

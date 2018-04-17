@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,8 +40,7 @@ class Google_Service_Reports_Resource_Activities extends Google_Service_Resource
    * performed. Supports both IPv4 and IPv6 addresses.
    * @opt_param string customerId Represents the customer for which the data is to
    * be fetched.
-   * @opt_param string endTime Return events which occurred at or before this
-   * time.
+   * @opt_param string endTime Return events which occured at or before this time.
    * @opt_param string eventName Name of the event being queried.
    * @opt_param string filters Event parameters in the form [parameter1
    * name][operator][parameter1 value],[parameter2 name][operator][parameter2
@@ -49,7 +48,7 @@ class Google_Service_Reports_Resource_Activities extends Google_Service_Resource
    * @opt_param int maxResults Number of activity records to be shown in each
    * page.
    * @opt_param string pageToken Token to specify next page.
-   * @opt_param string startTime Return events which occurred at or after this
+   * @opt_param string startTime Return events which occured at or after this
    * time.
    * @return Google_Service_Reports_Activities
    */
@@ -74,8 +73,7 @@ class Google_Service_Reports_Resource_Activities extends Google_Service_Resource
    * performed. Supports both IPv4 and IPv6 addresses.
    * @opt_param string customerId Represents the customer for which the data is to
    * be fetched.
-   * @opt_param string endTime Return events which occurred at or before this
-   * time.
+   * @opt_param string endTime Return events which occured at or before this time.
    * @opt_param string eventName Name of the event being queried.
    * @opt_param string filters Event parameters in the form [parameter1
    * name][operator][parameter1 value],[parameter2 name][operator][parameter2
@@ -83,7 +81,7 @@ class Google_Service_Reports_Resource_Activities extends Google_Service_Resource
    * @opt_param int maxResults Number of activity records to be shown in each
    * page.
    * @opt_param string pageToken Token to specify next page.
-   * @opt_param string startTime Return events which occurred at or after this
+   * @opt_param string startTime Return events which occured at or after this
    * time.
    * @return Google_Service_Reports_Channel
    */

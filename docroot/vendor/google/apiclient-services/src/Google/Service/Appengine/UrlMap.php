@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,16 +29,10 @@ class Google_Service_Appengine_UrlMap extends Google_Model
   protected $staticFilesDataType = '';
   public $urlRegex;
 
-  /**
-   * @param Google_Service_Appengine_ApiEndpointHandler
-   */
   public function setApiEndpoint(Google_Service_Appengine_ApiEndpointHandler $apiEndpoint)
   {
     $this->apiEndpoint = $apiEndpoint;
   }
-  /**
-   * @return Google_Service_Appengine_ApiEndpointHandler
-   */
   public function getApiEndpoint()
   {
     return $this->apiEndpoint;
@@ -67,16 +61,10 @@ class Google_Service_Appengine_UrlMap extends Google_Model
   {
     return $this->redirectHttpResponseCode;
   }
-  /**
-   * @param Google_Service_Appengine_ScriptHandler
-   */
   public function setScript(Google_Service_Appengine_ScriptHandler $script)
   {
     $this->script = $script;
   }
-  /**
-   * @return Google_Service_Appengine_ScriptHandler
-   */
   public function getScript()
   {
     return $this->script;
@@ -89,16 +77,10 @@ class Google_Service_Appengine_UrlMap extends Google_Model
   {
     return $this->securityLevel;
   }
-  /**
-   * @param Google_Service_Appengine_StaticFilesHandler
-   */
   public function setStaticFiles(Google_Service_Appengine_StaticFilesHandler $staticFiles)
   {
     $this->staticFiles = $staticFiles;
   }
-  /**
-   * @return Google_Service_Appengine_StaticFilesHandler
-   */
   public function getStaticFiles()
   {
     return $this->staticFiles;

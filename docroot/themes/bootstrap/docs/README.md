@@ -24,8 +24,7 @@ a base theme like this.
 
 #### @link sub_theming Sub-Theming @endlink
 - @link sub_theming_cdn CDN Starterkit @endlink
-- @link sub_theming_less Less Starterkit @endlink
-- @link sub_theming_sass Sass Starterkit @endlink
+- @link sub_theming_less LESS Starterkit @endlink
 
 #### @link templates Templates @endlink
 

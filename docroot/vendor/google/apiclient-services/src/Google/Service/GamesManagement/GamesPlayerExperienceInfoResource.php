@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,16 +32,10 @@ class Google_Service_GamesManagement_GamesPlayerExperienceInfoResource extends G
   {
     return $this->currentExperiencePoints;
   }
-  /**
-   * @param Google_Service_GamesManagement_GamesPlayerLevelResource
-   */
   public function setCurrentLevel(Google_Service_GamesManagement_GamesPlayerLevelResource $currentLevel)
   {
     $this->currentLevel = $currentLevel;
   }
-  /**
-   * @return Google_Service_GamesManagement_GamesPlayerLevelResource
-   */
   public function getCurrentLevel()
   {
     return $this->currentLevel;
@@ -54,16 +48,10 @@ class Google_Service_GamesManagement_GamesPlayerExperienceInfoResource extends G
   {
     return $this->lastLevelUpTimestampMillis;
   }
-  /**
-   * @param Google_Service_GamesManagement_GamesPlayerLevelResource
-   */
   public function setNextLevel(Google_Service_GamesManagement_GamesPlayerLevelResource $nextLevel)
   {
     $this->nextLevel = $nextLevel;
   }
-  /**
-   * @return Google_Service_GamesManagement_GamesPlayerLevelResource
-   */
   public function getNextLevel()
   {
     return $this->nextLevel;

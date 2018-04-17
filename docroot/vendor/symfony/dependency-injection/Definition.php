@@ -29,7 +29,7 @@ class Definition
     private $factoryService;
     private $shared = true;
     private $deprecated = false;
-    private $deprecationTemplate;
+    private $deprecationTemplate = 'The "%service_id%" service is deprecated. You should stop using it, as it will soon be removed.';
     private $scope = ContainerInterface::SCOPE_CONTAINER;
     private $properties = array();
     private $calls = array();
@@ -43,8 +43,6 @@ class Definition
     private $decoratedService;
     private $autowired = false;
     private $autowiringTypes = array();
-
-    private static $defaultDeprecationTemplate = 'The "%service_id%" service is deprecated. You should stop using it, as it will soon be removed.';
 
     protected $arguments;
 
@@ -798,7 +796,7 @@ class Definition
      */
     public function getDeprecationMessage($id)
     {
-        return str_replace('%service_id%', $id, $this->deprecationTemplate ?: self::$defaultDeprecationTemplate);
+        return str_replace('%service_id%', $id, $this->deprecationTemplate);
     }
 
     /**

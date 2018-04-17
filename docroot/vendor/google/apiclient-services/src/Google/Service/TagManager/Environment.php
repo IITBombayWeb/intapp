@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,8 +19,7 @@ class Google_Service_TagManager_Environment extends Google_Model
 {
   public $accountId;
   public $authorizationCode;
-  protected $authorizationTimestampType = 'Google_Service_TagManager_Timestamp';
-  protected $authorizationTimestampDataType = '';
+  public $authorizationTimestampMs;
   public $containerId;
   public $containerVersionId;
   public $description;
@@ -28,11 +27,8 @@ class Google_Service_TagManager_Environment extends Google_Model
   public $environmentId;
   public $fingerprint;
   public $name;
-  public $path;
-  public $tagManagerUrl;
   public $type;
   public $url;
-  public $workspaceId;
 
   public function setAccountId($accountId)
   {
@@ -50,19 +46,13 @@ class Google_Service_TagManager_Environment extends Google_Model
   {
     return $this->authorizationCode;
   }
-  /**
-   * @param Google_Service_TagManager_Timestamp
-   */
-  public function setAuthorizationTimestamp(Google_Service_TagManager_Timestamp $authorizationTimestamp)
+  public function setAuthorizationTimestampMs($authorizationTimestampMs)
   {
-    $this->authorizationTimestamp = $authorizationTimestamp;
+    $this->authorizationTimestampMs = $authorizationTimestampMs;
   }
-  /**
-   * @return Google_Service_TagManager_Timestamp
-   */
-  public function getAuthorizationTimestamp()
+  public function getAuthorizationTimestampMs()
   {
-    return $this->authorizationTimestamp;
+    return $this->authorizationTimestampMs;
   }
   public function setContainerId($containerId)
   {
@@ -120,22 +110,6 @@ class Google_Service_TagManager_Environment extends Google_Model
   {
     return $this->name;
   }
-  public function setPath($path)
-  {
-    $this->path = $path;
-  }
-  public function getPath()
-  {
-    return $this->path;
-  }
-  public function setTagManagerUrl($tagManagerUrl)
-  {
-    $this->tagManagerUrl = $tagManagerUrl;
-  }
-  public function getTagManagerUrl()
-  {
-    return $this->tagManagerUrl;
-  }
   public function setType($type)
   {
     $this->type = $type;
@@ -151,13 +125,5 @@ class Google_Service_TagManager_Environment extends Google_Model
   public function getUrl()
   {
     return $this->url;
-  }
-  public function setWorkspaceId($workspaceId)
-  {
-    $this->workspaceId = $workspaceId;
-  }
-  public function getWorkspaceId()
-  {
-    return $this->workspaceId;
   }
 }

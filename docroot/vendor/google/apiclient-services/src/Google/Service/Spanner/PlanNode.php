@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,16 +28,10 @@ class Google_Service_Spanner_PlanNode extends Google_Collection
   protected $shortRepresentationType = 'Google_Service_Spanner_ShortRepresentation';
   protected $shortRepresentationDataType = '';
 
-  /**
-   * @param Google_Service_Spanner_ChildLink
-   */
   public function setChildLinks($childLinks)
   {
     $this->childLinks = $childLinks;
   }
-  /**
-   * @return Google_Service_Spanner_ChildLink
-   */
   public function getChildLinks()
   {
     return $this->childLinks;
@@ -82,16 +76,10 @@ class Google_Service_Spanner_PlanNode extends Google_Collection
   {
     return $this->metadata;
   }
-  /**
-   * @param Google_Service_Spanner_ShortRepresentation
-   */
   public function setShortRepresentation(Google_Service_Spanner_ShortRepresentation $shortRepresentation)
   {
     $this->shortRepresentation = $shortRepresentation;
   }
-  /**
-   * @return Google_Service_Spanner_ShortRepresentation
-   */
   public function getShortRepresentation()
   {
     return $this->shortRepresentation;

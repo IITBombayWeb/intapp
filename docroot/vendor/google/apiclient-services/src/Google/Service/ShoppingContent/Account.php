@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,16 +38,10 @@ class Google_Service_ShoppingContent_Account extends Google_Collection
   {
     return $this->adultContent;
   }
-  /**
-   * @param Google_Service_ShoppingContent_AccountAdwordsLink
-   */
   public function setAdwordsLinks($adwordsLinks)
   {
     $this->adwordsLinks = $adwordsLinks;
   }
-  /**
-   * @return Google_Service_ShoppingContent_AccountAdwordsLink
-   */
   public function getAdwordsLinks()
   {
     return $this->adwordsLinks;
@@ -92,16 +86,10 @@ class Google_Service_ShoppingContent_Account extends Google_Collection
   {
     return $this->sellerId;
   }
-  /**
-   * @param Google_Service_ShoppingContent_AccountUser
-   */
   public function setUsers($users)
   {
     $this->users = $users;
   }
-  /**
-   * @return Google_Service_ShoppingContent_AccountUser
-   */
   public function getUsers()
   {
     return $this->users;

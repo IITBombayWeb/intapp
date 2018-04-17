@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,16 +32,10 @@ class Google_Service_YouTube_SearchResult extends Google_Model
   {
     return $this->etag;
   }
-  /**
-   * @param Google_Service_YouTube_ResourceId
-   */
   public function setId(Google_Service_YouTube_ResourceId $id)
   {
     $this->id = $id;
   }
-  /**
-   * @return Google_Service_YouTube_ResourceId
-   */
   public function getId()
   {
     return $this->id;
@@ -54,16 +48,10 @@ class Google_Service_YouTube_SearchResult extends Google_Model
   {
     return $this->kind;
   }
-  /**
-   * @param Google_Service_YouTube_SearchResultSnippet
-   */
   public function setSnippet(Google_Service_YouTube_SearchResultSnippet $snippet)
   {
     $this->snippet = $snippet;
   }
-  /**
-   * @return Google_Service_YouTube_SearchResultSnippet
-   */
   public function getSnippet()
   {
     return $this->snippet;

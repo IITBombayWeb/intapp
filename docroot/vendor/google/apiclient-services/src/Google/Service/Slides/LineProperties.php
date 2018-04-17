@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,30 +43,18 @@ class Google_Service_Slides_LineProperties extends Google_Model
   {
     return $this->endArrow;
   }
-  /**
-   * @param Google_Service_Slides_LineFill
-   */
   public function setLineFill(Google_Service_Slides_LineFill $lineFill)
   {
     $this->lineFill = $lineFill;
   }
-  /**
-   * @return Google_Service_Slides_LineFill
-   */
   public function getLineFill()
   {
     return $this->lineFill;
   }
-  /**
-   * @param Google_Service_Slides_Link
-   */
   public function setLink(Google_Service_Slides_Link $link)
   {
     $this->link = $link;
   }
-  /**
-   * @return Google_Service_Slides_Link
-   */
   public function getLink()
   {
     return $this->link;
@@ -79,16 +67,10 @@ class Google_Service_Slides_LineProperties extends Google_Model
   {
     return $this->startArrow;
   }
-  /**
-   * @param Google_Service_Slides_Dimension
-   */
   public function setWeight(Google_Service_Slides_Dimension $weight)
   {
     $this->weight = $weight;
   }
-  /**
-   * @return Google_Service_Slides_Dimension
-   */
   public function getWeight()
   {
     return $this->weight;

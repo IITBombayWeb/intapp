@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2014 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,6 +35,7 @@ class Google_Service_Dfareporting_FloodlightConfiguration extends Google_Collect
   public $naturalSearchConversionAttributionOption;
   protected $omnitureSettingsType = 'Google_Service_Dfareporting_OmnitureSettings';
   protected $omnitureSettingsDataType = '';
+  public $standardVariableTypes;
   public $subaccountId;
   protected $tagSettingsType = 'Google_Service_Dfareporting_TagSettings';
   protected $tagSettingsDataType = '';
@@ -59,16 +60,10 @@ class Google_Service_Dfareporting_FloodlightConfiguration extends Google_Collect
   {
     return $this->advertiserId;
   }
-  /**
-   * @param Google_Service_Dfareporting_DimensionValue
-   */
   public function setAdvertiserIdDimensionValue(Google_Service_Dfareporting_DimensionValue $advertiserIdDimensionValue)
   {
     $this->advertiserIdDimensionValue = $advertiserIdDimensionValue;
   }
-  /**
-   * @return Google_Service_Dfareporting_DimensionValue
-   */
   public function getAdvertiserIdDimensionValue()
   {
     return $this->advertiserIdDimensionValue;
@@ -105,16 +100,10 @@ class Google_Service_Dfareporting_FloodlightConfiguration extends Google_Collect
   {
     return $this->id;
   }
-  /**
-   * @param Google_Service_Dfareporting_DimensionValue
-   */
   public function setIdDimensionValue(Google_Service_Dfareporting_DimensionValue $idDimensionValue)
   {
     $this->idDimensionValue = $idDimensionValue;
   }
-  /**
-   * @return Google_Service_Dfareporting_DimensionValue
-   */
   public function getIdDimensionValue()
   {
     return $this->idDimensionValue;
@@ -135,16 +124,10 @@ class Google_Service_Dfareporting_FloodlightConfiguration extends Google_Collect
   {
     return $this->kind;
   }
-  /**
-   * @param Google_Service_Dfareporting_LookbackConfiguration
-   */
   public function setLookbackConfiguration(Google_Service_Dfareporting_LookbackConfiguration $lookbackConfiguration)
   {
     $this->lookbackConfiguration = $lookbackConfiguration;
   }
-  /**
-   * @return Google_Service_Dfareporting_LookbackConfiguration
-   */
   public function getLookbackConfiguration()
   {
     return $this->lookbackConfiguration;
@@ -157,19 +140,21 @@ class Google_Service_Dfareporting_FloodlightConfiguration extends Google_Collect
   {
     return $this->naturalSearchConversionAttributionOption;
   }
-  /**
-   * @param Google_Service_Dfareporting_OmnitureSettings
-   */
   public function setOmnitureSettings(Google_Service_Dfareporting_OmnitureSettings $omnitureSettings)
   {
     $this->omnitureSettings = $omnitureSettings;
   }
-  /**
-   * @return Google_Service_Dfareporting_OmnitureSettings
-   */
   public function getOmnitureSettings()
   {
     return $this->omnitureSettings;
+  }
+  public function setStandardVariableTypes($standardVariableTypes)
+  {
+    $this->standardVariableTypes = $standardVariableTypes;
+  }
+  public function getStandardVariableTypes()
+  {
+    return $this->standardVariableTypes;
   }
   public function setSubaccountId($subaccountId)
   {
@@ -179,44 +164,26 @@ class Google_Service_Dfareporting_FloodlightConfiguration extends Google_Collect
   {
     return $this->subaccountId;
   }
-  /**
-   * @param Google_Service_Dfareporting_TagSettings
-   */
   public function setTagSettings(Google_Service_Dfareporting_TagSettings $tagSettings)
   {
     $this->tagSettings = $tagSettings;
   }
-  /**
-   * @return Google_Service_Dfareporting_TagSettings
-   */
   public function getTagSettings()
   {
     return $this->tagSettings;
   }
-  /**
-   * @param Google_Service_Dfareporting_ThirdPartyAuthenticationToken
-   */
   public function setThirdPartyAuthenticationTokens($thirdPartyAuthenticationTokens)
   {
     $this->thirdPartyAuthenticationTokens = $thirdPartyAuthenticationTokens;
   }
-  /**
-   * @return Google_Service_Dfareporting_ThirdPartyAuthenticationToken
-   */
   public function getThirdPartyAuthenticationTokens()
   {
     return $this->thirdPartyAuthenticationTokens;
   }
-  /**
-   * @param Google_Service_Dfareporting_UserDefinedVariableConfiguration
-   */
   public function setUserDefinedVariableConfigurations($userDefinedVariableConfigurations)
   {
     $this->userDefinedVariableConfigurations = $userDefinedVariableConfigurations;
   }
-  /**
-   * @return Google_Service_Dfareporting_UserDefinedVariableConfiguration
-   */
   public function getUserDefinedVariableConfigurations()
   {
     return $this->userDefinedVariableConfigurations;
