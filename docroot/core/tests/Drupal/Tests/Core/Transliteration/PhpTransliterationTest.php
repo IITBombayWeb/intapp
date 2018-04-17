@@ -24,7 +24,7 @@ class PhpTransliterationTest extends UnitTestCase {
    *   The string which was not transliterated yet.
    * @param string $expected
    *   The string expected after the transliteration.
-   * @param string|null $printable
+   * @param string|NULL $printable
    *   (optional) An alternative version of the original string which is
    *   printable in the output.
    *
@@ -74,13 +74,13 @@ class PhpTransliterationTest extends UnitTestCase {
     // Five-byte characters do not work in MySQL, so make a printable version.
     $five_byte_printable = '&#x10330;&#x10338;';
 
-    $cases = [
+    $cases = array(
       // Test the language override hook in the test module, which changes
       // the transliteration of Ä to Z and provides for the 5-byte characters.
-      ['zz', $two_byte, 'Z O U A O aouaohello'],
-      ['zz', $random, $random],
-      ['zz', $five_byte, 'ATh', $five_byte_printable],
-    ];
+      array('zz', $two_byte, 'Z O U A O aouaohello'),
+      array('zz', $random, $random),
+      array('zz', $five_byte, 'ATh', $five_byte_printable),
+    );
 
     return $cases;
   }

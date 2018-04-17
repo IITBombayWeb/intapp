@@ -17,19 +17,19 @@ class RowTest extends UnitTestCase {
    *
    * @var array
    */
-  protected $testSourceIds = [
+  protected $testSourceIds = array(
     'nid' => 'Node ID',
-  ];
+  );
 
   /**
    * The test values.
    *
    * @var array
    */
-  protected $testValues = [
+  protected $testValues = array(
     'nid' => 1,
     'title' => 'node 1',
-  ];
+  );
 
   /**
    * The test hash.
@@ -49,8 +49,8 @@ class RowTest extends UnitTestCase {
    * Tests object creation: empty.
    */
   public function testRowWithoutData() {
-    $row = new Row();
-    $this->assertSame([], $row->getSource(), 'Empty row');
+    $row = new Row(array(), array());
+    $this->assertSame(array(), $row->getSource(), 'Empty row');
   }
 
   /**
@@ -65,25 +65,28 @@ class RowTest extends UnitTestCase {
    * Tests object creation: multiple source IDs.
    */
   public function testRowWithMultipleSourceIds() {
-    $multi_source_ids = $this->testSourceIds + ['vid' => 'Node revision'];
-    $multi_source_ids_values = $this->testValues + ['vid' => 1];
+    $multi_source_ids = $this->testSourceIds + array('vid' => 'Node revision');
+    $multi_source_ids_values = $this->testValues + array('vid' => 1);
     $row = new Row($multi_source_ids_values, $multi_source_ids);
     $this->assertSame($multi_source_ids_values, $row->getSource(), 'Row with data, multifield id.');
   }
 
   /**
    * Tests object creation: invalid values.
+   *
+   * @expectedException \Exception
    */
   public function testRowWithInvalidData() {
-    $invalid_values = [
+    $invalid_values = array(
       'title' => 'node X',
-    ];
-    $this->setExpectedException(\Exception::class);
+    );
     $row = new Row($invalid_values, $this->testSourceIds);
   }
 
   /**
    * Tests source immutability after freeze.
+   *
+   * @expectedException \Exception
    */
   public function testSourceFreeze() {
     $row = new Row($this->testValues, $this->testSourceIds);
@@ -93,17 +96,18 @@ class RowTest extends UnitTestCase {
     $row->rehash();
     $this->assertSame($this->testHashMod, $row->getHash(), 'Hash changed correctly.');
     $row->freezeSource();
-    $this->setExpectedException(\Exception::class);
     $row->setSourceProperty('title', 'new title');
   }
 
   /**
    * Tests setting on a frozen row.
+   *
+   * @expectedException \Exception
+   * @expectedExceptionMessage The source is frozen and can't be changed any more
    */
   public function testSetFrozenRow() {
     $row = new Row($this->testValues, $this->testSourceIds);
     $row->freezeSource();
-    $this->setExpectedException(\Exception::class, "The source is frozen and can't be changed any more");
     $row->setSourceProperty('title', 'new title');
   }
 
@@ -119,11 +123,11 @@ class RowTest extends UnitTestCase {
     $this->assertSame($this->testHash, $row->getHash(), 'Correct hash even doing it twice.');
 
     // Set the map to needs update.
-    $test_id_map = [
+    $test_id_map = array(
       'original_hash' => '',
       'hash' => '',
       'source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
-    ];
+    );
     $row->setIdMap($test_id_map);
     $this->assertTrue($row->needsUpdate());
 
@@ -139,30 +143,30 @@ class RowTest extends UnitTestCase {
     $this->assertSame(64, strlen($row->getHash()));
 
     // Set the map to successfully imported.
-    $test_id_map = [
+    $test_id_map = array(
       'original_hash' => '',
       'hash' => '',
       'source_row_status' => MigrateIdMapInterface::STATUS_IMPORTED,
-    ];
+    );
     $row->setIdMap($test_id_map);
     $this->assertFalse($row->needsUpdate());
 
     // Set the same hash value and ensure it was not changed.
     $random = $this->randomMachineName();
-    $test_id_map = [
+    $test_id_map = array(
       'original_hash' => $random,
       'hash' => $random,
       'source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
-    ];
+    );
     $row->setIdMap($test_id_map);
     $this->assertFalse($row->changed());
 
     // Set different has values to ensure it is marked as changed.
-    $test_id_map = [
+    $test_id_map = array(
       'original_hash' => $this->randomMachineName(),
       'hash' => $this->randomMachineName(),
       'source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
-    ];
+    );
     $row->setIdMap($test_id_map);
     $this->assertTrue($row->changed());
   }
@@ -175,11 +179,11 @@ class RowTest extends UnitTestCase {
    */
   public function testGetSetIdMap() {
     $row = new Row($this->testValues, $this->testSourceIds);
-    $test_id_map = [
+    $test_id_map = array(
       'original_hash' => '',
       'hash' => '',
       'source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
-    ];
+    );
     $row->setIdMap($test_id_map);
     $this->assertEquals($test_id_map, $row->getIdMap());
   }
@@ -189,40 +193,7 @@ class RowTest extends UnitTestCase {
    */
   public function testSourceIdValues() {
     $row = new Row($this->testValues, $this->testSourceIds);
-    $this->assertSame(['nid' => $this->testValues['nid']], $row->getSourceIdValues());
-  }
-
-  /**
-   * Tests the multiple source IDs.
-   */
-  public function testMultipleSourceIdValues() {
-    // Set values in same order as ids.
-    $multi_source_ids = $this->testSourceIds + [
-        'vid' => 'Node revision',
-        'type' => 'Node type',
-        'langcode' => 'Node language',
-      ];
-    $multi_source_ids_values = $this->testValues + [
-        'vid' => 1,
-        'type' => 'page',
-        'langcode' => 'en',
-      ];
-    $row = new Row($multi_source_ids_values, $multi_source_ids);
-    $this->assertSame(array_keys($multi_source_ids), array_keys($row->getSourceIdValues()));
-
-    // Set values in different order.
-    $multi_source_ids = $this->testSourceIds + [
-        'vid' => 'Node revision',
-        'type' => 'Node type',
-        'langcode' => 'Node language',
-      ];
-    $multi_source_ids_values = $this->testValues + [
-        'langcode' => 'en',
-        'type' => 'page',
-        'vid' => 1,
-      ];
-    $row = new Row($multi_source_ids_values, $multi_source_ids);
-    $this->assertSame(array_keys($multi_source_ids), array_keys($row->getSourceIdValues()));
+    $this->assertSame(array('nid' => $this->testValues['nid']), $row->getSourceIdValues());
   }
 
   /**
@@ -248,7 +219,7 @@ class RowTest extends UnitTestCase {
     // Set a destination.
     $row->setDestinationProperty('nid', 2);
     $this->assertTrue($row->hasDestinationProperty('nid'));
-    $this->assertEquals(['nid' => 2], $row->getDestination());
+    $this->assertEquals(array('nid' => 2), $row->getDestination());
   }
 
   /**

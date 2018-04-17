@@ -123,7 +123,7 @@ display:
           entity_field: nid
       filters:
         status:
-          value: '1'
+          value: true
           table: node_field_data
           field: status
           id: status

@@ -36,9 +36,9 @@ class EditorSelector implements EditorSelectorInterface {
   /**
    * Constructs a new EditorSelector.
    *
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $editor_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface
    *   The manager for editor plugins.
-   * @param \Drupal\Core\Field\FormatterPluginManager $formatter_manager
+   * @param \Drupal\Core\Field\FormatterPluginManager
    *   The manager for formatter plugins.
    */
   public function __construct(PluginManagerInterface $editor_manager, FormatterPluginManager $formatter_manager) {
@@ -50,8 +50,21 @@ class EditorSelector implements EditorSelectorInterface {
    * {@inheritdoc}
    */
   public function getEditor($formatter_type, FieldItemListInterface $items) {
+    // Build a static cache of the editors that have registered themselves as
+    // alternatives to a certain editor.
+    if (!isset($this->alternatives)) {
+      $editors = $this->editorManager->getDefinitions();
+      foreach ($editors as $alternative_editor_id => $editor) {
+        if (isset($editor['alternativeTo'])) {
+          foreach ($editor['alternativeTo'] as $original_editor_id) {
+            $this->alternatives[$original_editor_id][] = $alternative_editor_id;
+          }
+        }
+      }
+    }
+
     // Check if the formatter defines an appropriate in-place editor. For
-    // example, text formatters displaying plain text can choose to use the
+    // example, text formatters displaying untrimmed text can choose to use the
     // 'plain_text' editor. If the formatter doesn't specify, fall back to the
     // 'form' editor, since that can work for any field. Formatter definitions
     // can use 'disabled' to explicitly opt out of in-place editing.
@@ -65,7 +78,7 @@ class EditorSelector implements EditorSelectorInterface {
     }
 
     // No early return, so create a list of all choices.
-    $editor_choices = [$editor_id];
+    $editor_choices = array($editor_id);
     if (isset($this->alternatives[$editor_id])) {
       $editor_choices = array_merge($editor_choices, $this->alternatives[$editor_id]);
     }
@@ -86,7 +99,7 @@ class EditorSelector implements EditorSelectorInterface {
    * {@inheritdoc}
    */
   public function getEditorAttachments(array $editor_ids) {
-    $attachments = [];
+    $attachments = array();
     $editor_ids = array_unique($editor_ids);
 
     // Editor plugins' attachments.

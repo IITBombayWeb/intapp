@@ -235,35 +235,6 @@ class Renderer implements RendererInterface {
     if (!empty($elements['#printed'])) {
       return '';
     }
-     // Render only the children if the internal #render_children property is
-    // set.
-    // @see \Drupal\Core\Theme\ThemeManager::render().
-    if (isset($elements['#render_children'])) {
-      // A non-empty #children property takes precedence. This happens only if
-      // it has been manually set into the render array.
-      if (!empty($elements['#children'])) {
-        $children_keys = ['#children'];
-      }
-      else {
-        $children_keys = Element::children($elements);
-
-        if (empty($children_keys)) {
-          return '';
-        }
-      }
-
-      // Remove all elements except the children because the main level has been
-      // already rendered when the #render_children is set and therefore they
-      // should not have any effect on the render children.
-     $new_elements = array_intersect_key($elements, array_flip($children_keys));
-     // Create a new variable that references the render array that was passed
-      // in. This allows the markup and cache information to be attached after
-      // rendering the new elements array.
-      $original_elements = &$elements;
-      // Change $elements to reference $new_elements. This prevents
-      // unintentional changes to the render array that was passed in.
-      $elements = &$new_elements;
-    }
 
     $context = $this->getCurrentRenderContext();
     if (!isset($context)) {
@@ -349,9 +320,9 @@ class Renderer implements RendererInterface {
         '#lazy_builder',
         '#cache',
         '#create_placeholder',
-        // The keys below are not actually supported, but these are added
-        // automatically by the Renderer. Adding them as though they are
-        // supported allows us to avoid throwing an exception 100% of the time.
+        // These keys are not actually supported, but they are added automatically
+        // by the Renderer, so we don't crash on them; them being missing when
+        // their #lazy_builder callback is invoked won't surprise the developer.
         '#weight',
         '#printed'
       ];
@@ -394,6 +365,11 @@ class Renderer implements RendererInterface {
       $elements['#lazy_builder_built'] = TRUE;
     }
 
+    // All render elements support #markup and #plain_text.
+    if (!empty($elements['#markup']) || !empty($elements['#plain_text'])) {
+      $elements = $this->ensureMarkupIsSafe($elements);
+    }
+
     // Make any final changes to the element before it is rendered. This means
     // that the $element or the children can be altered or corrected before the
     // element is rendered into the final text.
@@ -406,15 +382,10 @@ class Renderer implements RendererInterface {
       }
     }
 
-    // All render elements support #markup and #plain_text.
-    if (!empty($elements['#markup']) || !empty($elements['#plain_text'])) {
-      $elements = $this->ensureMarkupIsSafe($elements);
-    }
-
     // Defaults for bubbleable rendering metadata.
-    $elements['#cache']['tags'] = isset($elements['#cache']['tags']) ? $elements['#cache']['tags'] : [];
+    $elements['#cache']['tags'] = isset($elements['#cache']['tags']) ? $elements['#cache']['tags'] : array();
     $elements['#cache']['max-age'] = isset($elements['#cache']['max-age']) ? $elements['#cache']['max-age'] : Cache::PERMANENT;
-    $elements['#attached'] = isset($elements['#attached']) ? $elements['#attached'] : [];
+    $elements['#attached'] = isset($elements['#attached']) ? $elements['#attached'] : array();
 
     // Allow #pre_render to abort rendering.
     if (!empty($elements['#printed'])) {
@@ -444,11 +415,11 @@ class Renderer implements RendererInterface {
     $theme_is_implemented = isset($elements['#theme']);
     // Check the elements for insecure HTML and pass through sanitization.
     if (isset($elements)) {
-      $markup_keys = [
+      $markup_keys = array(
         '#description',
         '#field_prefix',
         '#field_suffix',
-      ];
+      );
       foreach ($markup_keys as $key) {
         if (!empty($elements[$key]) && is_scalar($elements[$key])) {
           $elements[$key] = $this->xssFilterAdminIfUnsafe($elements[$key]);
@@ -456,8 +427,11 @@ class Renderer implements RendererInterface {
       }
     }
 
-       // element have to be rendered there.
-      if ($theme_is_implemented) {
+    // Call the element's #theme function if it is set. Then any children of the
+    // element have to be rendered there. If the internal #render_children
+    // property is set, do not call the #theme function to prevent infinite
+    // recursion.
+    if ($theme_is_implemented && !isset($elements['#render_children'])) {
       $elements['#children'] = $this->theme->render($elements['#theme'], $elements);
 
       // If ThemeManagerInterface::render() returns FALSE this means that the
@@ -466,10 +440,10 @@ class Renderer implements RendererInterface {
       $theme_is_implemented = ($elements['#children'] !== FALSE);
     }
 
-      // If #theme is not implemented and the element has an empty #children
-     // attribute, render the children now. This is the same process as
-     // Renderer::render() but is inlined for speed.
-    if (!$theme_is_implemented && empty($elements['#children'])) {
+    // If #theme is not implemented or #render_children is set and the element
+    // has an empty #children attribute, render the children now. This is the
+    // same process as Renderer::render() but is inlined for speed.
+    if ((!$theme_is_implemented || isset($elements['#render_children'])) && empty($elements['#children'])) {
       foreach ($children as $key) {
         $elements['#children'] .= $this->doRender($elements[$key]);
       }
@@ -493,7 +467,9 @@ class Renderer implements RendererInterface {
     // because the #type 'page' render array from drupal_prepare_page() would
     // render the $page and wrap it into the html.html.twig template without the
     // attached assets otherwise.
-     if (isset($elements['#theme_wrappers'])) {
+    // If the internal #render_children property is set, do not call the
+    // #theme_wrappers function(s) to prevent infinite recursion.
+    if (isset($elements['#theme_wrappers']) && !isset($elements['#render_children'])) {
       foreach ($elements['#theme_wrappers'] as $key => $value) {
         // If the value of a #theme_wrappers item is an array then the theme
         // hook is found in the key of the item and the value contains attribute
@@ -576,17 +552,6 @@ class Renderer implements RendererInterface {
     $context->bubble();
 
     $elements['#printed'] = TRUE;
-    
-    // #markup should be always saved to the referenced elements variable to
-    // prevent re-rendering. #cache and #attached ensures that correct cacheable
-    // metadata is applied for the re-rendered instances.
-    if (isset($original_elements)) {
-      $original_elements['#markup'] = $elements['#markup'];
-      $original_elements['#cache'] = $elements['#cache'];
-      $original_elements['#attached'] = $elements['#attached'];
-      $original_elements['#printed'] = $elements['#printed'];
-    }
-
     return $elements['#markup'];
   }
 
@@ -768,7 +733,7 @@ class Renderer implements RendererInterface {
    *
    * @see \Drupal\Component\Utility\Html::escape()
    * @see \Drupal\Component\Utility\Xss::filter()
-   * @see \Drupal\Component\Utility\Xss::filterAdmin()
+   * @see \Drupal\Component\Utility\Xss::adminFilter()
    */
   protected function ensureMarkupIsSafe(array $elements) {
     if (empty($elements['#markup']) && empty($elements['#plain_text'])) {

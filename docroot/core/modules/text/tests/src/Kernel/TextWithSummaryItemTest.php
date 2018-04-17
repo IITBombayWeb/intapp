@@ -21,7 +21,7 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter'];
+  public static $modules = array('filter');
 
   /**
    * Field storage entity.
@@ -44,11 +44,11 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
     $this->installEntitySchema('entity_test_rev');
 
     // Create the necessary formats.
-    $this->installConfig(['filter']);
-    FilterFormat::create([
+    $this->installConfig(array('filter'));
+    FilterFormat::create(array(
       'format' => 'no_filters',
-      'filters' => [],
-    ])->save();
+      'filters' => array(),
+    ))->save();
   }
 
   /**
@@ -59,16 +59,16 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
     $this->createField($entity_type);
 
     // Create an entity with a summary and no text format.
-    $storage = $this->container->get('entity_type.manager')
-      ->getStorage($entity_type);
-    $entity = $storage->create();
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($entity_type)
+      ->create();
     $entity->summary_field->value = $value = $this->randomMachineName();
     $entity->summary_field->summary = $summary = $this->randomMachineName();
     $entity->summary_field->format = NULL;
     $entity->name->value = $this->randomMachineName();
     $entity->save();
 
-    $entity = $storage->load($entity->id());
+    $entity = entity_load($entity_type, $entity->id());
     $this->assertTrue($entity->summary_field instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->summary_field[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->summary_field->value, $value);
@@ -100,14 +100,14 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
    */
   protected function createField($entity_type) {
     // Create a field .
-    $this->fieldStorage = FieldStorageConfig::create([
+    $this->fieldStorage = FieldStorageConfig::create(array(
       'field_name' => 'summary_field',
       'entity_type' => $entity_type,
       'type' => 'text_with_summary',
-      'settings' => [
+      'settings' => array(
         'max_length' => 10,
-      ]
-    ]);
+      )
+    ));
     $this->fieldStorage->save();
     $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,

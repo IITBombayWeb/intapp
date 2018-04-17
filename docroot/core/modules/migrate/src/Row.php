@@ -15,21 +15,21 @@ class Row {
    *
    * @var array
    */
-  protected $source = [];
+  protected $source = array();
 
   /**
    * The source identifiers.
    *
    * @var array
    */
-  protected $sourceIds = [];
+  protected $sourceIds = array();
 
   /**
    * The destination values.
    *
    * @var array
    */
-  protected $destination = [];
+  protected $destination = array();
 
   /**
    * Level separator of destination and source properties.
@@ -41,11 +41,11 @@ class Row {
    *
    * @var array
    */
-  protected $idMap = [
+  protected $idMap = array(
     'original_hash' => '',
     'hash' => '',
     'source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
-  ];
+  );
 
   /**
    * Whether the source has been frozen already.
@@ -91,7 +91,7 @@ class Row {
    * @throws \InvalidArgumentException
    *   Thrown when a source ID property does not exist.
    */
-  public function __construct(array $values = [], array $source_ids = [], $is_stub = FALSE) {
+  public function __construct(array $values, array $source_ids, $is_stub = FALSE) {
     $this->source = $values;
     $this->sourceIds = $source_ids;
     $this->isStub = $is_stub;
@@ -106,11 +106,10 @@ class Row {
    * Retrieves the values of the source identifiers.
    *
    * @return array
-   *   An array containing the values of the source identifiers. Returns values
-   *   in the same order as defined in $this->sourceIds.
+   *   An array containing the values of the source identifiers.
    */
   public function getSourceIdValues() {
-    return array_merge($this->sourceIds, array_intersect_key($this->source, $this->sourceIds));
+    return array_intersect_key($this->source, $this->sourceIds);
   }
 
   /**

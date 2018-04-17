@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTest.
  */
 
-namespace Drupal\Tests\views\Unit\Plugin\field;
+namespace Drupal\Tests\views\Unit\Plugin\field {
 
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
@@ -227,17 +227,11 @@ class FieldPluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Test rendering with a more link.
+   * Test rendering as a link without a path.
    *
-   * @param string $path
-   *   An internal or external path.
-   * @param string $url
-   *   The final url used by the more link.
-   *
-   * @dataProvider providerTestRenderTrimmedWithMoreLinkAndPath
    * @covers ::renderText
    */
-  public function testRenderTrimmedWithMoreLinkAndPath($path, $url) {
+  public function testRenderTrimmedWithMoreLink() {
     $alter = [
       'trim' => TRUE,
       'max_length' => 7,
@@ -245,7 +239,6 @@ class FieldPluginBaseTest extends UnitTestCase {
       // Don't invoke translation.
       'ellipsis' => FALSE,
       'more_link_text' => 'more link',
-      'more_link_path' => $path,
     ];
 
     $this->display->expects($this->any())
@@ -260,36 +253,9 @@ class FieldPluginBaseTest extends UnitTestCase {
     $field->field_alias = 'key';
     $row = new ResultRow(['key' => 'a long value']);
 
-    $expected_result = 'a long <a href="' . $url . '" class="views-more-link">more link</a>';
+    $expected_result = 'a long <a href="/%3Cfront%3E" class="views-more-link">more link</a>';
     $result = $field->advancedRender($row);
     $this->assertEquals($expected_result, $result);
-  }
-
-  /**
-   * Data provider for ::testRenderTrimmedWithMoreLinkAndPath().
-   *
-   * @return array
-   *   Test data.
-   */
-  public function providerTestRenderTrimmedWithMoreLinkAndPath() {
-    $data = [];
-    // Simple path with default options.
-    $data[] = ['test-path', '/test-path'];
-    // Add a fragment.
-    $data[] = ['test-path#test', '/test-path#test'];
-    // Query specified as part of the path.
-    $data[] = ['test-path?foo=bar', '/test-path?foo=bar'];
-    // Empty path.
-    $data[] = ['', '/%3Cfront%3E'];
-    // Front page path.
-    $data[] = ['<front>', '/%3Cfront%3E'];
-
-    // External URL.
-    $data[] = ['https://www.drupal.org', 'https://www.drupal.org'];
-    $data[] = ['http://www.drupal.org', 'http://www.drupal.org'];
-    $data[] = ['www.drupal.org', '/www.drupal.org'];
-
-    return $data;
   }
 
   /**
@@ -726,12 +692,12 @@ class FieldPluginBaseTestField extends FieldPluginBase {
   }
 
 }
-
+}
 // @todo Remove as part of https://www.drupal.org/node/2529170.
-namespace Drupal\views\Plugin\views\field;
-
-if (!function_exists('base_path')) {
-  function base_path() {
-    return '/';
+namespace {
+  if (!function_exists('base_path')) {
+    function base_path() {
+      return '/';
+    }
   }
 }

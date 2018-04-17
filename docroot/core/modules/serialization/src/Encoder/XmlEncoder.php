@@ -4,7 +4,6 @@ namespace Drupal\serialization\Encoder;
 
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
-use Symfony\Component\Serializer\Encoder\SerializerAwareEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder as BaseXmlEncoder;
 
 /**
@@ -13,14 +12,14 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder as BaseXmlEncoder;
  * This acts as a wrapper class for Symfony's XmlEncoder so that it is not
  * implementing NormalizationAwareInterface, and can be normalized externally.
  */
-class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, DecoderInterface {
+class XmlEncoder implements EncoderInterface, DecoderInterface {
 
   /**
    * The formats that this Encoder supports.
    *
    * @var array
    */
-  static protected $format = ['xml'];
+  static protected $format = array('xml');
 
   /**
    * An instance of the Symfony XmlEncoder to perform the actual encoding.
@@ -38,7 +37,6 @@ class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, Dec
   public function getBaseEncoder() {
     if (!isset($this->baseEncoder)) {
       $this->baseEncoder = new BaseXmlEncoder();
-      $this->baseEncoder->setSerializer($this->serializer);
     }
 
     return $this->baseEncoder;
@@ -56,7 +54,7 @@ class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, Dec
   /**
    * {@inheritdoc}
    */
-  public function encode($data, $format, array $context = []){
+  public function encode($data, $format, array $context = array()){
     return $this->getBaseEncoder()->encode($data, $format, $context);
   }
 
@@ -70,7 +68,7 @@ class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, Dec
   /**
    * {@inheritdoc}
    */
-  public function decode($data, $format, array $context = []){
+  public function decode($data, $format, array $context = array()){
     return $this->getBaseEncoder()->decode($data, $format, $context);
   }
 

@@ -70,7 +70,7 @@ class File extends ContentEntityBase implements FileInterface {
    *
    * @see file_url_transform_relative()
    */
-  public function url($rel = 'canonical', $options = []) {
+  public function url($rel = 'canonical', $options = array()) {
     return file_create_url($this->getFileUri());
   }
 
@@ -220,15 +220,19 @@ class File extends ContentEntityBase implements FileInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
-    $fields = parent::baseFieldDefinitions($entity_type);
+    $fields['fid'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('File ID'))
+      ->setDescription(t('The file ID.'))
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
 
-    $fields['fid']->setLabel(t('File ID'))
-      ->setDescription(t('The file ID.'));
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The file UUID.'))
+      ->setReadOnly(TRUE);
 
-    $fields['uuid']->setDescription(t('The file UUID.'));
-
-    $fields['langcode']->setLabel(t('Language code'))
+    $fields['langcode'] = BaseFieldDefinition::create('language')
+      ->setLabel(t('Language code'))
       ->setDescription(t('The file language code.'));
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')

@@ -18,7 +18,7 @@ class BlockRegionTest extends UnitTestCase {
    *
    * @param array $value
    *   The value to transform.
-   * @param \Drupal\migrate\Row|null $row
+   * @param \Drupal\migrate\Row|NULL $row
    *   (optional) The mocked row.
    *
    * @return array|string
@@ -30,20 +30,14 @@ class BlockRegionTest extends UnitTestCase {
       $row = $this->prophesize(Row::class)->reveal();
     }
 
-    $configuration = [
-      'map' => [
-        'bartik' => [
-          'bartik' => [
-            'triptych_first' => 'triptych_first',
-            'triptych_middle' => 'triptych_second',
-            'triptych_last' => 'triptych_third',
-          ],
-        ],
-      ],
-      'default_value' => 'content',
-    ];
-
-    $plugin = new BlockRegion($configuration, 'block_region', [], $configuration['map']['bartik']['bartik']);
+    $regions = array(
+      'bartik' => array(
+        'triptych_first' => 'Triptych first',
+        'triptych_second' => 'Triptych second',
+        'triptych_third' => 'Triptych third',
+      ),
+    );
+    $plugin = new BlockRegion(['region_map' => []], 'block_region', [], $regions);
     return $plugin->transform($value, $executable, $row, 'foo');
   }
 
@@ -54,7 +48,7 @@ class BlockRegionTest extends UnitTestCase {
    * @covers ::transform
    */
   public function testTransformSameThemeRegionExists() {
-    $this->assertSame('triptych_second', $this->transform(['bartik', 'bartik', 'triptych_middle']));
+    $this->assertSame('triptych_second', $this->transform(['triptych_second', 'bartik', 'bartik']));
   }
 
   /**
@@ -64,7 +58,7 @@ class BlockRegionTest extends UnitTestCase {
    * @covers ::transform
    */
   public function testTransformSameThemeRegionNotExists() {
-    $this->assertSame('content', $this->transform(['bartik', 'bartik', 'footer']));
+    $this->assertSame('content', $this->transform(['footer', 'bartik', 'bartik']));
   }
 
 }

@@ -4,7 +4,7 @@
 namespace Drupal\Core\DependencyInjection;
 
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Core\Serialization\Yaml;
+use Drupal\Component\Serialization\Yaml;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
@@ -111,16 +111,7 @@ class YamlFileLoader
             throw new InvalidArgumentException(sprintf('The "services" key should contain an array in %s. Check your YAML syntax.', $file));
         }
 
-        // Some extensions split up their dependencies into multiple files.
-        if (isset($content['_provider'])) {
-            $provider = $content['_provider'];
-        }
-        else {
-            $basename = basename($file);
-            list($provider, ) = explode('.', $basename, 2);
-        }
         foreach ($content['services'] as $id => $service) {
-            $service['tags'][] = ['name' => '_provider', 'provider' => $provider];
             $this->parseDefinition($id, $service, $file);
         }
     }

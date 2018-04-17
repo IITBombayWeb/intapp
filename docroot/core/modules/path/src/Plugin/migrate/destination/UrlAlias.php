@@ -58,24 +58,16 @@ class UrlAlias extends DestinationBase implements ContainerFactoryPluginInterfac
   /**
    * {@inheritdoc}
    */
-  public function import(Row $row, array $old_destination_id_values = []) {
-    $source = $row->getDestinationProperty('source');
-    $alias = $row->getDestinationProperty('alias');
-    $langcode = $row->getDestinationProperty('langcode');
-    $pid = $old_destination_id_values ? $old_destination_id_values[0] : NULL;
+  public function import(Row $row, array $old_destination_id_values = array()) {
 
-    // Check if this alias is for a node and if that node is a translation.
-    if (preg_match('/^\/node\/\d+$/', $source) && $row->hasDestinationProperty('node_translation')) {
+    $path = $this->aliasStorage->save(
+      $row->getDestinationProperty('source'),
+      $row->getDestinationProperty('alias'),
+      $row->getDestinationProperty('langcode'),
+      $old_destination_id_values ? $old_destination_id_values[0] : NULL
+    );
 
-      // Replace the alias source with the translation source path.
-      $node_translation = $row->getDestinationProperty('node_translation');
-      $source = '/node/' . $node_translation[0];
-      $langcode = $node_translation[1];
-    }
-
-    $path = $this->aliasStorage->save($source, $alias, $langcode, $pid);
-
-    return [$path['pid']];
+    return array($path['pid']);
   }
 
   /**

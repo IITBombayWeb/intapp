@@ -22,9 +22,9 @@ class Result extends AreaPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['content'] = [
+    $options['content'] = array(
       'default' => $this->t('Displaying @start - @end of @total'),
-    ];
+    );
 
     return $options;
   }
@@ -34,9 +34,9 @@ class Result extends AreaPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $item_list = [
+    $item_list = array(
       '#theme' => 'item_list',
-      '#items' => [
+      '#items' => array(
         '@start -- the initial record number in the set',
         '@end -- the last record number in the set',
         '@total -- the total records in the set',
@@ -45,16 +45,16 @@ class Result extends AreaPluginBase {
         '@current_page -- the current page number',
         '@current_record_count -- the current page record count',
         '@page_count -- the total page count',
-      ],
-    ];
+      ),
+    );
     $list = drupal_render($item_list);
-    $form['content'] = [
+    $form['content'] = array(
       '#title' => $this->t('Display'),
       '#type' => 'textarea',
       '#rows' => 3,
       '#default_value' => $this->options['content'],
       '#description' => $this->t('You may use HTML code in this field. The following tokens are supported:') . $list,
-    ];
+    );
   }
 
   /**
@@ -72,7 +72,7 @@ class Result extends AreaPluginBase {
   public function render($empty = FALSE) {
     // Must have options and does not work on summaries.
     if (!isset($this->options['content']) || $this->view->style_plugin instanceof DefaultSummary) {
-      return [];
+      return array();
     }
     $output = '';
     $format = $this->options['content'];
@@ -83,13 +83,9 @@ class Result extends AreaPluginBase {
     // Not every view has total_rows set, use view->result instead.
     $total = isset($this->view->total_rows) ? $this->view->total_rows : count($this->view->result);
     $label = Html::escape($this->view->storage->label());
-    // If there is no result the "start" and "current_record_count" should be
-    // equal to 0. To have the same calculation logic, we use a "start offset"
-    // to handle all the cases.
-    $start_offset = empty($total) ? 0 : 1;
     if ($per_page === 0) {
       $page_count = 1;
-      $start = $start_offset;
+      $start = 1;
       $end = $total;
     }
     else {
@@ -98,10 +94,10 @@ class Result extends AreaPluginBase {
       if ($total_count > $total) {
         $total_count = $total;
       }
-      $start = ($current_page - 1) * $per_page + $start_offset;
+      $start = ($current_page - 1) * $per_page + 1;
       $end = $total_count;
     }
-    $current_record_count = ($end - $start) + $start_offset;
+    $current_record_count = ($end - $start) + 1;
     // Get the search information.
     $replacements = [];
     $replacements['@start'] = $start;
@@ -113,13 +109,13 @@ class Result extends AreaPluginBase {
     $replacements['@current_record_count'] = $current_record_count;
     $replacements['@page_count'] = $page_count;
     // Send the output.
-    if (!empty($total) || !empty($this->options['empty'])) {
+    if (!empty($total)) {
       $output .= Xss::filterAdmin(str_replace(array_keys($replacements), array_values($replacements), $format));
     }
     // Return as render array.
-    return [
+    return array(
       '#markup' => $output,
-    ];
+    );
   }
 
 }

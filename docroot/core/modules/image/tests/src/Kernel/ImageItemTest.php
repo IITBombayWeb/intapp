@@ -23,7 +23,7 @@ class ImageItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['file', 'image'];
+  public static $modules = array('file', 'image');
 
   /**
    * Created file entity.
@@ -41,14 +41,14 @@ class ImageItemTest extends FieldKernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('file');
-    $this->installSchema('file', ['file_usage']);
+    $this->installSchema('file', array('file_usage'));
 
-    FieldStorageConfig::create([
+    FieldStorageConfig::create(array(
       'entity_type' => 'entity_test',
       'field_name' => 'image_test',
       'type' => 'image',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    ])->save();
+    ))->save();
     FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'image_test',
@@ -77,7 +77,7 @@ class ImageItemTest extends FieldKernelTestBase {
     $entity->name->value = $this->randomMachineName();
     $entity->save();
 
-    $entity = EntityTest::load($entity->id());
+    $entity = entity_load('entity_test', $entity->id());
     $this->assertTrue($entity->image_test instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->image_test[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->image_test->target_id, $this->image->id());
@@ -114,11 +114,11 @@ class ImageItemTest extends FieldKernelTestBase {
 
     // Delete the image and try to save the entity again.
     $this->image->delete();
-    $entity = EntityTest::create(['mame' => $this->randomMachineName()]);
+    $entity = EntityTest::create(array('mame' => $this->randomMachineName()));
     $entity->save();
 
     // Test image item properties.
-    $expected = ['target_id', 'entity', 'alt', 'title', 'width', 'height'];
+    $expected = array('target_id', 'entity', 'alt', 'title', 'width', 'height');
     $properties = $entity->getFieldDefinition('image_test')->getFieldStorageDefinition()->getPropertyDefinitions();
     $this->assertEqual(array_keys($properties), $expected);
 

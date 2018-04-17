@@ -10,9 +10,6 @@ use Drupal\Core\Form\FormStateInterface;
  * Formats as a pair of password fields, which do not validate unless the two
  * entered passwords match.
  *
- * Properties:
- * - #size: The size of the input element in characters.
- *
  * Usage example:
  * @code
  * $form['pass'] = array(
@@ -33,14 +30,14 @@ class PasswordConfirm extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return [
+    return array(
       '#input' => TRUE,
       '#markup' => '',
-      '#process' => [
-        [$class, 'processPasswordConfirm'],
-      ],
-      '#theme_wrappers' => ['form_element'],
-    ];
+      '#process' => array(
+        array($class, 'processPasswordConfirm'),
+      ),
+      '#theme_wrappers' => array('form_element'),
+    );
   }
 
   /**
@@ -68,23 +65,23 @@ class PasswordConfirm extends FormElement {
    * Expand a password_confirm field into two text boxes.
    */
   public static function processPasswordConfirm(&$element, FormStateInterface $form_state, &$complete_form) {
-    $element['pass1'] = [
+    $element['pass1'] = array(
       '#type' => 'password',
       '#title' => t('Password'),
       '#value' => empty($element['#value']) ? NULL : $element['#value']['pass1'],
       '#required' => $element['#required'],
-      '#attributes' => ['class' => ['password-field', 'js-password-field']],
+      '#attributes' => array('class' => array('password-field', 'js-password-field')),
       '#error_no_message' => TRUE,
-    ];
-    $element['pass2'] = [
+    );
+    $element['pass2'] = array(
       '#type' => 'password',
       '#title' => t('Confirm password'),
       '#value' => empty($element['#value']) ? NULL : $element['#value']['pass2'],
       '#required' => $element['#required'],
-      '#attributes' => ['class' => ['password-confirm', 'js-password-confirm']],
+      '#attributes' => array('class' => array('password-confirm', 'js-password-confirm')),
       '#error_no_message' => TRUE,
-    ];
-    $element['#element_validate'] = [[get_called_class(), 'validatePasswordConfirm']];
+    );
+    $element['#element_validate'] = array(array(get_called_class(), 'validatePasswordConfirm'));
     $element['#tree'] = TRUE;
 
     if (isset($element['#size'])) {

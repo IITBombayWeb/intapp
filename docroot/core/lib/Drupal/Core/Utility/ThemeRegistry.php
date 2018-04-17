@@ -46,14 +46,14 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
    * @param bool $modules_loaded
    *   Whether all modules have already been loaded.
    */
-  public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, $tags = [], $modules_loaded = FALSE) {
+  function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, $tags = array(), $modules_loaded = FALSE) {
     $this->cid = $cid;
     $this->cache = $cache;
     $this->lock = $lock;
     $this->tags = $tags;
     $this->persistable = $modules_loaded && \Drupal::hasRequest() && \Drupal::request()->isMethod('GET');
 
-    // @todo: Implement lazyload.
+     // @todo: Implement lazyload.
     $this->cacheLoaded = TRUE;
 
     if ($this->persistable && $cached = $this->cache->get($this->cid)) {
@@ -81,7 +81,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
    *   An array with the keys of the full theme registry, but the values
    *   initialized to NULL.
    */
-  public function initializeRegistry() {
+  function initializeRegistry() {
     // @todo DIC this.
     $this->completeRegistry = \Drupal::service('theme.registry')->get();
 
@@ -136,7 +136,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
       return;
     }
     // @todo: Is the custom implementation necessary?
-    $data = [];
+    $data = array();
     foreach ($this->keysToPersist as $offset => $persist) {
       if ($persist) {
         $data[$offset] = $this->storage[$offset];

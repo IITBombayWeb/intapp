@@ -25,10 +25,9 @@ class FieldInstance extends DrupalSqlBase {
       ->condition('fc.active', 1)
       ->condition('fc.deleted', 0)
       ->condition('fc.storage_active', 1)
-      ->fields('fc', ['type']);
+      ->fields('fc', array('type'));
 
     $query->innerJoin('field_config', 'fc', 'fci.field_id = fc.id');
-    $query->addField('fc', 'data', 'field_data');
 
     // Optionally filter by entity type and bundle.
     if (isset($this->configuration['entity_type'])) {
@@ -46,7 +45,7 @@ class FieldInstance extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return [
+    return array(
       'field_name' => $this->t('The machine name of field.'),
       'entity_type' => $this->t('The entity type.'),
       'bundle' => $this->t('The entity bundle.'),
@@ -54,8 +53,7 @@ class FieldInstance extends DrupalSqlBase {
       'instance_settings' => $this->t('Field instance settings.'),
       'widget_settings' => $this->t('Widget settings.'),
       'display_settings' => $this->t('Display settings.'),
-      'field_settings' => $this->t('Field settings.'),
-    ];
+    );
   }
 
   /**
@@ -68,7 +66,7 @@ class FieldInstance extends DrupalSqlBase {
     $row->setSourceProperty('description', $data['description']);
     $row->setSourceProperty('required', $data['required']);
 
-    $default_value = !empty($data['default_value']) ? $data['default_value'] : [];
+    $default_value = !empty($data['default_value']) ? $data['default_value'] : array();
     if ($data['widget']['type'] == 'email_textfield' && $default_value) {
       $default_value[0]['value'] = $default_value[0]['email'];
       unset($default_value[0]['email']);
@@ -83,28 +81,6 @@ class FieldInstance extends DrupalSqlBase {
     // This is for parity with the d6_field_instance plugin.
     $row->setSourceProperty('widget_type', $data['widget']['type']);
 
-    $field_data = unserialize($row->getSourceProperty('field_data'));
-    $row->setSourceProperty('field_settings', $field_data['settings']);
-
-    $translatable = FALSE;
-    if ($row->getSourceProperty('entity_type') == 'node') {
-      // language_content_type_[bundle] may be
-      //   - 0: no language support
-      //   - 1: language assignment support
-      //   - 2: node translation support
-      //   - 4: entity translation support
-      if ($this->variableGet('language_content_type_' . $row->getSourceProperty('bundle'), 0) == 2) {
-        $translatable = TRUE;
-      }
-    }
-    else {
-      // This is not a node entity. Get the translatable value from the source
-      // field_config table.
-      $data = unserialize($row->getSourceProperty('field_data'));
-      $translatable = $data['translatable'];
-    }
-    $row->setSourceProperty('translatable', $translatable);
-
     return parent::prepareRow($row);
   }
 
@@ -112,20 +88,20 @@ class FieldInstance extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function getIds() {
-    return [
-      'entity_type' => [
+    return array(
+      'entity_type' => array(
         'type' => 'string',
         'alias' => 'fci',
-      ],
-      'bundle' => [
+      ),
+      'bundle' => array(
         'type' => 'string',
         'alias' => 'fci',
-      ],
-      'field_name' => [
+      ),
+      'field_name' => array(
         'type' => 'string',
         'alias' => 'fci',
-      ],
-    ];
+      ),
+    );
   }
 
 }

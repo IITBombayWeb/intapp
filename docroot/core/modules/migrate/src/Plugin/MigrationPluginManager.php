@@ -9,7 +9,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
-use Drupal\migrate\Plugin\Discovery\ProviderFilterDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDirectoryDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\migrate\MigrateBuildDependencyInterface;
@@ -24,9 +23,9 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    *
    * @var array
    */
-  protected $defaults = [
+  protected $defaults = array(
     'class' => '\Drupal\migrate\Plugin\Migration',
-  ];
+  );
 
   /**
    * The interface the plugins should implement.
@@ -55,7 +54,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   public function __construct(ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager) {
     $this->factory = new ContainerFactory($this, $this->pluginInterface);
     $this->alterInfo('migration_plugins');
-    $this->setCacheBackend($cache_backend, 'migration_plugins', ['migration_plugins']);
+    $this->setCacheBackend($cache_backend, 'migration_plugins', array('migration_plugins'));
     $this->moduleHandler = $module_handler;
   }
 
@@ -69,15 +68,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
       }, $this->moduleHandler->getModuleDirectories());
 
       $yaml_discovery = new YamlDirectoryDiscovery($directories, 'migrate');
-      // This gets rid of migrations which try to use a non-existent source
-      // plugin. The common case for this is if the source plugin has, or
-      // specifies, a non-existent provider.
-      $only_with_source_discovery  = new NoSourcePluginDecorator($yaml_discovery);
-      // This gets rid of migrations with explicit providers set if one of the
-      // providers do not exist before we try to use a potentially non-existing
-      // deriver. This is a rare case.
-      $filtered_discovery = new ProviderFilterDecorator($only_with_source_discovery, [$this->moduleHandler, 'moduleExists']);
-      $this->discovery = new ContainerDerivativeDiscoveryDecorator($filtered_discovery);
+      $this->discovery = new ContainerDerivativeDiscoveryDecorator($yaml_discovery);
     }
     return $this->discovery;
   }
@@ -85,15 +76,15 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   /**
    * {@inheritdoc}
    */
-  public function createInstance($plugin_id, array $configuration = []) {
-    $instances = $this->createInstances([$plugin_id], [$plugin_id => $configuration]);
+  public function createInstance($plugin_id, array $configuration = array()) {
+    $instances = $this->createInstances([$plugin_id], $configuration);
     return reset($instances);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createInstances($migration_id, array $configuration = []) {
+  public function createInstances($migration_id, array $configuration = array()) {
     if (empty($migration_id)) {
       $migration_id = array_keys($this->getDefinitions());
     }
@@ -222,9 +213,9 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    *   The dynamic ID mapping.
    */
   protected function addDependency(array &$graph, $id, $dependency, $dynamic_ids) {
-    $dependencies = isset($dynamic_ids[$dependency]) ? $dynamic_ids[$dependency] : [$dependency];
+    $dependencies = isset($dynamic_ids[$dependency]) ? $dynamic_ids[$dependency] : array($dependency);
     if (!isset($graph[$id]['edges'])) {
-      $graph[$id]['edges'] = [];
+      $graph[$id]['edges'] = array();
     }
     $graph[$id]['edges'] += array_combine($dependencies, $dependencies);
   }
@@ -235,27 +226,6 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   public function createStubMigration(array $definition) {
     $id = isset($definition['id']) ? $definition['id'] : uniqid();
     return Migration::create(\Drupal::getContainer(), [], $id, $definition);
-  }
-
-  /**
-   * Finds plugin definitions.
-   *
-   * @return array
-   *   List of definitions to store in cache.
-   *
-   * @todo This is a temporary solution to the fact that migration source
-   *   plugins have more than one provider. This functionality will be moved to
-   *   core in https://www.drupal.org/node/2786355.
-   */
-  protected function findDefinitions() {
-    $definitions = $this->getDiscovery()->getDefinitions();
-    foreach ($definitions as $plugin_id => &$definition) {
-      $this->processDefinition($definition, $plugin_id);
-    }
-    $this->alterDefinitions($definitions);
-    return ProviderFilterDecorator::filterDefinitions($definitions, function ($provider) {
-      return $this->providerExists($provider);
-    });
   }
 
 }

@@ -34,7 +34,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
    *   The module handler.
    * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
    *   The typed data manager.
@@ -61,7 +61,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    * @return \Drupal\Core\Field\FieldItemInterface
    *   The instantiated object.
    */
-  public function createInstance($field_type, array $configuration = []) {
+  public function createInstance($field_type, array $configuration = array()) {
     $configuration['data_definition'] = $configuration['field_definition']->getItemDefinition();
     return $this->typedDataManager->createInstance("field_item:$field_type", $configuration);
   }
@@ -106,7 +106,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
       $plugin_class = DefaultFactory::getPluginClass($type, $plugin_definition);
       return $plugin_class::defaultStorageSettings();
     }
-    return [];
+    return array();
   }
 
   /**
@@ -118,7 +118,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
       $plugin_class = DefaultFactory::getPluginClass($type, $plugin_definition);
       return $plugin_class::defaultFieldSettings();
     }
-    return [];
+    return array();
   }
 
   /**

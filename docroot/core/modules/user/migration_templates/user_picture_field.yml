@@ -18,7 +18,4 @@ process:
   type: 'constants/type'
   cardinality: 'constants/cardinality'
 destination:
-  plugin: entity:field_storage_config
-  dependencies:
-    module:
-      - image
+  plugin: md_entity:field_storage_config

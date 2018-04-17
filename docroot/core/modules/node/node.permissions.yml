@@ -12,6 +12,7 @@ administer nodes:
   restrict access: true
 access content overview:
   title: 'Access the Content overview page'
+  description: 'Get an overview of all content.'
 access content:
   title: 'View published content'
 view own unpublished content:

@@ -140,32 +140,6 @@ class RendererTest extends RendererTestBase {
       '#children' => 'foo',
       'child' => ['#markup' => 'bar'],
     ], 'foo'];
-    // Ensure that content added to #markup via a #pre_render callback is safe.
-    $data[] = [[
-      '#markup' => 'foo',
-      '#pre_render' => [function($elements) {
-        $elements['#markup'] .= '<script>alert("bar");</script>';
-        return $elements;
-      }]
-    ], 'fooalert("bar");'];
-    // Test #allowed_tags in combination with #markup and #pre_render.
-    $data[] = [[
-      '#markup' => 'foo',
-      '#allowed_tags' => ['script'],
-      '#pre_render' => [function($elements) {
-        $elements['#markup'] .= '<script>alert("bar");</script>';
-        return $elements;
-      }]
-    ], 'foo<script>alert("bar");</script>'];
-    // Ensure output is escaped when adding content to #check_plain through
-    // a #pre_render callback.
-    $data[] = [[
-      '#plain_text' => 'foo',
-      '#pre_render' => [function($elements) {
-        $elements['#plain_text'] .= '<script>alert("bar");</script>';
-        return $elements;
-      }]
-    ], 'foo&lt;script&gt;alert(&quot;bar&quot;);&lt;/script&gt;'];
 
     // Part 2: render arrays using #theme and #theme_wrappers.
 
@@ -362,25 +336,7 @@ class RendererTest extends RendererTestBase {
         ->method('render');
     };
     $data[] = [$build, 'baz', $setup_code];
-    // #theme is implemented but #render_children is TRUE. In this case the
-    // calling code is expecting only the children to be rendered. #prefix and
-    // #suffix should not be inherited for the children.
-    $build = [
-      '#theme' => 'common_test_foo',
-      '#children' => '',
-      '#prefix' => 'kangaroo',
-      '#suffix' => 'unicorn',
-      '#render_children' => TRUE,
-      'child' => [
-        '#markup' => 'kitten',
-      ],
-    ];
-    $setup_code = function() {
-      $this->themeManager->expects($this->never())
-        ->method('render');
-    };
-    $data[] = [$build, 'kitten', $setup_code];
- 
+
     return $data;
   }
 
@@ -426,17 +382,17 @@ class RendererTest extends RendererTestBase {
     $first = $this->randomMachineName();
     $second = $this->randomMachineName();
     // The same array structure again, but with #sorted set to TRUE.
-    $elements = [
-      'second' => [
+    $elements = array(
+      'second' => array(
         '#weight' => 10,
         '#markup' => $second,
-      ],
-      'first' => [
+      ),
+      'first' => array(
         '#weight' => 0,
         '#markup' => $first,
-      ],
+      ),
       '#sorted' => TRUE,
-    ];
+    );
     $output = $this->renderer->renderRoot($elements);
 
     // The elements should appear in output in the same order as the array.
@@ -540,77 +496,22 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * Tests rendering same render array twice.
+   * Tests that a first render returns the rendered output and a second doesn't.
    *
-   * Tests that a first render returns the rendered output and a second doesn't
-   * because of the #printed property. Also tests that correct metadata has been
-   * set for re-rendering.
+   * (Because of the #printed property.)
    *
    * @covers ::render
    * @covers ::doRender
-   *
-   * @dataProvider providerRenderTwice
-  */
-public function testRenderTwice($build) {
-    $this->assertEquals('kittens', $this->renderer->renderRoot($build));
-    $this->assertEquals('kittens', $build['#markup']);
-    $this->assertEquals(['kittens-147'], $build['#cache']['tags']);
+   */
+  public function testRenderTwice() {
+    $build = [
+      '#markup' => 'test',
+    ];
+
+    $this->assertEquals('test', $this->renderer->renderRoot($build));
     $this->assertTrue($build['#printed']);
 
     // We don't want to reprint already printed render arrays.
-    $this->assertEquals('', $this->renderer->renderRoot($build));
-  }
-   /**
-   * Provides a list of render array iterations.
-   *
-   * @return array
-   */
-  public function providerRenderTwice() {
-    return [
-      [
-        [
-          '#markup' => 'kittens',
-          '#cache' => [
-            'tags' => ['kittens-147']
-          ],
-        ],
-      ],
-      [
-        [
-          'child' => [
-            '#markup' => 'kittens',
-            '#cache' => [
-              'tags' => ['kittens-147'],
-            ],
-          ],
-        ],
-      ],
-      [
-        [
-          '#render_children' => TRUE,
-          'child' => [
-            '#markup' => 'kittens',
-            '#cache' => [
-              'tags' => ['kittens-147'],
-            ],
-          ],
-        ],
-      ],
-    ];
-  }
-
-  /**
-   * Ensures that #access is taken in account when rendering #render_children.
-   */
-  public function testRenderChildrenAccess() {
-    $build = [
-      '#access' => FALSE,
-      '#render_children' => TRUE,
-      'child' => [
-        '#markup' => 'kittens',
-      ],
-    ];
-
     $this->assertEquals('', $this->renderer->renderRoot($build));
   }
 
@@ -670,9 +571,9 @@ public function testRenderTwice($build) {
    * @covers ::doRender
    */
   public function testRenderWithoutThemeArguments() {
-    $element = [
+    $element = array(
       '#theme' => 'common_test_foo',
-    ];
+    );
 
     $this->themeManager->expects($this->once())
       ->method('render')
@@ -688,11 +589,11 @@ public function testRenderTwice($build) {
    * @covers ::doRender
    */
   public function testRenderWithThemeArguments() {
-    $element = [
+    $element = array(
       '#theme' => 'common_test_foo',
       '#foo' => $this->randomMachineName(),
       '#bar' => $this->randomMachineName(),
-    ];
+    );
 
     $this->themeManager->expects($this->once())
       ->method('render')

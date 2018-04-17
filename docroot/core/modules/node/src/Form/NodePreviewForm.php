@@ -3,6 +3,7 @@
 namespace Drupal\node\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
@@ -13,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Contains a form for switching the view mode of a node during preview.
  */
-class NodePreviewForm extends FormBase {
+class NodePreviewForm extends FormBase implements ContainerInjectionInterface {
 
   /**
    * The entity manager service.
@@ -72,49 +73,42 @@ class NodePreviewForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $node = NULL) {
     $view_mode = $node->preview_view_mode;
 
-    $query_options = ['query' => ['uuid' => $node->uuid()]];
-    $query = $this->getRequest()->query;
-    if ($query->has('destination')) {
-      $query_options['query']['destination'] = $query->get('destination');
-    }
-
-    $form['backlink'] = [
+    $query_options = $node->isNew() ? array('query' => array('uuid' => $node->uuid())) : array();
+    $form['backlink'] = array(
       '#type' => 'link',
       '#title' => $this->t('Back to content editing'),
       '#url' => $node->isNew() ? Url::fromRoute('node.add', ['node_type' => $node->bundle()]) : $node->urlInfo('edit-form'),
-      '#options' => ['attributes' => ['class' => ['node-preview-backlink']]] + $query_options,
-    ];
+      '#options' => array('attributes' => array('class' => array('node-preview-backlink'))) + $query_options,
+    );
 
-    // Always show full as an option, even if the display is not enabled.
-    $view_mode_options = ['full' => $this->t('Full')] + $this->entityManager->getViewModeOptionsByBundle('node', $node->bundle());
+    $view_mode_options = $this->entityManager->getViewModeOptionsByBundle('node', $node->bundle());
 
     // Unset view modes that are not used in the front end.
-    unset($view_mode_options['default']);
     unset($view_mode_options['rss']);
     unset($view_mode_options['search_index']);
 
-    $form['uuid'] = [
+    $form['uuid'] = array(
       '#type' => 'value',
       '#value' => $node->uuid(),
-    ];
+    );
 
-    $form['view_mode'] = [
+    $form['view_mode'] = array(
       '#type' => 'select',
       '#title' => $this->t('View mode'),
       '#options' => $view_mode_options,
       '#default_value' => $view_mode,
-      '#attributes' => [
+      '#attributes' => array(
         'data-drupal-autosubmit' => TRUE,
-      ]
-    ];
+      )
+    );
 
-    $form['submit'] = [
+    $form['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Switch'),
-      '#attributes' => [
-        'class' => ['js-hide'],
-      ],
-    ];
+      '#attributes' => array(
+        'class' => array('js-hide'),
+      ),
+    );
 
     return $form;
   }
@@ -123,18 +117,10 @@ class NodePreviewForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $route_parameters = [
+    $form_state->setRedirect('entity.node.preview', array(
       'node_preview' => $form_state->getValue('uuid'),
       'view_mode_id' => $form_state->getValue('view_mode'),
-    ];
-
-    $options = [];
-    $query = $this->getRequest()->query;
-    if ($query->has('destination')) {
-      $options['query']['destination'] = $query->get('destination');
-      $query->remove('destination');
-    }
-    $form_state->setRedirect('entity.node.preview', $route_parameters, $options);
+    ));
   }
 
 }

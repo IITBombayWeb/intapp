@@ -40,7 +40,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
    * @see ::prepareView()
    */
   protected function getEntitiesToView(EntityReferenceFieldItemListInterface $items, $langcode) {
-    $entities = [];
+    $entities = array();
 
     foreach ($items as $delta => $item) {
       // Ignore items where no entity could be loaded in prepareView().
@@ -104,8 +104,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
     // tags on which the access results depend, to ensure users that cannot view
     // this field at the moment will gain access once any of those cache tags
     // are invalidated.
-    $field_level_access_cacheability->merge(CacheableMetadata::createFromRenderArray($elements))
-      ->applyTo($elements);
+    $field_level_access_cacheability->applyTo($elements);
 
     return $elements;
   }
@@ -121,7 +120,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
     // "multiple entity load" to load all the entities for the multiple
     // "entity reference item lists" being displayed. We thus cannot use
     // \Drupal\Core\Field\EntityReferenceFieldItemList::referencedEntities().
-    $ids = [];
+    $ids = array();
     foreach ($entities_items as $items) {
       foreach ($items as $item) {
         // To avoid trying to reload non-existent entities in
@@ -170,9 +169,9 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
   /**
    * Checks access to the given entity.
    *
-   * By default, entity 'view' access is checked. However, a subclass can choose
-   * to exclude certain items from entity access checking by immediately
-   * granting access.
+   * By default, entity access is checked. However, a subclass can choose to
+   * exclude certain items from entity access checking by immediately granting
+   * access.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *    The entity to check.

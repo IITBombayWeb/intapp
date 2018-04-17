@@ -80,7 +80,7 @@ class EntityContentBase extends Entity {
   /**
    * {@inheritdoc}
    */
-  public function import(Row $row, array $old_destination_id_values = []) {
+  public function import(Row $row, array $old_destination_id_values = array()) {
     $this->rollbackAction = MigrateIdMapInterface::ROLLBACK_DELETE;
     $entity = $this->getEntity($row, $old_destination_id_values);
     if (!$entity) {
@@ -105,9 +105,9 @@ class EntityContentBase extends Entity {
    * @return array
    *   An array containing the entity ID.
    */
-  protected function save(ContentEntityInterface $entity, array $old_destination_id_values = []) {
+  protected function save(ContentEntityInterface $entity, array $old_destination_id_values = array()) {
     $entity->save();
-    return [$entity->id()];
+    return array($entity->id());
   }
 
   /**
@@ -125,13 +125,15 @@ class EntityContentBase extends Entity {
    */
   public function getIds() {
     $id_key = $this->getKey('id');
-    $ids[$id_key] = $this->getDefinitionFromEntity($id_key);
+    $ids[$id_key]['type'] = 'integer';
 
     if ($this->isTranslationDestination()) {
-      if (!$langcode_key = $this->getKey('langcode')) {
+      if ($key = $this->getKey('langcode')) {
+        $ids[$key]['type'] = 'string';
+      }
+      else {
         throw new MigrateException('This entity type does not support translation.');
       }
-      $ids[$langcode_key] = $this->getDefinitionFromEntity($langcode_key);
     }
 
     return $ids;
@@ -145,7 +147,7 @@ class EntityContentBase extends Entity {
    * @param \Drupal\migrate\Row $row
    *   The row object to update from.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|null
+   * @return NULL|\Drupal\Core\Entity\EntityInterface
    *   An updated entity, or NULL if it's the same as the one passed in.
    */
   protected function updateEntity(EntityInterface $entity, Row $row) {
@@ -259,34 +261,6 @@ class EntityContentBase extends Entity {
     else {
       parent::rollback($destination_identifier);
     }
-  }
-
-  /**
-   * Gets the field definition from a specific entity base field.
-   *
-   * The method takes the field ID as an argument and returns the field storage
-   * definition to be used in getIds() by querying the destination entity base
-   * field definition.
-   *
-   * @param string $key
-   *   The field ID key.
-   *
-   * @return array
-   *   An associative array with a structure that contains the field type, keyed
-   *   as 'type', together with field storage settings as they are returned by
-   *   FieldStorageDefinitionInterface::getSettings().
-   *
-   * @see \Drupal\Core\Field\FieldStorageDefinitionInterface::getSettings()
-   */
-  protected function getDefinitionFromEntity($key) {
-    $entity_type_id = static::getEntityTypeId($this->getPluginId());
-    /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface[] $definitions */
-    $definitions = $this->entityManager->getBaseFieldDefinitions($entity_type_id);
-    $field_definition = $definitions[$key];
-
-    return [
-      'type' => $field_definition->getType(),
-    ] + $field_definition->getSettings();
   }
 
 }

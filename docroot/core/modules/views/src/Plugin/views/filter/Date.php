@@ -27,15 +27,15 @@ class Date extends NumericFilter {
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     if (!$form_state->get('exposed')) {
-      $form['value']['type'] = [
+      $form['value']['type'] = array(
         '#type' => 'radios',
         '#title' => $this->t('Value type'),
-        '#options' => [
+        '#options' => array(
           'date' => $this->t('A date in any machine readable format. CCYY-MM-DD HH:MM:SS is preferred.'),
-          'offset' => $this->t('An offset from the current time such as "@example1" or "@example2"', ['@example1' => '+1 day', '@example2' => '-2 hours -30 minutes']),
-        ],
+          'offset' => $this->t('An offset from the current time such as "@example1" or "@example2"', array('@example1' => '+1 day', '@example2' => '-2 hours -30 minutes')),
+        ),
         '#default_value' => !empty($this->value['type']) ? $this->value['type'] : 'date',
-      ];
+      );
     }
     parent::valueForm($form, $form_state);
   }
@@ -43,12 +43,12 @@ class Date extends NumericFilter {
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
 
-    if (!empty($this->options['exposed']) && $form_state->isValueEmpty(['options', 'expose', 'required'])) {
+    if (!empty($this->options['exposed']) && $form_state->isValueEmpty(array('options', 'expose', 'required'))) {
       // Who cares what the value is if it's exposed and non-required.
       return;
     }
 
-    $this->validateValidTime($form['value'], $form_state, $form_state->getValue(['options', 'operator']), $form_state->getValue(['options', 'value']));
+    $this->validateValidTime($form['value'], $form_state, $form_state->getValue(array('options', 'operator')), $form_state->getValue(array('options', 'value')));
   }
 
   public function validateExposed(&$form, FormStateInterface $form_state) {
@@ -98,23 +98,32 @@ class Date extends NumericFilter {
   }
 
   /**
-   * {@inheritdoc}
+   * Validate the build group options form.
    */
-  protected function hasValidGroupedValue(array $group) {
-    if (!is_array($group['value']) || empty($group['value'])) {
-      return FALSE;
+  protected function buildGroupValidate($form, FormStateInterface $form_state) {
+    // Special case to validate grouped date filters, this is because the
+    // $group['value'] array contains the type of filter (date or offset)
+    // and therefore the number of items the comparison has to be done
+    // against 'one' instead of 'zero'.
+    foreach ($form_state->getValue(array('options', 'group_info', 'group_items')) as $id => $group) {
+      if (empty($group['remove'])) {
+        // Check if the title is defined but value wasn't defined.
+        if (!empty($group['title'])) {
+          if ((!is_array($group['value']) && empty($group['value'])) || (is_array($group['value']) && count(array_filter($group['value'])) == 1)) {
+            $form_state->setError($form['group_info']['group_items'][$id]['value'], $this->t('The value is required if title for this item is defined.'));
+          }
+        }
+
+        // Check if the value is defined but title wasn't defined.
+        if ((!is_array($group['value']) && !empty($group['value'])) || (is_array($group['value']) && count(array_filter($group['value'])) > 1)) {
+          if (empty($group['title'])) {
+            $form_state->setError($form['group_info']['group_items'][$id]['title'], $this->t('The title is required if value for this item is defined.'));
+          }
+        }
+      }
     }
-
-    // Special case when validating grouped date filters because the
-    // $group['value'] array contains the type of filter (date or offset) and
-    // therefore the number of items the comparison has to be done against is
-    // one greater.
-    $operators = $this->operators();
-    $expected = $operators[$group['operator']]['values'] + 1;
-    $actual = count(array_filter($group['value'], 'static::arrayFilterZero'));
-
-    return $actual == $expected;
   }
+
 
   public function acceptExposedInput($input) {
     if (empty($this->options['exposed'])) {
@@ -122,21 +131,8 @@ class Date extends NumericFilter {
     }
 
     // Store this because it will get overwritten.
-    $type = NULL;
-    if ($this->isAGroup()) {
-      if (is_array($this->group_info)) {
-        $type = $this->group_info['type'];
-      }
-    }
-    else {
-      $type = $this->value['type'];
-    }
+    $type = $this->value['type'];
     $rc = parent::acceptExposedInput($input);
-
-    // Restore what got overwritten by the parent.
-    if (!is_null($type)) {
-      $this->value['type'] = $type;
-    }
 
     // Don't filter if value(s) are empty.
     $operators = $this->operators();
@@ -158,6 +154,8 @@ class Date extends NumericFilter {
       }
     }
 
+    // restore what got overwritten by the parent.
+    $this->value['type'] = $type;
     return $rc;
   }
 

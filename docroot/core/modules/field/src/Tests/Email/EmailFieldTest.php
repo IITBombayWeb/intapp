@@ -3,7 +3,6 @@
 namespace Drupal\field\Tests\Email;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -20,7 +19,7 @@ class EmailFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'entity_test', 'field_ui'];
+  public static $modules = array('node', 'entity_test', 'field_ui');
 
   /**
    * A field storage to use in this test class.
@@ -39,24 +38,24 @@ class EmailFieldTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalLogin($this->drupalCreateUser([
+    $this->drupalLogin($this->drupalCreateUser(array(
       'view test entity',
       'administer entity_test content',
       'administer content types',
-    ]));
+    )));
   }
 
   /**
    * Tests email field.
    */
-  public function testEmailField() {
+  function testEmailField() {
     // Create a field with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $this->fieldStorage = FieldStorageConfig::create([
+    $this->fieldStorage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'email',
-    ]);
+    ));
     $this->fieldStorage->save();
     $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
@@ -66,18 +65,18 @@ class EmailFieldTest extends WebTestBase {
 
     // Create a form display for the default form mode.
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($field_name, [
+      ->setComponent($field_name, array(
         'type' => 'email_default',
-        'settings' => [
+        'settings' => array(
           'placeholder' => 'example@example.com',
-        ],
-      ])
+        ),
+      ))
       ->save();
     // Create a display for the full view mode.
     entity_get_display('entity_test', 'entity_test', 'full')
-      ->setComponent($field_name, [
+      ->setComponent($field_name, array(
         'type' => 'email_mailto',
-      ])
+      ))
       ->save();
 
     // Display creation form.
@@ -87,17 +86,17 @@ class EmailFieldTest extends WebTestBase {
 
     // Submit a valid email address and ensure it is accepted.
     $value = 'test@example.com';
-    $edit = [
+    $edit = array(
       "{$field_name}[0][value]" => $value,
-    ];
+    );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
     $this->assertRaw($value);
 
     // Verify that a mailto link is displayed.
-    $entity = EntityTest::load($id);
+    $entity = entity_load('entity_test', $id);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
     $this->setRawContent(\Drupal::service('renderer')->renderRoot($content));

@@ -10,7 +10,6 @@ namespace Drupal\Tests\Core\Access;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Access\AccessResultNeutral;
-use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -114,23 +113,6 @@ class AccessResultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::forbidden
-   */
-  public function testAccessForbiddenReason() {
-    $verify = function (AccessResult $access, $reason) {
-      $this->assertInstanceOf(AccessResultReasonInterface::class, $access);
-      $this->assertSame($reason, $access->getReason());
-    };
-
-    $b = AccessResult::forbidden();
-    $verify($b, NULL);
-
-    $reason = $this->getRandomGenerator()->string();
-    $b = AccessResult::forbidden($reason);
-    $verify($b, $reason);
-  }
-
-  /**
    * @covers ::allowedIf
    * @covers ::isAllowed
    * @covers ::isForbidden
@@ -174,9 +156,9 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::andIf
    */
   public function testAndIf() {
-    $neutral = AccessResult::neutral('neutral message');
+    $neutral = AccessResult::neutral();
     $allowed = AccessResult::allowed();
-    $forbidden = AccessResult::forbidden('forbidden message');
+    $forbidden = AccessResult::forbidden();
     $unused_access_result_due_to_lazy_evaluation = $this->getMock('\Drupal\Core\Access\AccessResultInterface');
     $unused_access_result_due_to_lazy_evaluation->expects($this->never())
       ->method($this->anything());
@@ -193,7 +175,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertFalse($access->isForbidden());
     $this->assertTrue($access->isNeutral());
-    $this->assertEquals('neutral message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // ALLOWED && FORBIDDEN === FORBIDDEN.
@@ -201,7 +182,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // NEUTRAL && ALLOW == NEUTRAL
@@ -209,7 +189,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertFalse($access->isForbidden());
     $this->assertTrue($access->isNeutral());
-    $this->assertEquals('neutral message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // NEUTRAL && NEUTRAL === NEUTRAL.
@@ -217,7 +196,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertFalse($access->isForbidden());
     $this->assertTrue($access->isNeutral());
-    $this->assertEquals('neutral message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // NEUTRAL && FORBIDDEN === FORBIDDEN.
@@ -225,7 +203,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // FORBIDDEN && ALLOWED = FORBIDDEN
@@ -233,7 +210,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // FORBIDDEN && NEUTRAL = FORBIDDEN
@@ -241,7 +217,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // FORBIDDEN && FORBIDDEN = FORBIDDEN
@@ -249,7 +224,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // FORBIDDEN && * === FORBIDDEN: lazy evaluation verification.
@@ -257,7 +231,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
   }
 
@@ -265,9 +238,9 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::orIf
    */
   public function testOrIf() {
-    $neutral = AccessResult::neutral('neutral message');
+    $neutral = AccessResult::neutral();
     $allowed = AccessResult::allowed();
-    $forbidden = AccessResult::forbidden('forbidden message');
+    $forbidden = AccessResult::forbidden();
     $unused_access_result_due_to_lazy_evaluation = $this->getMock('\Drupal\Core\Access\AccessResultInterface');
     $unused_access_result_due_to_lazy_evaluation->expects($this->never())
       ->method($this->anything());
@@ -291,7 +264,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // NEUTRAL || NEUTRAL === NEUTRAL.
@@ -299,7 +271,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertFalse($access->isForbidden());
     $this->assertTrue($access->isNeutral());
-    $this->assertEquals('neutral message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // NEUTRAL || ALLOWED === ALLOWED.
@@ -314,7 +285,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // FORBIDDEN || ALLOWED === FORBIDDEN.
@@ -322,7 +292,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // FORBIDDEN || NEUTRAL === FORBIDDEN.
@@ -330,7 +299,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // FORBIDDEN || FORBIDDEN === FORBIDDEN.
@@ -338,7 +306,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
     // FORBIDDEN || * === FORBIDDEN.
@@ -346,7 +313,6 @@ class AccessResultTest extends UnitTestCase {
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
-    $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
   }
 
@@ -397,7 +363,7 @@ class AccessResultTest extends UnitTestCase {
     $verify($access, ['bar', 'foo']);
 
     // ::cachePerPermissions() convenience method.
-    $contexts = ['user.permissions'];
+    $contexts = array('user.permissions');
     $a = AccessResult::neutral()->addCacheContexts($contexts);
     $verify($a, $contexts);
     $b = AccessResult::neutral()->cachePerPermissions();
@@ -405,7 +371,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertEquals($a, $b);
 
     // ::cachePerUser() convenience method.
-    $contexts = ['user'];
+    $contexts = array('user');
     $a = AccessResult::neutral()->addCacheContexts($contexts);
     $verify($a, $contexts);
     $b = AccessResult::neutral()->cachePerUser();
@@ -413,7 +379,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertEquals($a, $b);
 
     // Both.
-    $contexts = ['user', 'user.permissions'];
+    $contexts = array('user', 'user.permissions');
     $a = AccessResult::neutral()->addCacheContexts($contexts);
     $verify($a, $contexts);
     $b = AccessResult::neutral()->cachePerPermissions()->cachePerUser();
@@ -429,7 +395,7 @@ class AccessResultTest extends UnitTestCase {
       ->method('hasPermission')
       ->with('may herd llamas')
       ->will($this->returnValue(FALSE));
-    $contexts = ['user.permissions'];
+    $contexts = array('user.permissions');
 
     // Verify the object when using the ::allowedIfHasPermission() convenience
     // static method.
@@ -480,14 +446,14 @@ class AccessResultTest extends UnitTestCase {
     $node = $this->getMock('\Drupal\node\NodeInterface');
     $node->expects($this->any())
       ->method('getCacheTags')
-      ->will($this->returnValue(['node:20011988']));
+      ->will($this->returnValue(array('node:20011988')));
     $node->expects($this->any())
       ->method('getCacheMaxAge')
       ->willReturn(600);
     $node->expects($this->any())
       ->method('getCacheContexts')
       ->willReturn(['user']);
-    $tags = ['node:20011988'];
+    $tags = array('node:20011988');
     $a = AccessResult::neutral()->addCacheTags($tags);
     $verify($a, $tags);
     $b = AccessResult::neutral()->addCacheableDependency($node);
@@ -917,31 +883,18 @@ class AccessResultTest extends UnitTestCase {
    * @return array
    */
   public function providerTestAllowedIfHasPermissions() {
-    $access_result = AccessResult::allowedIf(FALSE);
-    $data[] = [[], 'AND', $access_result];
-    $data[] = [[], 'OR', $access_result];
-
-    $access_result = AccessResult::allowedIf(TRUE);
-    $data[] = [['allowed'], 'OR', $access_result];
-    $data[] = [['allowed'], 'AND', $access_result];
-
-    $access_result = AccessResult::allowedIf(FALSE);
-    $access_result->setReason("The 'denied' permission is required.");
-    $data[] = [['denied'], 'OR', $access_result];
-    $data[] = [['denied'], 'AND', $access_result];
-
-    $access_result = AccessResult::allowedIf(TRUE);
-    $data[] = [['allowed', 'denied'], 'OR', $access_result];
-    $data[] = [['denied', 'allowed'], 'OR', $access_result];
-
-    $access_result = AccessResult::allowedIf(TRUE);
-    $data[] = [['allowed', 'denied', 'other'], 'OR', $access_result];
-
-    $access_result = AccessResult::allowedIf(FALSE);
-    $access_result->setReason("The following permissions are required: 'allowed' AND 'denied'.");
-    $data[] = [['allowed', 'denied'], 'AND', $access_result];
-
-    return $data;
+    return [
+      [[], 'AND', AccessResult::allowedIf(FALSE)],
+      [[], 'OR', AccessResult::allowedIf(FALSE)],
+      [['allowed'], 'OR', AccessResult::allowedIf(TRUE)],
+      [['allowed'], 'AND', AccessResult::allowedIf(TRUE)],
+      [['denied'], 'OR', AccessResult::allowedIf(FALSE)],
+      [['denied'], 'AND', AccessResult::allowedIf(FALSE)],
+      [['allowed', 'denied'], 'OR', AccessResult::allowedIf(TRUE)],
+      [['denied', 'allowed'], 'OR', AccessResult::allowedIf(TRUE)],
+      [['allowed', 'denied', 'other'], 'OR', AccessResult::allowedIf(TRUE)],
+      [['allowed', 'denied'], 'AND', AccessResult::allowedIf(FALSE)],
+    ];
   }
 
 }

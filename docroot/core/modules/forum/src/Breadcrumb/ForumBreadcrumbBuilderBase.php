@@ -9,7 +9,6 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\forum\ForumManagerInterface;
 
 /**
@@ -51,14 +50,11 @@ abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface 
    *   The configuration factory.
    * @param \Drupal\forum\ForumManagerInterface $forum_manager
    *   The forum manager service.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The string translation service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, ForumManagerInterface $forum_manager, TranslationInterface $string_translation) {
+  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, ForumManagerInterface $forum_manager) {
     $this->entityManager = $entity_manager;
     $this->config = $config_factory->get('forum.settings');
     $this->forumManager = $forum_manager;
-    $this->setStringTranslation($string_translation);
   }
 
   /**

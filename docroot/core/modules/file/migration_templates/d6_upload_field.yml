@@ -20,7 +20,4 @@ process:
   cardinality: 'constants/cardinality'
   'settings/display_field': 'constants/display_field'
 destination:
-  plugin: entity:field_storage_config
-  dependencies:
-    module:
-      - file
+  plugin: md_entity:field_storage_config

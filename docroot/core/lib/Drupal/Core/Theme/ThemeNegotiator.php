@@ -17,14 +17,14 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
    *
    * @var array
    */
-  protected $negotiators = [];
+  protected $negotiators = array();
 
   /**
    * Holds the array of theme negotiators sorted by priority.
    *
    * Set to NULL if the array needs to be re-calculated.
    *
-   * @var array|null
+   * @var array|NULL
    */
   protected $sortedNegotiators;
 
@@ -71,7 +71,7 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
       krsort($this->negotiators);
       // Merge nested negotiators from $this->negotiators into
       // $this->sortedNegotiators.
-      $this->sortedNegotiators = [];
+      $this->sortedNegotiators = array();
       foreach ($this->negotiators as $builders) {
         $this->sortedNegotiators = array_merge($this->sortedNegotiators, $builders);
       }

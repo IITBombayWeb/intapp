@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Form;
+namespace Drupal\Tests\Core\Form {
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBuilder;
@@ -147,9 +147,6 @@ abstract class FormTestBase extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    // Add functions to the global namespace for testing.
-    require_once __DIR__ . '/fixtures/form_base_test.inc';
-
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $this->formCache = $this->getMock('Drupal\Core\Form\FormCacheInterface');
@@ -163,7 +160,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->getMock();
     $this->elementInfo->expects($this->any())
       ->method('getInfo')
-      ->will($this->returnCallback([$this, 'getInfo']));
+      ->will($this->returnCallback(array($this, 'getInfo')));
 
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
@@ -184,8 +181,8 @@ abstract class FormTestBase extends UnitTestCase {
       ->setMethods(NULL)
       ->getMock();
     $this->formSubmitter = $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
-      ->setConstructorArgs([$this->requestStack, $this->urlGenerator])
-      ->setMethods(['batchGet', 'drupalInstallationAttempted'])
+      ->setConstructorArgs(array($this->requestStack, $this->urlGenerator))
+      ->setMethods(array('batchGet', 'drupalInstallationAttempted'))
       ->getMock();
     $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
 
@@ -290,27 +287,59 @@ abstract class FormTestBase extends UnitTestCase {
     $types['hidden'] = [
       '#input' => TRUE,
     ];
-    $types['token'] = [
+    $types['token'] = array(
       '#input' => TRUE,
-    ];
-    $types['value'] = [
+    );
+    $types['value'] = array(
       '#input' => TRUE,
-    ];
-    $types['radios'] = [
+    );
+    $types['radios'] = array(
       '#input' => TRUE,
-    ];
-    $types['textfield'] = [
+    );
+    $types['textfield'] = array(
       '#input' => TRUE,
-    ];
-    $types['submit'] = [
+    );
+    $types['submit'] = array(
       '#input' => TRUE,
       '#name' => 'op',
       '#is_button' => TRUE,
-    ];
+    );
     if (!isset($types[$type])) {
-      $types[$type] = [];
+      $types[$type] = array();
     }
     return $types[$type];
+  }
+
+}
+
+}
+
+namespace {
+
+  function test_form_id() {
+    $form['test'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Test',
+    );
+    $form['options'] = array(
+      '#type' => 'radios',
+      '#options' => array(
+        'foo' => 'foo',
+        'bar' => 'bar',
+      ),
+    );
+    $form['value'] = array(
+      '#type' => 'value',
+      '#value' => 'bananas',
+    );
+    $form['actions'] = array(
+      '#type' => 'actions',
+    );
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => 'Submit',
+    );
+    return $form;
   }
 
 }

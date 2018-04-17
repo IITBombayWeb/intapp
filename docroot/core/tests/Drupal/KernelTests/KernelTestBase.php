@@ -7,7 +7,9 @@ use Drupal\Component\FileCache\FileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Config\Development\ConfigSchemaChecker;
+use Drupal\Core\Config\ConfigImporter;
+use Drupal\Core\Config\StorageComparer;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
@@ -16,10 +18,8 @@ use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\Test\TestDatabase;
 use Drupal\simpletest\AssertContentTrait;
 use Drupal\simpletest\AssertHelperTrait;
-use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\simpletest\TestServiceProvider;
 use Symfony\Component\DependencyInjection\Reference;
@@ -55,7 +55,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   use AssertContentTrait;
   use AssertHelperTrait;
   use RandomGeneratorTrait;
-  use ConfigTestTrait;
 
   /**
    * {@inheritdoc}
@@ -69,10 +68,8 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   /**
    * {@inheritdoc}
    *
-   * Kernel tests are run in separate processes because they allow autoloading
-   * of code from extensions. Running the test in a separate process isolates
-   * this behavior from other tests. Subclasses should not override this
-   * property.
+   * Kernel tests are run in separate processes to prevent collisions between
+   * code that may be loaded by tests.
    */
   protected $runTestInSeparateProcess = TRUE;
 
@@ -133,6 +130,11 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   protected $container;
 
   /**
+   * @var \Drupal\Core\DependencyInjection\ContainerBuilder
+   */
+  private static $initialContainerBuilder;
+
+  /**
    * Modules to enable.
    *
    * The test runner will merge the $modules lists from this class, the class
@@ -144,7 +146,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    *
    * @var array
    */
-  protected static $modules = [];
+  public static $modules = array();
 
   /**
    * The virtual filesystem root directory.
@@ -179,7 +181,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   /**
    * Set to TRUE to strict check all configuration saved.
    *
-   * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
    *
    * @var bool
    */
@@ -190,7 +192,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    *
    * @var string[]
    */
-  protected static $configSchemaCheckerExclusions = [
+  protected static $configSchemaCheckerExclusions = array(
     // Following are used to test lack of or partial schema. Where partial
     // schema is provided, that is explicitly tested in specific tests.
     'config_schema_test.noschema',
@@ -199,7 +201,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     'config_schema_test.no_schema_data_types',
     // Used to test application of schema to filtering of configuration.
     'config_test.dynamic.system',
-  ];
+  );
 
   /**
    * {@inheritdoc}
@@ -242,7 +244,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * @internal
    */
   protected function bootEnvironment() {
-    $this->streamWrappers = [];
+    $this->streamWrappers = array();
     \Drupal::unsetContainer();
 
     $this->classLoader = require $this->root . '/autoload.php';
@@ -250,54 +252,50 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     require_once $this->root . '/core/includes/bootstrap.inc';
 
     // Set up virtual filesystem.
-    Database::addConnectionInfo('default', 'test-runner', $this->getDatabaseConnectionInfo()['default']);
-    $test_db = new TestDatabase();
-    $this->siteDirectory = $test_db->getTestSitePath();
+    // Ensure that the generated test site directory does not exist already,
+    // which may happen with a large amount of concurrent threads and
+    // long-running tests.
+    do {
+      $suffix = mt_rand(100000, 999999);
+      $this->siteDirectory = 'sites/simpletest/' . $suffix;
+      $this->databasePrefix = 'simpletest' . $suffix;
+    } while (is_dir($this->root . '/' . $this->siteDirectory));
+
+    $this->vfsRoot = vfsStream::setup('root', NULL, array(
+      'sites' => array(
+        'simpletest' => array(
+          $suffix => array(),
+        ),
+      ),
+    ));
+    $this->siteDirectory = vfsStream::url('root/sites/simpletest/' . $suffix);
+
+    mkdir($this->siteDirectory . '/files', 0775);
+    mkdir($this->siteDirectory . '/files/config/' . CONFIG_SYNC_DIRECTORY, 0775, TRUE);
 
     // Ensure that all code that relies on drupal_valid_test_ua() can still be
     // safely executed. This primarily affects the (test) site directory
     // resolution (used by e.g. LocalStream and PhpStorage).
-    $this->databasePrefix = $test_db->getDatabasePrefix();
+    $this->databasePrefix = 'simpletest' . $suffix;
     drupal_valid_test_ua($this->databasePrefix);
 
-    $settings = [
+    $settings = array(
       'hash_salt' => get_class($this),
       'file_public_path' => $this->siteDirectory . '/files',
       // Disable Twig template caching/dumping.
       'twig_cache' => FALSE,
       // @see \Drupal\KernelTests\KernelTestBase::register()
-    ];
+    );
     new Settings($settings);
 
-    $this->setUpFilesystem();
+    $GLOBALS['config_directories'] = array(
+      CONFIG_SYNC_DIRECTORY => $this->siteDirectory . '/files/config/sync',
+    );
 
     foreach (Database::getAllConnectionInfo() as $key => $targets) {
       Database::removeConnection($key);
     }
     Database::addConnectionInfo('default', 'default', $this->getDatabaseConnectionInfo()['default']);
-  }
-
-  /**
-   * Sets up the filesystem, so things like the file directory.
-   */
-  protected function setUpFilesystem() {
-    $test_db = new TestDatabase($this->databasePrefix);
-    $test_site_path = $test_db->getTestSitePath();
-
-    $this->vfsRoot = vfsStream::setup('root');
-    $this->vfsRoot->addChild(vfsStream::newDirectory($test_site_path));
-    $this->siteDirectory = vfsStream::url('root/' . $test_site_path);
-
-    mkdir($this->siteDirectory . '/files', 0775);
-    mkdir($this->siteDirectory . '/files/config/' . CONFIG_SYNC_DIRECTORY, 0775, TRUE);
-
-    $settings = Settings::getInstance() ? Settings::getAll() : [];
-    $settings['file_public_path'] = $this->siteDirectory . '/files';
-    new Settings($settings);
-
-    $GLOBALS['config_directories'] = [
-      CONFIG_SYNC_DIRECTORY => $this->siteDirectory . '/files/config/sync',
-    ];
   }
 
   /**
@@ -340,13 +338,23 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       // PHPUnit's @test annotations are intentionally ignored/not supported.
       return strpos($method->getName(), 'test') === 0;
     }));
+    if ($test_method_count > 1 && !$this->isTestInIsolation()) {
+      // Clone a precompiled, empty ContainerBuilder instance for each test.
+      $container = $this->getCompiledContainerBuilder($modules);
+    }
 
     // Bootstrap the kernel. Do not use createFromRequest() to retain Settings.
     $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
     $kernel->setSitePath($this->siteDirectory);
+    // Boot the precompiled container. The kernel will enhance it with synthetic
+    // services.
+    if (isset($container)) {
+      $kernel->setContainer($container);
+      unset($container);
+    }
     // Boot a new one-time container from scratch. Ensure to set the module list
     // upfront to avoid a subsequent rebuild.
-    if ($modules && $extensions = $this->getExtensionsForModules($modules)) {
+    elseif ($modules && $extensions = $this->getExtensionsForModules($modules)) {
       $kernel->updateModules($extensions, $extensions);
     }
     // DrupalKernel::boot() is not sufficient as it does not invoke preHandle(),
@@ -376,11 +384,10 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
     // Write the core.extension configuration.
     // Required for ConfigInstaller::installDefaultConfig() to work.
-    $this->container->get('config.storage')->write('core.extension', [
+    $this->container->get('config.storage')->write('core.extension', array(
       'module' => array_fill_keys($modules, 0),
-      'theme' => [],
-      'profile' => '',
-    ]);
+      'theme' => array(),
+    ));
 
     $settings = Settings::getAll();
     $settings['php_storage']['default'] = [
@@ -393,11 +400,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // While this should be enforced via settings.php prior to installation,
     // some tests expect to be able to test mail system implementations.
     $GLOBALS['config']['system.mail']['interface']['default'] = 'test_mail_collector';
-
-    // Manually configure the default file scheme so that modules that use file
-    // functions don't have to install system and its configuration.
-    // @see file_default_scheme()
-    $GLOBALS['config']['system.file']['default_scheme'] = 'public';
   }
 
   /**
@@ -448,12 +450,74 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       foreach ($connection_info as $target => $value) {
         // Replace the full table prefix definition to ensure that no table
         // prefixes of the test runner leak into the test.
-        $connection_info[$target]['prefix'] = [
+        $connection_info[$target]['prefix'] = array(
           'default' => $value['prefix']['default'] . $this->databasePrefix,
-        ];
+        );
       }
     }
     return $connection_info;
+  }
+
+  /**
+   * Prepares a precompiled ContainerBuilder for all tests of this class.
+   *
+   * Avoids repetitive calls to ContainerBuilder::compile(), which is very slow.
+   *
+   * Based on the (always identical) list of $modules to enable, an initial
+   * container is compiled, all instantiated services are reset/removed, and
+   * this precompiled container is stored in a static class property. (Static,
+   * because PHPUnit instantiates a new class instance for each test *method*.)
+   *
+   * This method is not invoked if there is only a single test method. It is
+   * also not invoked for tests running in process isolation (since each test
+   * method runs in a separate process).
+   *
+   * The ContainerBuilder is not dumped into the filesystem (which would yield
+   * an actually compiled Container class), because
+   *
+   * 1. PHP code cannot be unloaded, so e.g. 900 tests would load 900 different,
+   *    full Container classes into memory, quickly exceeding any sensible
+   *    memory consumption (GigaBytes).
+   * 2. Dumping a Container class requires to actually write to the system's
+   *    temporary directory. This is not really easy with vfs, because vfs
+   *    doesn't support yet "include 'vfs://container.php'.". Maybe we could fix
+   *    that upstream.
+   * 3. PhpDumper is very slow on its own.
+   *
+   * @param string[] $modules
+   *   The list of modules to enable.
+   *
+   * @return \Drupal\Core\DependencyInjection\ContainerBuilder
+   *   A clone of the precompiled, empty service container.
+   */
+  private function getCompiledContainerBuilder(array $modules) {
+    if (!isset(self::$initialContainerBuilder)) {
+      $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
+      $kernel->setSitePath($this->siteDirectory);
+      if ($modules && $extensions = $this->getExtensionsForModules($modules)) {
+        $kernel->updateModules($extensions, $extensions);
+      }
+      $kernel->boot();
+      self::$initialContainerBuilder = $kernel->getContainer();
+
+      // Remove all instantiated services, so the container is safe for cloning.
+      // Technically, ContainerBuilder::set($id, NULL) removes each definition,
+      // but the container is compiled/frozen already.
+      foreach (self::$initialContainerBuilder->getServiceIds() as $id) {
+        self::$initialContainerBuilder->set($id, NULL);
+      }
+
+      // Destruct and trigger garbage collection.
+      \Drupal::unsetContainer();
+      $kernel->shutdown();
+      $kernel = NULL;
+      // @see register()
+      $this->container = NULL;
+    }
+
+    $container = clone self::$initialContainerBuilder;
+
+    return $container;
   }
 
   /**
@@ -467,6 +531,11 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
     // Provide a default configuration, if not set.
     if (!isset($configuration['default'])) {
+      $configuration['default'] = [
+        'class' => FileCache::class,
+        'cache_backend_class' => NULL,
+        'cache_backend_configuration' => [],
+      ];
       // @todo Use extension_loaded('apcu') for non-testbot
       //  https://www.drupal.org/node/2447753.
       if (function_exists('apcu_fetch')) {
@@ -493,9 +562,9 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * @see \Drupal\Core\Extension\ModuleHandler::add()
    */
   private function getExtensionsForModules(array $modules) {
-    $extensions = [];
+    $extensions = array();
     $discovery = new ExtensionDiscovery($this->root);
-    $discovery->setProfileDirectories([]);
+    $discovery->setProfileDirectories(array());
     $list = $discovery->scan('module');
     foreach ($modules as $name) {
       if (!isset($list[$name])) {
@@ -540,7 +609,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
     if ($this->strictConfigSchema) {
       $container
-        ->register('simpletest.config_schema_checker', ConfigSchemaChecker::class)
+        ->register('simpletest.config_schema_checker', 'Drupal\Core\Config\Testing\ConfigSchemaChecker')
         ->addArgument(new Reference('config.typed'))
         ->addArgument($this->getConfigSchemaExclusions())
         ->addTag('event_subscriber');
@@ -558,7 +627,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
     if ($container->hasDefinition('password')) {
       $container->getDefinition('password')
-        ->setArguments([1]);
+        ->setArguments(array(1));
     }
     TestServiceProvider::addRouteProvider($container);
   }
@@ -594,7 +663,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     }
 
     // Shut down the kernel (if bootKernel() was called).
-    // @see \Drupal\KernelTests\Core\DrupalKernel\DrupalKernelTest
+    // @see \Drupal\system\Tests\DrupalKernel\DrupalKernelTest
     if ($this->container) {
       $this->container->get('kernel')->shutdown();
     }
@@ -636,7 +705,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // Free up memory: Custom test class properties.
     // Note: Private properties cannot be cleaned up.
     $rc = new \ReflectionClass(__CLASS__);
-    $blacklist = [];
+    $blacklist = array();
     foreach ($rc->getProperties() as $property) {
       $blacklist[$property->name] = $property->getDeclaringClass()->name;
     }
@@ -656,7 +725,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     }
     \Drupal::unsetContainer();
     $this->container = NULL;
-    new Settings([]);
+    new Settings(array());
 
     parent::tearDown();
   }
@@ -672,6 +741,15 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     foreach (Database::getAllConnectionInfo() as $key => $targets) {
       Database::removeConnection($key);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function tearDownAfterClass() {
+    // Free up memory: Precompiled container.
+    self::$initialContainerBuilder = NULL;
+    parent::tearDownAfterClass();
   }
 
   /**
@@ -750,18 +828,18 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       $all_tables_exist = TRUE;
       foreach ($tables as $table) {
         if (!$db_schema->tableExists($table)) {
-          $this->fail(SafeMarkup::format('Installed entity type table for the %entity_type entity type: %table', [
+          $this->fail(SafeMarkup::format('Installed entity type table for the %entity_type entity type: %table', array(
             '%entity_type' => $entity_type_id,
             '%table' => $table,
-          ]));
+          )));
           $all_tables_exist = FALSE;
         }
       }
       if ($all_tables_exist) {
-        $this->pass(SafeMarkup::format('Installed entity type tables for the %entity_type entity type: %tables', [
+        $this->pass(SafeMarkup::format('Installed entity type tables for the %entity_type entity type: %tables', array(
           '%entity_type' => $entity_type_id,
           '%tables' => '{' . implode('}, {', $tables) . '}',
-        ]));
+        )));
       }
     }
   }
@@ -920,9 +998,57 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    *   \Drupal\Core\Site\Settings::get() to perform custom merges.
    */
   protected function setSetting($name, $value) {
-    $settings = Settings::getInstance() ? Settings::getAll() : [];
+    $settings = Settings::getAll();
     $settings[$name] = $value;
     new Settings($settings);
+  }
+
+  /**
+   * Returns a ConfigImporter object to import test configuration.
+   *
+   * @return \Drupal\Core\Config\ConfigImporter
+   *
+   * @todo Move into Config-specific test base class.
+   */
+  protected function configImporter() {
+    if (!$this->configImporter) {
+      // Set up the ConfigImporter object for testing.
+      $storage_comparer = new StorageComparer(
+        $this->container->get('config.storage.sync'),
+        $this->container->get('config.storage'),
+        $this->container->get('config.manager')
+      );
+      $this->configImporter = new ConfigImporter(
+        $storage_comparer,
+        $this->container->get('event_dispatcher'),
+        $this->container->get('config.manager'),
+        $this->container->get('lock'),
+        $this->container->get('config.typed'),
+        $this->container->get('module_handler'),
+        $this->container->get('module_installer'),
+        $this->container->get('theme_handler'),
+        $this->container->get('string_translation')
+      );
+    }
+    // Always recalculate the changelist when called.
+    return $this->configImporter->reset();
+  }
+
+  /**
+   * Copies configuration objects from a source storage to a target storage.
+   *
+   * @param \Drupal\Core\Config\StorageInterface $source_storage
+   *   The source config storage.
+   * @param \Drupal\Core\Config\StorageInterface $target_storage
+   *   The target config storage.
+   *
+   * @todo Move into Config-specific test base class.
+   */
+  protected function copyConfig(StorageInterface $source_storage, StorageInterface $target_storage) {
+    $target_storage->deleteAll();
+    foreach ($source_storage->listAll() as $name) {
+      $target_storage->write($name, $source_storage->read($name));
+    }
   }
 
   /**
@@ -948,7 +1074,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * @return array
    */
   private static function getModulesToEnable($class) {
-    $modules = [];
+    $modules = array();
     while ($class) {
       if (property_exists($class, 'modules')) {
         // Only add the modules, if the $modules property was not inherited.
@@ -980,28 +1106,21 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // @see /core/tests/bootstrap.php
     $bootstrap_globals .= '$namespaces = ' . var_export($GLOBALS['namespaces'], TRUE) . ";\n";
 
-    $template->setVar([
+    $template->setVar(array(
       'constants' => '',
       'included_files' => '',
       'globals' => $bootstrap_globals,
-    ]);
+    ));
   }
 
   /**
-   * Returns whether the current test method is running in a separate process.
-   *
-   * Note that KernelTestBase will run in a separate process by default.
+   * Returns whether the current test runs in isolation.
    *
    * @return bool
    *
-   * @see \Drupal\KernelTests\KernelTestBase::$runTestInSeparateProcess
    * @see https://github.com/sebastianbergmann/phpunit/pull/1350
-   *
-   * @deprecated in Drupal 8.4.x, for removal before the Drupal 9.0.0 release.
-   *   KernelTestBase tests are always run in isolated processes.
    */
   protected function isTestInIsolation() {
-    @trigger_error(__CLASS__ . '::' . __FUNCTION__ . '() is deprecated in Drupal 8.4.x, for removal before the Drupal 9.0.0 release. KernelTestBase tests are always run in isolated processes.', E_USER_DEPRECATED);
     return function_exists('__phpunit_run_isolated_test');
   }
 
@@ -1014,12 +1133,12 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.2.0.
    */
   public function __get($name) {
-    if (in_array($name, [
+    if (in_array($name, array(
       'public_files_directory',
       'private_files_directory',
       'temp_files_directory',
       'translation_files_directory',
-    ])) {
+    ))) {
       // @comment it in again.
       trigger_error(sprintf("KernelTestBase::\$%s no longer exists. Use the regular API method to retrieve it instead (e.g., Settings).", $name), E_USER_DEPRECATED);
       switch ($name) {
@@ -1027,7 +1146,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
           return Settings::get('file_public_path', \Drupal::service('site.path') . '/files');
 
         case 'private_files_directory':
-          return Settings::get('file_private_path');
+          return $this->container->get('config.factory')->get('system.file')->get('path.private');
 
         case 'temp_files_directory':
           return file_directory_temp();
@@ -1039,12 +1158,12 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
     if ($name === 'configDirectories') {
       trigger_error(sprintf("KernelTestBase::\$%s no longer exists. Use config_get_config_directory() directly instead.", $name), E_USER_DEPRECATED);
-      return [
+      return array(
         CONFIG_SYNC_DIRECTORY => config_get_config_directory(CONFIG_SYNC_DIRECTORY),
-      ];
+      );
     }
 
-    $denied = [
+    $denied = array(
       // @see \Drupal\simpletest\TestBase
       'testId',
       'timeLimit',
@@ -1062,7 +1181,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       'generatedTestFiles',
       // Properties from the old KernelTestBase class that has been removed.
       'keyValueFactory',
-    ];
+    );
     if (in_array($name, $denied) || strpos($name, 'original') === 0) {
       throw new \RuntimeException(sprintf('TestBase::$%s property no longer exists', $name));
     }

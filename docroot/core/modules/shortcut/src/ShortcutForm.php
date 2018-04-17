@@ -23,28 +23,18 @@ class ShortcutForm extends ContentEntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
     $status = $entity->save();
-    $url = $entity->getUrl();
-    // There's an edge case where a user can have permission to
-    // 'link to any content', but has no right to access the linked page. So we
-    // check the access before showing the link.
-    if ($url->access()) {
-      $view_link = \Drupal::l($entity->getTitle(), $url);
-    }
-    else {
-      $view_link = $entity->getTitle();
-    }
 
     if ($status == SAVED_UPDATED) {
-      $message = $this->t('The shortcut %link has been updated.', ['%link' => $view_link]);
+      $message = $this->t('The shortcut %link has been updated.', array('%link' => $entity->getTitle()));
     }
     else {
-      $message = $this->t('Added a shortcut for %title.', ['%title' => $view_link]);
+      $message = $this->t('Added a shortcut for %title.', array('%title' => $entity->getTitle()));
     }
     drupal_set_message($message);
 
     $form_state->setRedirect(
       'entity.shortcut_set.customize_form',
-      ['shortcut_set' => $entity->bundle()]
+      array('shortcut_set' => $entity->bundle())
     );
   }
 

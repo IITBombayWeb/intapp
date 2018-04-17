@@ -61,14 +61,14 @@ class Term extends ContentEntityBase implements TermInterface {
     parent::postDelete($storage, $entities);
 
     // See if any of the term's children are about to be become orphans.
-    $orphans = [];
+    $orphans = array();
     foreach (array_keys($entities) as $tid) {
       if ($children = $storage->loadChildren($tid)) {
         foreach ($children as $child) {
           // If the term has multiple parents, we don't delete it.
           $parents = $storage->loadParents($child->id());
           if (empty($parents)) {
-            $orphans[] = $child;
+            $orphans[] = $child->id();
           }
         }
       }
@@ -79,7 +79,7 @@ class Term extends ContentEntityBase implements TermInterface {
     $storage->deleteTermHierarchy(array_keys($entities));
 
     if (!empty($orphans)) {
-      $storage->delete($orphans);
+      entity_delete_multiple('taxonomy_term', $orphans);
     }
   }
 
@@ -92,7 +92,7 @@ class Term extends ContentEntityBase implements TermInterface {
     // Only change the parents if a value is set, keep the existing values if
     // not.
     if (isset($this->parent->target_id)) {
-      $storage->deleteTermHierarchy([$this->id()]);
+      $storage->deleteTermHierarchy(array($this->id()));
       $storage->updateTermHierarchy($this);
     }
   }
@@ -101,48 +101,65 @@ class Term extends ContentEntityBase implements TermInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
-    $fields = parent::baseFieldDefinitions($entity_type);
+    $fields['tid'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Term ID'))
+      ->setDescription(t('The term ID.'))
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
 
-    $fields['tid']->setLabel(t('Term ID'))
-      ->setDescription(t('The term ID.'));
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The term UUID.'))
+      ->setReadOnly(TRUE);
 
-    $fields['uuid']->setDescription(t('The term UUID.'));
+    $fields['vid'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Vocabulary'))
+      ->setDescription(t('The vocabulary to which the term is assigned.'))
+      ->setSetting('target_type', 'taxonomy_vocabulary');
 
-    $fields['vid']->setLabel(t('Vocabulary'))
-      ->setDescription(t('The vocabulary to which the term is assigned.'));
-
-    $fields['langcode']->setDescription(t('The term language code.'));
+    $fields['langcode'] = BaseFieldDefinition::create('language')
+      ->setLabel(t('Language'))
+      ->setDescription(t('The term language code.'))
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', array(
+        'type' => 'hidden',
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'language_select',
+        'weight' => 2,
+      ));
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
+      ->setDescription(t('The term name.'))
       ->setTranslatable(TRUE)
       ->setRequired(TRUE)
       ->setSetting('max_length', 255)
-      ->setDisplayOptions('view', [
+      ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'string',
         'weight' => -5,
-      ])
-      ->setDisplayOptions('form', [
+      ))
+      ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
         'weight' => -5,
-      ])
+      ))
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['description'] = BaseFieldDefinition::create('text_long')
       ->setLabel(t('Description'))
+      ->setDescription(t('A description of the term.'))
       ->setTranslatable(TRUE)
-      ->setDisplayOptions('view', [
+      ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'text_default',
         'weight' => 0,
-      ])
+      ))
       ->setDisplayConfigurable('view', TRUE)
-      ->setDisplayOptions('form', [
+      ->setDisplayOptions('form', array(
         'type' => 'text_textfield',
         'weight' => 0,
-      ])
+      ))
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['weight'] = BaseFieldDefinition::create('integer')
@@ -230,19 +247,6 @@ class Term extends ContentEntityBase implements TermInterface {
    */
   public function getVocabularyId() {
     return $this->get('vid')->target_id;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getFieldsToSkipFromTranslationChangesCheck() {
-    // @todo the current implementation of the parent field makes it impossible
-    // for ::hasTranslationChanges() to correctly check the field for changes,
-    // so it is currently skipped from the comparision and has to be fixed by
-    // https://www.drupal.org/node/2843060.
-    $fields = parent::getFieldsToSkipFromTranslationChangesCheck();
-    $fields[] = 'parent';
-    return $fields;
   }
 
 }

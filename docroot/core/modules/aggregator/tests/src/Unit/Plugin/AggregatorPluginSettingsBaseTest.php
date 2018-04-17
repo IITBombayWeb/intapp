@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\aggregator\Unit\Plugin;
+namespace Drupal\Tests\aggregator\Unit\Plugin {
 
 use Drupal\aggregator\Form\SettingsForm;
 use Drupal\Core\Form\FormState;
@@ -39,20 +39,20 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
    */
   protected function setUp() {
     $this->configFactory = $this->getConfigFactoryStub(
-      [
-        'aggregator.settings' => [
-          'processors' => ['aggregator_test'],
-        ],
-        'aggregator_test.settings' => [],
-      ]
+      array(
+        'aggregator.settings' => array(
+          'processors' => array('aggregator_test'),
+        ),
+        'aggregator_test.settings' => array(),
+      )
     );
-    foreach (['fetcher', 'parser', 'processor'] as $type) {
+    foreach (array('fetcher', 'parser', 'processor') as $type) {
       $this->managers[$type] = $this->getMockBuilder('Drupal\aggregator\Plugin\AggregatorPluginManager')
         ->disableOriginalConstructor()
         ->getMock();
       $this->managers[$type]->expects($this->once())
         ->method('getDefinitions')
-        ->will($this->returnValue(['aggregator_test' => ['title' => '', 'description' => '']]));
+        ->will($this->returnValue(array('aggregator_test' => array('title' => '', 'description' => ''))));
     }
 
     $this->settingsForm = new SettingsForm(
@@ -79,8 +79,8 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
 
     $test_processor = $this->getMock(
       'Drupal\aggregator_test\Plugin\aggregator\processor\TestProcessor',
-      ['buildConfigurationForm', 'validateConfigurationForm', 'submitConfigurationForm'],
-      [[], 'aggregator_test', ['description' => ''], $this->configFactory]
+      array('buildConfigurationForm', 'validateConfigurationForm', 'submitConfigurationForm'),
+      array(array(), 'aggregator_test', array('description' => ''), $this->configFactory)
     );
     $test_processor->expects($this->at(0))
       ->method('buildConfigurationForm')
@@ -98,16 +98,18 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
       ->with($this->equalTo('aggregator_test'))
       ->will($this->returnValue($test_processor));
 
-    $form = $this->settingsForm->buildForm([], $form_state);
+    $form = $this->settingsForm->buildForm(array(), $form_state);
     $this->settingsForm->validateForm($form, $form_state);
     $this->settingsForm->submitForm($form, $form_state);
   }
 
 }
 
-// @todo Delete after https://www.drupal.org/node/2278383 is in.
-namespace Drupal\Core\Form;
+}
 
-if (!function_exists('drupal_set_message')) {
-  function drupal_set_message() {}
+namespace {
+  // @todo Delete after https://www.drupal.org/node/1858196 is in.
+  if (!function_exists('drupal_set_message')) {
+    function drupal_set_message() {}
+  }
 }

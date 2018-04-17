@@ -11,9 +11,6 @@ use Drupal\editor\EditorInterface;
  * @ConfigEntityType(
  *   id = "editor",
  *   label = @Translation("Text Editor"),
- *   handlers = {
- *     "access" = "Drupal\editor\EditorAccessControlHandler",
- *   },
  *   entity_keys = {
  *     "id" = "format"
  *   },
@@ -49,14 +46,14 @@ class Editor extends ConfigEntityBase implements EditorInterface {
    *
    * @var array
    */
-  protected $settings = [];
+  protected $settings = array();
 
   /**
    * The structured array of image upload settings.
    *
    * @var array
    */
-  protected $image_upload = [];
+  protected $image_upload = array();
 
   /**
    * The filter format this text editor is associated with.

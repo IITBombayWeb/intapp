@@ -2,8 +2,8 @@
 
 namespace Drupal\rest;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\rest\Plugin\Type\ResourcePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,30 +20,30 @@ class RestPermissions implements ContainerInjectionInterface {
   protected $restPluginManager;
 
   /**
-   * The REST resource config storage.
+   * The config factory.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $resourceConfigStorage;
+  protected $configFactory;
 
   /**
    * Constructs a new RestPermissions instance.
    *
    * @param \Drupal\rest\Plugin\Type\ResourcePluginManager $rest_plugin_manager
    *   The rest resource plugin manager.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
-  public function __construct(ResourcePluginManager $rest_plugin_manager, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(ResourcePluginManager $rest_plugin_manager, ConfigFactoryInterface $config_factory) {
     $this->restPluginManager = $rest_plugin_manager;
-    $this->resourceConfigStorage = $entity_type_manager->getStorage('rest_resource_config');
+    $this->configFactory = $config_factory;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('plugin.manager.rest'), $container->get('entity_type.manager'));
+    return new static($container->get('plugin.manager.rest'), $container->get('config.factory'));
   }
 
   /**
@@ -53,11 +53,12 @@ class RestPermissions implements ContainerInjectionInterface {
    */
   public function permissions() {
     $permissions = [];
-    /** @var \Drupal\rest\RestResourceConfigInterface[] $resource_configs */
-    $resource_configs = $this->resourceConfigStorage->loadMultiple();
-    foreach ($resource_configs as $resource_config) {
-      $plugin = $resource_config->getResourcePlugin();
-      $permissions = array_merge($permissions, $plugin->permissions());
+    $resources = $this->configFactory->get('rest.settings')->get('resources');
+    if ($resources && $enabled = array_intersect_key($this->restPluginManager->getDefinitions(), $resources)) {
+      foreach ($enabled as $key => $resource) {
+        $plugin = $this->restPluginManager->getInstance(['id' => $key]);
+        $permissions = array_merge($permissions, $plugin->permissions());
+      }
     }
     return $permissions;
   }

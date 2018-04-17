@@ -14,18 +14,17 @@ use Drupal\node\NodeInterface;
  */
 class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
 
-  public static $modules = [
+  public static $modules = array(
     'datetime',
     'field',
     'filter',
     'image',
     'link',
-    'menu_ui',
     'node',
     'taxonomy',
     'telephone',
     'text',
-  ];
+  );
 
   /**
    * {@inheritdoc}
@@ -41,21 +40,21 @@ class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
 
     $this->executeMigration('d7_node_type');
 
-    FieldStorageConfig::create([
+    FieldStorageConfig::create(array(
       'type' => 'entity_reference',
       'field_name' => 'field_tags',
       'entity_type' => 'node',
-      'settings' => [
+      'settings' => array(
         'target_type' => 'taxonomy_term',
-      ],
+      ),
       'cardinality' => FieldStorageConfigInterface::CARDINALITY_UNLIMITED,
-    ])->save();
+    ))->save();
 
-    FieldConfig::create([
+    FieldConfig::create(array(
       'entity_type' => 'node',
       'field_name' => 'field_tags',
       'bundle' => 'article',
-    ])->save();
+    ))->save();
 
     $this->executeMigrations([
       'd7_taxonomy_vocabulary',

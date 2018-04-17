@@ -83,6 +83,7 @@ trait AssertConfigTrait {
           break;
         default:
           throw new \Exception($config_name . ': ' . var_export($op, TRUE));
+          break;
       }
     }
   }

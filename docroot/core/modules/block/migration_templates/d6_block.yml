@@ -13,8 +13,7 @@ process:
     source: status
   id:
     # We need something unique, so aggregator, aggregator_1 etc will do.
-    plugin: make_unique_entity_field
-
+    plugin: dedupe_entity
     entity_type: block
     field: id
     postfix: _
@@ -64,19 +63,17 @@ process:
   region:
     plugin: block_region
     source:
+      - region
       - theme
       - '@theme'
-      - region
-    map:
-      garland:
-        bartik:
-          # Garland 6.x --> Bartik 8.x
-          header: header
-          footer: footer_fifth
-          left: sidebar_first
-          right: sidebar_second
-    # If mapping fails, put the block in the content region.
-    default_value: content
+    region_map:
+      left: sidebar_first
+      right: sidebar_second
+      sidebar_first: sidebar_first
+      sidebar_second: sidebar_second
+      help: help
+      header: header
+      footer: footer
   weight: weight
   settings:
     plugin: block_settings

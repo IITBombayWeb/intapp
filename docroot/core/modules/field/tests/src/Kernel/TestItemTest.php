@@ -21,7 +21,7 @@ class TestItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_test'];
+  public static $modules = array('field_test');
 
   /**
    * The name of the field to use in this test.
@@ -34,11 +34,11 @@ class TestItemTest extends FieldKernelTestBase {
     parent::setUp();
 
     // Create a 'test_field' field and storage for validation.
-    FieldStorageConfig::create([
+    FieldStorageConfig::create(array(
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-    ])->save();
+    ))->save();
     FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
@@ -59,7 +59,7 @@ class TestItemTest extends FieldKernelTestBase {
 
     // Verify entity has been created properly.
     $id = $entity->id();
-    $entity = EntityTest::load($id);
+    $entity = entity_load('entity_test', $id);
     $this->assertTrue($entity->{$this->fieldName} instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->{$this->fieldName}[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->{$this->fieldName}->value, $value);
@@ -72,23 +72,23 @@ class TestItemTest extends FieldKernelTestBase {
 
     // Read changed entity and assert changed values.
     $entity->save();
-    $entity = EntityTest::load($id);
+    $entity = entity_load('entity_test', $id);
     $this->assertEqual($entity->{$this->fieldName}->value, $new_value);
 
     // Test the schema for this field type.
-    $expected_schema = [
-      'columns' => [
-        'value' => [
+    $expected_schema = array(
+      'columns' => array(
+        'value' => array(
           'type' => 'int',
           'size' => 'medium',
-        ],
-      ],
-      'unique keys' => [],
-      'indexes' => [
-        'value' => ['value'],
-      ],
-      'foreign keys' => [],
-    ];
+        ),
+      ),
+      'unique keys' => array(),
+      'indexes' => array(
+        'value' => array('value'),
+      ),
+      'foreign keys' => array(),
+    );
     $field_schema = BaseFieldDefinition::create('test_field')->getSchema();
     $this->assertEqual($field_schema, $expected_schema);
   }

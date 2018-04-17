@@ -21,7 +21,7 @@ interface StaticMenuLinkOverridesInterface {
    * @param string $id
    *   A menu link plugin ID.
    *
-   * @return array|null
+   * @return array|NULL
    *   An override with following supported keys:
    *     - parent
    *     - weight

@@ -1,14 +1,18 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Tests\rest\Kernel\RequestHandlerTest.
+ */
+
 namespace Drupal\Tests\rest\Kernel;
 
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\rest\Plugin\ResourceBase;
+use Drupal\rest\Plugin\Type\ResourcePluginManager;
 use Drupal\rest\RequestHandler;
 use Drupal\rest\ResourceResponse;
-use Drupal\rest\RestResourceConfigInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -28,40 +32,32 @@ class RequestHandlerTest extends KernelTestBase {
   public static $modules = ['serialization', 'rest'];
 
   /**
-   * The entity storage.
-   *
-   * @var \Prophecy\Prophecy\ObjectProphecy
-   */
-  protected $entityStorage;
-
-  /**
    * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
-    $this->entityStorage = $this->prophesize(EntityStorageInterface::class);
-    $this->requestHandler = new RequestHandler($this->entityStorage->reveal());
+    $this->requestHandler = new RequestHandler();
     $this->requestHandler->setContainer($this->container);
   }
 
   /**
+   * Assert some basic handler method logic.
+   *
    * @covers ::handle
    */
-  public function testHandle() {
+  public function testBaseHandler() {
     $request = new Request();
-    $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => 'restplugin'], ['_format' => 'json']));
+    $route_match = new RouteMatch('test', new Route('/rest/test', ['_plugin' => 'restplugin', '_format' => 'json']));
 
     $resource = $this->prophesize(StubRequestHandlerResourcePlugin::class);
     $resource->get(NULL, $request)
       ->shouldBeCalled();
 
-    // Setup the configuration.
-    $config = $this->prophesize(RestResourceConfigInterface::class);
-    $config->getResourcePlugin()->willReturn($resource->reveal());
-    $config->getCacheContexts()->willReturn([]);
-    $config->getCacheTags()->willReturn([]);
-    $config->getCacheMaxAge()->willReturn(12);
-    $this->entityStorage->load('restplugin')->willReturn($config->reveal());
+    // Setup stub plugin manager that will return our plugin.
+    $stub = $this->prophesize(ResourcePluginManager::class);
+    $stub->getInstance(['id' => 'restplugin'])
+      ->willReturn($resource->reveal());
+    $this->container->set('plugin.manager.rest', $stub->reveal());
 
     // Response returns NULL this time because response from plugin is not
     // a ResourceResponse so it is passed through directly.
@@ -76,7 +72,6 @@ class RequestHandlerTest extends KernelTestBase {
     $this->assertEquals($response, $handler_response);
 
     // We will call the patch method this time.
-    $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => 'restplugin'], ['_content_type_format' => 'json']));
     $request->setMethod('PATCH');
     $response = new ResourceResponse([]);
     $resource->patch(NULL, $request)
@@ -86,6 +81,49 @@ class RequestHandlerTest extends KernelTestBase {
     $this->assertEquals($response, $handler_response);
   }
 
+  /**
+   * Test that given structured data, the request handler will serialize it.
+   *
+   * @dataProvider providerTestSerialization
+   * @covers ::handle
+   */
+  public function testSerialization($data) {
+    $request = new Request();
+    $route_match = new RouteMatch('test', new Route('/rest/test', ['_plugin' => 'restplugin', '_format' => 'json']));
+
+    $resource = $this->prophesize(StubRequestHandlerResourcePlugin::class);
+
+    // Setup stub plugin manager that will return our plugin.
+    $stub = $this->prophesize(ResourcePluginManager::class);
+    $stub->getInstance(['id' => 'restplugin'])
+      ->willReturn($resource->reveal());
+    $this->container->set('plugin.manager.rest', $stub->reveal());
+
+    $response = new ResourceResponse($data);
+    $resource->get(NULL, $request)
+      ->willReturn($response);
+    $handler_response = $this->requestHandler->handle($route_match, $request);
+    // Content is a serialized version of the data we provided.
+    $this->assertEquals(json_encode($data), $handler_response->getContent());
+  }
+
+  public function providerTestSerialization() {
+    return [
+      [NULL],
+      [''],
+      ['string'],
+      ['Complex \ string $%^&@ with unicode ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ'],
+      [[]],
+      [['test']],
+      [['test' => 'foobar']],
+      [TRUE],
+      [FALSE],
+      // @todo Not supported. https://www.drupal.org/node/2427811
+      // [new \stdClass()],
+      // [(object) ['test' => 'foobar']],
+    ];
+  }
+
 }
 
 /**
@@ -93,9 +131,7 @@ class RequestHandlerTest extends KernelTestBase {
  */
 class StubRequestHandlerResourcePlugin extends ResourceBase {
 
-  public function get() {}
-  public function post() {}
-  public function patch() {}
-  public function delete() {}
+  function get() {}
+  function patch() {}
 
 }

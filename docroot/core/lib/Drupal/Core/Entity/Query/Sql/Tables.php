@@ -3,12 +3,9 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Entity\Sql\TableMappingInterface;
-use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
-use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 
 /**
  * Adds tables and fields to the SQL entity query.
@@ -28,7 +25,7 @@ class Tables implements TablesInterface {
    *
    * @var array
    */
-  protected $entityTables = [];
+  protected $entityTables = array();
 
   /**
    * Field table array, key is table name, value is alias.
@@ -37,7 +34,7 @@ class Tables implements TablesInterface {
    *
    * @var array
    */
-  protected $fieldTables = [];
+  protected $fieldTables = array();
 
   /**
    * The entity manager.
@@ -51,7 +48,7 @@ class Tables implements TablesInterface {
    *
    * @var array
    */
-  protected $caseSensitiveFields = [];
+  protected $caseSensitiveFields = array();
 
   /**
    * @param \Drupal\Core\Database\Query\SelectInterface $sql_query
@@ -80,7 +77,7 @@ class Tables implements TablesInterface {
     $count = count($specifiers) - 1;
     // This will contain the definitions of the last specifier seen by the
     // system.
-    $propertyDefinitions = [];
+    $propertyDefinitions = array();
     $entity_type = $this->entityManager->getDefinition($entity_type_id);
 
     $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
@@ -183,7 +180,7 @@ class Tables implements TablesInterface {
         // queried from the data table or the base table based on where it
         // finds the property first. The data table is preferred, which is why
         // it gets added before the base table.
-        $entity_tables = [];
+        $entity_tables = array();
         if ($all_revisions && $field_storage && $field_storage->isRevisionable()) {
           $data_table = $entity_type->getRevisionDataTable();
           $entity_base_table = $entity_type->getRevisionTable();
@@ -256,25 +253,16 @@ class Tables implements TablesInterface {
           $relationship_specifier = $specifiers[$key + 1];
           $next_index_prefix = $relationship_specifier;
         }
-        $entity_type_id = NULL;
-        // Relationship specifier can also contain the entity type ID, i.e.
-        // entity:node, entity:user or entity:taxonomy.
-        if (strpos($relationship_specifier, ':') !== FALSE) {
-          list($relationship_specifier, $entity_type_id) = explode(':', $relationship_specifier, 2);
-        }
         // Check for a valid relationship.
-        if (isset($propertyDefinitions[$relationship_specifier]) && $propertyDefinitions[$relationship_specifier] instanceof DataReferenceDefinitionInterface) {
-          // If it is, use the entity type if specified already, otherwise use
-          // the definition.
-          $target_definition = $propertyDefinitions[$relationship_specifier]->getTargetDefinition();
-          if (!$entity_type_id && $target_definition instanceof EntityDataDefinitionInterface) {
-            $entity_type_id = $target_definition->getEntityTypeId();
-          }
+        if (isset($propertyDefinitions[$relationship_specifier]) && $field_storage->getPropertyDefinition('entity')->getDataType() == 'entity_reference' ) {
+          // If it is, use the entity type.
+          $entity_type_id = $propertyDefinitions[$relationship_specifier]->getTargetDefinition()->getEntityTypeId();
           $entity_type = $this->entityManager->getDefinition($entity_type_id);
           $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
           // Add the new entity base table using the table and sql column.
-          $base_table = $this->addNextBaseTable($entity_type, $table, $sql_column);
-          $propertyDefinitions = [];
+          $join_condition = '%alias.' . $entity_type->getKey('id') . " = $table.$sql_column";
+          $base_table = $this->sqlQuery->leftJoin($entity_type->getBaseTable(), NULL, $join_condition);
+          $propertyDefinitions = array();
           $key++;
           $index_prefix .= "$next_index_prefix.";
         }
@@ -340,7 +328,7 @@ class Tables implements TablesInterface {
   }
 
   protected function addJoin($type, $table, $join_condition, $langcode, $delta = NULL) {
-    $arguments = [];
+    $arguments = array();
     if ($langcode) {
       $entity_type_id = $this->sqlQuery->getMetaData('entity_type');
       $entity_type = $this->entityManager->getDefinition($entity_type_id);
@@ -377,31 +365,6 @@ class Tables implements TablesInterface {
       return FALSE;
     }
     return array_flip($mapping);
-  }
-
-  /**
-   * Add the next entity base table.
-   *
-   * For example, when building the SQL query for
-   * @code
-   * condition('uid.entity.name', 'foo', 'CONTAINS')
-   * @endcode
-   *
-   * this adds the users table.
-   *
-   * @param \Drupal\Core\Entity\EntityType $entity_type
-   *   The entity type being joined, in the above example, User.
-   * @param string $table
-   *   This is the table being joined, in the above example, {users}.
-   * @param string $sql_column
-   *   This is the SQL column in the existing table being joined to.
-   *
-   * @return string
-   *   The alias of the next entity table joined in.
-   */
-  protected function addNextBaseTable(EntityType $entity_type, $table, $sql_column) {
-    $join_condition = '%alias.' . $entity_type->getKey('id') . " = $table.$sql_column";
-    return $this->sqlQuery->leftJoin($entity_type->getBaseTable(), NULL, $join_condition);
   }
 
 }

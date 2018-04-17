@@ -2,7 +2,6 @@
 
 namespace Drupal\field_test\Form;
 
-use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -34,31 +33,21 @@ class NestedEntityTestForm extends FormBase {
     $form_state->set('entity_2', $entity_2);
     $form_display_2 = EntityFormDisplay::collectRenderDisplay($entity_2, 'default');
     $form_state->set('form_display_2', $form_display_2);
-    $form['entity_2'] = [
+    $form['entity_2'] = array(
       '#type' => 'details',
       '#title' => t('Second entity'),
       '#tree' => TRUE,
-      '#parents' => ['entity_2'],
+      '#parents' => array('entity_2'),
       '#weight' => 50,
-      '#attributes' => ['class' => ['entity-2']]
-    ];
+    );
 
     $form_display_2->buildForm($entity_2, $form['entity_2'], $form_state);
 
-    if ($entity_2 instanceof EntityChangedInterface) {
-      // Changed must be sent to the client, for later overwrite error checking.
-      // @see Drupal\field\Tests\NestedFormTest::testNestedEntityFormEntityLevelValidation()
-      $form['entity_2']['changed'] = [
-        '#type' => 'hidden',
-        '#default_value' => $entity_1->getChangedTime(),
-      ];
-    }
-
-    $form['save'] = [
+    $form['save'] = array(
       '#type' => 'submit',
       '#value' => t('Save'),
       '#weight' => 100,
-    ];
+    );
 
     return $form;
   }
@@ -76,16 +65,7 @@ class NestedEntityTestForm extends FormBase {
     $entity_2 = $form_state->get('entity_2');
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display_2 */
     $form_display_2 = $form_state->get('form_display_2');
-    $extracted = $form_display_2->extractFormValues($entity_2, $form['entity_2'], $form_state);
-    // Extract the values of fields that are not rendered through widgets, by
-    // simply copying from top-level form values. This leaves the fields that
-    // are not being edited within this form untouched.
-    // @see Drupal\field\Tests\NestedFormTest::testNestedEntityFormEntityLevelValidation()
-    foreach ($form_state->getValues()['entity_2'] as $name => $values) {
-      if ($entity_2->hasField($name) && !isset($extracted[$name])) {
-        $entity_2->set($name, $values);
-      }
-    }
+    $form_display_2->extractFormValues($entity_2, $form['entity_2'], $form_state);
     $form_display_2->validateFormValues($entity_2, $form['entity_2'], $form_state);
   }
 
@@ -101,7 +81,7 @@ class NestedEntityTestForm extends FormBase {
     $entity_2 = $form_state->get('entity_2');
     $entity_2->save();
 
-    drupal_set_message($this->t('test_entities @id_1 and @id_2 have been updated.', ['@id_1' => $entity_1->id(), '@id_2' => $entity_2->id()]));
+    drupal_set_message($this->t('test_entities @id_1 and @id_2 have been updated.', array('@id_1' => $entity_1->id(), '@id_2' => $entity_2->id())));
   }
 
 }

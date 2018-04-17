@@ -3,7 +3,6 @@
 namespace Drupal\Tests\user\Kernel\Migrate\d6;
 
 use Drupal\file\Entity\File;
-use Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
@@ -13,8 +12,6 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  */
 class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
 
-  use FileMigrationTestTrait;
-
   /**
    * {@inheritdoc}
    */
@@ -22,14 +19,20 @@ class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
     parent::setUp();
 
     $this->installEntitySchema('file');
-    $this->executeMigration('d6_user_picture_file');
+
+    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
+    $migration = $this->getMigration('d6_user_picture_file');
+    $source = $migration->getSourceConfiguration();
+    $source['site_path'] = 'core/modules/simpletest';
+    $migration->set('source', $source);
+    $this->executeMigration($migration);
   }
 
   /**
    * Tests the Drupal 6 user pictures to Drupal 8 migration.
    */
   public function testUserPictures() {
-    $file_ids = [];
+    $file_ids = array();
     foreach ($this->migration->getIdMap() as $destination_ids) {
       $file_ids[] = reset($destination_ids);
     }

@@ -26,7 +26,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['editor', 'editor_test'];
+  public static $modules = array('editor', 'editor_test');
 
   /**
    * The manager for editor plug-ins.
@@ -73,22 +73,22 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $this->createFieldWithStorage(
       $this->fieldName, 'text', 1, 'Long text field',
       // Instance settings.
-      [],
+      array(),
       // Widget type & settings.
       'text_textarea',
-      ['size' => 42],
+      array('size' => 42),
       // 'default' formatter type & settings.
       'text_default',
-      []
+      array()
     );
 
     // Create text format.
-    $full_html_format = FilterFormat::create([
+    $full_html_format = FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
-      'filters' => [],
-    ]);
+      'filters' => array(),
+    ));
     $full_html_format->save();
 
     // Associate text editor with text format.
@@ -99,12 +99,12 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $editor->save();
 
     // Also create a text format without an associated text editor.
-    FilterFormat::create([
+    FilterFormat::create(array(
       'format' => 'no_editor',
       'name' => 'No Text Editor',
       'weight' => 2,
-      'filters' => [],
-    ])->save();
+      'filters' => array(),
+    ))->save();
   }
 
   /**
@@ -121,9 +121,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
    *   Returns the selected in-place editor.
    */
   protected function getSelectedEditor($entity_id, $field_name, $view_mode = 'default') {
-    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
-    $storage->resetCache([$entity_id]);
-    $entity = $storage->load($entity_id);
+    $entity = entity_load('entity_test', $entity_id, TRUE);
     $items = $entity->get($field_name);
     $options = entity_get_display('entity_test', 'entity_test', $view_mode)->getComponent($field_name);
     return $this->editorSelector->getEditor($options['type'], $items);
@@ -174,20 +172,20 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $entity->{$this->fieldName}->value = 'Test';
     $entity->{$this->fieldName}->format = 'full_html';
     $entity->save();
-    $entity = EntityTest::load($entity->id());
+    $entity = entity_load('entity_test', $entity->id());
 
     // Verify metadata.
     $items = $entity->get($this->fieldName);
     $metadata = $this->metadataGenerator->generateFieldMetadata($items, 'default');
-    $expected = [
+    $expected = array(
       'access' => TRUE,
       'label' => 'Long text field',
       'editor' => 'editor',
-      'custom' => [
+      'custom' => array(
         'format' => 'full_html',
         'formatHasTransformations' => FALSE,
-      ],
-    ];
+      ),
+    );
     $this->assertEqual($expected, $metadata, 'The correct metadata (including custom metadata) is generated.');
   }
 
@@ -197,9 +195,9 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
   public function testAttachments() {
     $this->editorSelector = $this->container->get('quickedit.editor.selector');
 
-    $editors = ['editor'];
+    $editors = array('editor');
     $attachments = $this->editorSelector->getEditorAttachments($editors);
-    $this->assertIdentical($attachments, ['library' => ['editor/quickedit.inPlaceEditor.formattedText']], "Expected attachments for Editor module's in-place editor found.");
+    $this->assertIdentical($attachments, array('library' => array('editor/quickedit.inPlaceEditor.formattedText')), "Expected attachments for Editor module's in-place editor found.");
   }
 
   /**
@@ -211,18 +209,18 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $entity->{$this->fieldName}->value = 'Test';
     $entity->{$this->fieldName}->format = 'full_html';
     $entity->save();
-    $entity = EntityTest::load($entity->id());
+    $entity = entity_load('entity_test', $entity->id());
 
     // Verify AJAX response.
     $controller = new EditorController();
     $request = new Request();
     $response = $controller->getUntransformedText($entity, $this->fieldName, LanguageInterface::LANGCODE_DEFAULT, 'default');
-    $expected = [
-      [
+    $expected = array(
+      array(
         'command' => 'editorGetUntransformedText',
         'data' => 'Test',
-      ]
-    ];
+      )
+    );
 
     $ajax_response_attachments_processor = \Drupal::service('ajax_response.attachments_processor');
     $subscriber = new AjaxResponseSubscriber($ajax_response_attachments_processor);

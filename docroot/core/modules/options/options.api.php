@@ -20,7 +20,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *   properties.
  * @param array $context
  *   An associative array containing:
- *   - fieldDefinition: The field definition
+ *   - field_definition: The field definition
  *     (\Drupal\Core\Field\FieldDefinitionInterface).
  *   - entity: The entity object the field is attached to
  *     (\Drupal\Core\Entity\EntityInterface).
@@ -30,7 +30,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  */
 function hook_options_list_alter(array &$options, array $context) {
   // Check if this is the field we want to change.
-  if ($context['fieldDefinition']->id() == 'field_option') {
+  if ($context['field']->id() == 'field_option') {
     // Change the label of the empty option.
     $options['_none'] = t('== Empty ==');
   }
@@ -81,21 +81,21 @@ function hook_options_list_alter(array &$options, array $context) {
  */
 function callback_allowed_values_function(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL, &$cacheable = TRUE) {
   if (isset($entity) && ($entity->bundle() == 'not_a_programmer')) {
-    $values = [
+    $values = array(
       1 => 'One',
       2 => 'Two',
-    ];
+    );
   }
   else {
-    $values = [
-      'Group 1' => [
+    $values = array(
+      'Group 1' => array(
         0 => 'Zero',
         1 => 'One',
-      ],
-      'Group 2' => [
+      ),
+      'Group 2' => array(
         2 => 'Two',
-      ],
-    ];
+      ),
+    );
   }
 
   return $values;

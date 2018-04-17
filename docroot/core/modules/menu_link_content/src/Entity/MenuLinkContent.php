@@ -117,9 +117,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
    * {@inheritdoc}
    */
   public function getParentId() {
-    // Cast the parent ID to a string, only an empty string means no parent,
-    // NULL keeps the existing parent.
-    return (string) $this->get('parent')->value;
+    return $this->get('parent')->value;
   }
 
   /**
@@ -133,7 +131,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
    * {@inheritdoc}
    */
   public function getPluginDefinition() {
-    $definition = [];
+    $definition = array();
     $definition['class'] = 'Drupal\menu_link_content\Plugin\Menu\MenuLinkContent';
     $definition['menu_name'] = $this->getMenuName();
 
@@ -155,7 +153,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $definition['description'] = $this->getDescription();
     $definition['weight'] = $this->getWeight();
     $definition['id'] = $this->getPluginId();
-    $definition['metadata'] = ['entity_id' => $this->id()];
+    $definition['metadata'] = array('entity_id' => $this->id());
     $definition['form_class'] = '\Drupal\menu_link_content\Form\MenuLinkContentForm';
     $definition['enabled'] = $this->isEnabled() ? 1 : 0;
     $definition['expanded'] = $this->isExpanded() ? 1 : 0;
@@ -235,20 +233,23 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
-    $fields = parent::baseFieldDefinitions($entity_type);
+    $fields['id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Entity ID'))
+      ->setDescription(t('The entity ID for this menu link content entity.'))
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
 
-    $fields['id']->setLabel(t('Entity ID'))
-      ->setDescription(t('The entity ID for this menu link content entity.'));
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The content menu link UUID.'))
+      ->setReadOnly(TRUE);
 
-    $fields['uuid']->setDescription(t('The content menu link UUID.'));
-
-    $fields['langcode']->setDescription(t('The menu link language code.'));
-
-    $fields['bundle']
+    $fields['bundle'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Bundle'))
       ->setDescription(t('The content menu link bundle.'))
       ->setSetting('max_length', EntityTypeInterface::BUNDLE_MAX_LENGTH)
-      ->setSetting('is_ascii', TRUE);
+      ->setSetting('is_ascii', TRUE)
+      ->setReadOnly(TRUE);
 
     $fields['title'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Menu link title'))
@@ -256,15 +257,15 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 255)
-      ->setDisplayOptions('view', [
+      ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'string',
         'weight' => -5,
-      ])
-      ->setDisplayOptions('form', [
+      ))
+      ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
         'weight' => -5,
-      ])
+      ))
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['description'] = BaseFieldDefinition::create('string')
@@ -272,15 +273,15 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setDescription(t('Shown when hovering over the menu link.'))
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 255)
-      ->setDisplayOptions('view', [
+      ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'string',
         'weight' => 0,
-      ])
-      ->setDisplayOptions('form', [
+      ))
+      ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
         'weight' => 0,
-      ]);
+      ));
 
     $fields['menu_name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Menu name'))
@@ -292,14 +293,14 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setLabel(t('Link'))
       ->setDescription(t('The location this menu link points to.'))
       ->setRequired(TRUE)
-      ->setSettings([
+      ->setSettings(array(
         'link_type' => LinkItemInterface::LINK_GENERIC,
         'title' => DRUPAL_DISABLED,
-      ])
-      ->setDisplayOptions('form', [
+      ))
+      ->setDisplayOptions('form', array(
         'type' => 'link_default',
         'weight' => -2,
-      ]);
+      ));
 
     $fields['external'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('External'))
@@ -314,43 +315,55 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setLabel(t('Weight'))
       ->setDescription(t('Link weight among links in the same menu at the same depth. In the menu, the links with high weight will sink and links with a low weight will be positioned nearer the top.'))
       ->setDefaultValue(0)
-      ->setDisplayOptions('view', [
+      ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'integer',
         'weight' => 0,
-      ])
-      ->setDisplayOptions('form', [
+      ))
+      ->setDisplayOptions('form', array(
         'type' => 'number',
         'weight' => 20,
-      ]);
+      ));
 
     $fields['expanded'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Show as expanded'))
       ->setDescription(t('If selected and this menu link has children, the menu will always appear expanded.'))
       ->setDefaultValue(FALSE)
-      ->setDisplayOptions('view', [
+      ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'boolean',
         'weight' => 0,
-      ])
-      ->setDisplayOptions('form', [
-        'settings' => ['display_label' => TRUE],
+      ))
+    ->setDisplayOptions('form', array(
+        'settings' => array('display_label' => TRUE),
         'weight' => 0,
-      ]);
+      ));
 
     $fields['enabled'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Enabled'))
       ->setDescription(t('A flag for whether the link should be enabled in menus or hidden.'))
       ->setDefaultValue(TRUE)
-      ->setDisplayOptions('view', [
+      ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'boolean',
         'weight' => 0,
-      ])
-      ->setDisplayOptions('form', [
-        'settings' => ['display_label' => TRUE],
+      ))
+      ->setDisplayOptions('form', array(
+        'settings' => array('display_label' => TRUE),
         'weight' => -1,
-      ]);
+      ));
+
+    $fields['langcode'] = BaseFieldDefinition::create('language')
+      ->setLabel(t('Language'))
+      ->setDescription(t('The menu link language code.'))
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', array(
+        'type' => 'hidden',
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'language_select',
+        'weight' => 2,
+      ));
 
     $fields['parent'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Parent plugin ID'))

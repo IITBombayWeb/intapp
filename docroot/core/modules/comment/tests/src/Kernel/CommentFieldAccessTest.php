@@ -10,7 +10,7 @@ use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
-use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
+use Drupal\simpletest\TestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
@@ -23,37 +23,36 @@ use Drupal\user\RoleInterface;
 class CommentFieldAccessTest extends EntityKernelTestBase {
 
   use CommentTestTrait;
-  use GeneratePermutationsTrait;
 
   /**
    * Modules to install.
    *
    * @var array
    */
-  public static $modules = ['comment', 'entity_test', 'user'];
+  public static $modules = array('comment', 'entity_test', 'user');
 
   /**
    * Fields that only users with administer comments permissions can change.
    *
    * @var array
    */
-  protected $administrativeFields = [
+  protected $administrativeFields = array(
     'uid',
     'status',
     'created',
-  ];
+  );
 
   /**
    * These fields are automatically managed and can not be changed by any user.
    *
    * @var array
    */
-  protected $readOnlyFields = [
+  protected $readOnlyFields = array(
     'changed',
     'hostname',
     'cid',
     'thread',
-  ];
+  );
 
   /**
    * These fields can be edited on create only.
@@ -74,19 +73,19 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected $contactFields = [
+  protected $contactFields = array(
     'name',
     'mail',
     'homepage',
-  ];
+  );
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(['user', 'comment']);
-    $this->installSchema('comment', ['comment_entity_statistics']);
+    $this->installConfig(array('user', 'comment'));
+    $this->installSchema('comment', array('comment_entity_statistics'));
   }
 
   /**
@@ -204,7 +203,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       'comment' => [$comment1, $comment2, $comment3, $comment4],
       'user' => [$comment_admin_user, $comment_enabled_user, $comment_no_edit_user, $comment_disabled_user, $anonymous_user]
     ];
-    $permutations = $this->generatePermutations($combinations);
+    $permutations = TestBase::generatePermutations($combinations);
 
     // Check access to administrative fields.
     foreach ($this->administrativeFields as $field) {

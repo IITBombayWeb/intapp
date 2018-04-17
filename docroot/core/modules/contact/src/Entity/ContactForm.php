@@ -4,7 +4,6 @@ namespace Drupal\contact\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\contact\ContactFormInterface;
-use Drupal\Core\Url;
 
 /**
  * Defines the contact form entity.
@@ -40,8 +39,6 @@ use Drupal\Core\Url;
  *     "recipients",
  *     "reply",
  *     "weight",
- *     "message",
- *     "redirect",
  *   }
  * )
  */
@@ -62,25 +59,11 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
   protected $label;
 
   /**
-   * The message displayed to user on form submission.
-   *
-   * @var string
-   */
-  protected $message;
-
-  /**
    * List of recipient email addresses.
    *
    * @var array
    */
-  protected $recipients = [];
-
-  /**
-   * The path to redirect to on form submission.
-   *
-   * @var string
-   */
-  protected $redirect;
+  protected $recipients = array();
 
   /**
    * An auto-reply message.
@@ -99,21 +82,6 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
   /**
    * {@inheritdoc}
    */
-  public function getMessage() {
-    return $this->message;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setMessage($message) {
-    $this->message = $message;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getRecipients() {
     return $this->recipients;
   }
@@ -123,34 +91,6 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    */
   public function setRecipients($recipients) {
     $this->recipients = $recipients;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRedirectPath() {
-    return $this->redirect;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRedirectUrl() {
-    if ($this->redirect) {
-      $url = Url::fromUserInput($this->redirect);
-    }
-    else {
-      $url = Url::fromRoute('<front>');
-    }
-    return $url;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setRedirectPath($redirect) {
-    $this->redirect = $redirect;
     return $this;
   }
 

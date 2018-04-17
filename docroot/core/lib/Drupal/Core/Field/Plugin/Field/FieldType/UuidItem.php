@@ -3,7 +3,6 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Defines the 'uuid' entity field type.
@@ -24,10 +23,10 @@ class UuidItem extends StringItem {
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return [
+    return array(
       'max_length' => 128,
       'is_ascii' => TRUE,
-    ] + parent::defaultStorageSettings();
+    ) + parent::defaultStorageSettings();
   }
 
   /**
@@ -36,7 +35,7 @@ class UuidItem extends StringItem {
   public function applyDefaultValue($notify = TRUE) {
     // Default to one field item with a generated UUID.
     $uuid = \Drupal::service('uuid');
-    $this->setValue(['value' => $uuid->generate()], $notify);
+    $this->setValue(array('value' => $uuid->generate()), $notify);
     return $this;
   }
 
@@ -45,16 +44,8 @@ class UuidItem extends StringItem {
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $schema = parent::schema($field_definition);
-    $schema['unique keys']['value'] = ['value'];
+    $schema['unique keys']['value'] = array('value');
     return $schema;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-    $values['value'] = \Drupal::service('uuid')->generate();
-    return $values;
   }
 
 }

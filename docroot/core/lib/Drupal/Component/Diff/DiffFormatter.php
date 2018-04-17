@@ -37,16 +37,6 @@ class DiffFormatter {
   public $trailing_context_lines = 0;
 
   /**
-   * The line stats.
-   *
-   * @var array
-   */
-  protected $line_stats = [
-    'counter' => ['x' => 0, 'y' => 0],
-    'offset' => ['x' => 0, 'y' => 0],
-  ];
-
-  /**
    * Format a diff.
    *
    * @param \Drupal\Component\Diff\Diff $diff
@@ -58,7 +48,7 @@ class DiffFormatter {
   public function format(Diff $diff) {
     $xi = $yi = 1;
     $block = FALSE;
-    $context = [];
+    $context = array();
 
     $nlead = $this->leading_context_lines;
     $ntrail = $this->trailing_context_lines;
@@ -87,7 +77,7 @@ class DiffFormatter {
           $context = array_slice($context, sizeof($context) - $nlead);
           $x0 = $xi - sizeof($context);
           $y0 = $yi - sizeof($context);
-          $block = [];
+          $block = array();
           if ($context) {
             $block[] = new DiffOpCopy($context);
           }

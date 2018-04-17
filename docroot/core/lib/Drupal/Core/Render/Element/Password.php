@@ -8,9 +8,6 @@ use Drupal\Core\Render\Element;
 /**
  * Provides a form element for entering a password, with hidden text.
  *
- * Properties:
- * - #size: The size of the input element in characters.
- *
  * Usage example:
  * @code
  * $form['pass'] = array(
@@ -32,20 +29,20 @@ class Password extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return [
+    return array(
       '#input' => TRUE,
       '#size' => 60,
       '#maxlength' => 128,
-      '#process' => [
-        [$class, 'processAjaxForm'],
-        [$class, 'processPattern'],
-      ],
-      '#pre_render' => [
-        [$class, 'preRenderPassword'],
-      ],
+      '#process' => array(
+        array($class, 'processAjaxForm'),
+        array($class, 'processPattern'),
+      ),
+      '#pre_render' => array(
+        array($class, 'preRenderPassword'),
+      ),
       '#theme' => 'input__password',
-      '#theme_wrappers' => ['form_element'],
-    ];
+      '#theme_wrappers' => array('form_element'),
+    );
   }
 
   /**
@@ -61,8 +58,8 @@ class Password extends FormElement {
    */
   public static function preRenderPassword($element) {
     $element['#attributes']['type'] = 'password';
-    Element::setAttributes($element, ['id', 'name', 'size', 'maxlength', 'placeholder']);
-    static::setAttributes($element, ['form-text']);
+    Element::setAttributes($element, array('id', 'name', 'size', 'maxlength', 'placeholder'));
+    static::setAttributes($element, array('form-text'));
 
     return $element;
   }

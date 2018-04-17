@@ -39,7 +39,7 @@ interface LibraryDiscoveryInterface {
    * @param string $name
    *   The name of a registered library to retrieve.
    *
-   * @return array|false
+   * @return array|FALSE
    *   The definition of the requested library, if $name was passed and it
    *   exists, otherwise FALSE.
    */

@@ -48,6 +48,10 @@ display:
         type: fields
         options:
           default_field_elements: true
+          inline:
+            subject: subject
+            changed: changed
+          separator: ' '
           hide_empty: false
       relationships:
         node:
@@ -169,7 +173,7 @@ display:
           entity_field: changed
       filters:
         status:
-          value: '1'
+          value: true
           table: comment_field_data
           field: status
           id: status
@@ -180,7 +184,7 @@ display:
           entity_type: comment
           entity_field: status
         status_node:
-          value: '1'
+          value: true
           table: node_field_data
           field: status
           relationship: node

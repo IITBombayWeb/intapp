@@ -3,7 +3,6 @@
 namespace Drupal\comment\Plugin\Field\FieldFormatter;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityFormBuilderInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -36,10 +35,9 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return [
-      'view_mode' => 'default',
+    return array(
       'pager_id' => 0,
-    ] + parent::defaultSettings();
+    ) + parent::defaultSettings();
   }
 
   /**
@@ -141,8 +139,8 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = [];
-    $output = [];
+    $elements = array();
+    $output = array();
 
     $field_name = $this->fieldDefinition->getName();
     $entity = $items->getEntity();
@@ -153,7 +151,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       // Comments are added to the search results and search index by
       // comment_node_update_index() instead of by this formatter, so don't
       // return anything if the view mode is search_index or search_result.
-      !in_array($this->viewMode, ['search_result', 'search_index'])) {
+      !in_array($this->viewMode, array('search_result', 'search_index'))) {
       $comment_settings = $this->getFieldSettings();
 
       // Only attempt to render comments if the entity has visible comments.
@@ -169,7 +167,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
           $comments_per_page = $comment_settings['per_page'];
           $comments = $this->storage->loadThread($entity, $field_name, $mode, $comments_per_page, $this->getSetting('pager_id'));
           if ($comments) {
-            $build = $this->viewBuilder->viewMultiple($comments, $this->getSetting('view_mode'));
+            $build = $this->viewBuilder->viewMultiple($comments);
             $build['pager']['#type'] = 'pager';
             // CommentController::commentPermalink() calculates the page number
             // where a specific comment appears and does a subrequest pointing to
@@ -203,12 +201,12 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
         }
       }
 
-      $elements[] = $output + [
+      $elements[] = $output + array(
         '#comment_type' => $this->getFieldSetting('comment_type'),
         '#comment_display_mode' => $this->getFieldSetting('default_mode'),
-        'comments' => [],
-        'comment_form' => [],
-      ];
+        'comments' => array(),
+        'comment_form' => array(),
+      );
     }
 
     return $elements;
@@ -218,24 +216,14 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element = [];
-    $view_modes = $this->getViewModes();
-    $element['view_mode'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Comments view mode'),
-      '#description' => $this->t('Select the view mode used to show the list of comments.'),
-      '#default_value' => $this->getSetting('view_mode'),
-      '#options' => $view_modes,
-      // Only show the select element when there are more than one options.
-      '#access' => count($view_modes) > 1,
-    ];
-    $element['pager_id'] = [
+    $element = array();
+    $element['pager_id'] = array(
       '#type' => 'select',
       '#title' => $this->t('Pager ID'),
       '#options' => range(0, 10),
       '#default_value' => $this->getSetting('pager_id'),
       '#description' => $this->t("Unless you're experiencing problems with pagers related to this field, you should leave this at 0. If using multiple pagers on one page you may need to set this number to a higher value so as not to conflict within the ?page= array. Large values will add a lot of commas to your URLs, so avoid if possible."),
-    ];
+    );
     return $element;
   }
 
@@ -243,41 +231,13 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $view_mode = $this->getSetting('view_mode');
-    $view_modes = $this->getViewModes();
-    $view_mode_label = isset($view_modes[$view_mode]) ? $view_modes[$view_mode] : 'default';
-    $summary = [$this->t('Comment view mode: @mode', ['@mode' => $view_mode_label])];
-    if ($pager_id = $this->getSetting('pager_id')) {
-      $summary[] = $this->t('Pager ID: @id', ['@id' => $pager_id]);
+    // Only show a summary if we're using a non-standard pager id.
+    if ($this->getSetting('pager_id')) {
+      return array($this->t('Pager ID: @id', array(
+        '@id' => $this->getSetting('pager_id'),
+      )));
     }
-    return $summary;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function calculateDependencies() {
-    $dependencies = parent::calculateDependencies();
-    if ($mode = $this->getSetting('view_mode')) {
-      if ($bundle = $this->getFieldSetting('comment_type')) {
-        /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
-        if ($display = EntityViewDisplay::load("comment.$bundle.$mode")) {
-          $dependencies[$display->getConfigDependencyKey()][] = $display->getConfigDependencyName();
-        }
-      }
-    }
-    return $dependencies;
-  }
-
-  /**
-   * Provides a list of comment view modes for the configured comment type.
-   *
-   * @return array
-   *   Associative array keyed by view mode key and having the view mode label
-   *   as value.
-   */
-  protected function getViewModes() {
-    return $this->entityManager->getViewModeOptionsByBundle('comment', $this->getFieldSetting('comment_type'));
+    return array();
   }
 
 }
