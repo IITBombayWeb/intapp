@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,6 +24,7 @@ class Google_Service_CloudBuild_BuildStep extends Google_Collection
   public $env;
   public $id;
   public $name;
+  public $secretEnv;
   public $waitFor;
 
   public function setArgs($args)
@@ -73,6 +74,14 @@ class Google_Service_CloudBuild_BuildStep extends Google_Collection
   public function getName()
   {
     return $this->name;
+  }
+  public function setSecretEnv($secretEnv)
+  {
+    $this->secretEnv = $secretEnv;
+  }
+  public function getSecretEnv()
+  {
+    return $this->secretEnv;
   }
   public function setWaitFor($waitFor)
   {

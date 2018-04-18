@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\State\State;
 use Drupal\Core\Cache\Cache;
 
@@ -79,8 +80,8 @@ class RendererBubblingTest extends RendererTestBase {
     $bin = $this->randomMachineName();
 
     $this->setUpRequest();
-    $this->memoryCache = new MemoryBackend('render');
-    $custom_cache = new MemoryBackend($bin);
+    $this->memoryCache = new MemoryBackend();
+    $custom_cache = new MemoryBackend();
 
     $this->cacheFactory->expects($this->atLeastOnce())
       ->method('get')
@@ -289,6 +290,42 @@ class RendererBubblingTest extends RendererTestBase {
       ],
     ];
     $data[] = [$test_element, ['bar', 'foo'], $expected_cache_items];
+     
+    // Ensure that bubbleable metadata has been collected from children and set
+    // correctly to the main level of the render array. That ensures that correct
+    // bubbleable metadata exists if render array gets rendered multiple times.
+    $test_element = [
+      '#cache' => [
+        'keys' => ['parent'],
+        'tags' => ['yar', 'har']
+      ],
+      '#markup' => 'parent',
+      'child' => [
+        '#render_children' => TRUE,
+        'subchild' => [
+          '#cache' => [
+            'contexts' => ['foo'],
+            'tags' => ['fiddle', 'dee'],
+          ],
+          '#attached' => [
+            'library' => ['foo/bar']
+          ],
+          '#markup' => '',
+        ]
+      ],
+    ];
+    $expected_cache_items = [
+      'parent:foo' => [
+        '#attached' => ['library' => ['foo/bar']],
+        '#cache' => [
+          'contexts' => ['foo'],
+          'tags' => ['dee', 'fiddle', 'har', 'yar'],
+          'max-age' => Cache::PERMANENT,
+        ],
+        '#markup' => 'parent',
+      ],
+    ];
+    $data[] = [$test_element, ['foo'], $expected_cache_items];
 
     return $data;
   }
@@ -326,9 +363,9 @@ class RendererBubblingTest extends RendererTestBase {
           ],
           'grandgrandchild' => [
             '#access_callback' => function () use (&$current_user_role) {
-                // Only role C can access this subtree.
-                return $current_user_role === 'C';
-              },
+              // Only role C can access this subtree.
+              return $current_user_role === 'C';
+            },
             '#cache' => [
               'contexts' => ['bar'],
               'tags' => ['d'],
@@ -502,7 +539,7 @@ class RendererBubblingTest extends RendererTestBase {
     $this->setupMemoryCache();
 
     // Mock the State service.
-    $memory_state = new State(new KeyValueMemoryFactory());;
+    $memory_state = new State(new KeyValueMemoryFactory(), new MemoryBackend('test'), new NullLockBackend());
     \Drupal::getContainer()->set('state', $memory_state);
     $this->controllerResolver->expects($this->any())
       ->method('getControllerFromDefinition')
@@ -570,9 +607,6 @@ class RendererBubblingTest extends RendererTestBase {
 
   /**
    * Tests that an element's cache keys cannot be changed during its rendering.
-   *
-   * @expectedException \LogicException
-   * @expectedExceptionMessage Cache keys may not be changed after initial setup. Use the contexts property instead to bubble additional metadata.
    */
   public function testOverWriteCacheKeys() {
     $this->setUpRequest();
@@ -585,6 +619,7 @@ class RendererBubblingTest extends RendererTestBase {
        ],
       '#pre_render' => [__NAMESPACE__ . '\\BubblingTest::bubblingCacheOverwritePrerender'],
     ];
+    $this->setExpectedException(\LogicException::class, 'Cache keys may not be changed after initial setup. Use the contexts property instead to bubble additional metadata.');
     $this->renderer->renderRoot($data);
   }
 
