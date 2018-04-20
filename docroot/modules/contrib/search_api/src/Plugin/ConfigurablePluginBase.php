@@ -2,8 +2,9 @@
 
 namespace Drupal\search_api\Plugin;
 
+use Drupal\Core\Entity\DependencyTrait;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\Core\Plugin\PluginDependencyTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -11,13 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class ConfigurablePluginBase extends PluginBase implements ConfigurablePluginInterface {
 
-  // Normally, we'd just need \Drupal\Core\Entity\DependencyTrait here for
-  // plugins. However, in a few cases, plugins use plugins themselves, and then
-  // the additional calculatePluginDependencies() method from this trait is
-  // useful. Since PHP 5 complains when adding this trait along with its
-  // "parent" trait to the same class, we just add it here in case a child class
-  // does need it.
-  use PluginDependencyTrait;
+  use DependencyTrait;
 
   /**
    * {@inheritdoc}
@@ -60,7 +55,7 @@ abstract class ConfigurablePluginBase extends PluginBase implements Configurable
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return [];
+    return array();
   }
 
   /**
@@ -80,8 +75,27 @@ abstract class ConfigurablePluginBase extends PluginBase implements Configurable
   /**
    * {@inheritdoc}
    */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {}
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->setConfiguration($form_state->getValues());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function calculateDependencies() {
-    return [];
+    return array();
   }
 
   /**

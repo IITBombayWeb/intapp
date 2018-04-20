@@ -2,13 +2,13 @@ langcode: en
 status: true
 dependencies:
   module:
-    - entity_test_mulrev_changed
-id: entity_test_mulrev_changed.links
+    - entity_test
+id: entity_test.links
 field_name: links
-entity_type: entity_test_mulrev_changed
+entity_type: entity_test
 type: entity_reference
 settings:
-  target_type: entity_test_mulrev_changed
+  target_type: entity_test
 module: core
 locked: false
 cardinality: -1

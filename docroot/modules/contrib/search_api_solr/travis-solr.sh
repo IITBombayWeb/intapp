@@ -4,22 +4,18 @@ SOLR_PORT=${SOLR_PORT:-8983}
 SOLR_VERSION=${SOLR_VERSION:-4.5.1}
 DEBUG=${DEBUG:-0}
 SOLR_CORE=${SOLR_CORE:-core0}
-HOME=${HOME:-.}
 
 download() {
-    [ -d $HOME/downloads ] || mkdir $HOME/downloads
     FILE="$2.tgz"
-    if [ -f $HOME/downloads/$FILE ];
+    if [ -f $FILE ];
     then
        echo "File $FILE exists."
     else
        echo "File $FILE does not exist. Downloading solr from $1..."
-       cd $HOME/downloads
        curl -O $1
-       cd -
-       echo "Downloaded!"
+       tar -zxf $FILE
     fi
-    tar -zxf $HOME/downloads/$FILE
+    echo "Downloaded!"
 }
 
 is_solr_up(){

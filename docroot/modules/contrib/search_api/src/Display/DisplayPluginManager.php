@@ -17,9 +17,9 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 class DisplayPluginManager extends DefaultPluginManager {
 
   /**
-   * Static cache for the display plugins.
+   * Static cache for the display definitions.
    *
-   * @var \Drupal\search_api\Display\DisplayInterface[]|null
+   * @var string[][]
    *
    * @see \Drupal\search_api\Display\DisplayPluginManager::getInstances()
    */
@@ -31,7 +31,6 @@ class DisplayPluginManager extends DefaultPluginManager {
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/search_api/display', $namespaces, $module_handler, 'Drupal\search_api\Display\DisplayInterface', 'Drupal\search_api\Annotation\SearchApiDisplay');
     $this->setCacheBackend($cache_backend, 'search_api_displays');
-    $this->alterInfo('search_api_displays');
   }
 
   /**
@@ -42,7 +41,7 @@ class DisplayPluginManager extends DefaultPluginManager {
    */
   public function getInstances() {
     if ($this->displays === NULL) {
-      $this->displays = [];
+      $this->displays = array();
 
       foreach ($this->getDefinitions() as $name => $display_definition) {
         if (class_exists($display_definition['class']) && empty($this->displays[$name])) {
@@ -53,15 +52,6 @@ class DisplayPluginManager extends DefaultPluginManager {
     }
 
     return $this->displays;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function clearCachedDefinitions() {
-    parent::clearCachedDefinitions();
-
-    $this->discovery = NULL;
   }
 
 }

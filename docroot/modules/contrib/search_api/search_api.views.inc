@@ -13,7 +13,7 @@ use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Item\FieldInterface;
 use Drupal\search_api\SearchApiException;
-use Drupal\search_api\Utility\Utility;
+use Drupal\search_api\Utility;
 
 /**
  * Implements hook_views_data().
@@ -32,7 +32,7 @@ use Drupal\search_api\Utility\Utility;
  * created. Those tables will use the key "search_api_entity_ENTITY".
  */
 function search_api_views_data() {
-  $data = [];
+  $data = array();
 
   /** @var \Drupal\search_api\IndexInterface $index */
   foreach (Index::loadMultiple() as $index) {
@@ -41,38 +41,36 @@ function search_api_views_data() {
       $key = 'search_api_index_' . $index->id();
       $table = &$data[$key];
       $index_label = $index->label();
-      $table['table']['group'] = t('Index @name', ['@name' => $index_label]);
-      $table['table']['base'] = [
+      $table['table']['group'] = t('Index @name', array('@name' => $index_label));
+      $table['table']['base'] = array(
         'field' => 'search_api_id',
         'index' => $index->id(),
-        'title' => t('Index @name', ['@name' => $index_label]),
-        'help' => t('Use the @name search index for filtering and retrieving data.', ['@name' => $index_label]),
+        'title' => t('Index @name', array('@name' => $index_label)),
+        'help' => t('Use the @name search index for filtering and retrieving data.', array('@name' => $index_label)),
         'query_id' => 'search_api_query',
-      ];
+      );
 
       // Add suitable handlers for all indexed fields.
-      foreach ($index->getFields(TRUE) as $field_id => $field) {
+      foreach ($index->getFields() as $field_id => $field) {
         $field_alias = _search_api_views_find_field_alias($field_id, $table);
         $field_definition = _search_api_views_get_handlers($field);
         // The field handler has to be extra, since it is a) determined by the
         // field's underlying property and b) needs a different "real field"
         // set.
-        if ($field->getPropertyPath()) {
-          $field_handler = _search_api_views_get_field_handler_for_property($field->getDataDefinition(), $field->getPropertyPath());
-          if ($field_handler) {
-            $field_definition['field'] = $field_handler;
-            $field_definition['field']['real field'] = $field->getCombinedPropertyPath();
-            $field_definition['field']['search_api field'] = $field_id;
-          }
+        $field_handler = _search_api_views_get_field_handler_for_property($field->getDataDefinition(), $field->getPropertyPath());
+        if ($field_handler) {
+          $field_definition['field'] = $field_handler;
+          $field_definition['field']['real field'] = $field->getCombinedPropertyPath();
+          $field_definition['field']['click sortable'] = TRUE;
         }
         if ($field_definition) {
           $field_label = $field->getLabel();
-          $field_definition += [
+          $field_definition += array(
             'title' => $field_label,
             'help' => $field->getDescription() ?: t('(No description available)'),
-          ];
+          );
           if ($datasource = $field->getDatasource()) {
-            $field_definition['group'] = t('@datasource datasource', ['@datasource' => $datasource->label()]);
+            $field_definition['group'] = t('@datasource datasource', array('@datasource' => $datasource->label()));
           }
           if ($definition = $field->getDataDefinition()) {
             $field_definition['title short'] = $definition->getLabel();
@@ -81,7 +79,7 @@ function search_api_views_data() {
             $field_definition['real field'] = $field_id;
           }
           if (isset($field_definition['field'])) {
-            $field_definition['field']['title'] = t('@field (indexed field)', ['@field' => $field_label]);
+            $field_definition['field']['title'] = t('@field (indexed field)', array('@field' => $field_label));
           }
           $table[$field_alias] = $field_definition;
         }
@@ -96,15 +94,15 @@ function search_api_views_data() {
         $table_key = _search_api_views_find_field_alias($datasource_tables_prefix . $datasource_id, $data);
         $data[$table_key] = _search_api_views_datasource_table($datasource, $data);
         // Automatically join this table for views of this index.
-        $data[$table_key]['table']['join'][$key] = [
+        $data[$table_key]['table']['join'][$key] = array(
           'join_id' => 'search_api',
-        ];
+        );
       }
     }
     catch (\Exception $e) {
-      $args = [
+      $args = array(
         '%index' => $index->label(),
-      ];
+      );
       watchdog_exception('search_api', $e, '%type while computing Views data for index %index: @message in %function (line %line of %file).', $args);
     }
   }
@@ -117,7 +115,7 @@ function search_api_views_data() {
  */
 function search_api_views_plugins_cache_alter(array &$plugins) {
   // Collect all base tables provided by this module.
-  $bases = [];
+  $bases = array();
   /** @var \Drupal\search_api\IndexInterface $index */
   foreach (Index::loadMultiple() as $index) {
     $bases[] = 'search_api_index_' . $index->id();
@@ -130,7 +128,7 @@ function search_api_views_plugins_cache_alter(array &$plugins) {
  */
 function search_api_views_plugins_row_alter(array &$plugins) {
   // Collect all base tables provided by this module.
-  $bases = [];
+  $bases = array();
   /** @var \Drupal\search_api\IndexInterface $index */
   foreach (Index::loadMultiple() as $index) {
     $bases[] = 'search_api_index_' . $index->id();
@@ -171,7 +169,7 @@ function _search_api_views_get_handlers(FieldInterface $field) {
   $mapping = _search_api_views_handler_mapping();
 
   try {
-    $types = [];
+    $types = array();
 
     $definition = $field->getDataDefinition();
     if ($definition->getSetting('target_type')) {
@@ -179,10 +177,7 @@ function _search_api_views_get_handlers(FieldInterface $field) {
       $types[] = 'entity';
     }
 
-    if ($definition->getSetting('allowed_values')) {
-      $types[] = 'options';
-    }
-
+    // @todo Detect fields with fixed lists of options, add type "options".
     $types[] = $field->getType();
     /** @var \Drupal\search_api\DataType\DataTypeInterface $data_type */
     $data_type = \Drupal::service('plugin.manager.search_api.data_type')->createInstance($field->getType());
@@ -203,7 +198,7 @@ function _search_api_views_get_handlers(FieldInterface $field) {
     watchdog_exception('search_api', $e, '%type while adding Views handlers for field %field on index %index: @message in %function (line %line of %file).', $vars);
   }
 
-  return [];
+  return array();
 }
 
 /**
@@ -222,123 +217,107 @@ function _search_api_views_handler_mapping() {
   $mapping = &drupal_static(__FUNCTION__);
 
   if (!isset($mapping)) {
-    $mapping = [
-      'boolean' => [
-        'argument' => [
+    $mapping = array(
+      'boolean' => array(
+        'argument' => array(
           'id' => 'search_api',
-        ],
-        'filter' => [
+        ),
+        'filter' => array(
           'id' => 'search_api_boolean',
-        ],
-        'sort' => [
+        ),
+        'sort' => array(
           'id' => 'search_api',
-        ],
-      ],
-      'date' => [
-        'argument' => [
+        ),
+      ),
+      'date' => array(
+        'filter' => array(
           'id' => 'search_api_date',
-        ],
-        'filter' => [
-          'id' => 'search_api_date',
-        ],
-        'sort' => [
+        ),
+        'sort' => array(
           'id' => 'search_api',
-        ],
-      ],
-      'decimal' => [
-        'argument' => [
+        ),
+      ),
+      'decimal' => array(
+        'argument' => array(
           'id' => 'search_api',
           'filter' => 'floatval',
-        ],
-        'filter' => [
+        ),
+        'filter' => array(
           'id' => 'search_api_numeric',
-        ],
-        'sort' => [
+        ),
+        'sort' => array(
           'id' => 'search_api',
-        ],
-      ],
-      'integer' => [
-        'argument' => [
+        ),
+      ),
+      'integer' => array(
+        'argument' => array(
           'id' => 'search_api',
           'filter' => 'intval',
-        ],
-        'filter' => [
+        ),
+        'filter' => array(
           'id' => 'search_api_numeric',
-        ],
-        'sort' => [
+        ),
+        'sort' => array(
           'id' => 'search_api',
-        ],
-      ],
-      'string' => [
-        'argument' => [
+        ),
+      ),
+      'string' => array(
+        'argument' => array(
           'id' => 'search_api',
-        ],
-        'filter' => [
+        ),
+        'filter' => array(
           'id' => 'search_api_string',
-        ],
-        'sort' => [
+        ),
+        'sort' => array(
           'id' => 'search_api',
-        ],
-      ],
-      'text' => [
-        'argument' => [
-          'id' => 'search_api',
-        ],
-        'filter' => [
+        ),
+      ),
+      'text' => array(
+        'filter' => array(
           'id' => 'search_api_text',
-        ],
-        'sort' => [
+        ),
+        'sort' => array(
           'id' => 'search_api',
-        ],
-      ],
-      'options' => [
-        'argument' => [
-          'id' => 'search_api',
-        ],
-        'filter' => [
+        ),
+      ),
+      'options' => array(
+        'filter' => array(
           'id' => 'search_api_options',
-        ],
-        'sort' => [
+        ),
+        'sort' => array(
           'id' => 'search_api',
-        ],
-      ],
-      'entity:taxonomy_term' => [
-        'argument' => [
-          'id' => 'search_api',
+        ),
+      ),
+      'entity:taxonomy_term' => array(
+        'argument' => array(
+          'id' => 'search_api_taxonomy_term',
           'filter' => 'intval',
-        ],
-        'filter' => [
+        ),
+        'filter' => array(
+          'id' => 'search_api_term',
+        ),
+        'sort' => array(
           'id' => 'search_api',
-        ],
-        'sort' => [
-          'id' => 'search_api',
-        ],
-      ],
-      'entity:user' => [
-        'argument' => [
-          'id' => 'search_api',
-          'filter' => 'intval',
-        ],
-        'filter' => [
+        ),
+      ),
+      'entity:user' => array(
+        'filter' => array(
           'id' => 'search_api_user',
-        ],
-        'sort' => [
+        ),
+        'sort' => array(
           'id' => 'search_api',
-        ],
-      ],
-      'entity:node_type' => [
-        'argument' => [
-          'id' => 'search_api',
-        ],
-        'filter' => [
+        ),
+      ),
+      'entity:node_type' => array(
+        'filter' => array(
           'id' => 'search_api_options',
           'options callback' => 'node_type_get_names',
-        ],
-        'sort' => [
+        ),
+        'sort' => array(
           'id' => 'search_api',
-        ],
-      ],
-    ];
+        ),
+      ),
+    );
 
     $alter_id = 'search_api_views_handler_mapping';
     \Drupal::moduleHandler()->alter($alter_id, $mapping);
@@ -371,29 +350,6 @@ function _search_api_views_handler_adjustments($type, FieldInterface $field, arr
       $target_bundles = $data_definition->getSettings()['handler_settings']['target_bundles'];
       if (count($target_bundles) == 1) {
         $definitions['filter']['vocabulary'] = reset($target_bundles);
-      }
-    }
-  }
-  elseif ($type == 'options') {
-    if ($data_definition instanceof FieldItemDataDefinition) {
-      // If this is a normal Field API field, dynamically retrieve the options
-      // list at query time.
-      $field_definition = $data_definition->getFieldDefinition();
-      $bundle = $field_definition->getTargetBundle();
-      $field_name = $field_definition->getName();
-      $entity_type = $field_definition->getTargetEntityTypeId();
-      $definitions['filter']['options callback'] = '_search_api_views_get_allowed_values';
-      $definitions['filter']['options arguments'] = [$entity_type, $bundle, $field_name];
-    }
-    else {
-      // Otherwise, include the options list verbatim in the Views data, unless
-      // it's too big (or doesn't look valid).
-      $options = $data_definition->getSetting('allowed_values');
-      if (is_array($options) && count($options) <= 50) {
-        // Since the Views InOperator filter plugin doesn't allow just including
-        // the options in the definition, we use this workaround.
-        $definitions['filter']['options callback'] = 'array_filter';
-        $definitions['filter']['options arguments'] = [$options];
       }
     }
   }
@@ -444,7 +400,7 @@ function _search_api_views_data_special_fields(array &$table) {
   $table[$relevance_field]['help'] = t('The relevance of this search result with respect to the query');
   $table[$relevance_field]['field']['type'] = 'decimal';
   $table[$relevance_field]['field']['id'] = 'numeric';
-  $table[$relevance_field]['field']['search_api field'] = 'search_api_relevance';
+  $table[$relevance_field]['field']['click sortable'] = TRUE;
   $table[$relevance_field]['sort']['id'] = 'search_api';
   if ($relevance_field != 'search_api_relevance') {
     $table[$relevance_field]['real field'] = 'search_api_relevance';
@@ -496,13 +452,13 @@ function _search_api_views_data_special_fields(array &$table) {
  */
 function _search_api_views_datasource_table(DatasourceInterface $datasource, array &$data) {
   $datasource_id = $datasource->getPluginId();
-  $table = [
-    'table' => [
-      'group' => t('@datasource datasource', ['@datasource' => $datasource->label()]),
+  $table = array(
+    'table' => array(
+      'group' => t('@datasource datasource', array('@datasource' => $datasource->label())),
       'index' => $datasource->getIndex()->id(),
       'datasource' => $datasource_id,
-    ],
-  ];
+    ),
+  );
   $entity_type_id = $datasource->getEntityTypeId();
   if ($entity_type_id) {
     $table['table']['entity type'] = $entity_type_id;
@@ -546,17 +502,17 @@ function _search_api_views_datasource_table(DatasourceInterface $datasource, arr
  */
 function _search_api_views_entity_type_table($entity_type_id, array &$data) {
   $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
-  if (!$entity_type || !$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
-    return [];
+  if (!$entity_type || !$entity_type->isSubclassOf(FieldableEntityInterface::class)) {
+    return array();
   }
 
-  $table = [
-    'table' => [
-      'group' => t('@entity_type relationship', ['@entity_type' => $entity_type->getLabel()]),
+  $table = array(
+    'table' => array(
+      'group' => t('@entity_type relationship', array('@entity_type' => $entity_type->getLabel())),
       'entity type' => $entity_type_id,
       'entity revision' => FALSE,
-    ],
-  ];
+    ),
+  );
 
   $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
   $bundle_info = \Drupal::getContainer()->get('entity_type.bundle.info');
@@ -581,18 +537,16 @@ function _search_api_views_entity_type_table($entity_type_id, array &$data) {
  *   The existing Views data definitions, passed by reference.
  */
 function _search_api_views_add_handlers_for_properties(array $properties, array &$table, array &$data) {
-  $entity_reference_types = array_flip([
+  $entity_reference_types = array_flip(array(
     'field_item:entity_reference',
     'field_item:image',
     'field_item:file',
-  ]);
+  ));
 
   foreach ($properties as $property_path => $property) {
     $key = _search_api_views_find_field_alias($property_path, $table);
     $original_property = $property;
-    $property = \Drupal::getContainer()
-      ->get('search_api.fields_helper')
-      ->getInnerProperty($property);
+    $property = Utility::getInnerProperty($property);
 
     // Add a field handler, if applicable.
     $definition = _search_api_views_get_field_handler_for_property($property, $property_path);
@@ -610,7 +564,7 @@ function _search_api_views_add_handlers_for_properties(array $properties, array 
           // Initialize the table definition before calling
           // _search_api_views_entity_type_table() to avoid an infinite
           // recursion.
-          $data[$entity_type_table_key] = [];
+          $data[$entity_type_table_key] = array();
           $data[$entity_type_table_key] = _search_api_views_entity_type_table($entity_type_id, $data);
         }
         // Add the relationship only if we have a non-empty table definition.
@@ -619,10 +573,10 @@ function _search_api_views_add_handlers_for_properties(array $properties, array 
           $entity_type = \Drupal::entityTypeManager()
             ->getDefinition($entity_type_id);
           $entity_type_label = $entity_type ? $entity_type->getLabel() : $entity_type_id;
-          $args = [
+          $args = array(
             '@label' => $entity_type_label,
             '@field_name' => $original_property->getLabel(),
-          ];
+          );
           // Look through the child properties to find the data reference
           // property that should be the "real field" for the relationship.
           // (For Core entity references, this will usually be ":entity".)
@@ -633,7 +587,7 @@ function _search_api_views_add_handlers_for_properties(array $properties, array 
               break;
             }
           }
-          $table[$key]['relationship'] = [
+          $table[$key]['relationship'] = array(
             'title' => t('@label referenced from @field_name', $args),
             'label' => t('@field_name: @label', $args),
             'help' => $property->getDescription() ?: t('(No description available)'),
@@ -642,7 +596,7 @@ function _search_api_views_add_handlers_for_properties(array $properties, array 
             'entity type' => $entity_type_id,
             'entity revision' => FALSE,
             'real field' => $property_path . $suffix,
-          ];
+          );
         }
       }
     }
@@ -691,19 +645,10 @@ function _search_api_views_get_field_handler_for_property(DataDefinitionInterfac
     }
   }
 
-  // Field items have a special handler, but need a fallback handler set to be
-  // able to optionally circumvent entity field rendering. That's why we just
-  // set the "field_item:…" types to their fallback handlers in
-  // _search_api_views_get_field_handler_mapping(), along with non-field item
-  // types, and here manually update entity field properties to have the correct
-  // definition, with "search_api_field" handler, correct fallback handler and
-  // "field_name" and "entity_type" correctly set.
+  // If there is a definition and the property represents a Field API field, add
+  // the "field_name" key.
   if (isset($definition) && $property instanceof FieldItemDataDefinition) {
     list(, $field_name) = Utility::splitPropertyPath($property_path, TRUE);
-    if (!isset($definition['fallback_handler'])) {
-      $definition['fallback_handler'] = $definition['id'];
-      $definition['id'] = 'search_api_field';
-    }
     $definition['field_name'] = $field_name;
     $definition['entity_type'] = $property
       ->getFieldDefinition()
@@ -730,64 +675,75 @@ function _search_api_views_get_field_handler_mapping() {
 
   if (!isset($mappings)) {
     // First create a plain mapping and pass it to the alter hook.
-    $plain_mapping = [];
+    $plain_mapping = array();
 
-    $plain_mapping['*'] = [
+    $plain_mapping['*'] = array(
       'id' => 'search_api',
-    ];
+    );
 
-    $text_mapping = [
+    $text_mapping = array(
       'id' => 'search_api',
       'filter_type' => 'xss',
-    ];
+    );
     $plain_mapping['field_item:text_long'] = $text_mapping;
     $plain_mapping['field_item:text_with_summary'] = $text_mapping;
-    $plain_mapping['search_api_html'] = $text_mapping;
-    unset($text_mapping['filter_type']);
-    $plain_mapping['search_api_text'] = $text_mapping;
 
-    $numeric_mapping = [
+    $numeric_mapping = array(
       'id' => 'search_api_numeric',
-    ];
+    );
     $plain_mapping['field_item:integer'] = $numeric_mapping;
     $plain_mapping['field_item:list_integer'] = $numeric_mapping;
     $plain_mapping['integer'] = $numeric_mapping;
     $plain_mapping['timespan'] = $numeric_mapping;
 
-    $float_mapping = [
+    $float_mapping = array(
       'id' => 'search_api_numeric',
       'float' => TRUE,
-    ];
+    );
     $plain_mapping['field_item:decimal'] = $float_mapping;
     $plain_mapping['field_item:float'] = $float_mapping;
     $plain_mapping['field_item:list_float'] = $float_mapping;
     $plain_mapping['decimal'] = $float_mapping;
     $plain_mapping['float'] = $float_mapping;
 
-    $date_mapping = [
+    $date_mapping = array(
       'id' => 'search_api_date',
-    ];
+    );
     $plain_mapping['field_item:created'] = $date_mapping;
     $plain_mapping['field_item:changed'] = $date_mapping;
     $plain_mapping['datetime_iso8601'] = $date_mapping;
     $plain_mapping['timestamp'] = $date_mapping;
 
-    $bool_mapping = [
+    $bool_mapping = array(
       'id' => 'search_api_boolean',
-    ];
+    );
     $plain_mapping['boolean'] = $bool_mapping;
     $plain_mapping['field_item:boolean'] = $bool_mapping;
 
-    $ref_mapping = [
+    $ref_mapping = array(
       'id' => 'search_api_entity',
-    ];
+    );
     $plain_mapping['field_item:entity_reference'] = $ref_mapping;
     $plain_mapping['field_item:comment'] = $ref_mapping;
 
+    // Field items have a special handler, but need a fallback handler set to be
+    // able to optionally circumvent entity field rendering. That's why we just
+    // set the "field_item:…" types to their fallback handlers above, along with
+    // non-field item types, and here go through them again to add the proper
+    // handler ("search_api_field") under "id" and move the previous one to
+    // "fallback_handler".
+    foreach ($plain_mapping as $key => $definition) {
+      if (substr($key, 0, 11) == 'field_item:') {
+        $plain_mapping[$key]['fallback_handler'] = $definition['id'];
+        $plain_mapping[$key]['id'] = 'search_api_field';
+      }
+    }
+
     // Finally, set a default handler for unknown field items.
-    $plain_mapping['field_item:*'] = [
-      'id' => 'search_api',
-    ];
+    $plain_mapping['field_item:*'] = array(
+      'id' => 'search_api_field',
+      'fallback_handler' => 'search_api',
+    );
 
     // Let other modules change or expand this mapping.
     $alter_id = 'search_api_views_field_handler_mapping';
@@ -795,11 +751,11 @@ function _search_api_views_get_field_handler_mapping() {
 
     // Then create a new, more practical structure, with the mappings grouped by
     // mapping type.
-    $mappings = [
-      'simple' => [],
-      'regex' => [],
+    $mappings = array(
+      'simple' => array(),
+      'regex' => array(),
       'default' => NULL,
-    ];
+    );
     foreach ($plain_mapping as $type => $definition) {
       if ($type == '*') {
         $mappings['default'] = $definition;

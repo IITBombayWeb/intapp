@@ -55,19 +55,16 @@ class Utility {
           'prefix' => 's',
         ),
         'integer' => array(
-          // Use trie field for better sorting.
-          'prefix' => 'it',
+          'prefix' => 'i',
         ),
         'decimal' => array(
-          // Use trie field for better sorting.
-          'prefix' => 'ft',
+          'prefix' => 'f',
         ),
         'date' => array(
           'prefix' => 'd',
         ),
         'duration' => array(
-          // Use trie field for better sorting.
-          'prefix' => 'it',
+          'prefix' => 'i',
         ),
         'boolean' => array(
           'prefix' => 'b',
@@ -75,15 +72,16 @@ class Utility {
         'uri' => array(
           'prefix' => 's',
         ),
+        'tokens' => array(
+          'prefix' => 't',
+        ),
       ));
 
       // Extra data type info.
       $extra_types_info = array(
-        // Provided by Search API Location module.
         'location' => array(
           'prefix' => 'loc',
         ),
-        // @todo Who provides that type?
         'geohash' => array(
           'prefix' => 'geo',
         ),
@@ -143,9 +141,7 @@ class Utility {
    *   If a problem occurred while retrieving the files.
    */
   public static function getServerFiles(ServerInterface $server, $dir_name = NULL) {
-    /** @var \Drupal\search_api_solr\SolrBackendInterface $backend */
-    $backend = $server->getBackend();
-    $response = $backend->getSolrConnector()->getFile($dir_name);
+    $response = $server->getBackend()->getFile($dir_name);
 
     // Search for directories and recursively merge directory files.
     $files_data = json_decode($response->getBody(), TRUE);
@@ -172,6 +168,23 @@ class Utility {
     ksort($result);
     ksort($result['']);
     return array_reduce($result, 'array_merge', array());
+  }
+
+  /**
+   * Escapes a Search API field name for passing to Solr.
+   *
+   * Since field names can only contain one special character, ":", there is no
+   * need to use the complete escape() method.
+   *
+   * @param string $value
+   *   The field name to escape.
+   *
+   * @return string
+   *   An escaped string suitable for passing to Solr.
+   */
+  public static function escapeFieldName($value) {
+    $value = str_replace(':', '\:', $value);
+    return $value;
   }
 
   /**
@@ -202,12 +215,7 @@ class Utility {
    * "Field names should consist of alphanumeric or underscore characters only
    * and not start with a digit ... Names with both leading and trailing
    * underscores (e.g. _version_) are reserved." Field names starting with
-   * digits or underscores are already avoided by our schema. The same is true
-   * for the names of field types. See
-   * https://cwiki.apache.org/confluence/display/solr/Field+Type+Definitions+and+Properties
-   * "It is strongly recommended that names consist of alphanumeric or
-   * underscore characters only and not start with a digit. This is not
-   * currently strictly enforced."
+   * digits or underscores are already avoided by our schema.
    *
    * This function therefore encodes all forbidden characters in their
    * hexadecimal equivalent encapsulted by a leading sequence of '_X' and a
@@ -223,7 +231,7 @@ class Utility {
    * @return string
    *   The encoded field name.
    */
-  public static function encodeSolrName($field_name) {
+  public static function encodeSolrDynamicFieldName($field_name) {
     return preg_replace_callback('/([^\da-zA-Z_]|_X)/u',
       function ($matches) {
         return '_X' . bin2hex($matches[1]) . '_';
@@ -238,8 +246,7 @@ class Utility {
    * hexadecimal equivalent encapsulted by a leading sequence of '_X' and a
    * termination charachter '_'. Example:
    * "tm_entity_X3a_node_X2f_body" becomes "tm_entity:node/body".
-   *
-   * @see encodeSolrDynamicFieldName() for details.
+   * @ee encodeSolrDynamicFieldName() for details.
    *
    * @param string $field_name
    *   Encoded field name.
@@ -247,7 +254,7 @@ class Utility {
    * @return string
    *   The decoded field name
    */
-  public static function decodeSolrName($field_name) {
+  public static function decodeSolrDynamicFieldName($field_name) {
     return preg_replace_callback('/_X([\dabcdef]+?)_/',
       function ($matches) {
         return hex2bin($matches[1]);

@@ -2,10 +2,9 @@
 
 namespace Drupal\search_api\Plugin\search_api\processor;
 
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\search_api\Datasource\DatasourceInterface;
-use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Processor\ProcessorPluginBase;
-use Drupal\search_api\Processor\ProcessorProperty;
 
 /**
  * Adds the item's URL to the indexed data.
@@ -15,10 +14,10 @@ use Drupal\search_api\Processor\ProcessorProperty;
  *   label = @Translation("URL field"),
  *   description = @Translation("Adds the item's URL to the indexed data."),
  *   stages = {
- *     "add_properties" = 0,
+ *     "preprocess_index" = -30
  *   },
  *   locked = true,
- *   hidden = true,
+ *   hidden = true
  * )
  */
 class AddURL extends ProcessorPluginBase {
@@ -26,33 +25,31 @@ class AddURL extends ProcessorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions(DatasourceInterface $datasource = NULL) {
-    $properties = [];
-
-    if (!$datasource) {
-      $definition = [
-        'label' => $this->t('URI'),
-        'description' => $this->t('A URI where the item can be accessed'),
-        'type' => 'string',
-        'processor_id' => $this->getPluginId(),
-      ];
-      $properties['search_api_url'] = new ProcessorProperty($definition);
+  public function alterPropertyDefinitions(array &$properties, DatasourceInterface $datasource = NULL) {
+    if ($datasource) {
+      return;
     }
-
-    return $properties;
+    $definition = array(
+      'label' => $this->t('URI'),
+      'description' => $this->t('A URI where the item can be accessed'),
+      'type' => 'string',
+    );
+    $properties['search_api_url'] = new DataDefinition($definition);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addFieldValues(ItemInterface $item) {
-    $url = $item->getDatasource()->getItemUrl($item->getOriginalObject());
-    if ($url) {
-      $url = $url->toString();
-      $fields = $this->getFieldsHelper()
-        ->filterForPropertyPath($item->getFields(), NULL, 'search_api_url');
-      foreach ($fields as $field) {
-        $field->addValue($url);
+  public function preprocessIndexItems(array &$items) {
+    // Annoyingly, this doc comment is needed for PHPStorm. See
+    // http://youtrack.jetbrains.com/issue/WI-23586
+    /** @var \Drupal\search_api\Item\ItemInterface $item */
+    foreach ($items as $item) {
+      $url = $item->getDatasource()->getItemUrl($item->getOriginalObject());
+      if ($url) {
+        foreach ($this->filterForPropertyPath($item->getFields(), 'search_api_url') as $field) {
+          $field->addValue($url->toString());
+        }
       }
     }
   }

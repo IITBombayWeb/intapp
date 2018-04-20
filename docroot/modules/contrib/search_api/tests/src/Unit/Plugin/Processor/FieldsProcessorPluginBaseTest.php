@@ -2,11 +2,8 @@
 
 namespace Drupal\Tests\search_api\Unit\Plugin\Processor;
 
-use Drupal\search_api\IndexInterface;
-use Drupal\search_api\Item\Field;
-use Drupal\search_api\Plugin\search_api\data_type\value\TextToken;
-use Drupal\search_api\Plugin\search_api\data_type\value\TextValue;
 use Drupal\search_api\Query\Condition;
+use Drupal\search_api\Utility;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -40,107 +37,17 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
   public function setUp() {
     parent::setUp();
 
-    $this->setUpMockContainer();
+    $this->setUpDataTypePlugin();
     $this->index = $this->getMock('Drupal\search_api\IndexInterface');
     $this->index->expects($this->any())
       ->method('status')
       ->will($this->returnValue(TRUE));
-    $items = $this->getTestItem();
-    $fields = $items[$this->itemIds[0]]->getFields();
+    $fields = $this->getTestItem()[$this->itemIds[0]]->getFields();
     $this->index->expects($this->any())
       ->method('getFields')
       ->will($this->returnValue($fields));
 
-    $this->processor = new TestFieldsProcessorPlugin(['#index' => $this->index], '', []);
-  }
-
-  /**
-   * Tests whether the processor handles field changes correctly.
-   */
-  public function testFieldRenaming() {
-    $configuration['fields'] = [
-      'float_field',
-      'float_field_2',
-      'string_field',
-      'text_field',
-      'text_field_2',
-    ];
-    $this->processor->setConfiguration($configuration);
-
-    $override = function ($type) {
-      return in_array($type, ['string', 'text']);
-    };
-    $this->processor->setMethodOverride('testType', $override);
-
-    $this->index->method('getFieldRenames')
-      ->willReturn([
-        'float_field' => 'foo',
-        'text_field' => 'bar',
-      ]);
-    $this->index->method('getField')
-      ->willReturnMap([
-        ['float_field', (new Field($this->index, ''))->setType('float')],
-        ['float_field_2', NULL],
-        ['string_field', (new Field($this->index, ''))->setType('string')],
-        ['bar', (new Field($this->index, ''))->setType('text')],
-        ['text_field_2', (new Field($this->index, ''))->setType('text')],
-      ]);
-
-    $this->processor->preIndexSave();
-
-    $fields = $this->processor->getConfiguration()['fields'];
-    sort($fields);
-    $expected = [
-      'bar',
-      'string_field',
-      'text_field_2',
-    ];
-    $this->assertEquals($expected, $fields);
-  }
-
-  /**
-   * Tests whether the "Enable on all supported fields" option works correctly.
-   *
-   * We want the option to make sure that all supported fields are automatically
-   * added to the processor, without adding unsupported ones or keeping old ones
-   * that were removed.
-   */
-  public function testAllFields() {
-    $configuration['all_fields'] = TRUE;
-    $configuration['fields'] = [
-      'float_field',
-      'string_field',
-    ];
-    $this->processor->setConfiguration($configuration);
-
-    $override = function ($type) {
-      return in_array($type, ['string', 'text']);
-    };
-    $this->processor->setMethodOverride('testType', $override);
-
-    // Since it's not possible to override an already specified method on a mock
-    // object, we need to create a new mock object for the index in this test.
-    /** @var \Drupal\search_api\IndexInterface|\PHPUnit_Framework_MockObject_MockObject $index */
-    $index = $this->getMock(IndexInterface::class);
-    $index->method('getFields')->willReturn([
-      'float_field' => (new Field($this->index, ''))->setType('float'),
-      'float_field_2' => (new Field($this->index, ''))->setType('float'),
-      'string_field' => (new Field($this->index, ''))->setType('string'),
-      'text_field' => (new Field($this->index, ''))->setType('text'),
-      'text_field_2' => (new Field($this->index, ''))->setType('text'),
-    ]);
-    $this->processor->setIndex($index);
-
-    $this->processor->preIndexSave();
-
-    $fields = $this->processor->getConfiguration()['fields'];
-    sort($fields);
-    $expected = [
-      'string_field',
-      'text_field',
-      'text_field_2',
-    ];
-    $this->assertEquals($expected, $fields);
+    $this->processor = new TestFieldsProcessorPlugin(array('index' => $this->index), '', array());
   }
 
   /**
@@ -149,7 +56,7 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
   public function testTestTypeDefault() {
     $items = $this->getTestItem();
     $this->processor->preprocessIndexItems($items);
-    $this->assertFieldsProcessed($items, ['text_field', 'string_field']);
+    $this->assertFieldsProcessed($items, array('text_field', 'string_field'));
   }
 
   /**
@@ -157,15 +64,13 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
    */
   public function testTestTypeOverride() {
     $override = function ($type) {
-      return \Drupal::getContainer()
-        ->get('search_api.data_type_helper')
-        ->isTextType($type, ['string', 'integer']);
+      return Utility::isTextType($type, array('string', 'integer'));
     };
     $this->processor->setMethodOverride('testType', $override);
 
     $items = $this->getTestItem();
     $this->processor->preprocessIndexItems($items);
-    $this->assertFieldsProcessed($items, ['string_field', 'integer_field']);
+    $this->assertFieldsProcessed($items, array('string_field', 'integer_field'));
   }
 
   /**
@@ -177,12 +82,12 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
       return FALSE;
     };
     $this->processor->setMethodOverride('testType', $override);
-    $configuration['fields'] = ['text_field', 'float_field'];
+    $configuration['fields'] = array('text_field' => 'text_field', 'float_field' => 'float_field');
     $this->processor->setConfiguration($configuration);
 
     $items = $this->getTestItem();
     $this->processor->preprocessIndexItems($items);
-    $this->assertFieldsProcessed($items, ['text_field', 'float_field']);
+    $this->assertFieldsProcessed($items, array('text_field', 'float_field'));
   }
 
   /**
@@ -202,7 +107,7 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
 
     $items = $this->getTestItem();
     $this->processor->preprocessIndexItems($items);
-    $this->assertFieldsProcessed($items, ['text_field', 'string_field'], '&');
+    $this->assertFieldsProcessed($items, array('text_field', 'string_field'), '&');
   }
 
   /**
@@ -219,185 +124,82 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
     };
     $this->processor->setMethodOverride('processFieldValue', $override);
 
-    $fields = [
-      'field1' => [
+    $fields = array(
+      'field1' => array(
         'type' => 'string',
-        'values' => [
+        'values' => array(
           'foo',
           'bar',
-        ],
-      ],
-    ];
+        ),
+      ),
+    );
     $items = $this->createItems($this->index, 1, $fields);
 
     $this->processor->preprocessIndexItems($items);
 
     $item_fields = $items[$this->itemIds[0]]->getFields();
-    $this->assertEquals(['*foo'], $item_fields['field1']->getValues(), 'Field value was correctly removed.');
+    $this->assertEquals(array('*foo'), $item_fields['field1']->getValues(), 'tokenized_text field correctly processed.');
   }
 
   /**
-   * Tests whether the processField() method operates correctly.
+   * Tests whether tokenized text is handled correctly.
    */
   public function testProcessFieldsTokenized() {
-    $override = function (&$value, $type) {
-      switch ($type) {
-        case 'integer':
-          ++$value;
-          return;
-
-        case 'string':
-          $value = "++$value";
-          return;
-      }
-
-      if (strpos($value, ' ')) {
-        $value = TestFieldsProcessorPlugin::createTokenizedText($value, 4)->getTokens();
+    $override = function (&$value, &$type) {
+      if ($type != 'tokenized_text') {
+        $value = TestFieldsProcessorPlugin::createTokenizedText($value, NULL);
+        $type = 'tokenized_text';
       }
       elseif ($value == 'bar') {
-        $value = TestFieldsProcessorPlugin::createTokenizedText('*bar', 2)->getTokens();
+        $value = array(array('value' => '*bar'));
       }
-      elseif ($value == 'baz') {
-        $value = '';
+      elseif ($value != 'baz') {
+        $value = "*$value";
       }
       else {
-        $value = "*$value";
+        $value = '';
       }
     };
     $this->processor->setMethodOverride('processFieldValue', $override);
 
-    $value = TestFieldsProcessorPlugin::createTokenizedText('foobar baz', 3);
-    $tokens = $value->getTokens();
-    $tokens[] = new TextToken('foo bar', 2);
-    $value->setTokens($tokens);
-    $fields = [
-      'field1' => [
-        'type' => 'text',
-        'values' => [
+    $fields = array(
+      'field1' => array(
+        'type' => 'tokenized_text',
+        'values' => array(
           TestFieldsProcessorPlugin::createTokenizedText('foo bar baz', 3),
-          $value,
-          new TextValue('foo'),
-          new TextValue('foo bar'),
-          new TextValue('bar'),
-          new TextValue('baz'),
-        ],
-      ],
-      'field2' => [
-        'type' => 'integer',
-        'values' => [
-          1,
-          3,
-        ],
-      ],
-      'field3' => [
-        'type' => 'string',
-        'values' => [
-          'foo',
+          TestFieldsProcessorPlugin::createTokenizedText('foobar'),
+        ),
+      ),
+      'field2' => array(
+        'type' => 'text',
+        'values' => array(
           'foo bar baz',
-        ],
-      ],
-    ];
+          'foobar',
+        ),
+      ),
+    );
     $items = $this->createItems($this->index, 1, $fields);
-
-    $this->processor->setConfiguration([
-      'fields' => ['field1', 'field2', 'field3'],
-    ]);
 
     $this->processor->preprocessIndexItems($items);
 
-    $fields = $items[$this->itemIds[0]]->getFields();
-
-    /** @var \Drupal\search_api\Plugin\search_api\data_type\value\TextValueInterface[] $values */
-    $values = $fields['field1']->getValues();
-    $summary = [];
-    foreach ($values as $i => $value) {
-      $summary[$i]['text'] = $value->toText();
-      $tokens = $value->getTokens();
-      if ($tokens !== NULL) {
-        $summary[$i]['tokens'] = [];
-        foreach ($tokens as $token) {
-          $summary[$i]['tokens'][] = [
-            'text' => $token->getText(),
-            'boost' => $token->getBoost(),
-          ];
-        }
-      }
-    }
-    $expected = [
-      [
-        'text' => '*foo *bar',
-        'tokens' => [
-          [
-            'text' => '*foo',
-            'boost' => 3,
-          ],
-          [
-            'text' => '*bar',
-            'boost' => 6,
-          ],
-        ],
-      ],
-      [
-        'text' => '*foobar foo bar',
-        'tokens' => [
-          [
-            'text' => '*foobar',
-            'boost' => 3,
-          ],
-          [
-            'text' => 'foo',
-            'boost' => 8,
-          ],
-          [
-            'text' => 'bar',
-            'boost' => 8,
-          ],
-        ],
-      ],
-      [
-        'text' => '*foo',
-      ],
-      [
-        'text' => 'foo bar',
-        'tokens' => [
-          [
-            'text' => 'foo',
-            'boost' => 4,
-          ],
-          [
-            'text' => 'bar',
-            'boost' => 4,
-          ],
-        ],
-      ],
-      [
-        'text' => '*bar',
-        'tokens' => [
-          [
-            'text' => '*bar',
-            'boost' => 2,
-          ],
-        ],
-      ],
-    ];
-    $this->assertEquals($expected, $summary);
-
-    $expected = [2, 4];
-    $this->assertEquals('integer', $fields['field2']->getType());
-    $this->assertEquals($expected, $fields['field2']->getValues());
-
-    $expected = ['++foo', '++foo bar baz'];
-    $this->assertEquals('string', $fields['field3']->getType());
-    $this->assertEquals($expected, $fields['field3']->getValues());
+    $item_fields = $items[$this->itemIds[0]]->getFields();
+    $expected = array(
+      TestFieldsProcessorPlugin::createTokenizedText('*foo *bar', 3),
+      TestFieldsProcessorPlugin::createTokenizedText('*foobar'),
+    );
+    $this->assertEquals($expected, $item_fields['field1']->getValues(), 'tokenized_text field correctly processed.');
+    $expected = array(
+      TestFieldsProcessorPlugin::createTokenizedText('foo bar baz'),
+      TestFieldsProcessorPlugin::createTokenizedText('foobar'),
+    );
+    $this->assertEquals($expected, $item_fields['field2']->getValues(), 'text field correctly processed and tokenized.');
   }
 
   /**
    * Tests whether preprocessing of queries without search keys works correctly.
    */
   public function testProcessKeysNoKeys() {
-    $query = \Drupal::getContainer()
-      ->get('search_api.query_helper')
-      ->createQuery($this->index);
+    $query = Utility::createQuery($this->index);
 
     $this->processor->preprocessSearchQuery($query);
 
@@ -408,9 +210,7 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
    * Tests whether preprocessing of simple search keys works correctly.
    */
   public function testProcessKeysSimple() {
-    $query = \Drupal::getContainer()
-      ->get('search_api.query_helper')
-      ->createQuery($this->index);
+    $query = Utility::createQuery($this->index);
     $keys = &$query->getKeys();
     $keys = 'foo';
 
@@ -423,33 +223,31 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
    * Tests whether preprocessing of complex search keys works correctly.
    */
   public function testProcessKeysComplex() {
-    $query = \Drupal::getContainer()
-      ->get('search_api.query_helper')
-      ->createQuery($this->index);
+    $query = Utility::createQuery($this->index);
     $keys = &$query->getKeys();
-    $keys = [
+    $keys = array(
       '#conjunction' => 'OR',
       'foo',
-      [
+      array(
         '#conjunction' => 'AND',
         'bar',
         'baz',
         '#negation' => TRUE,
-      ],
-    ];
+      ),
+    );
 
     $this->processor->preprocessSearchQuery($query);
 
-    $expected = [
+    $expected = array(
       '#conjunction' => 'OR',
       '*foo',
-      [
+      array(
         '#conjunction' => 'AND',
         '*bar',
         '*baz',
         '#negation' => TRUE,
-      ],
-    ];
+      ),
+    );
     $this->assertEquals($expected, $query->getKeys(), 'Search keys were correctly preprocessed.');
   }
 
@@ -467,32 +265,30 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
     };
     $this->processor->setMethodOverride('processKey', $override);
 
-    $query = \Drupal::getContainer()
-      ->get('search_api.query_helper')
-      ->createQuery($this->index);
+    $query = Utility::createQuery($this->index);
     $keys = &$query->getKeys();
-    $keys = [
+    $keys = array(
       '#conjunction' => 'OR',
       'foo',
-      [
+      array(
         '#conjunction' => 'AND',
         'bar',
         'baz',
         '#negation' => TRUE,
-      ],
-    ];
+      ),
+    );
 
     $this->processor->preprocessSearchQuery($query);
 
-    $expected = [
+    $expected = array(
       '#conjunction' => 'OR',
       '&foo',
-      [
+      array(
         '#conjunction' => 'AND',
         '&bar',
         '#negation' => TRUE,
-      ],
-    ];
+      ),
+    );
     $this->assertEquals($expected, $query->getKeys(), 'Search keys were correctly preprocessed.');
   }
 
@@ -500,22 +296,20 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
    * Tests whether preprocessing search conditions works correctly.
    */
   public function testProcessConditions() {
-    $query = \Drupal::getContainer()
-      ->get('search_api.query_helper')
-      ->createQuery($this->index);
+    $query = Utility::createQuery($this->index);
     $query->addCondition('text_field', 'foo');
-    $query->addCondition('text_field', ['foo', 'bar'], 'IN');
+    $query->addCondition('text_field', array('foo', 'bar'), 'IN');
     $query->addCondition('string_field', NULL, '<>');
     $query->addCondition('integer_field', 'bar');
 
     $this->processor->preprocessSearchQuery($query);
 
-    $expected = [
+    $expected = array(
       new Condition('text_field', '*foo'),
-      new Condition('text_field', ['*foo', '*bar'], 'IN'),
+      new Condition('text_field', array('*foo', '*bar'), 'IN'),
       new Condition('string_field', 'undefined', '<>'),
       new Condition('integer_field', 'bar'),
-    ];
+    );
     $this->assertEquals($expected, $query->getConditionGroup()->getConditions(), 'Conditions were preprocessed correctly.');
   }
 
@@ -523,24 +317,22 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
    * Tests whether preprocessing nested search conditions works correctly.
    */
   public function testProcessConditionsNestedConditions() {
-    $query = \Drupal::getContainer()
-      ->get('search_api.query_helper')
-      ->createQuery($this->index);
+    $query = Utility::createQuery($this->index);
     $conditions = $query->createConditionGroup();
     $conditions->addCondition('text_field', 'foo');
-    $conditions->addCondition('text_field', ['foo', 'bar'], 'IN');
+    $conditions->addCondition('text_field', array('foo', 'bar'), 'IN');
     $conditions->addCondition('string_field', NULL, '<>');
     $conditions->addCondition('integer_field', 'bar');
     $query->addConditionGroup($conditions);
 
     $this->processor->preprocessSearchQuery($query);
 
-    $expected = [
+    $expected = array(
       new Condition('text_field', '*foo'),
-      new Condition('text_field', ['*foo', '*bar'], 'IN'),
+      new Condition('text_field', array('*foo', '*bar'), 'IN'),
       new Condition('string_field', 'undefined', '<>'),
       new Condition('integer_field', 'bar'),
-    ];
+    );
     $this->assertEquals($expected, $query->getConditionGroup()->getConditions()[0]->getConditions(), 'Conditions were preprocessed correctly.');
   }
 
@@ -555,19 +347,17 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
     };
     $this->processor->setMethodOverride('processConditionValue', $override);
 
-    $query = \Drupal::getContainer()
-      ->get('search_api.query_helper')
-      ->createQuery($this->index);
+    $query = Utility::createQuery($this->index);
     $query->addCondition('text_field', 'foo');
     $query->addCondition('string_field', NULL, '<>');
     $query->addCondition('integer_field', 'bar');
 
     $this->processor->preprocessSearchQuery($query);
 
-    $expected = [
+    $expected = array(
       new Condition('string_field', NULL, '<>'),
       new Condition('integer_field', 'bar'),
-    ];
+    );
     $this->assertEquals($expected, array_merge($query->getConditionGroup()->getConditions()), 'Conditions were preprocessed correctly.');
   }
 
@@ -586,27 +376,25 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
     };
     $this->processor->setMethodOverride('process', $override);
 
-    $query = \Drupal::getContainer()
-      ->get('search_api.query_helper')
-      ->createQuery($this->index);
-    $query->addCondition('text_field', ['a', 'b'], 'NOT IN');
-    $query->addCondition('text_field', ['a', 'bo'], 'IN');
-    $query->addCondition('text_field', ['ab', 'bo'], 'NOT IN');
-    $query->addCondition('text_field', ['a', 'bo'], 'BETWEEN');
-    $query->addCondition('text_field', ['ab', 'bo'], 'NOT BETWEEN');
-    $query->addCondition('text_field', ['a', 'bar'], 'IN');
-    $query->addCondition('text_field', ['abo', 'baz'], 'BETWEEN');
+    $query = Utility::createQuery($this->index);
+    $query->addCondition('text_field', array('a', 'b'), 'NOT IN');
+    $query->addCondition('text_field', array('a', 'bo'), 'IN');
+    $query->addCondition('text_field', array('ab', 'bo'), 'NOT IN');
+    $query->addCondition('text_field', array('a', 'bo'), 'BETWEEN');
+    $query->addCondition('text_field', array('ab', 'bo'), 'NOT BETWEEN');
+    $query->addCondition('text_field', array('a', 'bar'), 'IN');
+    $query->addCondition('text_field', array('abo', 'baz'), 'BETWEEN');
 
     $this->processor->preprocessSearchQuery($query);
 
-    $expected = [
-      new Condition('text_field', ['a', 'b'], 'NOT IN'),
-      new Condition('text_field', ['a'], 'IN'),
-      new Condition('text_field', ['a', 'bo'], 'BETWEEN'),
-      new Condition('text_field', ['ab', 'bo'], 'NOT BETWEEN'),
-      new Condition('text_field', ['a', 'bar*'], 'IN'),
-      new Condition('text_field', ['abo*', 'baz*'], 'BETWEEN'),
-    ];
+    $expected = array(
+      new Condition('text_field', array('a', 'b'), 'NOT IN'),
+      new Condition('text_field', array('a'), 'IN'),
+      new Condition('text_field', array('a', 'bo'), 'BETWEEN'),
+      new Condition('text_field', array('ab', 'bo'), 'NOT BETWEEN'),
+      new Condition('text_field', array('a', 'bar*'), 'IN'),
+      new Condition('text_field', array('abo*', 'baz*'), 'BETWEEN'),
+    );
     $this->assertEquals($expected, array_merge($query->getConditionGroup()->getConditions()), 'Conditions were preprocessed correctly.');
   }
 
@@ -622,19 +410,19 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
    */
   protected function getTestItem($types = NULL) {
     if ($types === NULL) {
-      $types = ['text', 'string', 'integer', 'float'];
+      $types = array('text', 'string', 'integer', 'float');
     }
 
-    $fields = [];
+    $fields = array();
     foreach ($types as $type) {
       $field_id = "{$type}_field";
-      $fields[$field_id] = [
+      $fields[$field_id] = array(
         'type' => $type,
-        'values' => [
+        'values' => array(
           "$field_id value 1",
           "$field_id value 2",
-        ],
-      ];
+        ),
+      );
     }
     return $this->createItems($this->index, 1, $fields);
   }
@@ -654,16 +442,16 @@ class FieldsProcessorPluginBaseTest extends UnitTestCase {
     foreach ($items as $item) {
       foreach ($item->getFields() as $field_id => $field) {
         if (!empty($processed_fields[$field_id])) {
-          $expected = [
+          $expected = array(
             "$prefix$field_id value 1",
             "$prefix$field_id value 2",
-          ];
+          );
         }
         else {
-          $expected = [
+          $expected = array(
             "$field_id value 1",
             "$field_id value 2",
-          ];
+          );
         }
         $this->assertEquals($expected, $field->getValues(), "Field $field_id is correct.");
       }

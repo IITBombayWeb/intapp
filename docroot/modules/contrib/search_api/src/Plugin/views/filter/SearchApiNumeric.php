@@ -2,6 +2,7 @@
 
 namespace Drupal\search_api\Plugin\views\filter;
 
+use Drupal\search_api\UncacheableDependencyTrait;
 use Drupal\views\Plugin\views\filter\NumericFilter;
 
 /**
@@ -13,6 +14,7 @@ use Drupal\views\Plugin\views\filter\NumericFilter;
  */
 class SearchApiNumeric extends NumericFilter {
 
+  use UncacheableDependencyTrait;
   use SearchApiFilterTrait;
 
   /**
@@ -20,8 +22,17 @@ class SearchApiNumeric extends NumericFilter {
    */
   public function operators() {
     $operators = parent::operators();
-    unset($operators['regular_expression']);
+    // @todo Enable "(not) between" again once that operator is available in
+    //   the Search API.
+    unset($operators['between'], $operators['not between'], $operators['regular_expression']);
     return $operators;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function opEmpty($field) {
+    $this->getQuery()->addCondition($this->realField, NULL, $this->operator == 'empty' ? '=' : '<>', $this->options['group']);
   }
 
 }

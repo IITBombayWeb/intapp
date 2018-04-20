@@ -1,2 +1,3 @@
 .idea
-InMemoriamOfPinkPony.rip
+vendor
+composer.lock

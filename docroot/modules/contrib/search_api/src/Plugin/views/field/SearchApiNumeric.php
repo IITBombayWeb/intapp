@@ -41,7 +41,7 @@ class SearchApiNumeric extends NumericField implements MultiItemsFieldHandlerInt
   public function defineOptions() {
     $options = $this->traitDefineOptions();
 
-    $options['format_plural_values'] = ['default' => []];
+    $options['format_plural_values'] = array('default' => array());
 
     return $options;
   }

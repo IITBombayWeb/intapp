@@ -2,22 +2,16 @@
 
 namespace Drupal\search_api\Item;
 
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\search_api\Datasource\DatasourceInterface;
-use Drupal\search_api\LoggerTrait;
-use Drupal\search_api\Processor\ProcessorInterface;
-use Drupal\search_api\Processor\ProcessorPropertyInterface;
 use Drupal\search_api\SearchApiException;
 use Drupal\search_api\IndexInterface;
-use Drupal\search_api\Utility\Utility;
+use Drupal\search_api\Utility;
 
 /**
  * Provides a default implementation for a search item.
  */
 class Item implements \IteratorAggregate, ItemInterface {
-
-  use LoggerTrait;
 
   /**
    * The search index with which this item is associated.
@@ -66,7 +60,7 @@ class Item implements \IteratorAggregate, ItemInterface {
    *
    * @var \Drupal\search_api\Item\FieldInterface[]
    */
-  protected $fields = [];
+  protected $fields = array();
 
   /**
    * Whether the fields were already extracted for this item.
@@ -101,7 +95,7 @@ class Item implements \IteratorAggregate, ItemInterface {
    *
    * @var array
    */
-  protected $extraData = [];
+  protected $extraData = array();
 
   /**
    * Constructs an Item object.
@@ -212,12 +206,9 @@ class Item implements \IteratorAggregate, ItemInterface {
    */
   public function getFields($extract = TRUE) {
     if ($extract && !$this->fieldsExtracted) {
-      $data_type_fallback_mapping = \Drupal::getContainer()
-        ->get('search_api.data_type_helper')
-        ->getDataTypeFallbackMapping($this->index);
-      foreach ([NULL, $this->getDatasourceId()] as $datasource_id) {
-        $fields_by_property_path = [];
-        $processors_with_fields = [];
+      $data_type_fallback_mapping = Utility::getDataTypeFallbackMapping($this->index);
+      foreach (array(NULL, $this->getDatasourceId()) as $datasource_id) {
+        $fields_by_property_path = array();
         foreach ($this->index->getFieldsByDatasource($datasource_id) as $field_id => $field) {
           // Don't overwrite fields that were previously set.
           if (empty($this->fields[$field_id])) {
@@ -230,34 +221,18 @@ class Item implements \IteratorAggregate, ItemInterface {
               $this->fields[$field_id]->setType($data_type_fallback_mapping[$field_data_type]);
             }
 
-            $property = $field->getDataDefinition();
-            if ($property instanceof ProcessorPropertyInterface) {
-              $processors_with_fields[$property->getProcessorId()] = TRUE;
-            }
-            elseif ($datasource_id) {
-              $fields_by_property_path[$field->getPropertyPath()][] = $this->fields[$field_id];
-            }
+            $fields_by_property_path[$field->getPropertyPath()][] = $this->fields[$field_id];
           }
         }
-        try {
-          if ($fields_by_property_path) {
-            \Drupal::getContainer()
-              ->get('search_api.fields_helper')
-              ->extractFields($this->getOriginalObject(), $fields_by_property_path, $this->getLanguage());
+        if ($datasource_id && $fields_by_property_path) {
+          try {
+            Utility::extractFields($this->getOriginalObject(), $fields_by_property_path);
           }
-          if ($processors_with_fields) {
-            $processors = $this->index->getProcessorsByStage(ProcessorInterface::STAGE_ADD_PROPERTIES);
-            foreach ($processors as $processor_id => $processor) {
-              if (isset($processors_with_fields[$processor_id])) {
-                $processor->addFieldValues($this);
-              }
-            }
+          catch (SearchApiException $e) {
+            // If we couldn't load the object, just log an error and fail
+            // silently to set the values.
+            watchdog_exception('search_api', $e);
           }
-        }
-        catch (SearchApiException $e) {
-          // If we couldn't load the object, just log an error and fail
-          // silently to set the values.
-          $this->logException($e);
         }
       }
       $this->fieldsExtracted = TRUE;
@@ -390,19 +365,6 @@ class Item implements \IteratorAggregate, ItemInterface {
       unset($this->extraData[$key]);
     }
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function checkAccess(AccountInterface $account = NULL) {
-    try {
-      return $this->getDatasource()
-        ->checkItemAccess($this->getOriginalObject(), $account);
-    }
-    catch (SearchApiException $e) {
-      return FALSE;
-    }
   }
 
   /**

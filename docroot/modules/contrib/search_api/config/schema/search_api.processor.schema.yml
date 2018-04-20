@@ -1,8 +1,6 @@
-# Base definitions for processors
-
-search_api.default_processor_configuration:
+plugin.plugin_configuration.search_api_processor.add_url:
   type: mapping
-  label: 'Default processor configuration'
+  label: 'Add URL configuration'
   mapping:
     weights:
       type: sequence
@@ -10,14 +8,6 @@ search_api.default_processor_configuration:
       sequence:
         type: integer
         label: 'The processor''s weight for this stage'
-
-search_api.fields_processor_configuration:
-  type: search_api.default_processor_configuration
-  label: 'Fields processor configuration'
-  mapping:
-    all_fields:
-      type: boolean
-      label: 'Enabled for all supported fields'
     fields:
       type: sequence
       label: 'The selected fields'
@@ -25,27 +15,46 @@ search_api.fields_processor_configuration:
         type: string
         label: 'Selected field'
 
-# Default for any processor without specific configuration
-plugin.plugin_configuration.search_api_processor.*:
-  type: search_api.default_processor_configuration
-
-# Definitions for individual processors
-
-plugin.plugin_configuration.search_api_processor.hierarchy:
-  type: search_api.default_processor_configuration
-  label: 'Hierarchy processor configuration'
+plugin.plugin_configuration.search_api_processor.aggregated_field:
+  type: mapping
+  label: 'Add aggregation processor configuration'
   mapping:
+    weights:
+      type: sequence
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
     fields:
       type: sequence
-      label: 'Fields for which to add the hierarchy'
+      label: 'The aggregated fields configured for this index'
       sequence:
-        type: string
-        label: 'Field ID'
+        type: mapping
+        label: 'One field to add'
+        mapping:
+          fields:
+            type: sequence
+            label: 'The selected fields to be aggregated'
+            sequence:
+              type: string
+              label: 'One field that should be part of the aggregation'
+          label:
+            type: string
+            label: 'The label of the new field'
+          type:
+            type: string
+            label: 'The type of the aggregation'
 
 plugin.plugin_configuration.search_api_processor.highlight:
-  type: search_api.default_processor_configuration
+  type: mapping
   label: 'Highlight processor configuration'
   mapping:
+    weights:
+      type: sequence
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
     prefix:
       type: string
       label: 'Text/HTML that will be prepended to all occurrences of search keywords in highlighted text'
@@ -58,23 +67,26 @@ plugin.plugin_configuration.search_api_processor.highlight:
     excerpt_length:
       type: integer
       label: 'The requested length of the excerpt, in characters'
-    exclude_fields:
-      type: sequence
-      label: 'Fields excluded from excerpt'
-      sequence:
-        type: string
-        label: 'An excluded field''s ID'
     highlight:
       type: string
       label: 'Defines whether returned fields should be highlighted (always/if returned/never).'
-    highlight_partial:
-      type: boolean
-      label: 'Whether matches in parts of words should be highlighted'
 
 plugin.plugin_configuration.search_api_processor.html_filter:
-  type: search_api.fields_processor_configuration
+  type: mapping
   label: 'HTML filter processor configuration'
   mapping:
+    weights:
+      type: sequence
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
+    fields:
+      type: sequence
+      label: 'The selected fields'
+      sequence:
+        type: string
+        label: 'The field name'
     title:
       type: boolean
       label: 'Title'
@@ -89,13 +101,38 @@ plugin.plugin_configuration.search_api_processor.html_filter:
         label: Boost
 
 plugin.plugin_configuration.search_api_processor.ignorecase:
-  type: search_api.fields_processor_configuration
+  type: mapping
   label: 'Ignore case processor configuration'
+  mapping:
+    weights:
+      type: sequence
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
+    fields:
+      type: sequence
+      label: 'The selected fields'
+      sequence:
+        type: string
+        label: 'Selected field'
 
 plugin.plugin_configuration.search_api_processor.ignore_character:
-  type: search_api.fields_processor_configuration
+  type: mapping
   label: 'Ignore Character processor configuration'
   mapping:
+    weights:
+      type: sequence
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
+    fields:
+      type: sequence
+      label: 'The selected fields'
+      sequence:
+        type: string
+        label: 'Selected field'
     ignorable:
       type: string
       label: 'Regular expression for characters it should ignore to stem'
@@ -110,21 +147,76 @@ plugin.plugin_configuration.search_api_processor.ignore_character:
             type: ignore
             label: 'Character set'
 
-plugin.plugin_configuration.search_api_processor.stemmer:
-  type: search_api.fields_processor_configuration
-  label: 'Stemmer processor configuration'
+plugin.plugin_configuration.search_api_processor.language:
+  type: mapping
+  label: 'Language field processor configuration'
   mapping:
-    exceptions:
+    weights:
       type: sequence
-      label: 'Stemming exceptions'
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
+    fields:
+      type: sequence
+      label: 'The selected fields'
       sequence:
         type: string
-        label: Exception
+        label: 'Selected field'
+
+plugin.plugin_configuration.search_api_processor.node_status:
+  type: mapping
+  label: 'node status processor configuration'
+  mapping:
+    weights:
+      type: sequence
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
+    fields:
+      type: sequence
+      label: 'The selected fields'
+      sequence:
+        type: string
+        label: 'Selected field'
+
+plugin.plugin_configuration.search_api_processor.rendered_item:
+  type: mapping
+  label: 'Rendered item processor configuration'
+  mapping:
+    weights:
+      type: sequence
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
+    view_mode:
+      type: sequence
+      label: 'The selected view modes for each datasource, by bundle'
+      sequence:
+        type: sequence
+        label: 'The selected view modes for the datasource, by bundle'
+        sequence:
+          type: string
+          label: 'The view mode used to render the entity for the specified bundle'
+    roles:
+      type: sequence
+      label: 'The selected roles'
+      sequence:
+        type: string
+        label: 'The user roles which will be active when the entity is rendered'
 
 plugin.plugin_configuration.search_api_processor.role_filter:
-  type: search_api.default_processor_configuration
+  type: mapping
   label: 'Role filter processor configuration'
   mapping:
+    weights:
+      type: sequence
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
     default:
       type: boolean
       label: 'Default'
@@ -136,9 +228,21 @@ plugin.plugin_configuration.search_api_processor.role_filter:
         label: 'The role name'
 
 plugin.plugin_configuration.search_api_processor.stopwords:
-  type: search_api.fields_processor_configuration
+  type: mapping
   label: 'Stopwords processor configuration'
   mapping:
+    weights:
+      type: sequence
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
+    fields:
+      type: sequence
+      label: 'The selected fields'
+      sequence:
+        type: string
+        label: 'Selected field'
     stopwords:
       type: sequence
       label: 'entered stopwords'
@@ -147,15 +251,27 @@ plugin.plugin_configuration.search_api_processor.stopwords:
         label: Stopword
 
 plugin.plugin_configuration.search_api_processor.tokenizer:
-  type: search_api.fields_processor_configuration
+  type: mapping
   label: 'Tokenizer processor configuration'
   mapping:
+    weights:
+      type: sequence
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
+    fields:
+      type: sequence
+      label: 'The selected fields'
+      sequence:
+        type: string
+        label: 'Selected field'
     spaces:
       type: string
       label: 'Regular expression for spaces'
     ignorable:
       type: string
-      label: 'Regular expression for ignorable characters'
+      label: 'Regular expression for ignorables'
     overlap_cjk:
       type: integer
       label: 'Defines if simple CJK handling should be enabled.'
@@ -164,46 +280,35 @@ plugin.plugin_configuration.search_api_processor.tokenizer:
       label: 'Defines the minimum word size'
 
 plugin.plugin_configuration.search_api_processor.transliteration:
-  type: search_api.fields_processor_configuration
+  type: mapping
   label: 'Transliteration processor configuration'
-
-# Definitions for property configuration
-
-search_api.property_configuration.*:
-  type: mapping
-  label: 'Default field configuration'
-  mapping: {}
-
-search_api.property_configuration.aggregated_field:
-  type: mapping
-  label: 'Aggregated field configuration'
   mapping:
-    type:
-      type: string
-      label: 'The type of the aggregation'
+    weights:
+      type: sequence
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
     fields:
       type: sequence
-      label: 'The properties to be aggregated'
+      label: 'The selected fields'
       sequence:
         type: string
-        label: 'A property that should be part of the aggregation'
+        label: 'Selected field'
 
-search_api.property_configuration.rendered_item:
+plugin.plugin_configuration.search_api_processor.content_access:
   type: mapping
-  label: 'Rendered item processor configuration'
+  label: 'Content Access configuration'
   mapping:
-    roles:
+    weights:
       type: sequence
-      label: 'The selected roles'
+      label: 'The processor''s weights for the different processing stages'
+      sequence:
+        type: integer
+        label: 'The processor''s weight for this stage'
+    fields:
+      type: sequence
+      label: 'The selected fields'
       sequence:
         type: string
-        label: 'The user roles which will be active when the entity is rendered'
-    view_mode:
-      type: sequence
-      label: 'The selected view modes for each datasource, by bundle'
-      sequence:
-        type: sequence
-        label: 'The selected view modes for the datasource, by bundle'
-        sequence:
-          type: string
-          label: 'The view mode used to render the entity for the specified bundle'
+        label: 'Selected field'

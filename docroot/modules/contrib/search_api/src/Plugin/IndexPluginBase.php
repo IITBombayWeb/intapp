@@ -20,9 +20,10 @@ abstract class IndexPluginBase extends ConfigurablePluginBase implements IndexPl
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
-    if (!empty($configuration['#index']) && $configuration['#index'] instanceof IndexInterface) {
-      $this->setIndex($configuration['#index']);
-      unset($configuration['#index']);
+    // @todo Change key to, e.g., '*index', to avoid potential collisions.
+    if (!empty($configuration['index']) && $configuration['index'] instanceof IndexInterface) {
+      $this->setIndex($configuration['index']);
+      unset($configuration['index']);
     }
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }

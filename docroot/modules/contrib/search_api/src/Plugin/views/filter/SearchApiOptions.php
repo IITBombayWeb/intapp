@@ -3,6 +3,7 @@
 namespace Drupal\search_api\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\search_api\UncacheableDependencyTrait;
 use Drupal\views\Plugin\views\filter\ManyToOne;
 
 /**
@@ -14,6 +15,7 @@ use Drupal\views\Plugin\views\filter\ManyToOne;
  */
 class SearchApiOptions extends ManyToOne {
 
+  use UncacheableDependencyTrait;
   use SearchApiFilterTrait;
 
   /**

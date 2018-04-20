@@ -2,6 +2,7 @@
 
 namespace Drupal\search_api\Plugin\views\sort;
 
+use Drupal\search_api\UncacheableDependencyTrait;
 use Drupal\views\Plugin\views\sort\SortPluginBase;
 
 /**
@@ -10,6 +11,8 @@ use Drupal\views\Plugin\views\sort\SortPluginBase;
  * @ViewsSort("search_api")
  */
 class SearchApiSort extends SortPluginBase {
+
+  use UncacheableDependencyTrait;
 
   /**
    * The associated views query object.
@@ -30,7 +33,7 @@ class SearchApiSort extends SortPluginBase {
     if (isset($this->query->orderby)) {
       unset($this->query->orderby);
       $sort = &$this->query->getSort();
-      $sort = [];
+      $sort = array();
     }
     $this->query->sort($this->realField, $this->options['order']);
   }

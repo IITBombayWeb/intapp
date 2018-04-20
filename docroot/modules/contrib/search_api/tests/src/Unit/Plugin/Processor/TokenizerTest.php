@@ -4,7 +4,7 @@ namespace Drupal\Tests\search_api\Unit\Plugin\Processor;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\search_api\Plugin\search_api\processor\Tokenizer;
-use Drupal\search_api\Utility\Utility;
+use Drupal\search_api\Utility;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -24,7 +24,7 @@ class TokenizerTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->processor = new Tokenizer([], 'tokenizer', []);
+    $this->processor = new Tokenizer(array(), 'tokenizer', array());
   }
 
   /**
@@ -39,13 +39,14 @@ class TokenizerTest extends UnitTestCase {
    *
    * @dataProvider textDataProvider
    */
-  public function testProcessFieldValue($passed_value, $expected_value, array $config = []) {
+  public function testProcessFieldValue($passed_value, $expected_value, array $config = array()) {
     if ($config) {
       $this->processor->setConfiguration($config);
     }
     $type = 'text';
-    $this->invokeMethod('processFieldValue', [&$passed_value, &$type]);
+    $this->invokeMethod('processFieldValue', array(&$passed_value, &$type));
     $this->assertEquals($expected_value, $passed_value);
+    $this->assertEquals('tokenized_text', $type);
   }
 
   /**
@@ -60,66 +61,66 @@ class TokenizerTest extends UnitTestCase {
    */
   public function textDataProvider() {
     $word_token = Utility::createTextToken('word');
-    return [
+    return array(
       // Test some simple cases.
-      ['word', [$word_token]],
-      ['word word', [$word_token, $word_token]],
+      array('word', array($word_token)),
+      array('word word', array($word_token, $word_token)),
       // Test whether the default splits on special characters, too.
-      ['words!word', [Utility::createTextToken('words'), $word_token]],
-      ['words$word', [Utility::createTextToken('words'), $word_token]],
+      array('words!word', array(Utility::createTextToken('words'), $word_token)),
+      array('words$word', array(Utility::createTextToken('words'), $word_token)),
       // Test whether overriding the default works and is case-insensitive.
-      [
+      array(
         'wordXwordxword',
-        [$word_token, Utility::createTextToken('wordxword')],
-        ['spaces' => 'X'],
-      ],
-      [
+        array($word_token, Utility::createTextToken('wordxword')),
+        array('spaces' => 'X'),
+      ),
+      array(
         'word3word!word',
-        [$word_token, Utility::createTextToken('word!word')],
-        ['spaces' => '\d'],
-      ],
-      [
+        array($word_token, Utility::createTextToken('word!word')),
+        array('spaces' => '\d'),
+      ),
+      array(
         'wordXwordRword',
-        [$word_token, $word_token, $word_token],
-        ['spaces' => 'R-Z'],
-      ],
-      [
+        array($word_token, $word_token, $word_token),
+        array('spaces' => 'R-Z'),
+      ),
+      array(
         'wordXwordRword',
-        [$word_token, $word_token, $word_token],
-        ['spaces' => 'R-TW-Z'],
-      ],
-      [
+        array($word_token, $word_token, $word_token),
+        array('spaces' => 'R-TW-Z'),
+      ),
+      array(
         'wordXword word',
-        [$word_token, $word_token, $word_token],
-        ['spaces' => 'R-Z'],
-      ],
+        array($word_token, $word_token, $word_token),
+        array('spaces' => 'R-Z'),
+      ),
       // Test whether minimum word size works.
-      [
+      array(
         'wordSwo',
-        [$word_token],
-        ['spaces' => 'R-Z'],
-      ],
-      [
+        array($word_token),
+        array('spaces' => 'R-Z'),
+      ),
+      array(
         'wordSwo',
-        [$word_token, Utility::createTextToken('wo')],
-        ['spaces' => 'R-Z', 'minimum_word_size' => 2],
-      ],
-      [
+        array($word_token, Utility::createTextToken('wo')),
+        array('spaces' => 'R-Z', 'minimum_word_size' => 2),
+      ),
+      array(
         'word w',
-        [$word_token],
-        ['minimum_word_size' => 2],
-      ],
-      [
+        array($word_token),
+        array('minimum_word_size' => 2),
+      ),
+      array(
         'word w',
-        [$word_token, Utility::createTextToken('w')],
-        ['minimum_word_size' => 1],
-      ],
-      [
+        array($word_token, Utility::createTextToken('w')),
+        array('minimum_word_size' => 1),
+      ),
+      array(
         'word wordword',
-        [],
-        ['minimum_word_size' => 10],
-      ],
-    ];
+        array(),
+        array('minimum_word_size' => 10),
+      ),
+    );
   }
 
   /**
@@ -136,7 +137,7 @@ class TokenizerTest extends UnitTestCase {
     // Create a string of CJK characters from various character ranges in
     // the Unicode tables. $starts contains the starts of the character ranges,
     // $ends the ends.
-    $starts = [
+    $starts = array(
       'CJK unified' => 0x4e00,
       'CJK Ext A' => 0x3400,
       'CJK Compat' => 0xf900,
@@ -157,8 +158,8 @@ class TokenizerTest extends UnitTestCase {
       'Bomofo Ext' => 0x31a0,
       'Lisu' => 0xa4d0,
       'Yi' => 0xa000,
-    ];
-    $ends = [
+    );
+    $ends = array(
       'CJK unified' => 0x9fcf,
       'CJK Ext A' => 0x4dbf,
       'CJK Compat' => 0xfaff,
@@ -179,10 +180,10 @@ class TokenizerTest extends UnitTestCase {
       'Bomofo Ext' => 0x31b7,
       'Lisu' => 0xa4fd,
       'Yi' => 0xa48f,
-    ];
+    );
 
     // Generate characters consisting of starts, midpoints, and ends.
-    $chars = [];
+    $chars = array();
     foreach ($starts as $key => $value) {
       $chars[] = self::codepointToUtf8($starts[$key]);
       $mid = round(0.5 * ($starts[$key] + $ends[$key]));
@@ -192,7 +193,7 @@ class TokenizerTest extends UnitTestCase {
 
     // Merge into a single string and tokenize.
     $text = implode('', $chars);
-    $simplified_text = $this->invokeMethod('simplifyText', [$text]);
+    $simplified_text = $this->invokeMethod('simplifyText', array($text));
 
     // Prepare the expected return value, which consists of all the 3-grams in
     // the original string, separated by spaces.
@@ -209,9 +210,9 @@ class TokenizerTest extends UnitTestCase {
     $this->assertEquals($expected, $simplified_text, 'CJK tokenizer worked on all supplied CJK characters');
 
     // Verify that disabling the "overlap_cjk" setting works as expected.
-    $this->processor->setConfiguration(['overlap_cjk' => FALSE]);
+    $this->processor->setConfiguration(array('overlap_cjk' => FALSE));
     $this->invokeMethod('prepare');
-    $simplified_text = $this->invokeMethod('simplifyText', [$text]);
+    $simplified_text = $this->invokeMethod('simplifyText', array($text));
     $this->assertEquals($text, $simplified_text, 'CJK tokenizing is successfully disabled');
   }
 
@@ -223,11 +224,11 @@ class TokenizerTest extends UnitTestCase {
    */
   public function testNoTokenizer() {
     // Set the minimum word size to 1 (to split all CJK characters).
-    $this->processor->setConfiguration(['minimum_word_size' => 1]);
+    $this->processor->setConfiguration(array('minimum_word_size' => 1));
     $this->invokeMethod('prepare');
 
     $letters = 'abcdefghijklmnopqrstuvwxyz';
-    $out = $this->invokeMethod('simplifyText', [$letters]);
+    $out = $this->invokeMethod('simplifyText', array($letters));
 
     $this->assertEquals($letters, $out, 'Latin letters are not CJK tokenized');
   }
@@ -281,16 +282,16 @@ class TokenizerTest extends UnitTestCase {
    */
   public function testSearchSimplifyUnicode() {
     // Set the minimum word size to 1 (to split all CJK characters).
-    $this->processor->setConfiguration(['minimum_word_size' => 1]);
+    $this->processor->setConfiguration(array('minimum_word_size' => 1));
     $this->invokeMethod('prepare');
 
     $input = file_get_contents($this->root . '/core/modules/search/tests/UnicodeTest.txt');
     $basestrings = explode(chr(10), $input);
-    $strings = [];
+    $strings = array();
     foreach ($basestrings as $key => $string) {
       if ($key % 2) {
         // Even line, should be removed by simplifyText().
-        $simplified = $this->invokeMethod('simplifyText', [$string]);
+        $simplified = $this->invokeMethod('simplifyText', array($string));
         $this->assertEquals('', $simplified, "Line $key is excluded from the index");
       }
       else {
@@ -312,7 +313,7 @@ class TokenizerTest extends UnitTestCase {
       }
     }
     foreach ($strings as $key => $string) {
-      $simplified = $this->invokeMethod('simplifyText', [$string]);
+      $simplified = $this->invokeMethod('simplifyText', array($string));
       $this->assertGreaterThanOrEqual(Unicode::strlen($string), Unicode::strlen($simplified), "Nothing is removed from string $key.");
     }
 
@@ -322,7 +323,7 @@ class TokenizerTest extends UnitTestCase {
     for ($i = 0; $i < 32; $i++) {
       $string .= chr($i);
     }
-    $this->assertEquals('', $this->invokeMethod('simplifyText', [$string]), 'Text simplification works for ASCII control characters.');
+    $this->assertEquals('', $this->invokeMethod('simplifyText', array($string)), 'Text simplification works for ASCII control characters.');
   }
 
   /**
@@ -339,10 +340,10 @@ class TokenizerTest extends UnitTestCase {
    */
   public function testSearchSimplifyPunctuation($passed_value, $expected_value, $message) {
     // Set the minimum word size to 1 (to split all CJK characters).
-    $this->processor->setConfiguration(['minimum_word_size' => 1]);
+    $this->processor->setConfiguration(array('minimum_word_size' => 1));
     $this->invokeMethod('prepare');
 
-    $out = $this->invokeMethod('simplifyText', [$passed_value]);
+    $out = $this->invokeMethod('simplifyText', array($passed_value));
     $this->assertEquals($expected_value, $out, $message);
   }
 
@@ -357,33 +358,33 @@ class TokenizerTest extends UnitTestCase {
    *   - The message to display for the assertion.
    */
   public function searchSimplifyPunctuationProvider() {
-    $cases = [
-      [
+    $cases = array(
+      array(
         '20.03/94-28,876',
         '20039428876',
         'Punctuation removed from numbers',
-      ],
-      [
+      ),
+      array(
         'great...drupal--module',
         'great drupal module',
         'Multiple dot and dashes are word boundaries',
-      ],
-      [
+      ),
+      array(
         'very_great-drupal.module',
         'verygreatdrupalmodule',
         'Single dot, dash, underscore are removed',
-      ],
-      [
+      ),
+      array(
         'regular,punctuation;word',
         'regular punctuation word',
         'Punctuation is a word boundary',
-      ],
-      [
+      ),
+      array(
         'Äußerung français repülőtér',
         'Äußerung français repülőtér',
         'Umlauts and accented characters are not treated as word boundaries',
-      ],
-    ];
+      ),
+    );
     return $cases;
   }
 

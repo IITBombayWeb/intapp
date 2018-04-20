@@ -3,19 +3,9 @@
 namespace Drupal\search_api\Plugin\search_api\data_type;
 
 use Drupal\search_api\DataType\DataTypePluginBase;
-use Drupal\search_api\Plugin\search_api\data_type\value\TextValue;
 
 /**
  * Provides a full text data type.
- *
- * This data type uses objects of type
- * \Drupal\search_api\Plugin\search_api\data_type\value\TextValueInterface for
- * its values.
- *
- * The same is expected of all data types that specify this type as their
- * fallback.
- *
- * @see \Drupal\search_api\Plugin\search_api\data_type\value\TextValueInterface
  *
  * @SearchApiDataType(
  *   id = "text",
@@ -25,12 +15,5 @@ use Drupal\search_api\Plugin\search_api\data_type\value\TextValue;
  * )
  */
 class TextDataType extends DataTypePluginBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getValue($value) {
-    return new TextValue((string) $value);
-  }
 
 }

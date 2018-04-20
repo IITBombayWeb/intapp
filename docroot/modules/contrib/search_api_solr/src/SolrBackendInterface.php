@@ -5,7 +5,7 @@ namespace Drupal\search_api_solr;
 use Drupal\search_api\Backend\BackendInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\ItemInterface;
-use Solarium\QueryType\Update\Query\Query as UpdateQuery;
+use Drupal\search_api_solr\Solr\SolrHelper;
 
 /**
  * Defines an interface for Solr search backend plugins.
@@ -16,6 +16,30 @@ use Solarium\QueryType\Update\Query\Query as UpdateQuery;
 interface SolrBackendInterface extends BackendInterface {
 
   /**
+   * Returns the solr helper class.
+   *
+   * @return \Drupal\search_api_solr\Solr\SolrHelper
+   *   The Solr helper class.
+   */
+  public function getSolrHelper();
+
+  /**
+   * Sets the Solr helper class.
+   *
+   * @param \Drupal\search_api_solr\Solr\SolrHelper $solrHelper
+   *   The Solr helper class.
+   */
+  public function setSolrHelper(SolrHelper $solrHelper);
+
+  /**
+   * Returns the Solarium client.
+   *
+   * @return \Solarium\Client
+   *   The solarium instance object.
+   */
+  public function getSolr();
+
+  /**
    * Creates a list of all indexed field names mapped to their Solr field names.
    *
    * The special fields "search_api_id" and "search_api_relevance" are also
@@ -24,21 +48,41 @@ interface SolrBackendInterface extends BackendInterface {
    *
    * @param \Drupal\search_api\IndexInterface $index
    *   The Search Api index.
+   * @param bool $single_value_name
+   *   (optional) Whether to return names for fields which store only the first
+   *   value of the field. Defaults to FALSE.
    * @param bool $reset
    *   (optional) Whether to reset the static cache.
    *
    * @see SearchApiSolrBackend::search()
    */
-  public function getSolrFieldNames(IndexInterface $index, $reset = FALSE);
+  public function getSolrFieldNames(IndexInterface $index, $single_value_name = FALSE, $reset = FALSE);
 
   /**
-   * Returns the Solr connector used for this backend.
+   * Gets the currently used Solr connection object.
    *
-   * @return \Drupal\search_api_solr\SolrConnectorInterface
-   *
-   * @throws \Drupal\search_api\SearchApiException
+   * @return \Solarium\Client
+   *   The solr connection object used by this server.
    */
-  public function getSolrConnector();
+  public function getSolrConnection();
+
+  /**
+   * Retrieves a config file or file list from the Solr server.
+   *
+   * Uses the admin/file request handler.
+   *
+   * @param string|null $file
+   *   (optional) The name of the file to retrieve. If the file is a directory,
+   *   the directory contents are instead listed and returned. NULL represents
+   *   the root config directory.
+   *
+   * @return \Solarium\Core\Client\Response
+   *   A Solarium response object containing either the file contents or a file
+   *   list.
+   *
+   * @throws \Drupal\search_api_solr\SearchApiSolrException
+   */
+  public function getFile($file = NULL);
 
   /**
    * Retrieves a Solr document from an search api index item.
@@ -60,23 +104,10 @@ interface SolrBackendInterface extends BackendInterface {
    *   The search api index.
    * @param \Drupal\search_api\Item\ItemInterface[] $items
    *   An array of items to get documents for.
-   * @param \Solarium\QueryType\Update\Query\Query $update_query
-   *   The existing update query the documents should be added to.
    *
    * @return \Solarium\QueryType\Update\Query\Document\Document[]
    *   An array of solr documents.
    */
-  public function getDocuments(IndexInterface $index, array $items, UpdateQuery $update_query = NULL);
-
-  /**
-   * Extract a file's content using tika within a solr server.
-   *
-   * @param string $filepath
-   *   The real path of the file to be extracted.
-   *
-   * @return string
-   *   The text extracted from the file.
-   */
-  public function extractContentFromFile($filepath);
+  public function getDocuments(IndexInterface $index, array $items);
 
 }

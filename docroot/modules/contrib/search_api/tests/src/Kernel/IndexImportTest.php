@@ -23,17 +23,17 @@ class IndexImportTest extends KernelTestBase {
    *
    * @var string[]
    */
-  public static $modules = [
+  public static $modules = array(
     'field',
     'search_api',
     'search_api_db',
     'search_api_test_db',
-    'search_api_test',
+    'search_api_test_backend',
     'user',
     'system',
     'entity_test',
     'text',
-  ];
+  );
 
   /**
    * {@inheritdoc}
@@ -41,26 +41,17 @@ class IndexImportTest extends KernelTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->installSchema('search_api', ['search_api_item']);
-    $this->installSchema('system', ['router']);
-    $this->installSchema('user', ['users_data']);
-    $this->installEntitySchema('entity_test_mulrev_changed');
-    $this->installEntitySchema('search_api_task');
+    $this->installSchema('search_api', array('search_api_item', 'search_api_task'));
+    $this->installSchema('system', array('router'));
+    $this->installSchema('user', array('users_data'));
+    $this->installEntitySchema('entity_test');
 
     // Do not use a batch for tracking the initial items after creating an
     // index when running the tests via the GUI. Otherwise, it seems Drupal's
     // Batch API gets confused and the test fails.
-    if (php_sapi_name() != 'cli') {
-      \Drupal::state()->set('search_api_use_tracking_batch', FALSE);
-    }
+    \Drupal::state()->set('search_api_use_tracking_batch', FALSE);
 
-    // Set tracking page size so tracking will work properly.
-    \Drupal::configFactory()
-      ->getEditable('search_api.settings')
-      ->set('tracking_page_size', 100)
-      ->save();
-
-    $this->installConfig(['search_api_test_db']);
+    $this->installConfig(array('search_api_test_db'));
 
     $this->storage = $this->container->get('entity_type.manager')->getStorage('search_api_index');
   }
@@ -72,7 +63,8 @@ class IndexImportTest extends KernelTestBase {
     // Check initial conditions.
     /** @var \Drupal\search_api\IndexInterface $index */
     $index = $this->storage->load('database_search_index');
-    $this->assertFalse($index->isValidProcessor('stopwords'), 'Processor is not in index');
+    $processors = $index->getProcessors();
+    $this->assertArrayNotHasKey('stopwords', $processors, 'Processor is not in index');
 
     // Prepare the import by creating a copy of the active config in sync.
     /** @var \Drupal\Core\Config\StorageInterface $sync */
@@ -83,18 +75,21 @@ class IndexImportTest extends KernelTestBase {
 
     // Make changes to the configuration in "sync" so there actually is
     // something to import.
-    $expected_stopwords = ['a', 'an', 'and', 'are', 'as'];
+    $expected_stopwords = array('a', 'an', 'and', 'are', 'as');
     $import_config = $sync->read('search_api.index.database_search_index');
-    $import_config['processor_settings']['stopwords'] = [
-      'weights' => [
-        'preprocess_query' => -10,
-        'postprocess_query' => -10,
-      ],
-      'fields' => [
-        'name',
-      ],
-      'stopwords' => $expected_stopwords,
-    ];
+    $import_config['processor_settings']['stopwords'] = array(
+      'plugin_id' => 'stopwords',
+      'settings' => array(
+        'weights' => array(
+          'preprocess_query' => -10,
+          'postprocess_query' => -10,
+        ),
+        'fields' => array(
+          'name',
+        ),
+        'stopwords' => $expected_stopwords,
+      ),
+    );
     $sync->write('search_api.index.database_search_index', $import_config);
 
     // Import the test configuration.
@@ -104,15 +99,16 @@ class IndexImportTest extends KernelTestBase {
 
     // Ensure the static cache is clear and check that our change was correctly
     // imported.
-    $this->storage->resetCache(['database_search_index']);
+    $this->storage->resetCache(array('database_search_index'));
     /** @var \Drupal\search_api\IndexInterface $imported_index */
     $imported_index = $this->storage->load('database_search_index');
-    $this->assertTrue($imported_index->isValidProcessor('stopwords'), 'Processor is in index after import');
+    $imported_processors = $imported_index->getProcessors();
+    $this->assertArrayHasKey('stopwords', $imported_processors, 'Processor is in index after import');
 
     // Check that the processor does not have the default configuration.
-    $processor_config = $imported_index->getProcessor('stopwords')->getConfiguration();
-    $this->assertArrayHasKey('stopwords', $processor_config, 'Stopwords are configured');
-    $actual_stopwords = $processor_config['stopwords'];
+    $processors_config = $imported_processors['stopwords']->getConfiguration();
+    $this->assertArrayHasKey('stopwords', $processors_config, 'Stopwords are configured');
+    $actual_stopwords = $processors_config['stopwords'];
     $this->assertEquals($expected_stopwords, $actual_stopwords, 'Processor config was correctly set during import');
   }
 

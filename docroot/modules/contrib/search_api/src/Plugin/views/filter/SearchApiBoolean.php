@@ -2,6 +2,7 @@
 
 namespace Drupal\search_api\Plugin\views\filter;
 
+use Drupal\search_api\UncacheableDependencyTrait;
 use Drupal\views\Plugin\views\filter\BooleanOperator;
 
 /**
@@ -13,6 +14,7 @@ use Drupal\views\Plugin\views\filter\BooleanOperator;
  */
 class SearchApiBoolean extends BooleanOperator {
 
+  use UncacheableDependencyTrait;
   use SearchApiFilterTrait;
 
 }

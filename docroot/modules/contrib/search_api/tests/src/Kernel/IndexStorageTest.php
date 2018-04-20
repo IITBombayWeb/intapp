@@ -18,7 +18,7 @@ class IndexStorageTest extends KernelTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['search_api', 'user', 'system'];
+  public static $modules = array('search_api', 'user', 'system');
 
   /**
    * The search index storage.
@@ -34,7 +34,6 @@ class IndexStorageTest extends KernelTestBase {
     parent::setUp();
 
     $this->installSchema('system', 'key_value_expire');
-    $this->installEntitySchema('search_api_task');
 
     $this->storage = $this->container
       ->get('entity_type.manager')
@@ -65,10 +64,10 @@ class IndexStorageTest extends KernelTestBase {
    *   The newly created search index.
    */
   protected function indexCreate() {
-    $index_data = [
+    $index_data = array(
       'id' => 'test',
       'name' => 'Index test name',
-    ];
+    );
 
     $index = $this->storage->create($index_data);
     $this->assertTrue($index instanceof IndexInterface, 'The newly created entity is a search index.');
@@ -95,7 +94,7 @@ class IndexStorageTest extends KernelTestBase {
    *   The index used for the test.
    */
   protected function indexDelete(IndexInterface $index) {
-    $this->storage->delete([$index]);
+    $this->storage->delete(array($index));
     $loaded_index = $this->storage->load($index->id());
     $this->assertNull($loaded_index);
   }

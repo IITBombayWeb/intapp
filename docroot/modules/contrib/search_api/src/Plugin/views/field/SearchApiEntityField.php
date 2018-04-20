@@ -5,9 +5,9 @@ namespace Drupal\search_api\Plugin\views\field;
 use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\search_api\Plugin\views\EntityFieldRenderer;
-use Drupal\search_api\Utility\Utility;
+use Drupal\search_api\Utility;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Plugin\views\field\EntityField;
+use Drupal\views\Plugin\views\field\Field;
 use Drupal\views\Plugin\views\field\MultiItemsFieldHandlerInterface;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
@@ -20,7 +20,7 @@ use Drupal\views\Views;
  *
  * @ViewsField("search_api_field")
  */
-class SearchApiEntityField extends EntityField {
+class SearchApiEntityField extends Field {
 
   use SearchApiFieldTrait {
     preRender as traitPreRender;
@@ -50,7 +50,7 @@ class SearchApiEntityField extends EntityField {
     $fallback_handler_id = !empty($this->definition['fallback_handler']) ? $this->definition['fallback_handler'] : 'search_api';
     $this->fallbackHandler = Views::handlerManager('field')
       ->getHandler($options, $fallback_handler_id);
-    $options += ['fallback_options' => []];
+    $options += array('fallback_options' => array());
     $fallback_options = $options['fallback_options'] + $options;
     $this->fallbackHandler->init($view, $display, $fallback_options);
 
@@ -60,7 +60,7 @@ class SearchApiEntityField extends EntityField {
   /**
    * {@inheritdoc}
    */
-  public function query($use_groupby = FALSE) {
+  public function query() {
     // If we're not using Field API field rendering, just use the query()
     // implementation of the fallback handler.
     if (!$this->options['field_rendering']) {
@@ -102,17 +102,17 @@ class SearchApiEntityField extends EntityField {
     // from the field plugin base (since they would otherwise be duplicated).
     // To find out which options should be excluded, we take the $options keys
     // from the parent and remove the keys that come directly from the parent.
-    $fallback_options = [];
-    if (is_callable([$this->fallbackHandler, 'defineOptions'])) {
+    $fallback_options = array();
+    if (is_callable(array($this->fallbackHandler, 'defineOptions'))) {
       $fallback_options = $this->fallbackHandler->defineOptions();
       $parent_keys = $this->getParentOptionKeys();
       $remove_from_fallback = array_diff_key($options, array_flip($parent_keys));
       $fallback_options = array_diff_key($fallback_options, $remove_from_fallback);
     }
 
-    $options['field_rendering'] = ['default' => TRUE];
-    $options['fallback_handler'] = ['default' => $this->fallbackHandler->getPluginId()];
-    $options['fallback_options'] = ['contains' => $fallback_options];
+    $options['field_rendering'] = array('default' => TRUE);
+    $options['fallback_handler'] = array('default' => $this->fallbackHandler->getPluginId());
+    $options['fallback_options'] = array('contains' => $fallback_options);
 
     return $options;
   }
@@ -120,7 +120,7 @@ class SearchApiEntityField extends EntityField {
   /**
    * Retrieves the keys of the options defined by our direct parent.
    *
-   * That is, this will exclude all options defined by
+   * I.e., this will exclude all options defined by
    * \Drupal\views\Plugin\views\field\FieldPluginBase, and only include those
    * defined by \Drupal\views\Plugin\views\field\Field.
    *
@@ -128,37 +128,37 @@ class SearchApiEntityField extends EntityField {
    *   The keys of options directly defined by our parent class.
    */
   protected function getParentOptionKeys() {
-    return [
+    return array(
       'multiple_field_settings',
       'click_sort_column',
       'type',
       'field_api_classes',
       'settings',
-    ];
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $form['field_rendering'] = [
+    $form['field_rendering'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Use entity field rendering'),
       '#description' => $this->t("If checked, Drupal's built-in field rendering mechanism will be used for rendering this field's values, which requires the entity to be loaded. If unchecked, a type-specific, entity-independent rendering mechanism will be used."),
       '#default_value' => $this->options['field_rendering'],
-    ];
+    );
 
     // Wrap the (immediate) parent options in their own field set, to clean up
     // the UI when (un)checking the above checkbox.
-    $form['parent_options'] = [
+    $form['parent_options'] = array(
       '#type' => 'fieldset',
       '#title' => $this->t('Render settings'),
-      '#states' => [
-        'visible' => [
-          ':input[name="options[field_rendering]"]' => ['checked' => TRUE],
-        ],
-      ],
-    ];
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[field_rendering]"]' => array('checked' => TRUE),
+        ),
+      ),
+    );
 
     // Include the parent options form and move all fields that were added by
     // our direct parent (\Drupal\views\Plugin\views\field\Field) to the
@@ -178,14 +178,14 @@ class SearchApiEntityField extends EntityField {
     }
 
     // Get the options form for the fallback handler.
-    $fallback_form = [];
+    $fallback_form = array();
     $this->fallbackHandler->buildOptionsForm($fallback_form, $form_state);
     // Remove all fields from FieldPluginBase from the fallback form, but leave
     // those in that were only added by our immediate parent,
-    // \Drupal\views\Plugin\views\field\Field. (For example, the "type" option
-    // is especially prone to conflicts here.) The others come from the plugin
-    // base classes and will be identical, so it would be confusing to include
-    // them twice.
+    // \Drupal\views\Plugin\views\field\Field. (E.g., the "type" option is
+    // especially prone to conflicts here.) The others come from the plugin base
+    // classes and will be identical, so it would be confusing to include them
+    // twice.
     $parent_keys[] = '#pre_render';
     $remove_from_fallback = array_diff_key($form, array_flip($parent_keys));
     $fallback_form = array_diff_key($fallback_form, $remove_from_fallback);
@@ -197,7 +197,7 @@ class SearchApiEntityField extends EntityField {
       $form['fallback_options'] = $fallback_form;
       $form['fallback_options']['#type'] = 'fieldset';
       $form['fallback_options']['#title'] = $this->t('Render settings');
-      $form['fallback_options']['#states']['visible'][':input[name="options[field_rendering]"]'] = ['checked' => FALSE];
+      $form['fallback_options']['#states']['visible'][':input[name="options[field_rendering]"]'] = array('checked' => FALSE);
     }
   }
 
@@ -273,23 +273,23 @@ class SearchApiEntityField extends EntityField {
       if ($this->fallbackHandler instanceof MultiItemsFieldHandlerInterface) {
         return $this->fallbackHandler->getItems($values);
       }
-      return [];
+      return array();
     }
 
     if ($values->search_api_datasource != $this->getDatasourceId()) {
-      return [];
+      return array();
     }
 
     $parent_path = $this->getParentPath();
     if (empty($values->_relationship_objects[$parent_path])) {
-      return [];
+      return array();
     }
-    $build = [];
+    $build = array();
     foreach (array_keys($values->_relationship_objects[$parent_path]) as $i) {
       $this->valueIndex = $i;
       $build[] = parent::getItems($values);
     }
-    return $build ? call_user_func_array('array_merge', $build) : [];
+    return $build ? call_user_func_array('array_merge', $build) : array();
   }
 
   /**
