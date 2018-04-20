@@ -1,0 +1,106 @@
+<?php
+
+function paypal_schema() {
+ 
+  $schema['paypal_payment_status'] = array(
+    'fields' => array(
+        'order_id'=>array(
+        'type'=>'serial',
+        'not null' => TRUE,
+      ),
+      'user_id'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'programme_id'=>array(
+        'type' => 'varchar',
+        'length' => 240,
+        'not null' => TRUE,
+      ),
+      'before_amount'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'after_amount'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+       'currency_code'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+       'custom_id'=>array(
+        'type' => 'varchar',
+        'length' => 240,
+        'not null' => TRUE,
+      ),
+       'transaction_id'=>array(
+        'type' => 'varchar',
+        'length' => 240,
+        'not null' => TRUE,
+      ),
+       'payment_status'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'created'=>array(
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+      ),
+      'updated'=>array(
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+      ),
+       
+    ),
+    'primary key' => array('order_id'),
+  );
+  
+  
+  $schema['applications_list'] = array(
+    
+    'fields' => array(
+        'id'=>array(
+        'type'=>'serial',
+        'not null' => TRUE,
+      ),
+      'user_id'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'order_id'=>array(
+        'type' => 'varchar',
+        'length' => 240,
+        'not null' => TRUE,
+      ),
+      'programme_id'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'application_id'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'created'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      
+    ),
+    'primary key' => array('id'),
+  );
+ 
+  return $schema;
+}
+

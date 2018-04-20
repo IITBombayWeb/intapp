@@ -1,0 +1,8 @@
+name: 'Excel Import/Export'
+type: module
+description: 'This module help us to Import/Export content from Excel. It uses API of PHPExcel module with help of PHPExcel library.'
+core: 8.x
+version: VERSION
+package: Import Export
+dependencies:
+  - phpexcel
