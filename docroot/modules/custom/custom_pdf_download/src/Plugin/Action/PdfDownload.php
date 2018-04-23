@@ -36,7 +36,8 @@ class PdfDownload extends ActionBase
             $filename         = end($filename);
         }
         //$base_path  = 'sites/default/private/';
-        $base_path  = \Drupal::service('file_system')->realpath("private://");
+        //$base_path  = \Drupal::service('file_system')->realpath("private://");
+        $base_path = '/var/www/html/intapp/dev/private';
         $content    = file_get_contents($base_path . $filename);
         //$content    = file_get_contents($base_url . '/' . $base_path . 'applications/' . $filename);
         //$content = file_get_contents('sites/default/files/santy_680_2497.pdf');
