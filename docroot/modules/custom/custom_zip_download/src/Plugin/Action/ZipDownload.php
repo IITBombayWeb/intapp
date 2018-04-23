@@ -40,7 +40,8 @@ class ZipDownload extends ActionBase {
           $filename = explode('/', $application_path);
           $filename = end($filename);
           //$download_file    = file_get_contents($base_url . '/sites/default/files/applications/' . $filename);
-        $base_path  = 'sites/default/private/';
+        //$base_path  = 'sites/default/private/';
+        $base_path  = \Drupal::service('file_system')->realpath("private://");
         $download_file  = file_get_contents($base_path . 'applications/' . $filename);
         #add it to the zip
         $zip->addFromString(basename($filename),$download_file);
