@@ -291,6 +291,8 @@ class Thankyoupage extends FormBase {
               $institute_tid = taxonomy_term_load($institute_id);
               $institute_code = $institute_tid->getTranslation($langcode)->get('field_short_code')->getValue()[0]['value'];
               $created = date("Y") . '-' . date("m");
+              $user_id = \Drupal::currentUser()->id();
+              //print_r($doc_data); exit;
               $node = Node::create([
                 'type'        => 'application',
                 'title'       => $value->getTranslation($langcode)->get('title')->getValue()[0]['value'],
@@ -299,13 +301,19 @@ class Thankyoupage extends FormBase {
               ]);
               $node->save();
               $node_id = $node->id();
-              $filename = 'sites/default/private/applications/' . $username . '_' . $account . '_' . $node_id . '.pdf';
-              $file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE);
+              $privateDir = \Drupal::service('file_system')->realpath("private://");
               $node = Node::load($node_id);
-              $new_application_id = "$institute_code-$created-$node_id";
+              $new_application_id = "$institute_code-$created-$node_id-$user_id";
+              $studentDir = $privateDir.'/student_documents/'.$new_application_id;
+              file_prepare_directory($studentDir, FILE_CREATE_DIRECTORY);
+              $filename = $studentDir. '/' . $new_application_id.'.pdf';
+              file_prepare_directory($studentDir, $options = FILE_MODIFY_PERMISSIONS);
+              $file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE);
               $node->setTitle($new_application_id);
               $node->set("field_status", 'apply_apply');
               $node->set("field_application_path", $filename);
+              $Curruser = \Drupal::currentUser()->id();
+              $node->set("field_user_id", $Curruser);
               $node->save();
               // Most popular programmes.
               $application_list = \Drupal::database()->insert('applications_list')
