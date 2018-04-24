@@ -2,20 +2,18 @@
     "name": "drupal/drupal",
     "description": "Drupal is an open source content management platform powering millions of websites and applications.",
     "type": "project",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "require": {
         "composer/installers": "^1.0.24",
         "wikimedia/composer-merge-plugin": "^1.4",
-        "drupal/simple_fb_connect": "3.x-dev",
-        "drupal/social_auth_google": "~1.0",
         "solarium/solarium": "^3.8",
-        "dompdf/dompdf": "^0.8.2",
-        "mikehaertl/phpwkhtmltopdf": "~2.1",
-        "tecnickcom/tcpdf": "~6",
-        "facebook/graph-sdk": "^5.6"
+        "drupal/simple_fb_connect": "~3.1",
+        "facebook/graph-sdk": "^5.6",
+        "drupal/social_auth_google": "~1.0",
+        "dompdf/dompdf": "^0.8.2"
     },
     "replace": {
-        "drupal/core": "^8.4"
+        "drupal/core": "^8.5"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -35,7 +33,7 @@
             "include": [
                 "core/composer.json"
             ],
-            "recurse": false,
+            "recurse": true,
             "replace": false,
             "merge-extra": false
         },
@@ -56,11 +54,13 @@
     },
     "scripts": {
         "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump",
-        "post-autoload-dump": [
-          "Drupal\\Core\\Composer\\Composer::ensureHtaccess"
-        ],
+        "post-autoload-dump": "Drupal\\Core\\Composer\\Composer::ensureHtaccess",
         "post-package-install": "Drupal\\Core\\Composer\\Composer::vendorTestCodeCleanup",
-        "post-package-update": "Drupal\\Core\\Composer\\Composer::vendorTestCodeCleanup"
+        "post-package-update": "Drupal\\Core\\Composer\\Composer::vendorTestCodeCleanup",
+        "drupal-phpunit-upgrade-check": "Drupal\\Core\\Composer\\Composer::upgradePHPUnit",
+        "drupal-phpunit-upgrade": "@composer update phpunit/phpunit --with-dependencies --no-progress",
+        "phpcs": "phpcs --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --",
+        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --"
     },
     "repositories": [
         {
