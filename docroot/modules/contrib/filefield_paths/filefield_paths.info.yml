@@ -1,0 +1,18 @@
+name: 'File (Field) Paths'
+description: 'Adds improved Token based file sorting and renaming functionalities.'
+package: Fields
+configure: filefield_paths.admin_settings
+# core: 8.x
+type: module
+dependencies:
+  - file
+test_dependencies:
+  - ctools
+  - pathauto
+  - token
+
+# Information added by Drupal.org packaging script on 2016-03-06
+version: '8.x-1.0-beta1+9-dev'
+core: '8.x'
+project: 'filefield_paths'
+datestamp: 1457304546
