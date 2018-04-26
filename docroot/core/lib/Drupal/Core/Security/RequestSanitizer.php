@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Sanitizes user input.
  */
+//santizes the output
 class RequestSanitizer {
 
   /**
