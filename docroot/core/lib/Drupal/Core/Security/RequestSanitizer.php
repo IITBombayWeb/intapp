@@ -51,18 +51,16 @@ class RequestSanitizer {
         if (static::processParameterBag($request->$bag, $whitelist, $log_sanitized_keys, $bag, $message)) {
           $update_globals = TRUE;
         }
-       }
       }
-
       if ($update_globals) {
         $request->overrideGlobals();
-       }
+      }
       $request->attributes->set(self::SANITIZED, TRUE);
     }
     return $request;
   }
 
-      /**
+  /**
    * Processes a request parameter bag.
    *
    * @param \Symfony\Component\HttpFoundation\ParameterBag $bag
@@ -88,11 +86,10 @@ class RequestSanitizer {
       $sanitized = TRUE;
       if ($log_sanitized_keys) {
         trigger_error(sprintf($message, implode(', ', $sanitized_keys)));
-       }
-    }
       }
+    }
 
-      if ($bag->has('destination')) {
+    if ($bag->has('destination')) {
       $destination_dangerous_keys = static::checkDestination($bag->get('destination'), $whitelist);
       if (!empty($destination_dangerous_keys)) {
         // The destination is removed rather than sanitized because the URL
@@ -103,11 +100,12 @@ class RequestSanitizer {
         if ($log_sanitized_keys) {
           trigger_error(sprintf('Potentially unsafe destination removed from %s parameter bag because it contained the following keys: %s', $bag_name, implode(', ', $destination_dangerous_keys)));
         }
-       }
       }
-      return $sanitized;
+    }
+    return $sanitized;
   }
-/**
+
+  /**
    * Checks a destination string to see if it is dangerous.
    *
    * @param string $destination
@@ -126,8 +124,7 @@ class RequestSanitizer {
       static::stripDangerousValues($parts['query'], $whitelist, $dangerous_keys);
     }
     return $dangerous_keys;
-   }
-  
+  }
 
   /**
    * Strips dangerous keys from $input.
