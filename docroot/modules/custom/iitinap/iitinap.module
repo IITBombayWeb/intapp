@@ -585,7 +585,7 @@ function form_validate_data1($form, &$form_state) {
        //foreach ($academic_rec as $ac_clm_key => $ac_clm_value){   
            //foreach ($ac_clm_value as $ac_row_key => $ac_row_value){
 	      if(empty($academic_rec)){
-	           $form_state->setError($form['field_details_of_academic_record']['widget'][0]['#value']['tablefield']['table'],"Please Fill Details of Academic Record.");
+	           $form_state->setError($form['field_details_of_academic_record']['widget'][0]['#value']['tablefield']['table'][$academic_rec],"Please Fill Details of Academic Record.");
 	      }
             
        
