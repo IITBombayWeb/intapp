@@ -578,8 +578,8 @@ function form_validate_data1($form, &$form_state) {
 	      }
           }   
        }
-       /*
-       // Details of Academic Record (Secondary onwards) 
+       
+       //Details of Academic Record (Secondary onwards) 
        $academic_rec = $form['field_details_of_academic_record']['widget'][0]['#value']['tablefield']['table'];
        foreach ($academic_rec as $ac_clm_key => $ac_clm_value){   
            foreach ($ac_clm_value as $ac_row_key => $ac_row_value){
@@ -588,7 +588,7 @@ function form_validate_data1($form, &$form_state) {
 	      }
           }   
        }
-      
+      /*
        // Research/ Professional Experience, Papers published etc. (upload a separate pdf for details, if required)
 	$research_exp = $form['field_research_professional_expe']['widget'][0]['#value']['tablefield']['table'];
        foreach ($research_exp as $res_clm_key => $res_clm_value){   
