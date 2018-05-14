@@ -420,8 +420,8 @@ function form_validate_data2($form, &$form_state){
  */
 
 function form_validate_data1($form, &$form_state) {
-     //dpm($form['field_details_of_academic_record']);
-     dpm($form_state);
+     dpm($form['field_details_of_academic_record']);
+     //dpm($form_state);
    if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest') {
        
        if($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
