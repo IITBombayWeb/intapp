@@ -387,7 +387,7 @@ class Thankyoupage extends FormBase {
               }
             }
             basiccart_empty_cart();
-            $notify_msg = "Thank you!  Your transaction is successful and applied to " . count($applicationArray) . " programmes. Please note your Order ID : " . $order_id . " for future reference";
+            $notify_msg = "Thank you!  Your transaction is successful and applied to " . count($applicationArray) . " programmes. Please note your Application Packet Refrence Number : " . $order_id . " for future reference";
           }
           elseif ($result['payment_status'] == $_GET['st'] && $result['before_amount'] == $_GET['amt']) {
             // Application Already created.
