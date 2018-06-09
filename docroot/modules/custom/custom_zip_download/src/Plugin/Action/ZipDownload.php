@@ -39,7 +39,7 @@ class ZipDownload extends ActionBase {
      $ins = "IIT_Bombay3";
      $new_folder = 'private://temp_general_doc1/'.$ins;
      file_prepare_directory($new_folder, FILE_CREATE_DIRECTORY);
-     //echo "<pre>";
+     echo "<pre>";
     foreach($entities as $entity){
       //print_r($entity);
 
