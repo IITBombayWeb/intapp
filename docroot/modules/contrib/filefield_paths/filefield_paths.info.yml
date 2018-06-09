@@ -6,13 +6,9 @@ configure: filefield_paths.admin_settings
 type: module
 dependencies:
   - file
-test_dependencies:
-  - ctools
-  - pathauto
-  - token
 
-# Information added by Drupal.org packaging script on 2016-03-06
-version: '8.x-1.0-beta1+9-dev'
+# Information added by Drupal.org packaging script on 2015-12-25
+version: '8.x-1.0-beta1'
 core: '8.x'
 project: 'filefield_paths'
-datestamp: 1457304546
+datestamp: 1451020748

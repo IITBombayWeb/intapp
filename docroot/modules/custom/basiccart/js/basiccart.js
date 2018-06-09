@@ -80,6 +80,14 @@
                  }
                 //console.log(cc);
                });
+                $('#edit-actions-submit').submit(function(e){
+                  e.preventDefault();
+                  
+                  
+                  
+                  
+                  
+                });
           }
          
           });
