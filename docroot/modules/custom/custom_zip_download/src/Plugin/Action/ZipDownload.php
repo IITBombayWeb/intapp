@@ -39,14 +39,13 @@ class ZipDownload extends ActionBase {
      $ins = "IIT_Bombay3";
      $new_folder = 'private://temp_general_doc1/'.$ins;
      file_prepare_directory($new_folder, FILE_CREATE_DIRECTORY);
-     echo "<pre>";
+     //echo "<pre>";
     foreach($entities as $entity){
       //print_r($entity);
 
         # download file
         $get_path = $entity->get('field_application_path')->getValue();
         $get_users = $entity->get('field_user_id')->getValue(); 
-        print_r(user_load($get_users[0]['value'])->get('name'));
         $user_name = user_load($get_users[0]['value'])->get('name')->getValue();
         $application_path = $get_path[0]['value'];
         $filename = explode('/', $application_path);
@@ -64,7 +63,7 @@ class ZipDownload extends ActionBase {
         //$zip->addFromString(basename($filename),$content);
         $users[]=$get_users[0]['value'];  
     }
-    exit;
+    //exit;
   //print_r($users);
   //exit;
     //foreach ($users as $key => $user_id) {
