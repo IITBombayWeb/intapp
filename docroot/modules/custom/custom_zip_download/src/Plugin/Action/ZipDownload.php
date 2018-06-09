@@ -46,7 +46,7 @@ class ZipDownload extends ActionBase {
         # download file
         $get_path = $entity->get('field_application_path')->getValue();
         $get_users = $entity->get('field_user_id')->getValue(); 
-        print_r(user_load($get_users[0]['value']));
+        print_r(user_load($get_users[0]['value'])->get('name'));
         $user_name = user_load($get_users[0]['value'])->get('name')->getValue();
         $application_path = $get_path[0]['value'];
         $filename = explode('/', $application_path);
