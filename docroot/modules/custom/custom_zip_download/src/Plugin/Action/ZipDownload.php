@@ -41,9 +41,25 @@ class ZipDownload extends ActionBase {
      $new_folder = 'private://temp_general_doc1/'.$ins;
      file_prepare_directory($new_folder, FILE_CREATE_DIRECTORY);
      echo "<pre>";
+     $user_full_dt = array();
+      $user_full_dt[0]['reg_id'] = "Registration No";
+      $user_full_dt[0]['name'] = "Name";
+      $user_full_dt[0]['mob_no'] = "Mobile No";
+      $user_full_dt[0]['mail'] = "Email ID";
+      $user_full_dt[0]['addr'] = "Address";
+      $user_full_dt[0]['gender'] = "Gender";
+      $user_full_dt[0]['dob'] = "DOB";
+      $user_full_dt[0]['app_ins'] = "Prog Applied Institute";
+      $user_full_dt[0]['app_deg'] = "Degree";
+      $user_full_dt[0]['app_spe'] = "Specialization";
+      $user_full_dt[0]['pass_ins'] = "Passing University/Institute";
+      $user_full_dt[0]['pass_year'] = "Passing Year";
+      $user_full_dt[0]['pass_per'] = "% of Marks";
+      $user_full_dt[0]['pass_cga'] = "Grade/CPI/CGPA";
+     $i = 1;
     foreach($entities as $entity){
-      print_r(node_load($entity->get('field_programme')->getValue()[0]['target_id']));
-
+      # programme
+      $prgm = node_load($entity->get('field_programme')->getValue()[0]['target_id']);
         # download file
         $get_path = $entity->get('field_application_path')->getValue();
         $get_users = $entity->get('field_user_id')->getValue();
@@ -68,13 +84,44 @@ class ZipDownload extends ActionBase {
       $nids = $query->execute();
       $nids = array_values($nids);
       $profile = Profile::load($nids[0]);
-      //print_r($profile);
+
+      $reg_id = $profile->get('revision_id')->getValue();
+      $mob = $profile->get('field_mobile_num_com')->getValue()[0]['value'];
+      $address = $profile->get('field_permanent_address')->getValue()[0]['value'];
+      $gender = $profile->get('field_gender')->getValue()[0]['value'];
+      $dob = $profile->get('field_date_of_birth')->getValue()[0]['value'];
+      $admrcd = $profile->get('field_details_of_academic_record')->getValue()[0]['value'];
+      $pass_ins = $admrcd[1][0];
+      $pass_year = $admrcd[1][4];
+      $pass_per = $admrcd[1][6];
+      $pass_cga = $admrcd[1][7];
+      $appIns = $prgm->get('title')->getValue();
+      $appDeg = $prgm->get('field_degree')->getValue()[0]['value'];
+      $appSpe = $prgm->get('field_specialisation')->getValue()[0]['value'];
+
+      $user_full_dt[$i]['reg_id'] = $reg_id;
+      $user_full_dt[$i]['name'] = $user_name;
+      $user_full_dt[$i]['mob_no'] = $mob;
+      $user_full_dt[$i]['mail'] = $user_mail;
+      $user_full_dt[$i]['addr'] = $address;
+      $user_full_dt[$i]['gender'] = $gender;
+      $user_full_dt[$i]['dob'] = $dob;
+      $user_full_dt[$i]['app_ins'] = $appIns;
+      $user_full_dt[$i]['app_deg'] = $appDeg;
+      $user_full_dt[$i]['app_spe'] = $appSpe;
+      $user_full_dt[$i]['pass_ins'] = $pass_ins;
+      $user_full_dt[$i]['pass_year'] = $pass_year;
+      $user_full_dt[$i]['pass_per'] = $pass_per;
+      $user_full_dt[$i]['pass_cga'] = $pass_cga;      
+
         //file_prepare_directory($dest_1, FILE_CREATE_DIRECTORY);
         //$path = str_replace('private:/',$base_path,$dest_1);
         //copy($src, $path.'/'.$filename);
         //$zip->addFromString(basename($filename),$content);
-        $users[]=$get_users[0]['value'];  
+        $users[]=$get_users[0]['value'];
+        ++$i;  
     }
+    print_r($user_full_dt);
     exit;
   //print_r($users);
   //exit;
