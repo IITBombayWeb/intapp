@@ -42,7 +42,7 @@ class ZipDownload extends ActionBase {
      file_prepare_directory($new_folder, FILE_CREATE_DIRECTORY);
      echo "<pre>";
     foreach($entities as $entity){
-      print_r($entity->get('field_institute'));
+      print_r($entity->get('field_programme'));
 
         # download file
         $get_path = $entity->get('field_application_path')->getValue();
