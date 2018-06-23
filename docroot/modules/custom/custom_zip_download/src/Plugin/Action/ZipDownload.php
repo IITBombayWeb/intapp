@@ -122,7 +122,7 @@ class ZipDownload extends ActionBase {
         ++$i;  
     }
     print_r($user_full_dt);
-    json_encode($user_full_dt);
+    print_r(json_encode($user_full_dt));
     // $csvFileName = '../private/student_documents/general_documents/Details.csv';
     // $fp = fopen($csvFileName, 'w');
     // foreach($user_full_dt as $row){
