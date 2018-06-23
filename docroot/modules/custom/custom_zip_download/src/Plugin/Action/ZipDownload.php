@@ -67,17 +67,17 @@ class ZipDownload extends ActionBase {
         $user_name = $user->get('name')->getValue();
         $user_mail = $user->get('mail')->getValue();
         $application_path = $get_path[0]['value'];
-      //   $filename = explode('/', $application_path);
-      //   $filename = end($filename);
-      //   $base_path  = \Drupal::service('file_system')->realpath("private://");
-      //   $src = $application_path;
-      //   $dest_1 = $new_folder.'/'.$user_name[0]['value'];
-      //   $path = str_replace('private:/',$base_path,$dest_1);
-      //   //$dest_1 = str_replace('private:/',$base_path,$dest_1);
-      //   $zip->addEmptyDir($user_name[0]['value']);
-      //   $zip->addFile($src, $user_name[0]['value'].'/'.$filename);
-      //   $options = array('add_path' => $user_name[0]['value'].'/', 'remove_all_path' => TRUE);
-      // $zip->addGlob('../private/student_documents/general_documents/'.$get_users[0]['value'].'/'.'*.{txt,doc,pdf,docx}', GLOB_BRACE, $options);
+        $filename = explode('/', $application_path);
+        $filename = end($filename);
+        $base_path  = \Drupal::service('file_system')->realpath("private://");
+        $src = $application_path;
+        $dest_1 = $new_folder.'/'.$user_name[0]['value'];
+        $path = str_replace('private:/',$base_path,$dest_1);
+        //$dest_1 = str_replace('private:/',$base_path,$dest_1);
+        $zip->addEmptyDir($user_name[0]['value']);
+        $zip->addFile($src, $user_name[0]['value'].'/'.$filename);
+        $options = array('add_path' => $user_name[0]['value'].'/', 'remove_all_path' => TRUE);
+      $zip->addGlob('../private/student_documents/general_documents/'.$get_users[0]['value'].'/'.'*.{txt,doc,pdf,docx}', GLOB_BRACE, $options);
       $query = \Drupal::entityQuery('profile')
         ->condition('status', 1)
         ->condition('uid', $get_users[0]['value']);
@@ -121,15 +121,13 @@ class ZipDownload extends ActionBase {
         $users[]=$get_users[0]['value'];
         ++$i;  
     }
-    print_r($user_full_dt);
-    print_r(json_encode($user_full_dt));
     $csvFileName = '../private/student_documents/general_documents/Details.csv';
     $fp = fopen($csvFileName, 'w');
     foreach($user_full_dt as $row){
         fputcsv($fp, $row);
     }
     fclose($fp);
-    exit;
+    $zip->addFile('../private/student_documents/general_documents/Details.csv', 'Details.csv');
   //print_r($users);
   //exit;
     //foreach ($users as $key => $user_id) {
