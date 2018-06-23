@@ -6,6 +6,7 @@ use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Session\AccountInterface;
 use \Drupal\node\Entity\Node;
 use Drupal\profile\Entity\Profile;
+use Drupal\profile\Entity\ProfileType;
 use Drupal\file\Entity\File;
 
 /**
