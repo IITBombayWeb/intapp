@@ -125,7 +125,9 @@ class ZipDownload extends ActionBase {
     $csvFileName = '../private/student_documents/general_documents/Details.csv';
     $fp = fopen($csvFileName, 'w');
     foreach($jsonDecoded as $row){
-        fputcsv($fp, $row);
+      foreach($row as $det){
+        fputcsv($fp, $det);
+      }
     }
     fclose($fp);
     exit;
