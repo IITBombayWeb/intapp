@@ -39,33 +39,34 @@ class ZipDownload extends ActionBase {
      $ins = "IIT_Bombay3";
      $new_folder = 'private://temp_general_doc1/'.$ins;
      file_prepare_directory($new_folder, FILE_CREATE_DIRECTORY);
-     //echo "<pre>";
+     echo "<pre>";
     foreach($entities as $entity){
       //print_r($entity);
 
         # download file
-        $get_path = $entity->get('field_application_path')->getValue();
-        $get_users = $entity->get('field_user_id')->getValue(); 
-        $user_name = user_load($get_users[0]['value'])->get('name')->getValue();
-        $application_path = $get_path[0]['value'];
-        $filename = explode('/', $application_path);
-        $filename = end($filename);
-        $base_path  = \Drupal::service('file_system')->realpath("private://");
-        $src = $application_path;
-        $dest_1 = $new_folder.'/'.$user_name[0]['value'];
-        $path = str_replace('private:/',$base_path,$dest_1);
-        //$dest_1 = str_replace('private:/',$base_path,$dest_1);
-        $zip->addEmptyDir($user_name[0]['value']);
-        $zip->addFile($src, $user_name[0]['value'].'/'.$filename);
-        $options = array('add_path' => $user_name[0]['value'].'/', 'remove_all_path' => TRUE);
-    	$zip->addGlob('../private/student_documents/general_documents/'.$get_users[0]['value'].'/'.'*.{txt,doc,pdf,docx}', GLOB_BRACE, $options);
+      //   $get_path = $entity->get('field_application_path')->getValue();
+      //   $get_users = $entity->get('field_user_id')->getValue(); 
+      //   $user_name = user_load($get_users[0]['value'])->get('name')->getValue();
+      //   $application_path = $get_path[0]['value'];
+      //   $filename = explode('/', $application_path);
+      //   $filename = end($filename);
+      //   $base_path  = \Drupal::service('file_system')->realpath("private://");
+      //   $src = $application_path;
+      //   $dest_1 = $new_folder.'/'.$user_name[0]['value'];
+      //   $path = str_replace('private:/',$base_path,$dest_1);
+      //   //$dest_1 = str_replace('private:/',$base_path,$dest_1);
+      //   $zip->addEmptyDir($user_name[0]['value']);
+      //   $zip->addFile($src, $user_name[0]['value'].'/'.$filename);
+      //   $options = array('add_path' => $user_name[0]['value'].'/', 'remove_all_path' => TRUE);
+      // $zip->addGlob('../private/student_documents/general_documents/'.$get_users[0]['value'].'/'.'*.{txt,doc,pdf,docx}', GLOB_BRACE, $options);
+      print_r($get_users[0]['value']);
         //file_prepare_directory($dest_1, FILE_CREATE_DIRECTORY);
         //$path = str_replace('private:/',$base_path,$dest_1);
         //copy($src, $path.'/'.$filename);
         //$zip->addFromString(basename($filename),$content);
         $users[]=$get_users[0]['value'];  
     }
-    //exit;
+    exit;
   //print_r($users);
   //exit;
     //foreach ($users as $key => $user_id) {
