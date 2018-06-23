@@ -42,20 +42,20 @@ class ZipDownload extends ActionBase {
      file_prepare_directory($new_folder, FILE_CREATE_DIRECTORY);
      echo "<pre>";
      $user_full_dt = array();
-      $user_full_dt[0]['reg_id'] = "Registration No";
-      $user_full_dt[0]['name'] = "Name";
-      $user_full_dt[0]['mob_no'] = "Mobile No";
-      $user_full_dt[0]['mail'] = "Email ID";
-      $user_full_dt[0]['addr'] = "Address";
-      $user_full_dt[0]['gender'] = "Gender";
-      $user_full_dt[0]['dob'] = "DOB";
-      $user_full_dt[0]['app_ins'] = "Prog Applied Institute";
-      $user_full_dt[0]['app_deg'] = "Degree";
-      $user_full_dt[0]['app_spe'] = "Specialization";
-      $user_full_dt[0]['pass_ins'] = "Passing University/Institute";
-      $user_full_dt[0]['pass_year'] = "Passing Year";
-      $user_full_dt[0]['pass_per'] = "% of Marks";
-      $user_full_dt[0]['pass_cga'] = "Grade/CPI/CGPA";
+     $user_full_dt['reg_id_0'] = "Registration No";
+     $user_full_dt['name_0'] = "Name";
+     $user_full_dt['mob_no_0'] = "Mobile No";
+     $user_full_dt['mail_0'] = "Email ID";
+     $user_full_dt['addr_0'] = "Address";
+     $user_full_dt['gender_0'] = "Gender";
+     $user_full_dt['dob_0'] = "DOB";
+     $user_full_dt['app_ins_0'] = "Prog Applied Institute";
+     $user_full_dt['app_deg_0'] = "Degree";
+     $user_full_dt['app_spe_0'] = "Specialization";
+     $user_full_dt['pass_ins_0'] = "Passing University/Institute";
+     $user_full_dt['pass_year_0'] = "Passing Year";
+     $user_full_dt['pass_per_0'] = "% of Marks";
+     $user_full_dt['pass_cga_0'] = "Grade/CPI/CGPA";
      $i = 1;
     foreach($entities as $entity){
       # programme
@@ -99,20 +99,20 @@ class ZipDownload extends ActionBase {
       $appDeg = $prgm->get('field_degree')->getValue()[0]['value'];
       $appSpe = $prgm->get('field_specialisation')->getValue()[0]['value'];
 
-      $user_full_dt[$i]['reg_id'] = $reg_id;
-      $user_full_dt[$i]['name'] = $user_name[0]['value'];
-      $user_full_dt[$i]['mob_no'] = $mob;
-      $user_full_dt[$i]['mail'] = $user_mail[0]['value'];
-      $user_full_dt[$i]['addr'] = $address;
-      $user_full_dt[$i]['gender'] = $gender;
-      $user_full_dt[$i]['dob'] = $dob;
-      $user_full_dt[$i]['app_ins'] = $appIns;
-      $user_full_dt[$i]['app_deg'] = $appDeg;
-      $user_full_dt[$i]['app_spe'] = $appSpe;
-      $user_full_dt[$i]['pass_ins'] = $pass_ins;
-      $user_full_dt[$i]['pass_year'] = $pass_year;
-      $user_full_dt[$i]['pass_per'] = $pass_per;
-      $user_full_dt[$i]['pass_cga'] = $pass_cga;      
+      $user_full_dt['reg_id_'.$i] = $reg_id;
+      $user_full_dt['name_'.$i] = $user_name[0]['value'];
+      $user_full_dt['mob_no_'.$i] = $mob;
+      $user_full_dt['mail_'.$i] = $user_mail[0]['value'];
+      $user_full_dt['addr_'.$i] = $address;
+      $user_full_dt['gender_'.$i] = $gender;
+      $user_full_dt['dob_'.$i] = $dob;
+      $user_full_dt['app_ins_'.$i] = $appIns;
+      $user_full_dt['app_deg_'.$i] = $appDeg;
+      $user_full_dt['app_spe_'.$i] = $appSpe;
+      $user_full_dt['pass_ins_'.$i] = $pass_ins;
+      $user_full_dt['pass_year_'.$i] = $pass_year;
+      $user_full_dt['pass_per_'.$i] = $pass_per;
+      $user_full_dt['pass_cga_'.$i] = $pass_cga;      
 
         //file_prepare_directory($dest_1, FILE_CREATE_DIRECTORY);
         //$path = str_replace('private:/',$base_path,$dest_1);
@@ -124,10 +124,8 @@ class ZipDownload extends ActionBase {
     print_r($user_full_dt);
     $csvFileName = '../private/student_documents/general_documents/Details.csv';
     $fp = fopen($csvFileName, 'w');
-    foreach($user_full_dt as $row){
-      foreach($row as $det){
-        fputcsv($fp, $det);
-      }
+    foreach($jsonDecoded as $row){
+        fputcsv($fp, $row);
     }
     fclose($fp);
     exit;
