@@ -62,8 +62,7 @@ class ZipDownload extends ActionBase {
       // $zip->addGlob('../private/student_documents/general_documents/'.$get_users[0]['value'].'/'.'*.{txt,doc,pdf,docx}', GLOB_BRACE, $options);
       $query = \Drupal::entityQuery('profile')
         ->condition('status', 1)
-        ->condition('uid', $get_users[0]['value'])
-        ->condition('type', 'office');
+        ->condition('uid', $get_users[0]['value']);
       $nids = $query->execute();
       $nids = array_values($nids);
       $profile = Profile::load($nids[0]);
