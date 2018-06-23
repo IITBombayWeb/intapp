@@ -85,7 +85,7 @@ class ZipDownload extends ActionBase {
       $nids = array_values($nids);
       $profile = Profile::load($nids[0]);
 
-      $reg_id = $profile->get('revision_id')->getValue();
+      $reg_id = $profile->get('revision_id')->getValue()[0]['value'];
       $mob = $profile->get('field_mobile_num_com')->getValue()[0]['value'];
       $address = $profile->get('field_permanent_address')->getValue()[0]['value'];
       $gender = $profile->get('field_gender')->getValue()[0]['value'];
@@ -95,14 +95,14 @@ class ZipDownload extends ActionBase {
       $pass_year = $admrcd[1][4];
       $pass_per = $admrcd[1][6];
       $pass_cga = $admrcd[1][7];
-      $appIns = $prgm->get('title')->getValue();
+      $appIns = $prgm->get('title')->getValue()[0]['value'];
       $appDeg = $prgm->get('field_degree')->getValue()[0]['value'];
       $appSpe = $prgm->get('field_specialisation')->getValue()[0]['value'];
 
       $user_full_dt[$i]['reg_id'] = $reg_id;
-      $user_full_dt[$i]['name'] = $user_name;
+      $user_full_dt[$i]['name'] = $user_name[0]['value'];
       $user_full_dt[$i]['mob_no'] = $mob;
-      $user_full_dt[$i]['mail'] = $user_mail;
+      $user_full_dt[$i]['mail'] = $user_mail[0]['value'];
       $user_full_dt[$i]['addr'] = $address;
       $user_full_dt[$i]['gender'] = $gender;
       $user_full_dt[$i]['dob'] = $dob;
