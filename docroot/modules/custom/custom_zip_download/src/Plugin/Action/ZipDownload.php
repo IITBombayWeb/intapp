@@ -42,12 +42,14 @@ class ZipDownload extends ActionBase {
      file_prepare_directory($new_folder, FILE_CREATE_DIRECTORY);
      echo "<pre>";
     foreach($entities as $entity){
-      //print_r($entity);
+      print_r($entity);
 
         # download file
         $get_path = $entity->get('field_application_path')->getValue();
-        $get_users = $entity->get('field_user_id')->getValue(); 
-        $user_name = user_load($get_users[0]['value'])->get('name')->getValue();
+        $get_users = $entity->get('field_user_id')->getValue();
+        $user = user_load($get_users[0]['value']);
+        print_r($user);
+        $user_name = $user->get('name')->getValue();
         $application_path = $get_path[0]['value'];
       //   $filename = explode('/', $application_path);
       //   $filename = end($filename);
@@ -66,7 +68,7 @@ class ZipDownload extends ActionBase {
       $nids = $query->execute();
       $nids = array_values($nids);
       $profile = Profile::load($nids[0]);
-      print_r($profile);
+      //print_r($profile);
         //file_prepare_directory($dest_1, FILE_CREATE_DIRECTORY);
         //$path = str_replace('private:/',$base_path,$dest_1);
         //copy($src, $path.'/'.$filename);
