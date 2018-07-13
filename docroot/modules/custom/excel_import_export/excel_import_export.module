@@ -18,7 +18,7 @@ use Drupal\Core\Url;
  * 
  */
 function excel_import_export_form_alter(&$form, FormStateInterface $form_state) {
-  dpm($form);
+  //dpm($form);
   if (($form["#id"] == "views-exposed-form-officers-application-list-page-1") && ($form["#form_id"] == "views_exposed_form")) {
     $arg = explode('/', \Drupal::request()->getpathInfo());
     $url = URL::fromUserInput('/excel/content/application/export')->toString() . '?tid=' . $arg[2];
