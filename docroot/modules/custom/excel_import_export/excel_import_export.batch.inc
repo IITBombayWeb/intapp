@@ -447,7 +447,11 @@ function excelImportExport_getFieldValue($entityObject, $property, $type = FALSE
     if ($type) {
       switch ($type) {
         case 'array':
-          $return = $return[0]['value'];
+          if(is_numeric($return[0]['value'])){
+            $return = (int) $return[0]['value'];
+          }else{
+            $return = $return[0]['value'];
+          }
           break;
         case 'reference':
           $return = $return[0]['target_id'];
