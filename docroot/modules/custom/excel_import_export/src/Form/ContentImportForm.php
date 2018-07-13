@@ -43,6 +43,12 @@ class ContentImportForm extends ConfigFormBase {
       '#description' => t('Upload a file, allowed extensions: xls, xlsx, or ods.'),
       '#required' => TRUE,
      );
+
+    $form['import'] = array(
+      '#type' => 'markup',
+      '#suffix' => t('Note: Using the downloaded excel sheet, change the status to offer given or application rejected and input it here.'),
+      '#weight' => 100,
+    );
     
     $form['submit'] = array(
       '#type' => 'submit',
