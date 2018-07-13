@@ -222,7 +222,7 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
       // Export{21}: zip file path.
       $itemsArray[21] = $zip_write_path;
     }
-    dpm($itemsArray);
+    
     /**
      * End of User data & Profile values.
      */
@@ -273,7 +273,6 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
       // Use our previously prepared file as a "template", which means we
       // will append data to it, instead of starting from scratch again.
       'template' => $context['sandbox']['file'],
-      'format' => 'csv',
     ));
     if ($result !== PHPEXCEL_SUCCESS) {
       drupal_set_message(t("Something went wrong on pass !pass", array(
