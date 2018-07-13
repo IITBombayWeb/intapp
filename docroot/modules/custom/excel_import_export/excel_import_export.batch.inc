@@ -157,11 +157,11 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
 
     // User Mobile number.
     // Export{11}: field_mobile_num_com.
-    $itemsArray[11] = excelImportExport_getFieldValue($profile, 'field_mobile_num_com', 'array') . " ";
+    $itemsArray[11] = (int) excelImportExport_getFieldValue($profile, 'field_mobile_num_com', 'array') . " ";
 
     // User Telephone number.
     // Export{12}: field_telephone_num_com.
-    $itemsArray[12] = excelImportExport_getFieldValue($profile, 'field_telephone_num_com', 'array') . " ";
+    $itemsArray[12] = (int) excelImportExport_getFieldValue($profile, 'field_telephone_num_com', 'array') . " ";
 
     // User Permenant Address.
     // Export{13}: field_permanent_address.
