@@ -222,7 +222,7 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
       // Export{21}: zip file path.
       $itemsArray[21] = $zip_write_path;
     }
-    
+    dpm($itemsArray);
     /**
      * End of User data & Profile values.
      */
@@ -447,11 +447,7 @@ function excelImportExport_getFieldValue($entityObject, $property, $type = FALSE
     if ($type) {
       switch ($type) {
         case 'array':
-          if(is_numeric($return[0]['value'])){
-            $return = (int) $return[0]['value'];
-          }else{
-            $return = $return[0]['value'];
-          }
+          $return = $return[0]['value'];
           break;
         case 'reference':
           $return = $return[0]['target_id'];
