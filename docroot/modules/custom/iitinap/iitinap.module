@@ -692,9 +692,9 @@ function iitinap_node_view(array &$build, EntityInterface $node, EntityViewDispl
  * Implements hook_menu_local_tasks_alter().
  */
 function iitinap_menu_local_tasks_alter(&$data, $route_name) {
-       $data['tabs'][0]['entity.profile.user_profile_form:profile.type.student_application_']['#link']['title'] = "Edit Applicant Details";
+       $data['tabs'][0]['entity.profile.user_profile_form:profile.type.student_application_']['#link']['title'] = "Profile Details";
        $data['tabs'][0]['entity.node.workflow_history']['#link']['title'] = "History";
-       $data['tabs'][0]['entity.user.edit_form']['#link']['title'] = "Account Details";
+       $data['tabs'][0]['entity.user.edit_form']['#link']['title'] = "Profile Settings";
 }
 
 /**
