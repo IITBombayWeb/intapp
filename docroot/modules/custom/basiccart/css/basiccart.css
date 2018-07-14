@@ -199,3 +199,11 @@ a.basiccart-get-quantity {
   border: 1px solid #aaa;
 }
 /* add to cart end */
+
+@media only screen and (max-width: 480px) {
+
+  .basiccart-grid .basiccart-cart-node-title{
+     width:91%;  
+  }
+
+}
