@@ -804,37 +804,36 @@ html {
 
 /* line 87, ../sass/_overrides.scss */
 body {
-  background: url("../images/bg.jpg") no-repeat center center fixed;
   background-size: cover;
   font-family: "Ek Mukta", "sans-serif";
   font-size: 100%;
   line-height: 1.5;
 }
 
-/* line 94, ../sass/_overrides.scss */
+/* line 93, ../sass/_overrides.scss */
 a {
   text-decoration: none;
   cursor: pointer;
   color: #000;
 }
 
-/* line 99, ../sass/_overrides.scss */
+/* line 98, ../sass/_overrides.scss */
 a:hover, a:focus {
   text-decoration: none;
 }
 
-/* line 102, ../sass/_overrides.scss */
+/* line 101, ../sass/_overrides.scss */
 button {
   cursor: pointer;
 }
 
-/* line 105, ../sass/_overrides.scss */
+/* line 104, ../sass/_overrides.scss */
 h1 {
   font-family: "Ek Mukta", "sans-serif";
   font-size: 3.125em;
 }
 
-/* line 109, ../sass/_overrides.scss */
+/* line 108, ../sass/_overrides.scss */
 h2 {
   font-family: "Ek Mukta", "sans-serif";
   font-size: 2.5em;
@@ -843,7 +842,7 @@ h2 {
 /*.clearfix {
 	overflow: auto;
 }*/
-/* line 116, ../sass/_overrides.scss */
+/* line 115, ../sass/_overrides.scss */
 .clearfix:after, .filter-wrapper:after {
   content: " ";
   /* Older browser do not support empty content */
@@ -853,63 +852,63 @@ h2 {
   clear: both;
 }
 
-/* line 123, ../sass/_overrides.scss */
+/* line 122, ../sass/_overrides.scss */
 .wrapper-black {
   background-color: #000;
 }
 
-/* line 126, ../sass/_overrides.scss */
+/* line 125, ../sass/_overrides.scss */
 .wrapper-black a, .slogan {
   color: #fff;
 }
 
-/* line 129, ../sass/_overrides.scss */
+/* line 128, ../sass/_overrides.scss */
 .wrap-width {
   max-width: 1170px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* line 134, ../sass/_overrides.scss */
+/* line 133, ../sass/_overrides.scss */
 .header-content {
   padding: 20px 0;
 }
 
-/* line 137, ../sass/_overrides.scss */
+/* line 136, ../sass/_overrides.scss */
 #logo-slogan {
   float: left;
 }
 
-/* line 140, ../sass/_overrides.scss */
+/* line 139, ../sass/_overrides.scss */
 #login {
   float: right;
   font-family: "Ek Mukta", "sans-serif";
   font-size: 0.938em;
 }
 
-/* line 145, ../sass/_overrides.scss */
+/* line 144, ../sass/_overrides.scss */
 #logo-slogan, #login {
   max-width: 50%;
 }
 
-/* line 148, ../sass/_overrides.scss */
+/* line 147, ../sass/_overrides.scss */
 .logo-name {
   font-family: "Ek Mukta", "sans-serif";
   font-size: 1.875em;
 }
 
-/* line 152, ../sass/_overrides.scss */
+/* line 151, ../sass/_overrides.scss */
 .slogan {
   font-family: "Ek Mukta", "sans-serif";
   font-size: 1.25em;
 }
 
-/* line 156, ../sass/_overrides.scss */
+/* line 155, ../sass/_overrides.scss */
 #login .fa, .login-types .fa {
   margin-right: 5px;
 }
 
-/* line 159, ../sass/_overrides.scss */
+/* line 158, ../sass/_overrides.scss */
 .login-types {
   display: none;
   position: absolute;
@@ -919,7 +918,7 @@ h2 {
   z-index: 2;
 }
 
-/* line 167, ../sass/_overrides.scss */
+/* line 166, ../sass/_overrides.scss */
 .login-types li {
   list-style: none;
   padding: 6px;
@@ -928,17 +927,17 @@ h2 {
   margin: 4px;
 }
 
-/* line 174, ../sass/_overrides.scss */
+/* line 173, ../sass/_overrides.scss */
 .slider {
   position: relative;
 }
 
-/* line 177, ../sass/_overrides.scss */
+/* line 176, ../sass/_overrides.scss */
 .slider img {
   width: 100%;
 }
 
-/* line 180, ../sass/_overrides.scss */
+/* line 179, ../sass/_overrides.scss */
 .slider-content {
   box-sizing: border-box;
   left: 0;
@@ -951,7 +950,7 @@ h2 {
   width: 100%;
 }
 
-/* line 191, ../sass/_overrides.scss */
+/* line 190, ../sass/_overrides.scss */
 .video-content {
   text-align: center;
   font-family: "Ek Mukta", "sans-serif";
@@ -967,7 +966,7 @@ h2 {
   /* IE6-9 */
 }
 
-/* line 202, ../sass/_overrides.scss */
+/* line 201, ../sass/_overrides.scss */
 .search-div {
   background-color: #fff;
   box-shadow: 0px 1px 5px 0;
@@ -978,7 +977,7 @@ h2 {
   bottom: 55px;
 }
 
-/* line 211, ../sass/_overrides.scss */
+/* line 210, ../sass/_overrides.scss */
 .search-input {
   width: 625px;
   height: 70px;
@@ -989,7 +988,7 @@ h2 {
   color: #969696;
 }
 
-/* line 221, ../sass/_overrides.scss */
+/* line 220, ../sass/_overrides.scss */
 .search-btn {
   border-style: none;
   font-size: 1.5em;
@@ -997,7 +996,7 @@ h2 {
   background-color: #fff;
 }
 
-/* line 227, ../sass/_overrides.scss */
+/* line 226, ../sass/_overrides.scss */
 .title {
   font-family: "Ek Mukta", "sans-serif";
   text-align: center;
@@ -1005,44 +1004,44 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* line 233, ../sass/_overrides.scss */
+/* line 232, ../sass/_overrides.scss */
 .left-sidebar {
   float: left;
   width: 300px;
 }
 
-/* line 237, ../sass/_overrides.scss */
+/* line 236, ../sass/_overrides.scss */
 .right-sidebar {
   float: right;
   width: 300px;
 }
 
-/* line 241, ../sass/_overrides.scss */
+/* line 240, ../sass/_overrides.scss */
 .center-content {
   background-color: #fff;
   margin: 0 320px;
 }
 
-/* line 245, ../sass/_overrides.scss */
+/* line 244, ../sass/_overrides.scss */
 .content-container {
   float: left;
   width: 100%;
 }
 
-/* line 249, ../sass/_overrides.scss */
+/* line 248, ../sass/_overrides.scss */
 .content-items {
   margin-top: 30px;
   background-color: #fff;
 }
 
-/* line 253, ../sass/_overrides.scss */
+/* line 252, ../sass/_overrides.scss */
 .left-menu {
   margin-top: 30px;
   box-shadow: 0 1px 2px 0;
   background-color: #ECECEC;
 }
 
-/* line 258, ../sass/_overrides.scss */
+/* line 257, ../sass/_overrides.scss */
 .sidebar-topcontainer {
   margin-top: 30px;
   border: 3px solid transparent;
@@ -1051,7 +1050,7 @@ h2 {
   text-align: center;
 }
 
-/* line 265, ../sass/_overrides.scss */
+/* line 264, ../sass/_overrides.scss */
 .sidebar-botcontainer {
   border-radius: 15px;
   margin-top: 30px;
@@ -1060,30 +1059,30 @@ h2 {
   text-align: left;
 }
 
-/* line 272, ../sass/_overrides.scss */
+/* line 271, ../sass/_overrides.scss */
 .menu-items {
   padding: 15px;
 }
 
-/* line 275, ../sass/_overrides.scss */
+/* line 274, ../sass/_overrides.scss */
 .menu-items ul {
   padding: 20px 0;
 }
 
-/* line 278, ../sass/_overrides.scss */
+/* line 277, ../sass/_overrides.scss */
 .menu-items li {
   font-family: "Ek Mukta", "sans-serif";
   font-size: 1.125em;
   list-style: none;
 }
 
-/* line 283, ../sass/_overrides.scss */
+/* line 282, ../sass/_overrides.scss */
 .menu-items li span {
   font-family: "Ek Mukta", "sans-serif";
   font-weight: bold;
 }
 
-/* line 287, ../sass/_overrides.scss */
+/* line 286, ../sass/_overrides.scss */
 .menu-title {
   font-family: "Ek Mukta", "sans-serif";
   font-size: 1.375em;
@@ -1091,39 +1090,39 @@ h2 {
   border-bottom: 2px solid #7C7C7C;
 }
 
-/* line 293, ../sass/_overrides.scss */
+/* line 292, ../sass/_overrides.scss */
 .view-more {
   font-family: "Ek Mukta", "sans-serif";
   font-size: 0.938em;
 }
 
-/* line 297, ../sass/_overrides.scss */
+/* line 296, ../sass/_overrides.scss */
 .content-box {
   margin: 20px;
   padding: 5px 0;
 }
 
-/* line 301, ../sass/_overrides.scss */
+/* line 300, ../sass/_overrides.scss */
 .content-title {
   border-bottom: 1px solid;
 }
 
-/* line 304, ../sass/_overrides.scss */
+/* line 303, ../sass/_overrides.scss */
 .content-title .fa {
   padding-right: 20px;
 }
 
-/* line 307, ../sass/_overrides.scss */
+/* line 306, ../sass/_overrides.scss */
 .content-para {
   margin: 15px 0;
 }
 
-/* line 310, ../sass/_overrides.scss */
+/* line 309, ../sass/_overrides.scss */
 .content-lists {
   margin: 20px;
 }
 
-/* line 313, ../sass/_overrides.scss */
+/* line 312, ../sass/_overrides.scss */
 .box-title {
   padding: 10px;
   font-family: "Ek Mukta", "sans-serif";
@@ -1135,7 +1134,7 @@ h2 {
   border-image: url("../images/border.jpg") 20% round;
 }
 
-/* line 323, ../sass/_overrides.scss */
+/* line 322, ../sass/_overrides.scss */
 .box-data, .notice-container {
   font-family: "Ek Mukta", "sans-serif";
   font-size: 1.375em;
@@ -1143,7 +1142,7 @@ h2 {
   line-height: 1.2;
 }
 
-/* line 329, ../sass/_overrides.scss */
+/* line 328, ../sass/_overrides.scss */
 .notice-head {
   padding: 10px;
   border-radius: 15px 15px 0 0;
@@ -1154,33 +1153,33 @@ h2 {
   text-align: center;
 }
 
-/* line 338, ../sass/_overrides.scss */
+/* line 337, ../sass/_overrides.scss */
 .notice-head .fa {
   margin-right: 5px;
 }
 
-/* line 341, ../sass/_overrides.scss */
+/* line 340, ../sass/_overrides.scss */
 .notice-data {
   border-bottom: 1px solid;
   margin-bottom: 20px;
 }
 
-/* line 345, ../sass/_overrides.scss */
+/* line 344, ../sass/_overrides.scss */
 .notice-info {
   margin: 10px 0;
 }
 
-/* line 348, ../sass/_overrides.scss */
+/* line 347, ../sass/_overrides.scss */
 .notice-data:last-child {
   border-bottom: none;
 }
 
-/* line 351, ../sass/_overrides.scss */
+/* line 350, ../sass/_overrides.scss */
 .footer-block {
   margin: 10px 320px;
 }
 
-/* line 354, ../sass/_overrides.scss */
+/* line 353, ../sass/_overrides.scss */
 .footer-left, .footer-right {
   color: #fff;
   float: left;
@@ -1190,23 +1189,23 @@ h2 {
   margin: 20px 0;
 }
 
-/* line 362, ../sass/_overrides.scss */
+/* line 361, ../sass/_overrides.scss */
 .footer-right {
   text-align: right;
 }
 
 /*CAP-IT Bootstrap*/
-/* line 366, ../sass/_overrides.scss */
+/* line 365, ../sass/_overrides.scss */
 body {
   margin: 0;
 }
 
-/* line 369, ../sass/_overrides.scss */
+/* line 368, ../sass/_overrides.scss */
 #slick-views-slideshow-block-1-1-thumbnail {
   display: none;
 }
 
-/* line 372, ../sass/_overrides.scss */
+/* line 371, ../sass/_overrides.scss */
 .path-frontpage #edit-keys {
   border-style: none;
   color: #969696;
@@ -1220,12 +1219,12 @@ body {
   padding-top: 15px;
 }
 
-/* line 384, ../sass/_overrides.scss */
+/* line 383, ../sass/_overrides.scss */
 .form-item.js-form-item.form-type-search {
   float: left;
 }
 
-/* line 387, ../sass/_overrides.scss */
+/* line 386, ../sass/_overrides.scss */
 .form-submit.btn-primary {
   background: none;
   border: none;
@@ -1235,14 +1234,14 @@ body {
   font-size: 0;
 }
 
-/* line 395, ../sass/_overrides.scss */
+/* line 394, ../sass/_overrides.scss */
 .form-submit.btn-primary span {
   display: block;
   font-size: 14px;
   text-indent: 0;
 }
 
-/* line 400, ../sass/_overrides.scss */
+/* line 399, ../sass/_overrides.scss */
 .left-menu h2.block-title {
   border-bottom: 2px solid #7c7c7c;
   border-top: 2px solid #7c7c7c;
@@ -1250,30 +1249,30 @@ body {
   font-size: 1.375em;
 }
 
-/* line 406, ../sass/_overrides.scss */
+/* line 405, ../sass/_overrides.scss */
 .left-menu ul {
   padding: 0;
 }
 
-/* line 409, ../sass/_overrides.scss */
+/* line 408, ../sass/_overrides.scss */
 .left-menu li {
   list-style: none;
 }
 
-/* line 412, ../sass/_overrides.scss */
+/* line 411, ../sass/_overrides.scss */
 .region-content .block-iitinap-general, .region-content nav {
   background-color: #fff;
   margin: 30px 0;
   padding: 15px;
 }
 
-/* line 417, ../sass/_overrides.scss */
+/* line 416, ../sass/_overrides.scss */
 .region-content section h2, .region-content nav h2 {
   border-bottom: 1px solid;
   margin: 0;
 }
 
-/* line 421, ../sass/_overrides.scss */
+/* line 420, ../sass/_overrides.scss */
 .region-sidebar-second .block-basiccart-cartblock {
   margin-top: 30px;
   background-color: #2fd1aa;
@@ -1281,7 +1280,7 @@ body {
   position: relative;
 }
 
-/* line 427, ../sass/_overrides.scss */
+/* line 426, ../sass/_overrides.scss */
 .block.block-basiccart.block-basiccart-cartblock.clearfix::before, .block.block-basiccart.block-basiccart-cartblock.filter-wrapper::before {
   border-left: 50px solid transparent;
   border-right: 50px solid transparent;
@@ -1293,7 +1292,7 @@ body {
   width: 100%;
 }
 
-/* line 437, ../sass/_overrides.scss */
+/* line 436, ../sass/_overrides.scss */
 .block-basiccart-cartblock h2 {
   font-family: "Ek Mukta","sans-serif";
   font-size: 1.375em;
@@ -1304,7 +1303,7 @@ body {
   z-index: 2;
 }
 
-/* line 446, ../sass/_overrides.scss */
+/* line 445, ../sass/_overrides.scss */
 .block-views-blockimportant-deadlines-block-1 {
   background-color: #ebebeb;
   border: 1px solid #bdbdbd;
@@ -1312,7 +1311,7 @@ body {
   text-align: left;
 }
 
-/* line 452, ../sass/_overrides.scss */
+/* line 451, ../sass/_overrides.scss */
 .block-views-blockimportant-deadlines-block-1 h2 {
   margin: 0;
   background-color: #ffb131;
@@ -1323,7 +1322,7 @@ body {
   text-align: center;
 }
 
-/* line 461, ../sass/_overrides.scss */
+/* line 460, ../sass/_overrides.scss */
 .view-important-deadlines .view-content {
   font-family: "Ek Mukta","sans-serif";
   font-size: 1.375em;
@@ -1331,24 +1330,24 @@ body {
   margin: 20px;
 }
 
-/* line 467, ../sass/_overrides.scss */
+/* line 466, ../sass/_overrides.scss */
 .view-important-deadlines .view-content .views-row {
   border-bottom: 1px solid;
   margin-bottom: 20px;
   padding-bottom: 20px;
 }
 
-/* line 472, ../sass/_overrides.scss */
+/* line 471, ../sass/_overrides.scss */
 .view-important-deadlines .views-field-title {
   font-weight: bold;
 }
 
-/* line 475, ../sass/_overrides.scss */
+/* line 474, ../sass/_overrides.scss */
 .view-important-deadlines .views-row:last-child {
   border-bottom: none;
 }
 
-/* line 478, ../sass/_overrides.scss */
+/* line 477, ../sass/_overrides.scss */
 #block-capit-account-menu {
   display: none;
   position: absolute;
@@ -1358,7 +1357,7 @@ body {
   z-index: 5;
 }
 
-/* line 486, ../sass/_overrides.scss */
+/* line 485, ../sass/_overrides.scss */
 #block-capit-account-menu li {
   float: none;
   background-color: #ff9800;
@@ -1369,83 +1368,83 @@ body {
   text-align: center;
 }
 
-/* line 495, ../sass/_overrides.scss */
+/* line 494, ../sass/_overrides.scss */
 #block-capit-account-menu li a {
   padding: 0;
 }
 
-/* line 498, ../sass/_overrides.scss */
+/* line 497, ../sass/_overrides.scss */
 #block-capit-account-menu li a:hover {
   background: none;
   color: #000;
 }
 
-/* line 502, ../sass/_overrides.scss */
+/* line 501, ../sass/_overrides.scss */
 video {
   width: 100%;
 }
 
-/* line 505, ../sass/_overrides.scss */
+/* line 504, ../sass/_overrides.scss */
 .video-content-title {
   font-size: 3.688em;
 }
 
-/* line 508, ../sass/_overrides.scss */
+/* line 507, ../sass/_overrides.scss */
 .mob-menu-div {
   display: none;
 }
 
-/* line 511, ../sass/_overrides.scss */
+/* line 510, ../sass/_overrides.scss */
 .footer {
   border-top: none;
 }
 
-/* line 514, ../sass/_overrides.scss */
+/* line 513, ../sass/_overrides.scss */
 .page-header {
   border-bottom: none;
 }
 
-/* line 517, ../sass/_overrides.scss */
+/* line 516, ../sass/_overrides.scss */
 .path-search h1.page-header {
   display: none;
 }
 
-/* line 520, ../sass/_overrides.scss */
+/* line 519, ../sass/_overrides.scss */
 .path-search aside {
   margin-top: 190px;
 }
 
-/* line 523, ../sass/_overrides.scss */
+/* line 522, ../sass/_overrides.scss */
 .path-search .search-api-page-block-form {
   margin-top: 100px;
 }
 
-/* line 526, ../sass/_overrides.scss */
+/* line 525, ../sass/_overrides.scss */
 article.search-result {
   background-color: #fff;
   margin-top: 38px;
 }
 
-/* line 530, ../sass/_overrides.scss */
+/* line 529, ../sass/_overrides.scss */
 article.search-result .field--type-addtocart {
   position: relative;
   bottom: 95px;
   right: 20px;
 }
 
-/* line 535, ../sass/_overrides.scss */
+/* line 534, ../sass/_overrides.scss */
 article.search-result h2 {
   margin-left: 20px;
   font-size: 1.5em;
 }
 
-/* line 539, ../sass/_overrides.scss */
+/* line 538, ../sass/_overrides.scss */
 article.search-result .content {
   margin-left: 20px;
   padding-bottom: 15px;
 }
 
-/* line 543, ../sass/_overrides.scss */
+/* line 542, ../sass/_overrides.scss */
 article.search-result .content .field--name-field-institute,
 article.search-result .content .field--name-field-institute-link,
 article.search-result .content .field--name-field-departments,
@@ -1457,34 +1456,34 @@ article.search-result .content .field--name-field-course-duration {
   padding-bottom: 15px;
 }
 
-/* line 553, ../sass/_overrides.scss */
+/* line 552, ../sass/_overrides.scss */
 .field.field--name-field-departments .field--label {
   float: none;
 }
 
-/* line 556, ../sass/_overrides.scss */
+/* line 555, ../sass/_overrides.scss */
 .field.field--name-field-course-duration .field--item:after {
   content: " months";
 }
 
-/* line 559, ../sass/_overrides.scss */
+/* line 558, ../sass/_overrides.scss */
 article.search-result .content .field--name-field-institute,
 article.search-result .content .field--name-field-institute-link,
 article.search-result .content .field--name-field-degree {
   margin-right: 15px;
 }
 
-/* line 564, ../sass/_overrides.scss */
+/* line 563, ../sass/_overrides.scss */
 article.search-result .content .field--name-field-specialisation a {
   font-size: 1.563em;
 }
 
-/* line 567, ../sass/_overrides.scss */
+/* line 566, ../sass/_overrides.scss */
 article.search-result .content .field--name-field-departments {
   width: 11em;
 }
 
-/* line 570, ../sass/_overrides.scss */
+/* line 569, ../sass/_overrides.scss */
 .path-search .search-api-page-block-form {
   background-color: #fff;
   bottom: 55px;
@@ -1497,7 +1496,7 @@ article.search-result .content .field--name-field-departments {
   text-align: center;
 }
 
-/* line 581, ../sass/_overrides.scss */
+/* line 580, ../sass/_overrides.scss */
 .path-search .search-api-page-block-form #edit-keys {
   border-style: none;
   color: #969696;
@@ -1511,13 +1510,13 @@ article.search-result .content .field--name-field-departments {
   width: 370px;
 }
 
-/* line 593, ../sass/_overrides.scss */
+/* line 592, ../sass/_overrides.scss */
 .video-banner-wrapper {
   max-height: 470px;
   overflow: hidden;
 }
 
-/* line 597, ../sass/_overrides.scss */
+/* line 596, ../sass/_overrides.scss */
 .addtocart-link-class .button {
   background-color: #2fd1aa;
   text-transform: uppercase;
@@ -1525,134 +1524,142 @@ article.search-result .content .field--name-field-departments {
   padding: 0 6px;
 }
 
-/* line 603, ../sass/_overrides.scss */
+/* line 602, ../sass/_overrides.scss */
 .views-view-grid .views-row .views-col {
   width: auto !important;
 }
 
-/* line 606, ../sass/_overrides.scss */
+/* line 605, ../sass/_overrides.scss */
 .basiccart-cart-contents, .basiccart-cart-total-price-contents, .basiccart-cart-checkout-button-block {
   margin: 0;
   padding: 10px;
 }
 
-/* line 610, ../sass/_overrides.scss */
+/* line 609, ../sass/_overrides.scss */
 .basiccart-cart-checkout-button a {
   background-color: #fff;
   padding: 3px 5px;
 }
 
 /*quick links */
-/* line 618, ../sass/_overrides.scss */
+/* line 617, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second {
   background-color: #E5E5E5;
   padding: 18px 25px;
 }
-
-/* line 623, ../sass/_overrides.scss */
-.region-sidebar-second {
-  background-color: red;
-  padding: 18px 25px;
+/* line 620, ../sass/_overrides.scss */
+.sidebar-first .region-sidebar-second h2 {
+  font-size: 1.8em;
+}
+/* line 624, ../sass/_overrides.scss */
+.sidebar-first .region-sidebar-second #block-quicklinks h2 {
+  border-bottom: 2px solid #ccc;
+}
+/* line 627, ../sass/_overrides.scss */
+.sidebar-first .region-sidebar-second #block-quicklinks a {
+  display: block;
+  border-bottom: 2px solid #ccc;
+  padding: 8px 0;
 }
 
 @media only screen and (max-width: 1023px) {
-  /* line 630, ../sass/_overrides.scss */
+  /* line 639, ../sass/_overrides.scss */
   h1 {
     font-size: 1.7em;
   }
 
-  /* line 633, ../sass/_overrides.scss */
+  /* line 642, ../sass/_overrides.scss */
   h2 {
     font-size: 1.5em;
   }
 
-  /* line 636, ../sass/_overrides.scss */
+  /* line 645, ../sass/_overrides.scss */
   #logo-slogan, #login {
     max-width: 100%;
   }
 
-  /* line 639, ../sass/_overrides.scss */
+  /* line 648, ../sass/_overrides.scss */
   .slogan {
     font-size: 0.750em;
   }
 
-  /* line 642, ../sass/_overrides.scss */
+  /* line 651, ../sass/_overrides.scss */
   #login {
     text-align: right;
     font-size: 0.750em;
   }
 
-  /* line 646, ../sass/_overrides.scss */
+  /* line 655, ../sass/_overrides.scss */
   .login-types {
     width: auto;
   }
 
-  /* line 649, ../sass/_overrides.scss */
+  /* line 658, ../sass/_overrides.scss */
   .login-types li {
     text-align: left;
   }
 
-  /* line 652, ../sass/_overrides.scss */
+  /* line 661, ../sass/_overrides.scss */
   .video-content {
     font-size: 1em;
   }
 
-  /* line 655, ../sass/_overrides.scss */
+  /* line 664, ../sass/_overrides.scss */
   .search-input {
     width: auto;
     height: auto;
     padding: 10px;
   }
 
-  /* line 660, ../sass/_overrides.scss */
+  /* line 669, ../sass/_overrides.scss */
   .search-input, .search-btn {
     font-size: 0.875em;
   }
 
-  /* line 663, ../sass/_overrides.scss */
+  /* line 672, ../sass/_overrides.scss */
   .search-div {
     bottom: 35px;
     margin: 0 20px;
   }
 
-  /* line 667, ../sass/_overrides.scss */
+  /* line 676, ../sass/_overrides.scss */
   .left-sidebar {
     float: none;
   }
 
-  /* line 670, ../sass/_overrides.scss */
+  /* line 679, ../sass/_overrides.scss */
   .left-sidebar, .right-sidebar {
     width: auto;
   }
 
-  /* line 673, ../sass/_overrides.scss */
+  /* line 682, ../sass/_overrides.scss */
   .content-container {
     width: auto;
   }
 
-  /* line 676, ../sass/_overrides.scss */
+  /* line 685, ../sass/_overrides.scss */
   .center-content {
     margin: 0;
   }
 
-  /* line 679, ../sass/_overrides.scss */
+  /* line 688, ../sass/_overrides.scss */
   .content-title .fa {
     padding-right: 8px;
   }
 
-  /* line 682, ../sass/_overrides.scss */
+  /* line 691, ../sass/_overrides.scss */
   .footer-block {
     margin: 0;
   }
 
-  /* line 685, ../sass/_overrides.scss */
+  /* line 694, ../sass/_overrides.scss */
   .footer-left, .footer-right {
     float: none;
     width: auto;
   }
 
   /*CAP-IT Bootstrap Responsive*/
-  /* line 690, ../sass/_overrides.scss */
+  /* line 699, ../sass/_overrides.scss */
   #edit-keys {
     font-size: 0.875em;
     height: auto;
@@ -1661,33 +1668,33 @@ article.search-result .content .field--name-field-departments {
     margin: 0;
   }
 
-  /* line 697, ../sass/_overrides.scss */
+  /* line 706, ../sass/_overrides.scss */
   .form-submit.btn-primary {
     margin: 6px;
   }
 
-  /* line 700, ../sass/_overrides.scss */
+  /* line 709, ../sass/_overrides.scss */
   .form-type-search.form-group {
     margin: 0;
   }
 
-  /* line 703, ../sass/_overrides.scss */
+  /* line 712, ../sass/_overrides.scss */
   .form-item.js-form-item.form-type-search {
     margin: 0;
   }
 
-  /* line 706, ../sass/_overrides.scss */
+  /* line 715, ../sass/_overrides.scss */
   .video-content-title {
     font-size: 1.7em;
     margin: 0;
   }
 
-  /* line 710, ../sass/_overrides.scss */
+  /* line 719, ../sass/_overrides.scss */
   .leftMobMenu {
     display: none;
   }
 
-  /* line 713, ../sass/_overrides.scss */
+  /* line 722, ../sass/_overrides.scss */
   .mob-menu-div {
     display: block;
     background-color: #3e4156;
@@ -1698,17 +1705,17 @@ article.search-result .content .field--name-field-departments {
     cursor: pointer;
   }
 
-  /* line 722, ../sass/_overrides.scss */
+  /* line 731, ../sass/_overrides.scss */
   .mob-menu-div a {
     color: #fff;
   }
 
-  /* line 725, ../sass/_overrides.scss */
+  /* line 734, ../sass/_overrides.scss */
   .mob-menu span {
     margin-left: 5px;
   }
 
-  /* line 728, ../sass/_overrides.scss */
+  /* line 737, ../sass/_overrides.scss */
   .path-search .search-api-page-block-form #edit-keys {
     font-size: 0.875em;
     padding: 10px 0 0 0;

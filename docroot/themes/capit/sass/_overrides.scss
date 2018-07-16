@@ -84,8 +84,7 @@ p:last-child,
 html {
 	font-size: 100%;
 }
-body {
-	background: url("../images/bg.jpg") no-repeat center center fixed;
+body {	
 	background-size: cover;
 	font-family: "Ek Mukta", "sans-serif";
 	font-size: 100%;
@@ -618,12 +617,22 @@ article.search-result .content .field--name-field-departments {
 	.region-sidebar-second{
 		background-color: #E5E5E5;
 		padding: 18px 25px;
+	  h2{
+		font-size: 1.8em;
+		}
+		#block-quicklinks{
+			h2{
+				border-bottom: 2px solid #ccc;
+			}
+			a{
+				display: block;
+				border-bottom: 2px solid #ccc;
+				padding: 8px 0;
+			}
+		}
 	}
 }
-.region-sidebar-second{
-	background-color: red;
-	padding: 18px 25px;
-}
+
 
 @media only screen and (max-width: 1023px) {
 
