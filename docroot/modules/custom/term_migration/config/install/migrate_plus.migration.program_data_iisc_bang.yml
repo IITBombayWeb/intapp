@@ -100,10 +100,10 @@ process:
   title: 
     plugin: concat
     source:
-      - Specialisation "in" 
-      - Institute Name "," 
-      - Degree
+      - Institute Name
       - Department Name
+      - Degree
+      - Specialisation
     delimiter: ' '
   #Degree field
   field_degree: Degree
