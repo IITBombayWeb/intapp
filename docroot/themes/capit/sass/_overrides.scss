@@ -646,6 +646,7 @@ article.search-result .content .field--name-field-departments {
 				color: #fff;
 				border: 0px;
 				margin: 10px 0;
+				display: block;
 			}
 			.loginBtn {
 			box-sizing: border-box;
@@ -657,9 +658,11 @@ article.search-result .content .field--name-field-departments {
 			text-align: left;
 			line-height: 34px;
 			white-space: nowrap;
-			border-radius: 0.2em;
-			font-size: 16px;
+			border-radius: 0em;
+			font-size: 0.938em;
 			color: #FFF;
+			width: 189.52px;
+            margin: 8px 0;
   			}
 			.loginBtn:before {
 				content: "";
