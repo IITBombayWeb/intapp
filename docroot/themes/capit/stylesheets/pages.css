@@ -1093,14 +1093,6 @@ input[type="file"] {
 }
 
 
-/*quick links */
-.sidebar-first{
-	background-color: #E5E5E5;
-	padding: 18px 25px;
-}
-
-
-
 @media only screen and (min-width: 568px) {
 	.basiccart-cart-node-title {
 		width: 250px;
