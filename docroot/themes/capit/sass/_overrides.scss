@@ -617,15 +617,13 @@ article.search-result .content .field--name-field-departments {
 	.region-sidebar-second{
 		background-color: #E5E5E5;
 		
-		#block-quicklinks{
-			border-bottom: 2px solid #fff;
-			padding: 30px;
-		}
-
 	  h2{
 		font-size: 1.8em;
 		}
+		
 		#block-quicklinks{
+			border-bottom: 2px solid #fff;
+			padding: 30px;
 			h2{
 				border-bottom: 2px solid #ccc;
 			}
