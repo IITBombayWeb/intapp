@@ -707,8 +707,9 @@ article.search-result .content .field--name-field-departments {
 			}			
 		}
 		
-		.block-help{
+		#block-help{
 			padding: 20px 30px;
+
 			.field--name-body{
 				
 					p::before {content: "•"; color: red;
