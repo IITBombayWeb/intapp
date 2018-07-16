@@ -343,7 +343,7 @@ h2{
 }
 .bscart-pop .basiccart-delete-image  {
 	position: absolute;
-	right: 10px;
+	right: 0px;
 	top: 50%;
 	margin-top: -12px;
 }
@@ -390,7 +390,7 @@ h2{
 	color: #333;
 	font-size: 16px;
 	background: #fff;
-	width: 85%;
+	width: 48%;
 	margin-top: 75px;
 	position: relative;
 }
@@ -1091,6 +1091,7 @@ input[type="file"] {
   margin: 0;
   width: 100%;
 }
+
 
 @media only screen and (min-width: 568px) {
 	.basiccart-cart-node-title {
