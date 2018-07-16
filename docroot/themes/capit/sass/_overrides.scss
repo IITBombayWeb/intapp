@@ -627,6 +627,10 @@ article.search-result .content .field--name-field-departments {
 			h2{
 				border-bottom: 2px solid #ccc;
 			}
+			a::before {
+				content: '\25c4';
+				padding-right: 0.5em;
+			  }
 			a{
 				display: block;
 				border-bottom: 2px solid #ccc;
@@ -714,7 +718,7 @@ article.search-result .content .field--name-field-departments {
 				
 					p::before {
 						content: '\2022';
-						color: red;
+						color: #2477b9;
 						display: inline-block;
 						width: 1em;
 						margin-left: -1em;
