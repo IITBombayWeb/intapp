@@ -647,7 +647,9 @@ ul li {
   width: 8px;
   background: #227ca7;
   display: block;
-  position: absolute;
+  position: relative;
+  top: 18px;
+  right: 22px;
 }
 
 
