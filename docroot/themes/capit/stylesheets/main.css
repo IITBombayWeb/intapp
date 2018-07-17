@@ -649,13 +649,19 @@ ul li {
   top: 18px;
   right: 22px;
 }
-.region-content .home-important{
+.region-content .admission-block{
   background-color: #119a80;
   color: #fff;
   padding: 25px;
 }
-.region-content .home-important h2{
+.region-content .admission-block h2{
   color:#fff;
+}
+.region-content .admission-block .admission-left{
+
+}
+.region-content .admission-block .admission-right{
+  
 }
 
 @media only screen and (min-width: 479px) {
