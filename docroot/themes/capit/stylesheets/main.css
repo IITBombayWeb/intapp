@@ -679,14 +679,8 @@ ul li {
   color: yellow;
 }
 
-@media only screen and (min-width: 479px) {
-  .featured-inn .ft-cm {
-    float: left;
-    width: 46%;
-    padding: 40px;
-    margin: 0 10px 20px;
-  }
 
+@media only screen and (max-width: 480px) {
   .region-content .admission-block .admission-left{
     width: 100%;
     float: left;
@@ -695,8 +689,17 @@ ul li {
   .region-content .admission-block .admission-right {
     float: left;
     padding-left: 0px;
+  }
 }
 
+
+@media only screen and (min-width: 479px) {
+  .featured-inn .ft-cm {
+    float: left;
+    width: 46%;
+    padding: 40px;
+    margin: 0 10px 20px;
+  }
 
 }
 @media only screen and (min-width: 568px) {
