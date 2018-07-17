@@ -3,7 +3,7 @@ global-styling:
     theme:
       # *stylesheets/style.css: {}
       css/jquery.mCustomScrollbar.css: {}
-      css/style.css: {}
+      # css/style.css: {}
       stylesheets/main.css: {}
       stylesheets/pages.css: {}      
       css/font-awesome.min.css: {}
