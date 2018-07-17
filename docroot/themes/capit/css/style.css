@@ -1402,11 +1402,6 @@ video {
   display: none;
 }
 
-/* line 515, ../sass/_overrides.scss */
-.path-search aside {
-  margin-top: 190px;
-}
-
 /* line 518, ../sass/_overrides.scss */
 .path-search .search-api-page-block-form {
   margin-top: 100px;
@@ -1415,7 +1410,6 @@ video {
 /* line 521, ../sass/_overrides.scss */
 article.search-result {
   background-color: #fff;
-  margin-top: 38px;
 }
 
 /* line 525, ../sass/_overrides.scss */
@@ -1509,76 +1503,68 @@ article.search-result .content .field--name-field-departments {
   overflow: hidden;
 }
 
-/* line 592, ../sass/_overrides.scss */
-.addtocart-link-class .button {
-  background-color: #2fd1aa;
-  text-transform: uppercase;
-  border-radius: 0;
-  padding: 0 6px;
-}
-
-/* line 598, ../sass/_overrides.scss */
+/* line 593, ../sass/_overrides.scss */
 .views-view-grid .views-row .views-col {
   width: auto !important;
 }
 
-/* line 601, ../sass/_overrides.scss */
+/* line 596, ../sass/_overrides.scss */
 .basiccart-cart-contents, .basiccart-cart-total-price-contents, .basiccart-cart-checkout-button-block {
   margin: 0;
   padding: 10px;
 }
 
-/* line 605, ../sass/_overrides.scss */
+/* line 600, ../sass/_overrides.scss */
 .basiccart-cart-checkout-button a {
   background-color: #fff;
   padding: 3px 5px;
 }
 
 /*quick links */
-/* line 613, ../sass/_overrides.scss */
+/* line 608, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second {
   background-color: #E5E5E5;
 }
-/* line 616, ../sass/_overrides.scss */
+/* line 611, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second h2 {
   font-size: 1.8em;
 }
-/* line 620, ../sass/_overrides.scss */
+/* line 615, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-quicklinks {
   border-bottom: 1.5px solid #fff;
   padding: 20px 30px;
 }
-/* line 623, ../sass/_overrides.scss */
+/* line 618, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-quicklinks h2 {
   border-bottom: 2px solid #ccc;
 }
-/* line 626, ../sass/_overrides.scss */
+/* line 621, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-quicklinks a::before {
   content: '\25ba';
   padding-right: 0.5em;
   color: #2477b9;
 }
-/* line 631, ../sass/_overrides.scss */
+/* line 626, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-quicklinks a {
   display: block;
   border-bottom: 2px solid #ccc;
   padding: 8px 0;
 }
-/* line 636, ../sass/_overrides.scss */
+/* line 631, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-quicklinks .quick-search {
   border-bottom: none;
 }
-/* line 641, ../sass/_overrides.scss */
+/* line 636, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login {
   padding: 20px 30px;
   border-bottom: 1.5px solid #fff;
 }
-/* line 644, ../sass/_overrides.scss */
+/* line 639, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login input {
   margin: 8px 0;
   padding: 3px 6px;
 }
-/* line 648, ../sass/_overrides.scss */
+/* line 643, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .frm-submit {
   background-color: #2477b9;
   padding: 5px 10px;
@@ -1587,7 +1573,7 @@ article.search-result .content .field--name-field-departments {
   margin: 10px 0;
   display: block;
 }
-/* line 656, ../sass/_overrides.scss */
+/* line 651, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn {
   box-sizing: border-box;
   position: relative;
@@ -1604,7 +1590,7 @@ article.search-result .content .field--name-field-departments {
   width: 189.52px;
   margin: 8px 0;
 }
-/* line 672, ../sass/_overrides.scss */
+/* line 667, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn:before {
   content: "";
   box-sizing: border-box;
@@ -1614,50 +1600,50 @@ article.search-result .content .field--name-field-departments {
   width: 34px;
   height: 100%;
 }
-/* line 681, ../sass/_overrides.scss */
+/* line 676, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn:focus {
   outline: none;
 }
-/* line 684, ../sass/_overrides.scss */
+/* line 679, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn:active {
   box-shadow: inset 0 0 0 32px rgba(0, 0, 0, 0.1);
 }
-/* line 687, ../sass/_overrides.scss */
+/* line 682, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--facebook {
   background-color: #4C69BA;
   background-image: linear-gradient(#4c69ba, #3b55a0);
   text-shadow: 0 -1px 0 #354C8C;
 }
-/* line 692, ../sass/_overrides.scss */
+/* line 687, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--facebook:before {
   border-right: #364e92 1px solid;
   background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_facebook.png") 6px 6px no-repeat;
 }
-/* line 696, ../sass/_overrides.scss */
+/* line 691, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--facebook:hover,
 .sidebar-first .region-sidebar-second #block-login .loginBtn--facebook:focus {
   background-color: #5B7BD5;
   background-image: linear-gradient(#5b7bd5, #4864b1);
 }
-/* line 701, ../sass/_overrides.scss */
+/* line 696, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--google {
   background: #DD4B39;
 }
-/* line 704, ../sass/_overrides.scss */
+/* line 699, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--google:before {
   border-right: #BB3F30 1px solid;
   background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png") 6px 6px no-repeat;
 }
-/* line 708, ../sass/_overrides.scss */
+/* line 703, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--google:hover,
 .sidebar-first .region-sidebar-second #block-login .loginBtn--google:focus {
   background: #E74B37;
 }
-/* line 714, ../sass/_overrides.scss */
+/* line 709, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-help {
   padding: 20px 50px;
 }
-/* line 719, ../sass/_overrides.scss */
+/* line 714, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-help .field--name-body p::before {
   content: '';
   height: 8px;
@@ -1670,103 +1656,103 @@ article.search-result .content .field--name-field-departments {
 }
 
 @media only screen and (max-width: 1023px) {
-  /* line 738, ../sass/_overrides.scss */
+  /* line 733, ../sass/_overrides.scss */
   h1 {
     font-size: 1.7em;
   }
 
-  /* line 741, ../sass/_overrides.scss */
+  /* line 736, ../sass/_overrides.scss */
   h2 {
     font-size: 1.5em;
   }
 
-  /* line 744, ../sass/_overrides.scss */
+  /* line 739, ../sass/_overrides.scss */
   #logo-slogan, #login {
     max-width: 100%;
   }
 
-  /* line 747, ../sass/_overrides.scss */
+  /* line 742, ../sass/_overrides.scss */
   .slogan {
     font-size: 0.750em;
   }
 
-  /* line 750, ../sass/_overrides.scss */
+  /* line 745, ../sass/_overrides.scss */
   #login {
     text-align: right;
     font-size: 0.750em;
   }
 
-  /* line 754, ../sass/_overrides.scss */
+  /* line 749, ../sass/_overrides.scss */
   .login-types {
     width: auto;
   }
 
-  /* line 757, ../sass/_overrides.scss */
+  /* line 752, ../sass/_overrides.scss */
   .login-types li {
     text-align: left;
   }
 
-  /* line 760, ../sass/_overrides.scss */
+  /* line 755, ../sass/_overrides.scss */
   .video-content {
     font-size: 1em;
   }
 
-  /* line 763, ../sass/_overrides.scss */
+  /* line 758, ../sass/_overrides.scss */
   .search-input {
     width: auto;
     height: auto;
     padding: 10px;
   }
 
-  /* line 768, ../sass/_overrides.scss */
+  /* line 763, ../sass/_overrides.scss */
   .search-input, .search-btn {
     font-size: 0.875em;
   }
 
-  /* line 771, ../sass/_overrides.scss */
+  /* line 766, ../sass/_overrides.scss */
   .search-div {
     bottom: 35px;
     margin: 0 20px;
   }
 
-  /* line 775, ../sass/_overrides.scss */
+  /* line 770, ../sass/_overrides.scss */
   .left-sidebar {
     float: none;
   }
 
-  /* line 778, ../sass/_overrides.scss */
+  /* line 773, ../sass/_overrides.scss */
   .left-sidebar, .right-sidebar {
     width: auto;
   }
 
-  /* line 781, ../sass/_overrides.scss */
+  /* line 776, ../sass/_overrides.scss */
   .content-container {
     width: auto;
   }
 
-  /* line 784, ../sass/_overrides.scss */
+  /* line 779, ../sass/_overrides.scss */
   .center-content {
     margin: 0;
   }
 
-  /* line 787, ../sass/_overrides.scss */
+  /* line 782, ../sass/_overrides.scss */
   .content-title .fa {
     padding-right: 8px;
   }
 
-  /* line 790, ../sass/_overrides.scss */
+  /* line 785, ../sass/_overrides.scss */
   .footer-block {
     margin: 0;
   }
 
-  /* line 793, ../sass/_overrides.scss */
+  /* line 788, ../sass/_overrides.scss */
   .footer-left, .footer-right {
     float: none;
     width: auto;
   }
 
   /*CAP-IT Bootstrap Responsive*/
-  /* line 798, ../sass/_overrides.scss */
+  /* line 793, ../sass/_overrides.scss */
   #edit-keys {
     font-size: 0.875em;
     height: auto;
@@ -1775,33 +1761,33 @@ article.search-result .content .field--name-field-departments {
     margin: 0;
   }
 
-  /* line 805, ../sass/_overrides.scss */
+  /* line 800, ../sass/_overrides.scss */
   .form-submit.btn-primary {
     margin: 6px;
   }
 
-  /* line 808, ../sass/_overrides.scss */
+  /* line 803, ../sass/_overrides.scss */
   .form-type-search.form-group {
     margin: 0;
   }
 
-  /* line 811, ../sass/_overrides.scss */
+  /* line 806, ../sass/_overrides.scss */
   .form-item.js-form-item.form-type-search {
     margin: 0;
   }
 
-  /* line 814, ../sass/_overrides.scss */
+  /* line 809, ../sass/_overrides.scss */
   .video-content-title {
     font-size: 1.7em;
     margin: 0;
   }
 
-  /* line 818, ../sass/_overrides.scss */
+  /* line 813, ../sass/_overrides.scss */
   .leftMobMenu {
     display: none;
   }
 
-  /* line 821, ../sass/_overrides.scss */
+  /* line 816, ../sass/_overrides.scss */
   .mob-menu-div {
     display: block;
     background-color: #3e4156;
@@ -1812,17 +1798,17 @@ article.search-result .content .field--name-field-departments {
     cursor: pointer;
   }
 
-  /* line 830, ../sass/_overrides.scss */
+  /* line 825, ../sass/_overrides.scss */
   .mob-menu-div a {
     color: #fff;
   }
 
-  /* line 833, ../sass/_overrides.scss */
+  /* line 828, ../sass/_overrides.scss */
   .mob-menu span {
     margin-left: 5px;
   }
 
-  /* line 836, ../sass/_overrides.scss */
+  /* line 831, ../sass/_overrides.scss */
   .path-search .search-api-page-block-form #edit-keys {
     font-size: 0.875em;
     padding: 10px 0 0 0;
