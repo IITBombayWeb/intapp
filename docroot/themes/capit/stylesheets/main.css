@@ -653,15 +653,18 @@ ul li {
   background-color: #119a80;
   color: #fff;
   padding: 25px;
+  margin-top: 30px;
 }
 .region-content .admission-block h2{
-  color:#fff;
+  color:#fff !important;
 }
 .region-content .admission-block .admission-left{
-
+  width: 37%;
+  float: left;
+  border-right: 2px solid #fff;
 }
 .region-content .admission-block .admission-right{
-  
+  float:left;
 }
 
 @media only screen and (min-width: 479px) {
