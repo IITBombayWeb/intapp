@@ -628,9 +628,14 @@ article.search-result .content .field--name-field-departments {
 				border-bottom: 2px solid #ccc;
 			}
 			a::before {
-				content: '\25ba';
-				padding-right: 0.5em;
-				color:#2477b9;
+				content: '';
+				height: 8px;
+				width: 8px;
+				background: #227ca7;
+				display: block;
+				position: relative;
+				top: 18px;
+				right: 22px;
 			  }
 			a{
 				display: block;
