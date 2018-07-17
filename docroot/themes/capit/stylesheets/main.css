@@ -395,10 +395,7 @@ ul li {
   padding: 0;
   margin: 0 0 20px;
 }
-.main-page .cnt-page {
-  background: #119a7f;
-  padding: 30px;
-}
+
 .main-page .cnt-page h2.block-title {
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 26px;
@@ -782,7 +779,7 @@ ul li {
 }
 @media only screen and (min-width: 920px) {
   .sidebar-left, .sidebar-right {
-    width: 32%;
+    width: 50%;
     float: left;
     margin: 0;
   }
@@ -790,7 +787,7 @@ ul li {
     float: right;
   }
   .main-page {
-    width: 36%;
+    width: 50%;
     float: left;
     padding: 0 30px;
     margin: 0;
