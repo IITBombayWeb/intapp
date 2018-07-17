@@ -668,6 +668,7 @@ ul li {
 }
 .region-content .admission-block .admission-right{
   float:left;
+  padding-left: 24px;
 }
 .region-content .admission-block .admission-right p{
   margin:0px;
