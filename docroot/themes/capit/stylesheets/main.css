@@ -410,6 +410,7 @@ ul li {
   color: #fcff28;
   font-weight: 700;
 }
+
 .view-important-deadlines .views-row .views-field-body {
   color: #fff;
   font-weight: 300;
@@ -673,6 +674,10 @@ ul li {
 .region-content .admission-block .admission-right p{
   margin:0px;
 }
+.region-content .admi-date{
+  font-weight: bold;
+  color: yellow;
+}
 
 @media only screen and (min-width: 479px) {
   .featured-inn .ft-cm {
@@ -681,6 +686,18 @@ ul li {
     padding: 40px;
     margin: 0 10px 20px;
   }
+
+  .region-content .admission-block .admission-left{
+    width: 100%;
+    float: left;
+    border-right: none;
+  }
+  .region-content .admission-block .admission-right {
+    float: left;
+    padding-left: 0px;
+}
+
+
 }
 @media only screen and (min-width: 568px) {
     .featured-inn .ins-count:hover:before {
