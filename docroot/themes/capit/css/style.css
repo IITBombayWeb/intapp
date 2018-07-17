@@ -1662,7 +1662,7 @@ article.search-result .content .field--name-field-departments {
 }
 /* line 718, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-help {
-  padding: 20px 30px;
+  padding: 20px 50px;
 }
 /* line 723, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-help .field--name-body p::before {
@@ -1672,7 +1672,7 @@ article.search-result .content .field--name-field-departments {
   background: #227ca7;
   display: block;
   position: relative;
-  top: 18px;
+  top: 15px;
   right: 22px;
 }
 

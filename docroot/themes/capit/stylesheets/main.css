@@ -633,14 +633,12 @@ ul li {
   font-size: 36px;
   border-bottom: none;
 }
-
 .region-content .block-block-content .field--name-body a{
   display:block;
   padding: 0 0 0 25px;
   color: #333;
   font-size: 1.250em;
 }
-
 .region-content .block-block-content .field--name-body a:before{
   content: '';
   height: 8px;
@@ -651,7 +649,14 @@ ul li {
   top: 18px;
   right: 22px;
 }
-
+.region-content .home-important{
+  background-color: #119a80;
+  color: #fff;
+  padding: 25px;
+}
+.region-content .home-important h2{
+  color:#fff;
+}
 
 @media only screen and (min-width: 479px) {
   .featured-inn .ft-cm {
