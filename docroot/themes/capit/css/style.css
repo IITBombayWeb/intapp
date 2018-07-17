@@ -1561,36 +1561,31 @@ article.search-result .content .field--name-field-departments {
 }
 /* line 630, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-quicklinks a::before {
-  content: '';
-  height: 8px;
-  width: 8px;
-  background: #227ca7;
-  display: block;
-  position: relative;
-  top: 18px;
-  right: 22px;
+  content: '\25ba';
+  padding-right: 0.5em;
+  color: #2477b9;
 }
-/* line 640, ../sass/_overrides.scss */
+/* line 635, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-quicklinks a {
   display: block;
   border-bottom: 2px solid #ccc;
   padding: 8px 0;
 }
-/* line 645, ../sass/_overrides.scss */
+/* line 640, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-quicklinks .quick-search {
   border-bottom: none;
 }
-/* line 650, ../sass/_overrides.scss */
+/* line 645, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login {
   padding: 20px 30px;
   border-bottom: 1.5px solid #fff;
 }
-/* line 653, ../sass/_overrides.scss */
+/* line 648, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login input {
   margin: 8px 0;
   padding: 3px 6px;
 }
-/* line 657, ../sass/_overrides.scss */
+/* line 652, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .frm-submit {
   background-color: #2477b9;
   padding: 5px 10px;
@@ -1599,7 +1594,7 @@ article.search-result .content .field--name-field-departments {
   margin: 10px 0;
   display: block;
 }
-/* line 665, ../sass/_overrides.scss */
+/* line 660, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn {
   box-sizing: border-box;
   position: relative;
@@ -1616,7 +1611,7 @@ article.search-result .content .field--name-field-departments {
   width: 189.52px;
   margin: 8px 0;
 }
-/* line 681, ../sass/_overrides.scss */
+/* line 676, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn:before {
   content: "";
   box-sizing: border-box;
@@ -1626,156 +1621,159 @@ article.search-result .content .field--name-field-departments {
   width: 34px;
   height: 100%;
 }
-/* line 690, ../sass/_overrides.scss */
+/* line 685, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn:focus {
   outline: none;
 }
-/* line 693, ../sass/_overrides.scss */
+/* line 688, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn:active {
   box-shadow: inset 0 0 0 32px rgba(0, 0, 0, 0.1);
 }
-/* line 696, ../sass/_overrides.scss */
+/* line 691, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--facebook {
   background-color: #4C69BA;
   background-image: linear-gradient(#4c69ba, #3b55a0);
   text-shadow: 0 -1px 0 #354C8C;
 }
-/* line 701, ../sass/_overrides.scss */
+/* line 696, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--facebook:before {
   border-right: #364e92 1px solid;
   background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_facebook.png") 6px 6px no-repeat;
 }
-/* line 705, ../sass/_overrides.scss */
+/* line 700, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--facebook:hover,
 .sidebar-first .region-sidebar-second #block-login .loginBtn--facebook:focus {
   background-color: #5B7BD5;
   background-image: linear-gradient(#5b7bd5, #4864b1);
 }
-/* line 710, ../sass/_overrides.scss */
+/* line 705, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--google {
   background: #DD4B39;
 }
-/* line 713, ../sass/_overrides.scss */
+/* line 708, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--google:before {
   border-right: #BB3F30 1px solid;
   background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png") 6px 6px no-repeat;
 }
-/* line 717, ../sass/_overrides.scss */
+/* line 712, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-login .loginBtn--google:hover,
 .sidebar-first .region-sidebar-second #block-login .loginBtn--google:focus {
   background: #E74B37;
 }
-/* line 723, ../sass/_overrides.scss */
+/* line 718, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-help {
   padding: 20px 30px;
 }
-/* line 728, ../sass/_overrides.scss */
+/* line 723, ../sass/_overrides.scss */
 .sidebar-first .region-sidebar-second #block-help .field--name-body p::before {
-  content: '\2022';
-  color: #2477b9;
-  display: inline-block;
-  width: 1em;
-  margin-left: -1em;
+  content: '';
+  height: 8px;
+  width: 8px;
+  background: #227ca7;
+  display: block;
+  position: relative;
+  top: 18px;
+  right: 22px;
 }
 
 @media only screen and (max-width: 1023px) {
-  /* line 744, ../sass/_overrides.scss */
+  /* line 742, ../sass/_overrides.scss */
   h1 {
     font-size: 1.7em;
   }
 
-  /* line 747, ../sass/_overrides.scss */
+  /* line 745, ../sass/_overrides.scss */
   h2 {
     font-size: 1.5em;
   }
 
-  /* line 750, ../sass/_overrides.scss */
+  /* line 748, ../sass/_overrides.scss */
   #logo-slogan, #login {
     max-width: 100%;
   }
 
-  /* line 753, ../sass/_overrides.scss */
+  /* line 751, ../sass/_overrides.scss */
   .slogan {
     font-size: 0.750em;
   }
 
-  /* line 756, ../sass/_overrides.scss */
+  /* line 754, ../sass/_overrides.scss */
   #login {
     text-align: right;
     font-size: 0.750em;
   }
 
-  /* line 760, ../sass/_overrides.scss */
+  /* line 758, ../sass/_overrides.scss */
   .login-types {
     width: auto;
   }
 
-  /* line 763, ../sass/_overrides.scss */
+  /* line 761, ../sass/_overrides.scss */
   .login-types li {
     text-align: left;
   }
 
-  /* line 766, ../sass/_overrides.scss */
+  /* line 764, ../sass/_overrides.scss */
   .video-content {
     font-size: 1em;
   }
 
-  /* line 769, ../sass/_overrides.scss */
+  /* line 767, ../sass/_overrides.scss */
   .search-input {
     width: auto;
     height: auto;
     padding: 10px;
   }
 
-  /* line 774, ../sass/_overrides.scss */
+  /* line 772, ../sass/_overrides.scss */
   .search-input, .search-btn {
     font-size: 0.875em;
   }
 
-  /* line 777, ../sass/_overrides.scss */
+  /* line 775, ../sass/_overrides.scss */
   .search-div {
     bottom: 35px;
     margin: 0 20px;
   }
 
-  /* line 781, ../sass/_overrides.scss */
+  /* line 779, ../sass/_overrides.scss */
   .left-sidebar {
     float: none;
   }
 
-  /* line 784, ../sass/_overrides.scss */
+  /* line 782, ../sass/_overrides.scss */
   .left-sidebar, .right-sidebar {
     width: auto;
   }
 
-  /* line 787, ../sass/_overrides.scss */
+  /* line 785, ../sass/_overrides.scss */
   .content-container {
     width: auto;
   }
 
-  /* line 790, ../sass/_overrides.scss */
+  /* line 788, ../sass/_overrides.scss */
   .center-content {
     margin: 0;
   }
 
-  /* line 793, ../sass/_overrides.scss */
+  /* line 791, ../sass/_overrides.scss */
   .content-title .fa {
     padding-right: 8px;
   }
 
-  /* line 796, ../sass/_overrides.scss */
+  /* line 794, ../sass/_overrides.scss */
   .footer-block {
     margin: 0;
   }
 
-  /* line 799, ../sass/_overrides.scss */
+  /* line 797, ../sass/_overrides.scss */
   .footer-left, .footer-right {
     float: none;
     width: auto;
   }
 
   /*CAP-IT Bootstrap Responsive*/
-  /* line 804, ../sass/_overrides.scss */
+  /* line 802, ../sass/_overrides.scss */
   #edit-keys {
     font-size: 0.875em;
     height: auto;
@@ -1784,33 +1782,33 @@ article.search-result .content .field--name-field-departments {
     margin: 0;
   }
 
-  /* line 811, ../sass/_overrides.scss */
+  /* line 809, ../sass/_overrides.scss */
   .form-submit.btn-primary {
     margin: 6px;
   }
 
-  /* line 814, ../sass/_overrides.scss */
+  /* line 812, ../sass/_overrides.scss */
   .form-type-search.form-group {
     margin: 0;
   }
 
-  /* line 817, ../sass/_overrides.scss */
+  /* line 815, ../sass/_overrides.scss */
   .form-item.js-form-item.form-type-search {
     margin: 0;
   }
 
-  /* line 820, ../sass/_overrides.scss */
+  /* line 818, ../sass/_overrides.scss */
   .video-content-title {
     font-size: 1.7em;
     margin: 0;
   }
 
-  /* line 824, ../sass/_overrides.scss */
+  /* line 822, ../sass/_overrides.scss */
   .leftMobMenu {
     display: none;
   }
 
-  /* line 827, ../sass/_overrides.scss */
+  /* line 825, ../sass/_overrides.scss */
   .mob-menu-div {
     display: block;
     background-color: #3e4156;
@@ -1821,17 +1819,17 @@ article.search-result .content .field--name-field-departments {
     cursor: pointer;
   }
 
-  /* line 836, ../sass/_overrides.scss */
+  /* line 834, ../sass/_overrides.scss */
   .mob-menu-div a {
     color: #fff;
   }
 
-  /* line 839, ../sass/_overrides.scss */
+  /* line 837, ../sass/_overrides.scss */
   .mob-menu span {
     margin-left: 5px;
   }
 
-  /* line 842, ../sass/_overrides.scss */
+  /* line 840, ../sass/_overrides.scss */
   .path-search .search-api-page-block-form #edit-keys {
     font-size: 0.875em;
     padding: 10px 0 0 0;

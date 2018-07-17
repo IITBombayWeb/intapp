@@ -628,14 +628,9 @@ article.search-result .content .field--name-field-departments {
 				border-bottom: 2px solid #ccc;
 			}
 			a::before {
-				content: '';
-				height: 8px;
-				width: 8px;
-				background: #227ca7;
-				display: block;
-				position: relative;
-				top: 18px;
-				right: 22px;
+				content: '\25ba';
+				padding-right: 0.5em;
+				color:#2477b9;
 			  }
 			a{
 				display: block;
@@ -726,11 +721,14 @@ article.search-result .content .field--name-field-departments {
 			.field--name-body{
 				
 					p::before {
-						content: '\2022';
-						color: #2477b9;
-						display: inline-block;
-						width: 1em;
-						margin-left: -1em;
+						content: '';
+						height: 8px;
+						width: 8px;
+						background: #227ca7;
+						display: block;
+						position: relative;
+						top: 18px;
+						right: 22px;
 					}
 			
 			}
