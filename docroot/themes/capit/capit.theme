@@ -12,6 +12,12 @@ use Drupal\Core\Template\Attribute;
  
  
 function capit_preprocess_html(&$variables) {
+  / To add class for home page
+  $current_path = \Drupal::service('path.current')->getPath();
+  dpm($current_path);
+   $variables['attributes']['class'][] = 'class-name';
+
+
   // Add information about the number of sidebars.
   if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
     $variables['attributes']['class'][] = 'layout-two-sidebars';

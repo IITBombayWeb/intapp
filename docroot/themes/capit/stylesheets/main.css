@@ -665,7 +665,7 @@ ul li {
 .region-content .admission-block h2{
   color:#fff !important;
   padding:0px;
-  margin-bottom: 0px;
+  margin-bottom: 0px !important;
 }
 .region-content .admission-block .admission-left{
   width: 37%;
@@ -677,7 +677,8 @@ ul li {
   padding-left: 24px;
 }
 .region-content .admission-block .admission-right p{
-  margin:0px;
+  margin:2px;
+  font-size:1em;
 }
 .region-content .admi-date{
   font-weight: bold;
