@@ -15,7 +15,7 @@ function capit_preprocess_html(&$variables) {
   // To add body tag class to homepage
   $current_uri = \Drupal::request()->getRequestUri();
   if($current_uri == "/homepage" || $current_uri == "/"){
-    $variables['attributes']['class'][] = 'sorna';
+    $variables['attributes']['class'][] = 'poral-landing';
   }
   // Add information about the number of sidebars.
   if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
