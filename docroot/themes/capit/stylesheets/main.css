@@ -634,6 +634,14 @@ ul li {
 .poral-landing .main-frnt .pge-in-wdt{
   padding:0px !important;
 }
+.poral-landing .region-sidebar-first{
+  padding: 10% 5% 5% 10%;
+  background-color: #E2E2E2;
+}
+.poral-landing .main-page{
+  padding: 10% 5% 5% 4%;
+  background-color: #D4D4D4;
+}
 
 #block-findapplyaccept .block-title {
   font-weight: 400;
