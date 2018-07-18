@@ -627,6 +627,24 @@ ul li {
   left: 0;
 }
 
+.find-apply{
+  font-size:18px;
+}
+.find-apply li{
+  padding:3px;
+ }
+
+
+ .find-apply li:before {
+  margin-right: 10px;
+  content: counter(item);
+  background: lightblue;
+  border-radius: 100%;
+  color: white;
+  width: 1.2em;
+  text-align: center;
+  display: inline-block;
+}
 
 .region-content .block-block-content .field--name-body .infoicon{
   float: left;
