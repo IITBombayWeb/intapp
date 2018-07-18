@@ -12,10 +12,11 @@ use Drupal\Core\Template\Attribute;
  
  
 function capit_preprocess_html(&$variables) {
-if($current_uri == "/homepage" || $current_uri == "/"){
-  $variables['attributes']['class'][] = 'sorna';
-
-}
+  // To add body tag class to homepage
+  $current_uri = \Drupal::request()->getRequestUri();
+  if($current_uri == "/homepage" || $current_uri == "/"){
+    $variables['attributes']['class'][] = 'sorna';
+  }
   // Add information about the number of sidebars.
   if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
     $variables['attributes']['class'][] = 'layout-two-sidebars';
