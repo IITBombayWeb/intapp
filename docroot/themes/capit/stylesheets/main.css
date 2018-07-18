@@ -627,6 +627,12 @@ ul li {
   left: 0;
 }
 
+#block-findapplyaccept .block-title {
+  font-weight: 400;
+  color: #1e7ab7;
+  font-size:36px;
+}
+
 .find-apply{
   font-size:18px;
   list-style: none;
