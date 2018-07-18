@@ -777,9 +777,10 @@ a.basiccart-get-quantity:hover {
 		padding: 20px 30px;
 		border-bottom: 1.5px solid #fff;
 	}
-		#block-login input{
+		#block-login input[type=text]{
 			margin: 8px 0;
 			padding: 3px 6px;
+			width:250px;
 		}	  
 		#block-login .frm-submit{
 			background-color: #2477b9;
@@ -788,6 +789,7 @@ a.basiccart-get-quantity:hover {
 			border: 0px;
 			margin: 10px 0;
 			display: block;
+			width: 80px;
 		}
 		#block-login .loginBtn {
 		box-sizing: border-box;
@@ -847,7 +849,7 @@ a.basiccart-get-quantity:hover {
 		}			
 			
 	#block-help{
-		padding: 20px 50px;
+		padding: 20px 50px 40px 50px;
 	}
 		
 	#block-help .field--name-body p::before {
