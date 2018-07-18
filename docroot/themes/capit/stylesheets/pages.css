@@ -767,6 +767,7 @@ a.basiccart-get-quantity:hover {
 			display: block;
 			border-bottom: 2px solid #ccc;
 			padding: 8px 0;
+			color:#000;
 		}
 		.region-sidebar-second #block-quicklinks .quick-search{
 			border-bottom: none;
@@ -846,10 +847,10 @@ a.basiccart-get-quantity:hover {
 		}			
 			
 	#block-help{
-		padding: 20px 30px;
+		padding: 20px 50px;
 	}
 		
-	.field--name-body p::before {
+	#block-help .field--name-body p::before {
 		content: '';
 		height: 8px;
 		width: 8px;
