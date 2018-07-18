@@ -12,8 +12,10 @@ use Drupal\Core\Template\Attribute;
  
  
 function capit_preprocess_html(&$variables) {
-  dpm($current_uri = \Drupal::request()->getRequestUri()
-);
+if($current_uri == "/homepage" || empty(arg(0))){
+  $variables['attributes']['class'][] = 'sorna';
+
+}
   // Add information about the number of sidebars.
   if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
     $variables['attributes']['class'][] = 'layout-two-sidebars';
