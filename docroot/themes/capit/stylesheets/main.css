@@ -678,6 +678,12 @@ ul li {
   counter-increment: item;
   margin-bottom: 5px;
 }
+ .find-apply .long-text{
+  display: inline-block;
+  width: 80%;
+  vertical-align: top;
+ }
+
  .find-apply li:before {
   margin-right: 10px;
   content: counter(item);
