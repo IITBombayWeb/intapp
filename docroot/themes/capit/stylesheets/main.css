@@ -627,6 +627,14 @@ ul li {
   left: 0;
 }
 
+.poral-landing .main-container{
+  padding:0px !important;
+}
+
+.poral-landing .main-frnt .pge-in-wdt{
+  padding:0px !important;
+}
+
 #block-findapplyaccept .block-title {
   font-weight: 400;
   color: #555;
