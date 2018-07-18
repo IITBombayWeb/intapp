@@ -629,16 +629,20 @@ ul li {
 
 .find-apply{
   font-size:18px;
+  list-style: none;
+  counter-reset: item;
 }
 .find-apply li{
   padding:3px;
  }
-
-
+ .find-apply li {
+  counter-increment: item;
+  margin-bottom: 5px;
+}
  .find-apply li:before {
   margin-right: 10px;
   content: counter(item);
-  background: lightblue;
+  background: #227ca7;
   border-radius: 100%;
   color: white;
   width: 1.2em;
