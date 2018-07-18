@@ -12,7 +12,7 @@ use Drupal\Core\Template\Attribute;
  
  
 function capit_preprocess_html(&$variables) {
-if($current_uri == "/homepage" || empty(arg(0))){
+if($current_uri == "/homepage" || $current_uri == "/"){
   $variables['attributes']['class'][] = 'sorna';
 
 }
