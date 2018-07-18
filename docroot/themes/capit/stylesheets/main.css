@@ -670,13 +670,14 @@ ul li {
   font-size:18px;
   list-style: none;
   counter-reset: item;
+  margin-top: 24px;
 }
 .find-apply li{
   padding:3px;
  }
  .find-apply li {
   counter-increment: item;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
  .find-apply .long-text{
   display: inline-block;
