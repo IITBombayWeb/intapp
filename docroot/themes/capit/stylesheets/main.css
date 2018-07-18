@@ -634,6 +634,18 @@ ul li {
   font-family: 'Roboto Condensed', sans-serif;
 }
 
+.find-heading{
+  width: 100%;
+  display: inline-block;
+  margin-bottom: 25px;
+}
+
+#block-findapplyaccept .infoicon{
+  float: left;
+  width: 60px;
+  margin-right: 20px;
+}
+
 .find-apply{
   font-size:18px;
   list-style: none;
