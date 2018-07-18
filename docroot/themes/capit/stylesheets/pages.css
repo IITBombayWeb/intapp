@@ -769,6 +769,9 @@ a.basiccart-get-quantity:hover {
 			padding: 8px 0;
 			color:#000;
 		}
+		.region-sidebar-second #block-quicklinks a:hover{
+            text-decoration: none;
+		}
 		.region-sidebar-second #block-quicklinks .quick-search{
 			border-bottom: none;
 		}
