@@ -665,6 +665,7 @@ ul li {
 .region-content .admission-block h2{
   color:#fff !important;
   padding:0px;
+  margin-bottom: 0px;
 }
 .region-content .admission-block .admission-left{
   width: 37%;
