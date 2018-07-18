@@ -628,10 +628,15 @@ ul li {
 }
 
 
-
+.region-content .block-block-content .field--name-body .infoicon{
+  float: left;
+  width: 60px;
+  margin-right: 20px;
+}
 .region-content .block-block-content .field--name-body h2{
   color:#555;
   font-size: 36px;
+  margin-bottom: 10px;
 }
 .region-content .block-block-content .field--name-body a{
   display:block;
