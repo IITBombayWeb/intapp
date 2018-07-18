@@ -641,7 +641,7 @@ ul li {
   
 }
 .poral-landing .main-page{
-  padding: 3.5% 5% 10% 4%;
+  padding: 3.5% 5% 14% 4%;
   background-color: #D4D4D4;
   
 }
@@ -679,7 +679,7 @@ ul li {
   counter-increment: item;
   margin-bottom: 6px;
 }
- .find-apply .long-text{
+ .find-apply span{
   display: inline-block;
   width: 80%;
   vertical-align: top;
