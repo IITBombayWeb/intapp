@@ -455,9 +455,10 @@ h2{
 	text-indent: -9999px;
 }
 .apl-pck .basiccart-delete-image a:before {
-  content: '\f056';
+  /* content: '\f056';
 	font: normal normal normal 22px/1 FontAwesome;
-	color: #D8210B;
+	color: #D8210B; */
+	content: url('/themes/capit/images/infoicon.png');
 }
 /**search result */
 
