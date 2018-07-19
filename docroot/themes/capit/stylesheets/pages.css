@@ -755,7 +755,7 @@ a.basiccart-get-quantity:hover {
 		padding: 20px 30px;
 	}
 	.region-sidebar-second #block-quicklinks h2{
-			border-bottom: 2px solid #ccc;
+			border-bottom: 1.2px solid #ccc;
 		}
 		.region-sidebar-second #block-quicklinks a::before {
 			content: '\25ba';
@@ -764,7 +764,7 @@ a.basiccart-get-quantity:hover {
 		  }
 		  .region-sidebar-second #block-quicklinks a{
 			display: block;
-			border-bottom: 2px solid #ccc;
+			border-bottom: 1.2px solid #ccc;
 			padding: 8px 0;
 			color:#000;
 			font-size: 1.17em;
