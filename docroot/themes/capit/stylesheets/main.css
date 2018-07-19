@@ -636,7 +636,7 @@ ul li {
   padding:0px !important;
 }
 .poral-landing .sidebar-left{
-  padding: 3.5% 5% 5% 4%;
+  padding: 3.5% 3% 5% 3.8%;
   background-color: #E2E2E2;
   
 }
@@ -671,6 +671,7 @@ ul li {
   list-style: none;
   counter-reset: item;
   margin-top: 24px;
+  padding-left: 0;
 }
 .find-apply li{
   padding:3px;
