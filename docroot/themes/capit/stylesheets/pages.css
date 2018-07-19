@@ -856,6 +856,7 @@ a.basiccart-get-quantity:hover {
 			
 	#block-help{
 		padding: 20px 50px 40px 50px;
+		font-size: 1.17em;
 	}
 		
 	#block-help .field--name-body p::before {
