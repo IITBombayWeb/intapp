@@ -682,7 +682,7 @@ ul li {
 }
  .find-apply span{
   display: inline-block;
-  width: 90%;
+  width: 88%;
   vertical-align: top;
  }
 
@@ -695,6 +695,9 @@ ul li {
   width: 1.389em;
   text-align: center;
   display: inline-block;
+}
+.poral-landing .main-page{
+margin-bottom: 0px;
 }
 
 .region-content .block-block-content .field--name-body .infoicon{
