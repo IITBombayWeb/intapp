@@ -768,6 +768,7 @@ a.basiccart-get-quantity:hover {
 			border-bottom: 2px solid #ccc;
 			padding: 8px 0;
 			color:#000;
+			font-size: 1.17em;
 		}
 		.region-sidebar-second #block-quicklinks a:hover{
             text-decoration: none;
@@ -832,7 +833,8 @@ a.basiccart-get-quantity:hover {
 		}
 		#block-login .loginBtn--facebook:before {
 			border-right: #364e92 1px solid;
-			background: url('/themes/capit/images/fb.png') 6px 6px no-repeat;
+			background: url('/themes/capit/images/fb.png') 5px 5px no-repeat;
+			background-size: 25px 25px;
 		}
 		#block-login .loginBtn--facebook:hover,
 		.loginBtn--facebook:focus {
@@ -845,6 +847,7 @@ a.basiccart-get-quantity:hover {
 		#block-login .loginBtn--google:before {
 			border-right: #BB3F30 1px solid;
 			background: url('/themes/capit/images/google-plus.png') 6px 6px no-repeat;
+			background-size: 26px 26px;
 		}
 		#block-login .loginBtn--google:hover,
 		.loginBtn--google:focus {
