@@ -158,7 +158,8 @@ ul li {
   padding: 0;
 }
 .layout-no-sidebars  .cm-pg .cnt-pg {
-  width: 100%;
+  margin: 0 auto;
+  width: 70%;
   float: none;
 }
 /*----------------------------dropdown---------------------*/
@@ -775,11 +776,19 @@ margin-bottom: 0px;
   and (-webkit-min-device-pixel-ratio: 1.5) {
     .region-content .admission-block .admission-left {
       width: 48%;
-      float: left;
-      border-right: 2px solid #fff;
   }
 }
 
+@media only screen 
+  and (min-device-width: 768px) 
+  and (max-device-width: 1024px) 
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    .region-content .admission-block{
+      width: 72%;
+      margin: 0 auto;
+      margin-top: 30px;
+  }
+}
 
 @media only screen and (min-width: 479px) {
   .featured-inn .ft-cm {
