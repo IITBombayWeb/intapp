@@ -2,6 +2,6 @@
 
 function term_migration_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
 
-dpm($entity);
+//dpm($entity);
 
 }

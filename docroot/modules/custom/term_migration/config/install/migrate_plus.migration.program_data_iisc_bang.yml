@@ -75,6 +75,8 @@ source:
     url: http://www.iisc.ac.in
     text: IISc, Bangalore
     packet: 1
+    conj : in
+    seprator : ,
 # Destination.
 destination:
   # We want to import data from a CSV file, but how do we save it?
@@ -101,7 +103,9 @@ process:
     plugin: concat
     source:
       - Institute Name
+      - conj
       - Department Name
+      - seprator
       - Degree
       - Specialisation
     delimiter: ' '
