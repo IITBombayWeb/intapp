@@ -408,11 +408,7 @@ body {
 .left-menu li {
 	list-style: none;
 }
-.region-content .block-iitinap-general,.region-content nav {
-	background-color: #fff;
-	margin: 30px 0;
-    padding: 15px;
-}
+
 .region-content section h2,.region-content nav h2 {
 	border-bottom: 1px solid;
 	margin: 0;
@@ -517,14 +513,14 @@ video {
 	display: none;
 }
 .path-search aside {
-	 margin-top: 190px;
+	//  margin-top: 190px;
 }
 .path-search .search-api-page-block-form {
 	margin-top: 100px;
 }
 article.search-result {
 	background-color: #fff;
-	margin-top: 38px;
+	// margin-top: 38px;
 }
 article.search-result .field--type-addtocart {
 	position: relative;
@@ -593,12 +589,7 @@ article.search-result .content .field--name-field-departments {
 	max-height: 470px;
     overflow: hidden;
 }
-.addtocart-link-class .button {
-	background-color: #2fd1aa;
-	text-transform: uppercase;
-	border-radius: 0;
-    padding: 0 6px;
-}
+
 .views-view-grid .views-row .views-col {
 	width: auto !important;
 }
@@ -716,16 +707,19 @@ article.search-result .content .field--name-field-departments {
 		}
 		
 		#block-help{
-			padding: 20px 30px;
+			padding: 20px 50px;
 
 			.field--name-body{
 				
 					p::before {
-						content: '\2022';
-						color: #2477b9;
-						display: inline-block;
-						width: 1em;
-						margin-left: -1em;
+						content: '';
+						height: 8px;
+						width: 8px;
+						background: #227ca7;
+						display: block;
+						position: relative;
+						top: 15px;
+						right: 22px;
 					}
 			
 			}
