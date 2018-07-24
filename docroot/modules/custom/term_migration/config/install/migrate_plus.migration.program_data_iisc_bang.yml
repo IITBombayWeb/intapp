@@ -103,11 +103,8 @@ process:
     plugin: concat
     source:
       - Institute Name
-      - conj
       - Department Name
-      - seprator
-      - Degree
-      - Specialisation
+      
     delimiter: ' '
   #Degree field
   field_degree: Degree
