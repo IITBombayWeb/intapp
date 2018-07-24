@@ -104,7 +104,7 @@ process:
     source:
       - Institute Name
       - Department Name
-      
+      - text
     delimiter: ' '
   #Degree field
   field_degree: Degree
