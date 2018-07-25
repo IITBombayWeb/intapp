@@ -745,7 +745,9 @@ a.basiccart-get-quantity:hover {
     padding-top: 28px;
 }
 .region-sidebar-second .workflow-transition-field-status-form--2 #workflow-transition-field-status-form-2{
-    font-size:16px;
+	font-size:16px;
+	padding: 26px;
+    padding-top: 0px;
 }
 /*quick links */
 
