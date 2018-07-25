@@ -388,7 +388,7 @@ h2{
 	color: #333;
 	font-size: 16px;
 	background: #fff;
-	width: 54%;
+	width: 85%;
 	margin-top: 75px;
 	position: relative;
 }
@@ -783,7 +783,7 @@ a.basiccart-get-quantity:hover {
 		#block-login .login-textbox{
 			margin: 8px 0;
 			padding: 3px 6px;
-			width:250px;
+			width:100%;
 		}	  
 		#block-login .frm-submit{
 			background-color: #2477b9;

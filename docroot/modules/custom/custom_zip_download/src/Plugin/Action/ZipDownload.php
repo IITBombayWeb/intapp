@@ -30,7 +30,7 @@ class ZipDownload extends ActionBase {
    */
   public function executeMultiple(array $entities) {
   
-    
+    dpm($entities);
     # create new zip opbject
     $zip = new \ZipArchive();
     # create a temp file & open it
