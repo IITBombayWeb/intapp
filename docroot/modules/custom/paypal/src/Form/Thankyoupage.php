@@ -299,7 +299,7 @@ class Thankyoupage extends FormBase {
           
 					// <div class="prof-img alm width_25">' . $image . '</div>
 					// <div class="alm width_25"><span class="label">Gender:</span>' . $gender . '</div>
-					// <div class="alm width_25"><span class="label">Date of Birth:</span>' . $dob . '</div>
+					// <div class="alm width_25"><span class="label">Date Of Birth:</span>' . $dob . '</div>
           //     </div>
           
           <div class="personal_info">
