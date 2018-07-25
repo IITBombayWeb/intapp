@@ -740,13 +740,13 @@ margin-bottom: 0px;
   margin-bottom: 0px !important;
 }
 .region-content .admission-block .admission-left{
-  width: 37%;
+  width: 40%;
   float: left;
-  border-right: 2px solid #fff;
+  border-right: 1px solid #fff;
 }
 .region-content .admission-block .admission-right{
   float:left;
-  padding-left: 24px;
+  padding-left: 28px;
 }
 .region-content .admission-block .admission-right p{
   margin:2px;
@@ -756,68 +756,13 @@ margin-bottom: 0px;
   font-weight: bold;
   color: yellow;
 }
-.social_login {
-  margin: 0 auto;
-  text-align: center;
-  display: table;
-  padding: 15px 0 22px 0;
+.user-login-form .social_login{
+  margin: 12px 0;
 }
-.social_login a:first-child {
-  background: #3C66C4;
-  color: #fff;
-  padding: 7px 30px;
-  font-weight: 600;
-  font-size: 1em;
-  position: relative;
-  display: block;
-  width: 207px;
-  text-decoration: none;
-}
-.social_login a:first-child:before {
-  content: "\f09a";
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  vertical-align: middle;
-  font-size: 1.5em;
-  margin: 10px;
-  position: absolute;
-  left: 0;
-  top: -2px;
-}
-.social_login a:last-child {
-  background: #CF4332;
-  color: #fff;
-  padding: 6px 39px;
-  position: relative;
-  width: 207px;
-  margin: 15px 0;
-  display: block;
-  text-decoration: none;
-}
-.social_login a:last-child:before {
-  content: " ";
-  background: url(../images/google-ico.png) no-repeat no-repeat left/auto;
-  padding: 0;
-  height: 30px;
-  width: 30px;
-  margin: 0 2px 0 12px;
-  background-size: 27px;
-  position: absolute;
-  left: -2px;
-  top: 0;
-}
-.dmt {
-  margin-top: 20px;
-}
-.dpt {
-  padding-top: 20px;
+.user-login-form .social_login a{
+  padding-right: 20px;
 }
 
-.user-login-form .form-actions.form-wrapper .form-submit {
-  display: table;
-  text-align: center;
-  margin: 0 auto;
-}
 
 @media only screen and (max-width: 480px) {
   .region-content .admission-block .admission-left{
@@ -1016,18 +961,6 @@ and (orientation : portrait) {
   .path-contact .cnt-pg input[type="checkbox"] {
     left: 0;
   }
-  .cnt-us-lt {
-    float: left;
-    width: 50%;
-}
-.cnt-us h3 {
-  font-size: 1.3em;
-}
-.cnt-us-rt {
-  float: right;
-  width: 50%;
-}
-
 }
 @media only screen and (min-width: 920px) {
   .sidebar-left, .sidebar-right {
