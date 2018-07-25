@@ -318,7 +318,7 @@ h2{
 	background: #fff;
 	color: #000;
 	opacity: 1;
-	max-height: 320px;
+	max-height: 400px;
 	padding: 10px;
 	width: 85%;
 	margin-top: 75px;
@@ -458,6 +458,18 @@ h2{
 	color: #D8210B; */
 	content: url('/themes/capit/images/delete.png');
 }
+
+.apl-frm .view-filters.views-exposed-form .form-inline a {
+    
+ 
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+	background: #1a7dc1;
+    width: 70px;
+    padding: 6px 0;s;
+}
+
 /**search result */
 
 .search-result  {
