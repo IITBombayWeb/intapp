@@ -75,8 +75,8 @@ class ZipDownload extends ActionBase {
         $path = str_replace('private:/',$base_path,$dest_1);
         //$dest_1 = str_replace('private:/',$base_path,$dest_1);
         $zip->addEmptyDir($get_users[0]['value'].'-'.$user_name[0]['value']);
-        $zip->addFile($src, $user_name[0]['value'].'/'.$filename);
-        $options = array('add_path' => $user_name[0]['value'].'/', 'remove_all_path' => TRUE);
+        $zip->addFile($src, $get_users[0]['value'].'-'.$user_name[0]['value'].'/'.$filename);
+        $options = array('add_path' => $get_users[0]['value'].'-'.$user_name[0]['value'].'/', 'remove_all_path' => TRUE);
       $zip->addGlob('../private/student_documents/general_documents/'.$get_users[0]['value'].'/'.'*.{txt,doc,pdf,docx}', GLOB_BRACE, $options);
       $query = \Drupal::entityQuery('profile')
         ->condition('status', 1)
