@@ -469,6 +469,11 @@ h2{
 	color: #fff;
     margin: 20px 0;
 }
+.apl-frm .view-empty{
+	font-size: 2em;
+    text-align: center;
+    margin: 30px;
+}
 
 /**search result */
 
