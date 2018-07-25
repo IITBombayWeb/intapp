@@ -107,8 +107,6 @@ process:
       - constants/conj
       - Specialisation
       - constants/seprator
-      - Department Name
-      - constants/comma
       - Institute Name
       
     delimiter: ' '
