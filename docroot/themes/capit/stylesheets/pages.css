@@ -1228,6 +1228,21 @@ input[type="file"] {
   margin: 0;
   width: 100%;
 }
+.block-basiccart > .basiccart-grid > .basiccart-grid:before {
+	content: "\f00d";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+/*--adjust as necessary--*/
+    color: #000;
+    font-size: 18px;
+    padding-right: 0.5em;
+    position: absolute;
+    top: 10px;
+	left: 0;
+	float: right;
+}
 
 @media only screen and (max-width: 768px) {
 #workflow-transition-field-status-form-2 .form-save-default-button{
