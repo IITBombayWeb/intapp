@@ -77,7 +77,6 @@ source:
     packet: 1
     conj : in
     seprator : at
-    comma : , 
 # Destination.
 destination:
   # We want to import data from a CSV file, but how do we save it?
@@ -107,8 +106,6 @@ process:
       - constants/conj
       - Specialisation
       - constants/seprator
-      - Department Name
-      - constants/comma
       - Institute Name
       
     delimiter: ' '
