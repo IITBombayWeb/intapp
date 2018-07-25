@@ -254,7 +254,7 @@ class Thankyoupage extends FormBase {
 					     <div class="addr-title"><h4>' . $first_name . ' ' . $sur_name . '</h4></div>
 					     <div class="alm width_50"><span class="label">Mobile:</span> <span class="ml">' . $fpa_mob_num . '</span></div>
 					     <div class="alm width_50"><span class="label">Email:</span> <span class="ml">' . $Email . '</span></div>
-					     <div><span class="label">Communication address:</span> <span class="ml">' . $field_permanent_address . ',' . $fpa_city . '-' . $fpa_pin . ',' . $fpa_state . ',' . $fpa_country . '</span></div>  
+					     <div><span class="label">Communication address (testing):</span> <span class="ml">' . $field_permanent_address . ',' . $fpa_city . '-' . $fpa_pin . ',' . $fpa_state . ',' . $fpa_country . '</span></div>  
 					</div>
 					<div class="prof-img alm width_25">' . $image . '</div>
 					<div class="alm width_25"><span class="label">Gender:</span>' . $gender . '</div>
