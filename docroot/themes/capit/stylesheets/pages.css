@@ -1228,7 +1228,7 @@ input[type="file"] {
   margin: 0;
   width: 100%;
 }
-.msg-pck-act .bscart-pop:before {
+.msg-pck-act .cart-view > .bscart-pop:before {
 	content: "\f00d";
     font-family: FontAwesome;
     font-style: normal;
