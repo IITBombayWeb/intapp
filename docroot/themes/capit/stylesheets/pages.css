@@ -783,7 +783,7 @@ a.basiccart-get-quantity:hover {
 		#block-login .login-textbox{
 			margin: 8px 0;
 			padding: 3px 6px;
-			width:250px;
+			width:100%;
 		}	  
 		#block-login .frm-submit{
 			background-color: #2477b9;
