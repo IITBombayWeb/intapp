@@ -774,6 +774,10 @@ margin-bottom: 0px;
     float: left;
     padding-left: 0px;
   }
+  .search-result .field--name-add-to-cart{
+    position: relative;
+  }
+
 }
 
 @media only screen 
