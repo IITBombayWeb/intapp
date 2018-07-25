@@ -30,7 +30,7 @@ class ZipDownload extends ActionBase {
    */
   public function executeMultiple(array $entities) {
   
-    
+    dpm($entities);
     # create new zip opbject
     $zip = new \ZipArchive();
     # create a temp file & open it
@@ -74,8 +74,7 @@ class ZipDownload extends ActionBase {
         $dest_1 = $new_folder.'/'.$user_name[0]['value'];
         $path = str_replace('private:/',$base_path,$dest_1);
         //$dest_1 = str_replace('private:/',$base_path,$dest_1);
-        //$zip->addEmptyDir($user_name[0]['value']);
-        $zip->addEmptyDir('test-1234');
+        $zip->addEmptyDir($user_name[0]['value']);
         $zip->addFile($src, $user_name[0]['value'].'/'.$filename);
         $options = array('add_path' => $user_name[0]['value'].'/', 'remove_all_path' => TRUE);
       $zip->addGlob('../private/student_documents/general_documents/'.$get_users[0]['value'].'/'.'*.{txt,doc,pdf,docx}', GLOB_BRACE, $options);
