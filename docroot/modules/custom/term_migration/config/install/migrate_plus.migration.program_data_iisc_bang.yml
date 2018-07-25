@@ -76,7 +76,8 @@ source:
     text: IISc, Bangalore
     packet: 1
     conj : in
-    seprator : ,
+    seprator : at
+    comma : , 
 # Destination.
 destination:
   # We want to import data from a CSV file, but how do we save it?
@@ -102,12 +103,13 @@ process:
   title: 
     plugin: concat
     source:
-      - Specialisation
+      - Degree
       - constants/conj
-      - Institute Name
+      - Specialisation
       - constants/seprator
       - Department Name
-      - Degree
+      - constants/comma
+      - Institute Name
       
     delimiter: ' '
   #Degree field
