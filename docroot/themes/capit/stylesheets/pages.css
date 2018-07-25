@@ -740,7 +740,13 @@ a.basiccart-get-quantity:hover {
 }
 
 
-
+.region-sidebar-second .workflow-transition-field-status-form--2 .block-title{
+    padding-left: 28px;
+    padding-top: 28px;
+}
+.region-sidebar-second .workflow-transition-field-status-form--2 #workflow-transition-field-status-form-2{
+    font-size:16px;
+}
 /*quick links */
 
 .region-sidebar-second{
@@ -1488,6 +1494,6 @@ input[type="file"] {
 		margin: 0 auto;
 	}
 	.profile-form h3 {
-		margin: 20px -70px;
+		margin: 20px 0px;
 	}
 }
