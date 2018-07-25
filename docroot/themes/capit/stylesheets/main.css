@@ -804,6 +804,12 @@ margin-bottom: 0px;
   left: -2px;
   top: 0;
 }
+.dmt {
+  margin-top: 20px;
+}
+.dpt {
+  padding-top: 20px;
+}
 
 
 @media only screen and (max-width: 480px) {
@@ -999,6 +1005,18 @@ and (orientation : portrait) {
   .path-contact .cnt-pg input[type="checkbox"] {
     left: 0;
   }
+  .cnt-us-lt {
+    float: left;
+    width: 50%;
+}
+.cnt-us h3 {
+  font-size: 1.3em;
+}
+.cnt-us-rt {
+  float: right;
+  width: 50%;
+}
+
 }
 @media only screen and (min-width: 920px) {
   .sidebar-left, .sidebar-right {
