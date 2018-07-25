@@ -737,7 +737,7 @@ function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_sta
     $form['social_login']=array(
           '#type' => 'markup',
           '#markup' => '<div class="social_login"><a href="/user/simple-fb-connect">Continue with Facebook</a><a href="/user/login/google">Continue with Google</a></div>',
-
+		  '#weight' => -10,
     	);
 }
 
