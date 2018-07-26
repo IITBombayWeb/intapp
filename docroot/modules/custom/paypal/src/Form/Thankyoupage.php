@@ -242,24 +242,122 @@ class Thankyoupage extends FormBase {
 					     }
 					     .ml {
 						    margin-left : 5px;
-					     }
+               }
+               .personal_info{
+                max-width:820px;
+                margin:0 auto;
+                height: 300px;
+            }
+            .personal_block_left{
+                width:70%;
+                height:300px;
+                float:left;
+                background: #eee;
+            }
+            .personal_block_right{
+                width:30%;
+                height:300px;
+                background:#ddd;
+                float: right;
+            }
+            .gd_main{
+                float: left;
+                width: 100%;
+                margin: 5px 0;
+            }
+            .gd_block-left{
+                width:150px;
+            }
+            .personal_block_left .gd_block-left{
+                margin-right: 24px;
+               float:left;
+            }
+            .personal_block_left .gd_block-right{
+               
+               float:left;
+            }
+            .stud_address{
+                float:left;
+            }
+            .stud_address table{
+                border:none;
+            }
+            .stud_address table td{
+                background: #fff !important;
+                border:none;
+            }
 				      </style>
 				 </head>
 				    <body>
 				      <div class="header middle">
 					     <h2>International Student Application to PG Programs 2017</h2>
 				      </div>
-				      <div class="address-wrap">
-					<div class="addr-inner-wrap alm width_75">
-					     <div class="addr-title"><h4>' . $first_name . ' ' . $sur_name . '</h4></div>
-					     <div class="alm width_50"><span class="label">Mobile:</span> <span class="ml">' . $fpa_mob_num . '</span></div>
-					     <div class="alm width_50"><span class="label">Email:</span> <span class="ml">' . $Email . '</span></div>
-					     <div><span class="label">Communication address:</span> <span class="ml">' . $field_permanent_address . ',' . $fpa_city . '-' . $fpa_pin . ',' . $fpa_state . ',' . $fpa_country . '</span></div>  
-					</div>
-					<div class="prof-img alm width_25">' . $image . '</div>
-					<div class="alm width_25"><span class="label">Gender:</span>' . $gender . '</div>
-					<div class="alm width_25"><span class="label">Date of Birth:</span>' . $dob . '</div>
-				      </div>
+            
+              <div class="personal_info">
+              <div class="personal_block_left">
+                <h3>student name</h3>
+                <div class="gd_main">
+                 <div class="gd_block-left">
+                    <span>
+                        Gender :
+                    </span>
+                    <span>
+                          Male
+                    </span>
+                 </div>
+
+                 <div class="gd_block-right">
+                      <span class="">
+                          Date of Birth :
+                      </span>
+                      <span class="">
+                            01/01/2018
+                      </span>
+                   </div>
+                   </div>
+
+                   <div class="gd_main">
+                          <div class="gd_block-left">
+                             <span>
+                                 Mobile No :
+                             </span>
+                             <span>
+                                   9940507985
+                             </span>
+                          </div>
+       
+                          <div class="gd_block-right">
+                               <span class="">
+                                   Email :
+                               </span>
+                               <span class="">
+                                     sornaraj@unimity.com
+                               </span>
+                            </div>
+                            </div>
+
+                            <div class="stud_address">
+                                <table>
+                                    <tr>
+                                        <td valign="top">
+                                              Communication Address :
+                                        </td>
+                                        <td>
+                                              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                              tempincididunt ut labore et dolore magna aliqua. Ut enim ad minim venia ,Chennai62546,TN,India
+                                        </td>
+                                    </tr>
+                                </table>
+                          
+                               
+                            </div>
+              </div>
+              <div class="personal_block_right">
+                <div class="prof-img alm width_25"><img src="http://www.m2kindia.com/wp-content/uploads/2016/07/dummy-logo.png"></div>
+              </div>
+           </div>
+
+              
 				      <div class="main-container">
 					<h3>Programs Applied</h3> ' . $perform_pgm_apply_result . '
                                         <h3>Proficiency in English </h3>' . $proficiency_eng_result . '
