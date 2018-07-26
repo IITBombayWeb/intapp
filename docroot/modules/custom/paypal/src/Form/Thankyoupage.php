@@ -249,6 +249,7 @@ class Thankyoupage extends FormBase {
                .personal_info{
                 max-width:820px;
                 margin:0 auto;
+                height:300px;
             }
             .personal_block_left{
                 width:70%;
