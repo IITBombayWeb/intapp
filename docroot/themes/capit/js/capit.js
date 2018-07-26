@@ -77,7 +77,7 @@ $(document).ready(function() {
     }
   }
 
-  var chksize =  $(".tabs .tabs--primary li").length();
+  var chksize =  $(".tabs .tabs--primary li").length;
   
 
   console.log("chksize length is---->"+chksize);
