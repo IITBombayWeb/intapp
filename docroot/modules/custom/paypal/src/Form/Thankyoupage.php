@@ -288,82 +288,71 @@ class Thankyoupage extends FormBase {
 				      <div class="header middle">
 					     <h2>International Student Application to PG Programs 2017</h2>
 				      </div>
-              <div class="address-wrap">
               
-					// <div class="addr-inner-wrap alm width_75">
-					//      <div class="addr-title stu_name"><h4>' . $first_name . ' ' . $sur_name . '</h4></div>
-					//      <div class="alm width_50"><span class="label">Mobile:</span> <span class="ml">' . $fpa_mob_num . '</span></div>
-					//      <div class="alm width_50"><span class="label">Email:</span> <span class="ml">' . $Email . '</span></div>
-					//      <div><span class="label">Communication address (testing):</span> <span class="ml">' . $field_permanent_address . ',' . $fpa_city . '-' . $fpa_pin . ',' . $fpa_state . ',' . $fpa_country . '</span></div>  
-          // </div>
-          
-					// <div class="prof-img alm width_25">' . $image . '</div>
-					// <div class="alm width_25"><span class="label">Gender:</span>' . $gender . '</div>
-					// <div class="alm width_25"><span class="label">Date Of Birth:</span>' . $dob . '</div>
-          //     </div>
-          
-          <div class="personal_info">
-          <div class="personal_block_left">
-            <h3>' . $first_name . ' ' . $sur_name . '</h3>
-            <div class="gd_main">
-             <div class="gd_block-left">
-                <span>
-                    Gender :
-                </span>
-                <span>
-                ' . $gender . '
-                </span>
+              <div class="personal_info">
+                <div class="personal_block_left">
+                  <h3>student name</h3>
+                  <div class="gd_main">
+                   <div class="gd_block-left">
+                      <span>
+                          Gender :
+                      </span>
+                      <span>
+                            Male
+                      </span>
+                   </div>
+
+                   <div class="gd_block-right">
+                        <span class="">
+                            Date of Birth :
+                        </span>
+                        <span class="">
+                              01/01/2018
+                        </span>
+                     </div>
+                     </div>
+
+                     <div class="gd_main">
+                            <div class="gd_block-left">
+                               <span>
+                                   Mobile :
+                               </span>
+                               <span>
+                                     9940507985
+                               </span>
+                            </div>
+         
+                            <div class="gd_block-right">
+                                 <span class="">
+                                     Email :
+                                 </span>
+                                 <span class="">
+                                       sornaraj@unimity.com
+                                 </span>
+                              </div>
+                              </div>
+
+                              <div class="stud_address">
+                                  <table>
+                                      <tr>
+                                          <td valign="top">
+                                                Communication Address :
+                                          </td>
+                                          <td>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim venia ,Chennai62546,TN,India
+                                          </td>
+                                      </tr>
+                                  </table>
+                            
+                                 
+                              </div>
+                </div>
+                <div class="personal_block_right">
+                
+                </div>
              </div>
-
-             <div class="gd_block-right">
-                  <span class="">
-                      Date of Birth :
-                  </span>
-                  <span class="">
-                  ' . $dob . '
-                  </span>
-               </div>
-               </div>
-
-               <div class="gd_main">
-                      <div class="gd_block-left">
-                         <span>
-                             Mobile :
-                         </span>
-                         <span>
-                         ' . $fpa_mob_num . '
-                         </span>
-                      </div>
-   
-                      <div class="gd_block-right">
-                           <span class="">
-                               Email :
-                           </span>
-                           <span class="">
-                           ' . $Email . '
-                           </span>
-                        </div>
-                        </div>
-
-                        <div class="stud_address">
-                            <table>
-                                <tr>
-                                    <td valign="top">
-                                          Communication Address :
-                                    </td>
-                                    <td>
-                                    ' . $field_permanent_address . ',' . $fpa_city . '-' . $fpa_pin . ',' . $fpa_state . ',' . $fpa_country . '
-                                    </td>
-                                </tr>
-                            </table>
-                      
-                           
-                        </div>
-          </div>
-          <div class="personal_block_right">
-          
-          </div>
-       </div>
+         
               
 
 
