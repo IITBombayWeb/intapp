@@ -76,6 +76,12 @@ $(document).ready(function() {
       clearTimeout(menulistbtn_timeout);
     }
   }
+
+  var chksize =  $(".tabs .tabs--primary li").length();
+  
+
+  console.log("chksize length is---->"+chksize);
+
 });
 
 $(window).on('load', function(){
