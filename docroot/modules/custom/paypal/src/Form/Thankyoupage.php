@@ -315,7 +315,7 @@ class Thankyoupage extends FormBase {
                      <div class="gd_main">
                             <div class="gd_block-left">
                                <span>
-                                   Mobile :
+                                   Mobile No :
                                </span>
                                <span>
                                      9940507985
