@@ -79,8 +79,10 @@ $(document).ready(function() {
 
   var chksize =  $(".tabs .tabs--primary li").length;
   
-
-  console.log("chksize length is---->"+chksize);
+    if(chksize ==1){
+      $(".tabs .tabs--primary li").hide();
+    }
+ 
 
 });
 
