@@ -339,7 +339,7 @@ class Thankyoupage extends FormBase {
                                                 Communication Address :
                                           </td>
                                           <td>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                                Lorem ipsum dolor sit amet,sectetur adipiscing elit, sed do eiusmod
                                                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim venia ,Chennai62546,TN,India
                                           </td>
                                       </tr>
