@@ -54,6 +54,7 @@
     theme.has_glyphicons ? 'has-glyphicons',
     user.hasPermission('administer')  ? 'admin',
     user.isAnonymous() ? 'anony',
+    user.hasRole('student') ? 'stu-view',
   ]
 %}
 <!DOCTYPE html>
