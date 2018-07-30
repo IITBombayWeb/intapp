@@ -38,7 +38,7 @@ class Thankyoupage extends FormBase {
         $tx = $_GET['tx'];
         module_load_include('inc', 'paypal');
         $tx_status = pdt_token($tx);
-        if ($tx_status == 'SUCCESS') {
+        //if ($tx_status == 'SUCCESS') {
         
           if ($result['payment_status'] == 'pending' && $result['before_amount'] == $_GET['amt']) {
             $time = time();
@@ -243,49 +243,7 @@ class Thankyoupage extends FormBase {
 					     .ml {
 						    margin-left : 5px;
                }
-               .personal_info{
-                max-width:820px;
-                margin:0 auto;
-                height: 300px;
-            }
-            .personal_block_left{
-                width:70%;
-                height:300px;
-                float:left;
-                background: #eee;
-            }
-            .personal_block_right{
-                width:30%;
-                height:300px;
-                background:#ddd;
-                float: right;
-            }
-            .gd_main{
-                float: left;
-                width: 100%;
-                margin: 5px 0;
-            }
-            .gd_block-left{
-                width:150px;
-            }
-            .personal_block_left .gd_block-left{
-                margin-right: 24px;
-               float:left;
-            }
-            .personal_block_left .gd_block-right{
-               
-               float:left;
-            }
-            .stud_address{
-                float:left;
-            }
-            .stud_address table{
-                border:none;
-            }
-            .stud_address table td{
-                background: #fff !important;
-                border:none;
-            }
+          
 				      </style>
 				 </head>
 				    <body>
@@ -293,70 +251,125 @@ class Thankyoupage extends FormBase {
 					     <h2>International Student Application to PG Programs 2017</h2>
 				      </div>
             
-              <div class="personal_info">
-              <div class="personal_block_left">
-                <h3>student name</h3>
-                <div class="gd_main">
-                 <div class="gd_block-left">
-                    <span>
-                        Gender :
-                    </span>
-                    <span>
-                          Male
-                    </span>
-                 </div>
-
-                 <div class="gd_block-right">
-                      <span class="">
-                          Date of Birth :
-                      </span>
-                      <span class="">
-                            01/01/2018
-                      </span>
-                   </div>
-                   </div>
-
-                   <div class="gd_main">
-                          <div class="gd_block-left">
-                             <span>
-                                 Mobile No :
-                             </span>
-                             <span>
-                                   9940507985
-                             </span>
-                          </div>
-       
-                          <div class="gd_block-right">
-                               <span class="">
-                                   Email :
-                               </span>
-                               <span class="">
-                                     sornaraj@unimity.com
-                               </span>
-                            </div>
-                            </div>
-
-                            <div class="stud_address">
-                                <table>
-                                    <tr>
-                                        <td valign="top">
-                                              Communication Address :
+              <div class="testing">
+             
+              <table style="border:none;border:none;position:relative;left:12px;padding-left:-5px;">
+              <tr style="border:none;padding-left:0px;">
+                <td style="background-color:#fff;width:485px;border:none;padding-left:-15px;" valign="top">
+  
+                  <table style="border:none;padding-left:0px;">
+                      <tr style="border:none">
+                          <td style="height:22px;border:none;background-color:#fff"><b>' . $first_name . ' ' . $sur_name . '</b></td>
+                      </tr>
+                  </table>
+  
+                  <table style="border:none;position:relative;left-20px:padding-left:0px;">
+                      <tr style="border:none">
+                          <td style="width:215px;border:none;background-color:#fff;padding-left:0px;">
+                            <table style="border:none">
+                                <tr style="border:none;background-color:#fff">
+                                    <td style="width:80px;border:none;background-color:#fff"">
+                                        Gender
+                                    </td>
+                                    <td style="width:10px;border:none;background-color:#fff">
+                                        :
+                                    </td>
+                                    <td style="width:80px;border:none;background-color:#fff">
+                                          ' . $gender . '
+                                    </td>
+                                </tr>
+                            </table>
+                              
+                          </td>
+  
+                          <td style="width:200px;border:none;background-color:#fff;padding-left:0px;">
+                                  <table style="border:none">
+                                      <tr style="border:none">
+                                          <td style="width:80px;border:none;background-color:#fff">
+                                              DOB
+                                          </td>
+                                          <td style="width:10px;border:none;background-color:#fff">
+                                                  :
+                                          </td>
+                                          <td style="width:80px;border:none;background-color:#fff">
+                                                  ' . $dob . '
+                                          </td>
+                                      </tr>
+                                  </table>
+                                    
+                                </td>
+                      </tr>
+  
+  
+                      <tr>
+                              <td style="width:200px;border:none;background-color:#fff;padding-left:0px;">
+                                <table style="border:none">
+                                    <tr style="border:none">
+                                        <td style="width:80px;border:none;background-color:#fff;">
+                                            Mobile No
                                         </td>
-                                        <td>
-                                              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                              tempincididunt ut labore et dolore magna aliqua. Ut enim ad minim venia ,Chennai62546,TN,India
+                                        <td style="width:10px;border:none;background-color:#fff">
+                                            :
+                                        </td>
+                                        <td style="width:80px;border:none;background-color:#fff">
+                                              ' . $fpa_mob_num . '
                                         </td>
                                     </tr>
                                 </table>
-                          
-                               
-                            </div>
-              </div>
-              <div class="personal_block_right">
-                <div class="prof-img alm width_25"><img src="http://www.m2kindia.com/wp-content/uploads/2016/07/dummy-logo.png"></div>
-              </div>
-           </div>
+                                  
+                              </td>
+      
+                              <td style="width:180px;border:nonel;background-color:#fff;padding-left:0px;">
+                                      <table style="border:none">
+                                          <tr style="border:none">
+                                              <td style="width:80px;border:none;background-color:#fff">
+                                                Email
+                                              </td>
+                                              <td style="width:10px;border:none;background-color:#fff">
+                                                      :
+                                              </td>
+                                              <td style="width:80px;border:none;background-color:#fff">
+                                                      ' . $Email . '
+                                              </td>
+                                          </tr>
+                                      </table>
+                                        
+                                    </td>
+                          </tr>
+  
+                          <tr style="border:none">
+                                  <td style="width:540px;margin-top:10px;border:none;background-color:#fff;padding-left:0px;" colspan="2">
+                                    <table style="margin-top:25px;border:none">
+                                        <tr style="border:none">
+                                            <td style="width:120px;border:none;background-color:#fff" valign="top;">
+                                                  Communication Address
+                                            </td>
+                                            <td style="width:10p;border:none;background-color:#fff" valign="top">
+                                                :
+                                            </td>
+                                            <td style="width:395px;border:none;background-color:#fff" valign="top">
+                                          ' . $field_permanent_address . ',' . $fpa_city . '-' . $fpa_pin . ',' . $fpa_state . ',' . $fpa_country . '
+                                            </td>
+                                        </tr>
+                                    </table>
+                                      
+                                  </td>
+          
+                                  
+                              </tr>
+                  </table>
+                 
+  
+                </td>
+  
+  
+  
+                <td style="background-color:#fff;width:246px;height:200px;border:none" valign="top">' . $image . '</td>
+              </tr>
+              
+            </table>
 
+               </div>
               
 				      <div class="main-container">
 					<h3>Programs Applied</h3> ' . $perform_pgm_apply_result . '
@@ -491,7 +504,7 @@ class Thankyoupage extends FormBase {
             // Application Already created.
             $notify_msg = "Your transaction has been completed. Please Contact Admin for any assistance.";
           }
-        }
+       // }
         elseif ($tx_status == 'FAIL') {
           drupal_set_message("Invalid Transaction Please Contact Admin for any assistance.");
         }
