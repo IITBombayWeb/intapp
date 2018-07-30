@@ -1262,13 +1262,14 @@ input[type="file"] {
     font-style: normal;
     font-weight: normal;
     text-decoration: inherit;
-    color: #000;
+	color: #000;
+	margin-top: -30px;s
     font-size: 18px;
     padding: 15px;
     float: right;
 }
 .cart-view .empt-cart .bscart-pop .mCustomScrollBox{
-	margin-top:0px
+	margin-top:30px
 }
 
 .msg-pck-act .bscart-pop .mCustomScrollBox{
