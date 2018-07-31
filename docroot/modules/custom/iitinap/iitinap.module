@@ -729,17 +729,14 @@ function iitinap_form_views_exposed_form_alter(array &$form, FormStateInterface 
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
-
 function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
     // Alter login form and add own custom submit handler.
     $form['#submit'][] = '_iitinap_user_login_form_submit';
     $form['social_login']=array(
           '#type' => 'markup',
-          '#markup' => '<div class="social_login">
-          <a href="/user/simple-fb-connect"><button class="fb-button">Continue with Facebook</button></a>
-          <a href="/user/login/google"><button class="google-btn">Continue with Google</button></a></div>',
+          '#markup' => '<div class="social_login"><a href="/user/simple-fb-connect"><button class="fb-button">Continue with Facebook</button></a><a href="/user/login/google"><button class="google-btn">Continue with Google</button></a></div>',
 		  '#weight' => -10,
     	);
 }
