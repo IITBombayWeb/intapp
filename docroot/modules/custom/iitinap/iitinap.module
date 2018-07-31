@@ -736,7 +736,7 @@ function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_sta
     $form['#submit'][] = '_iitinap_user_login_form_submit';
     $form['social_login']=array(
           '#type' => 'markup',
-          '#markup' => '<div class="social_login"><a class="fb-button" href="/user/simple-fb-connect">Continue with Facebook</a><a class="google-btn"href="/user/login/google">Continue with Google</a></div>',
+          '#markup' => '<div class="social_login"><a class="fb-button" href="/user/simple-fb-connect">Continue with Facebook</a><a class="google-btn" href="/user/login/google">Continue with Google</a></div>',
 		  '#weight' => -10,
     	);
 }
