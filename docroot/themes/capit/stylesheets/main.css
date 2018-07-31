@@ -781,6 +781,8 @@ margin-bottom: 0px;
   display: block;
   text-align: center;
   margin: 0 auto;
+  margin-bottom: 4px;
+  border-radius: 4px;
 }
 
 .user-login-form .social_login .fb-button:before{
@@ -808,6 +810,7 @@ background-size: 25px 25px;
   display: block;
   text-align: center;
   margin: 0 auto;
+  border-radius: 4px;
 }
 
 .user-login-form .social_login .google-btn:before{
