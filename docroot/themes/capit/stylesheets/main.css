@@ -789,20 +789,21 @@ background-size: 25px 25px;
 
 
 .user-login-form .social_login .google-btn{
-  background: #DD4B39;
-   box-sizing: border-box;
-    position: relative;
-    margin: 0.2em;
-    padding: 0 15px 0 46px;
-    border: none;
-    text-align: left;
-    line-height: 34px;
-    white-space: nowrap;
-    border-radius: 0em;
-    font-size: 0.938em;
-    color: #FFF;
-    width: 189.52px;
-    margin: 8px 0;
+  background-color: #DD4B39;
+  text-shadow: 0 -1px 0 #354C8C;
+  box-sizing: border-box;
+  position: relative;
+  margin: 0.2em;
+  padding: 10px 15px 10px 46px;
+  border: none;
+  text-align: left;
+  line-height: 34px;
+  white-space: nowrap;
+  border-radius: 0em;
+  font-size: 0.938em;
+  color: #FFF;
+  width: 189.52px;
+  margin: 8px 0;
 }
 
 .user-login-form .social_login .google-btn:before{
