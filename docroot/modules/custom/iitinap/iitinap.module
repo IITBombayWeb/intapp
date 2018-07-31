@@ -689,7 +689,7 @@ function iitinap_node_view(array &$build, EntityInterface $node, EntityViewDispl
 }
 
 /*
- * Implements hook_menu_local_tasks_alter().
+ * Implement hook_menu_local_tasks_alter().
  */
 function iitinap_menu_local_tasks_alter(&$data, $route_name) {
        $data['tabs'][0]['entity.profile.user_profile_form:profile.type.student_application_']['#link']['title'] = "Profile Details";
