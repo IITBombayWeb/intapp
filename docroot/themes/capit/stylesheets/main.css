@@ -768,7 +768,7 @@ margin-bottom: 0px;
   box-sizing: border-box;
   position: relative;
   margin: 0.2em;
-  padding: 10px 15px 10px 46px;
+  padding: 5px 15px 5px 46px;
   border: none;
   text-align: left;
   line-height: 34px;
@@ -776,8 +776,11 @@ margin-bottom: 0px;
   border-radius: 0em;
   font-size: 0.938em;
   color: #FFF;
-  width: 189.52px;
+  width: 300px;
   margin: 8px 0;
+  display: block;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .user-login-form .social_login .fb-button:before{
@@ -787,14 +790,12 @@ background-size: 25px 25px;
 }
 
 
-
 .user-login-form .social_login .google-btn{
   background-color: #DD4B39;
-  text-shadow: 0 -1px 0 #354C8C;
   box-sizing: border-box;
   position: relative;
   margin: 0.2em;
-  padding: 10px 15px 10px 46px;
+  padding: 5px 15px 5px 46px;
   border: none;
   text-align: left;
   line-height: 34px;
@@ -802,8 +803,11 @@ background-size: 25px 25px;
   border-radius: 0em;
   font-size: 0.938em;
   color: #FFF;
-  width: 189.52px;
+  width: 300px;
   margin: 8px 0;
+  display: block;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .user-login-form .social_login .google-btn:before{
