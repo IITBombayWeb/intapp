@@ -28,7 +28,7 @@ function excel_import_export_form_alter(&$form, FormStateInterface $form_state) 
     }
     //dpm($form['created']['max']['#title']->get('string'));
     $form['created']['min']['#title'] = 'From';
-    //$form['created']['max']['#title'] = 'To';
+    dpm($form['created']['max']['#title']->render());
     $form['created']['min']['#type'] = 'date';
     $form['created']['max']['#type'] = 'date';
     if($form['#id'] != 'views-exposed-form-application-pdf-download-page-1'){
