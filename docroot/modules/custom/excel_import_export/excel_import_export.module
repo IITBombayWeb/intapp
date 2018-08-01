@@ -26,8 +26,10 @@ function excel_import_export_form_alter(&$form, FormStateInterface $form_state) 
     if (isset($_GET['created'])) {
       $url = $url . '&min=' . $created['min'] . '&max=' . $created['max'];
     }
+    dpm($form['created']['min']['#title']);
+    dpm($form['created']['max']['#title']);
     $form['created']['min']['#title'] = 'From';
-    $form['created']['max']['#title']['string'] = 'To';
+    //$form['created']['max']['#title']['string'] = 'To';
     $form['created']['min']['#type'] = 'date';
     $form['created']['max']['#type'] = 'date';
     if($form['#id'] != 'views-exposed-form-application-pdf-download-page-1'){
