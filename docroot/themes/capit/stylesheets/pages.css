@@ -1186,12 +1186,7 @@ input[type="file"] {
 	padding: 10px;
 }
 
-/*
-* form Required
-*/
-.form-required:after {
-	
-}
+
 
 /*
 * work Flow Stauts
@@ -1263,7 +1258,7 @@ input[type="file"] {
     font-weight: normal;
     text-decoration: inherit;
 	color: #000;
-	margin-top: -30px;s
+	margin-top: -30px;
     font-size: 18px;
     padding: 15px;
     float: right;
