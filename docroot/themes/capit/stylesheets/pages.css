@@ -1287,6 +1287,10 @@ input[type="file"] {
 .msg-pck-act .bscart-pop .mCustomScrollBox{
     margin-top: 30px;
 }
+.mCSB_container table tbody tr td:last-child{
+	color: #1a7dc1;
+    text-decoration: underline;s
+}
 
 @media only screen and (max-width: 768px) {
 #workflow-transition-field-status-form-2 .form-save-default-button{
