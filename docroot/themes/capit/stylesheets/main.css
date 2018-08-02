@@ -797,7 +797,7 @@ background-size: 25px 25px;
 }
 
 
-.user-login-form .social_login .google-btn{
+.user-login-form .social_login .gle-buttton{
   background-color: #DD4B39;
   box-sizing: border-box;
   position: relative;
@@ -817,7 +817,7 @@ background-size: 25px 25px;
   border-radius: 4px;
 }
 
-.user-login-form .social_login .google-btn:before{
+.user-login-form .social_login .gle-buttton:before{
   border-right: #BB3F30 1px solid;
   background: url(/themes/capit/images/google-plus.png) 6px 6px no-repeat;
   background-size: 26px 26px;
