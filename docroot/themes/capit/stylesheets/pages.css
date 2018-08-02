@@ -862,6 +862,7 @@ a.basiccart-get-quantity:hover {
 		.loginBtn--facebook:focus {
 			background-color: #5B7BD5;
 			background-image: linear-gradient(#5B7BD5, #4864B1);
+			text-decoration: none;
 		}
 		#block-login .loginBtn--google {
 			background: #DD4B39;
@@ -878,6 +879,7 @@ a.basiccart-get-quantity:hover {
 		#block-login .loginBtn--google:hover,
 		.loginBtn--google:focus {
 			background: #E74B37;
+			text-decoration: none;
 		}	
 		.login_btn{
 			display: block;
@@ -887,7 +889,10 @@ a.basiccart-get-quantity:hover {
 			margin-top: 15px;
 			padding: 6px;
 			text-align: center;  
-		 }		
+		 }	
+		 .login_btn:hover{
+		text-decoration: none	 
+		 }
 			
 	#block-help{
 		padding: 10px 50px 40px 50px;
@@ -1275,13 +1280,13 @@ input[type="file"] {
     font-weight: normal;
     text-decoration: inherit;
 	color: #000;
-	margin-top: -30px;s
+	margin-top: -30px;
     font-size: 18px;
     padding: 15px;
     float: right;
 }
 .cart-view .empt-cart .bscart-pop .mCustomScrollBox{
-	margin-top:30px
+	margin-top:30px;
 }
 
 .msg-pck-act .bscart-pop .mCustomScrollBox{

@@ -288,7 +288,7 @@ ul li {
   margin:0;
   bottom: 0;
 }
-.ft-mnu{}
+
 .ft-mnu ul{
   padding: 5px 0;
   margin: 0;
@@ -783,6 +783,9 @@ margin-bottom: 0px;
   margin-bottom: 4px;
   border-radius: 4px;
 }
+.user-login-form .social_login .fb-button:hover{
+  text-decoration: none;
+}
 
 .social_login .fb-button:before {
   content: "";
@@ -834,6 +837,10 @@ background-size: 25px 25px;
   text-align: center;
   margin: 0 auto;
   border-radius: 4px;
+}
+
+.user-login-form .social_login .gle-buttton:hover{
+  text-decoration: none;
 }
 
 .user-login-form .social_login .gle-buttton:before{
