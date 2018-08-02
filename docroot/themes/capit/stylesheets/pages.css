@@ -913,7 +913,7 @@ a.basiccart-get-quantity:hover {
 /*
 * Table Style
 */
-.mCSB_container table tbody tr td:last-child{
+.mCSB_container table tbody tr td:last-child a{
 	color: #1a7dc1;
     text-decoration: underline;
 }
