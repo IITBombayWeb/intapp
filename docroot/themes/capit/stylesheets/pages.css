@@ -321,8 +321,9 @@ h2{
 	padding: 10px;
 	width: 85%;
 	margin-top: 75px;
-	height: 701px;
-	/* overflow: scroll; */
+	height: 653px;
+    overflow: hidden;
+    padding-bottom: 54px;
 }
 .msg-pck-act .basic-cart-pck  {
   visibility: visible;
