@@ -1298,7 +1298,7 @@ input[type="file"] {
 .form-actions,.payment-success{
 text-align: center;
 }
-.cart-x {
+.basiccart-grid div.cart-x {
 	display: none;
 }
 .tle{
