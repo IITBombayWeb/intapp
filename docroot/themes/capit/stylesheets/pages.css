@@ -1292,88 +1292,9 @@ input[type="file"] {
 .msg-pck-act .bscart-pop .mCustomScrollBox{
     margin-top: 30px;
 }
-
-.user-login-form .social_login .fb-button{
-	background-color: #4C69BA;
-	background-image: linear-gradient(#4C69BA, #3B55A0);
-	text-shadow: 0 -1px 0 #354C8C;
-	box-sizing: border-box;
-	position: relative;
-	margin: 0.2em;
-	padding: 5px 15px 5px 46px;
-	border: none;
-	text-align: left;
-	line-height: 27px;
-	white-space: nowrap;
-	font-size: 0.938em;
-	color: #FFF;
-	width: 300px;
-	margin: 8px 0;
-	display: block;
-	text-align: center;
-	margin: 0 auto;
-	margin-bottom: 4px;
-	border-radius: 4px;
-  }
-  .user-login-form .social_login .fb-button:hover{
-	text-decoration: none;
-  }
-  
-  .social_login .fb-button:before {
-	content: "";
-	box-sizing: border-box;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 34px;
-	height: 100%;
-  }
-  .social_login .gle-buttton:before {
-	content: "";
-	box-sizing: border-box;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 34px;
-	height: 100%;
-  }
-  
-  .social_login .fb-button:before{
-  border-right: #364e92 1px solid;
-  background: url(/themes/capit/images/fb.png) 5px 5px no-repeat;
-  background-size: 25px 25px;
-  }
-  
-  .user-login-form .social_login .gle-buttton{
-	background-color: #DD4B39;
-	box-sizing: border-box;
-	position: relative;
-	margin: 0.2em;
-	padding: 5px 15px 5px 46px;
-	border: none;
-	text-align: left;
-	line-height: 27px;
-	white-space: nowrap;
-	font-size: 0.938em;
-	color: #FFF;
-	width: 300px;
-	margin: 8px 0;
-	display: block;
-	text-align: center;
-	margin: 0 auto;
-	border-radius: 4px;
-  }
-  
-  .user-login-form .social_login .gle-buttton:hover{
-	text-decoration: none;
-  }
-  
-  .user-login-form .social_login .gle-buttton:before{
-	border-right: #BB3F30 1px solid;
-	background: url(/themes/capit/images/google-plus.png) 6px 6px no-repeat;
-	background-size: 26px 26px;
-  }
-
+.form-actions{
+text-align: center;
+}
 @media only screen and (max-width: 768px) {
 #workflow-transition-field-status-form-2 .form-save-default-button{
 	font-size:12px
@@ -1589,7 +1510,6 @@ input[type="file"] {
 	}
 	.user-form .field--name-user-picture + .form-actions.form-group {
 		margin-top: 20px;
-		text-align: center;
 	}
 	.user-form .panel-default {
 		width: 280px;
