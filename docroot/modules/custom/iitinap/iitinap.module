@@ -689,7 +689,7 @@ function iitinap_node_view(array &$build, EntityInterface $node, EntityViewDispl
 }
 
 /*
- * Implements hook_menu_local_tasks_alter().
+ * Implement hook_menu_local_tasks_alter().
  */
 function iitinap_menu_local_tasks_alter(&$data, $route_name) {
        $data['tabs'][0]['entity.profile.user_profile_form:profile.type.student_application_']['#link']['title'] = "Profile Details";
@@ -732,11 +732,13 @@ function iitinap_form_views_exposed_form_alter(array &$form, FormStateInterface 
  * Implements hook_form_FORM_ID_alter().
  */
 function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-    // Alter login form and add own custom submit handler.
+    // Alter login form and add own custom submit handler
     $form['#submit'][] = '_iitinap_user_login_form_submit';
     $form['social_login']=array(
           '#type' => 'markup',
-          '#markup' => '<div class="social_login"><a href="/user/simple-fb-connect">Continue with Facebook</a><a href="/user/login/google">Continue with Google</a></div>',
+		  '#markup' => '<div class="social_login">
+		  <a class="fb-button" href="/user/simple-fb-connect">Continue with Facebook</a>
+		  <a class="gle-buttton" href="/user/login/google">Continue with Google</a></div>',
 		  '#weight' => -10,
     	);
 }

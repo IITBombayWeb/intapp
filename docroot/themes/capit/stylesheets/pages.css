@@ -321,6 +321,9 @@ h2{
 	padding: 10px;
 	width: 85%;
 	margin-top: 75px;
+	height: 653px;
+    overflow: hidden;
+    padding-bottom: 54px;
 }
 .msg-pck-act .basic-cart-pck  {
   visibility: visible;
@@ -821,12 +824,11 @@ a.basiccart-get-quantity:hover {
 		#block-login .loginBtn {
 		box-sizing: border-box;
 		position: relative;
-		/* width: 13em;  - apply for fixed size */
 		margin: 0.2em;
-		padding: 0 15px 0 46px;
+		padding: 8px 15px 4px 49px;
 		border: none;
 		text-align: left;
-		line-height: 34px;
+		line-height: 40px;
 		white-space: nowrap;
 		border-radius: 0em;
 		font-size: 0.938em;
@@ -863,10 +865,15 @@ a.basiccart-get-quantity:hover {
 		.loginBtn--facebook:focus {
 			background-color: #5B7BD5;
 			background-image: linear-gradient(#5B7BD5, #4864B1);
+			text-decoration: none;
 		}
 		#block-login .loginBtn--google {
 			background: #DD4B39;
 		}
+       #block-login .loginBtn--google {
+           background: #DD4B39;
+           padding-right: 28px;
+        }
 		#block-login .loginBtn--google:before {
 			border-right: #BB3F30 1px solid;
 			background: url('/themes/capit/images/google-plus.png') 6px 6px no-repeat;
@@ -875,7 +882,20 @@ a.basiccart-get-quantity:hover {
 		#block-login .loginBtn--google:hover,
 		.loginBtn--google:focus {
 			background: #E74B37;
-		}			
+			text-decoration: none;
+		}	
+		.login_btn{
+			display: block;
+			width: 80px;
+			background: #1e7bb8;
+			color: #fff;
+			margin-top: 15px;
+			padding: 6px;
+			text-align: center;  
+		 }	
+		 .login_btn:hover{
+		text-decoration: none	 
+		 }
 			
 	#block-help{
 		padding: 10px 50px 40px 50px;
@@ -896,6 +916,11 @@ a.basiccart-get-quantity:hover {
 /*
 * Table Style
 */
+.mCSB_container table tbody tr td:last-child a{
+	color: #1a7dc1;
+    text-decoration: underline;
+}
+
 .table > thead > tr > th a, .table > tbody > tr > td a {
 	color: #333;
 	font-family: 'Ek Mukta', sans-serif;
@@ -1186,12 +1211,7 @@ input[type="file"] {
 	padding: 10px;
 }
 
-/*
-* form Required
-*/
-.form-required:after {
-	
-}
+
 
 /*
 * work Flow Stauts
@@ -1263,19 +1283,21 @@ input[type="file"] {
     font-weight: normal;
     text-decoration: inherit;
 	color: #000;
-	margin-top: -30px;s
+	margin-top: -30px;
     font-size: 18px;
     padding: 15px;
     float: right;
 }
 .cart-view .empt-cart .bscart-pop .mCustomScrollBox{
-	margin-top:30px
+	margin-top:30px;
 }
 
 .msg-pck-act .bscart-pop .mCustomScrollBox{
     margin-top: 30px;
 }
-
+.form-actions,.payment-success{
+text-align: center;
+}
 @media only screen and (max-width: 768px) {
 #workflow-transition-field-status-form-2 .form-save-default-button{
 	font-size:12px
