@@ -783,7 +783,7 @@ a.basiccart-get-quantity:hover {
 	}
 	.region-sidebar-second #block-workflowtransitionform{
 		border-bottom: 1.5px solid #fff;
-		/* padding: 10px 30px 20px 30px; */
+		padding: 0;
 	}
 	.region-sidebar-second #block-quicklinks h2{
 			border-bottom: 1.2px solid #ccc;
