@@ -48,9 +48,11 @@ function capit_preprocess_block(&$vars) {
 function capit_preprocess_page(&$variables) {
   $utility = \Drupal\basiccart\Utility::get_cart();
 	$variables['cntcart'] = count($utility['cart']);
-	// $userCurrent = \Drupal::currentUser();
- //  if($userCurrent->isAnonymous()){
- //    $variables['anony'] = 'no-view-anyms';
- //   }
+  //Cart
+  $user = \Drupal::currentUser()->getRoles();
+  if(!in_array("office", $user)) {
+    $Role = true;
+    $variables['cart_role'] = $Role;
+  } 
 }
 

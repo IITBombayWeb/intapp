@@ -77,9 +77,11 @@
       {% if page.header_second %}
       {% block header_second %}
           <div class="mnu-lst">
-              <div class="msg-pck">
-                  <a><img src="/themes/capit/images/packet-icon.png"><span class="circle" id="cnt">{{cntcart}}</span></a>
-                </div>
+                  {% if cart_role  %}
+                    <div class="msg-pck">
+                      <a><img src="/themes/capit/images/packet-icon.png"><span class="circle" id="cnt">{{cntcart}}</span></a>
+                    </div>
+                  {% endif %}
                   {% if logged_in %}
                       <div class="lgn-lst">
                         <span class="dsk-lgn">Settings<i class="fa fa-caret-down"></i></span>

@@ -597,15 +597,27 @@ function workflow_url_get_field_name() {
  * @return mixed|string
  */
 function workflow_url_get_operation() {
-  $url = \Drupal\Core\Url::fromRoute('<current>');
-  // The last part of the path is the operation: edit, workflow, devel.
-  $url_parts = explode('/', $url->toString());
-  $operation = array_pop($url_parts);
-  // Except for view pages.
-  if (is_numeric($operation) || $operation == 'view') {
-    $operation = '';
+  // $url = \Drupal\Core\Url::fromRoute('<current>');
+  // // The last part of the path is the operation: edit, workflow, devel.
+  // $url_parts = explode('/', $url->toString());
+  // $operation = array_pop($url_parts);
+  // // Except for view pages.
+  // if (is_numeric($operation) || $operation == 'view') {
+  //   $operation = '';
+  // }
+  // return $operation;
+  /*
+   * Hack Info:
+   * Issue: Block visibility not working for node alias.
+   * To resolve the issue commented the above code and replaced with below.
+   * By Uday
+   */
+  $routename = \Drupal::routeMatch()->getRouteName();
+  if($routename == "entity.node.canonical") {
+    return "";
+  } else {
+    return $routename;
   }
-  return $operation;
 }
 
 /**
