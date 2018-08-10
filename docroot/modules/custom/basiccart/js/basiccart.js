@@ -78,7 +78,7 @@
                 if(cc){
                 window.location.href = jQuery(this).attr('href');
                  }
-                //console.log(cc);
+                console.log("ccc1",cc);
                });
                 $('#edit-actions-submit').submit(function(e){
                   e.preventDefault();
@@ -100,7 +100,7 @@ var cc = confirm("Do you wish to remove the packet from the cart?");
 if(cc){
 window.location.href = jQuery(this).attr('href');
 }
-//console.log(cc);
+console.log("ccc2",cc);
 });
 }
   })
