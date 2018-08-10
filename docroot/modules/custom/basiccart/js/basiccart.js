@@ -73,6 +73,7 @@
           ,
           complete: function(){
                 $('.basiccart-delete-image-image a').click(function(e){
+                  console.log("click1");
                 e.preventDefault();
                 var cc = confirm("Do you wish to remove the packet from the cart?");
                 if(cc){
@@ -95,6 +96,7 @@
       });
       if($('span').hasClass('basiccart-delete-image-image')){
 $('.basiccart-delete-image-image a').click(function(e){
+  console.log("click2");
 e.preventDefault();
 var cc = confirm("Do you wish to remove the packet from the cart?");
 if(cc){
