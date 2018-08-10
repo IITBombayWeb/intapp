@@ -321,7 +321,7 @@ h2{
 	padding: 10px;
 	width: 85%;
 	margin-top: 75px;
-	height: 653px;
+	max-height: 70%;
     overflow: hidden;
     padding-bottom: 54px;
 }
