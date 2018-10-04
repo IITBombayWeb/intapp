@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\site_verify\Form\SiteVerifyDeleteForm.
- */
-
 namespace Drupal\site_verify\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
@@ -38,7 +33,7 @@ class SiteVerifyDeleteForm extends ConfirmFormBase {
   public function getQuestion() {
     if (!empty($this->siteVerify)) {
       $record = \Drupal::service('site_verify_service')->siteVerifyLoad($this->siteVerify);
-      return $this->t('Are you sure you want to delete the site verification %label?', array('%label' => $record['engine']['name']));
+      return $this->t('Are you sure you want to delete the site verification %label?', ['%label' => $record['engine']['name']]);
     }
   }
 
@@ -66,10 +61,10 @@ class SiteVerifyDeleteForm extends ConfirmFormBase {
 
     $form = parent::buildForm($form, $form_state);
 
-    $form['record'] = array(
+    $form['record'] = [
       '#type' => 'value',
       '#value' => $record,
-    );
+    ];
 
     return $form;
   }
@@ -79,15 +74,15 @@ class SiteVerifyDeleteForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $record = $form_state->getValue('record');
-    db_delete('site_verify')
+    \Drupal::database()->delete('site_verify')
       ->condition('svid', $record['svid'])
       ->execute();
-    drupal_set_message(t('Verification for %engine has been deleted.', array(
+    drupal_set_message(t('Verification for %engine has been deleted.', [
       '%engine' => $record['engine']['name'],
-    )));
-    \Drupal::logger('site_verify')->notice(t('Verification for %engine deleted.', array(
+    ]));
+    \Drupal::logger('site_verify')->notice(t('Verification for %engine deleted.', [
       '%engine' => $record['engine']['name'],
-    )));
+    ]));
     $form_state->setRedirect('site_verify.verifications_list');
 
     // Set the menu to be rebuilt.

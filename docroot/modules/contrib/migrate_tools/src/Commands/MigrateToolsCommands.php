@@ -12,10 +12,8 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\migrate\Plugin\RequirementsInterface;
 use Drupal\migrate_tools\Drush9LogMigrateMessage;
-use Drupal\migrate_tools\DrushLogMigrateMessage;
 use Drupal\migrate_tools\MigrateExecutable;
 use Drush\Commands\DrushCommands;
-use Drush\Drush;
 
 /**
  * Migrate Tools drush commands.

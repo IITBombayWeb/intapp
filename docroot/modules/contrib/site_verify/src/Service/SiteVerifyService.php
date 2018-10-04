@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\site_verify\Service\SiteVerifyService.
- */
-
 namespace Drupal\site_verify\Service;
 
 use \Drupal\Component\Utility\Unicode;
@@ -28,7 +23,7 @@ class SiteVerifyService {
    *   An array of the site verification record, or FALSE if not found.
    */
   public function siteVerifyLoad($svid) {
-    $record = db_select('site_verify', 'site_verify')
+    $record = \Drupal::database()->select('site_verify', 'site_verify')
       ->fields('site_verify')
       ->condition('svid', $svid)
       ->execute()
@@ -66,19 +61,19 @@ class SiteVerifyService {
       \Drupal::moduleHandler()->alter('site_verify_engine', $engines);
       // Merge the default values for each engine entry.
       foreach ($engines as $key => $engine) {
-        $engines[$key] += array(
+        $engines[$key] += [
           'key' => $key,
-          'name' => Unicode::ucfirst($engine->name),
+          'name' => Unicode::ucfirst($engine['name']),
           'file' => FALSE,
           'file_example' => FALSE,
-          'file_validate' => array(),
+          'file_validate' => [],
           'file_contents' => FALSE,
           'file_contents_example' => FALSE,
-          'file_contents_validate' => array(),
+          'file_contents_validate' => [],
           'meta' => FALSE,
           'meta_example' => FALSE,
-          'meta_validate' => array(),
-        );
+          'meta_validate' => [],
+        ];
       }
     }
 

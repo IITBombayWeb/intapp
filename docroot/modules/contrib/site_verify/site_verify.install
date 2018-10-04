@@ -9,45 +9,45 @@
  * Implements hook_scheam().
  */
 function site_verify_schema() {
-  $schema['site_verify'] = array(
+  $schema['site_verify'] = [
     'description' => '',
-    'fields' => array(
-      'svid' => array(
+    'fields' => [
+      'svid' => [
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'Primary Key: Unique site verification ID.',
-      ),
-      'engine' => array(
+      ],
+      'engine' => [
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
         'description' => '',
-      ),
-      'file' => array(
+      ],
+      'file' => [
         'type' => 'varchar',
         'length' => 255,
         'default' => '',
         'description' => '',
-      ),
-      'file_contents' => array(
+      ],
+      'file_contents' => [
         'type' => 'text',
         'not null' => TRUE,
         'size' => 'big',
         'description' => '',
-      ),
-      'meta' => array(
+      ],
+      'meta' => [
         'type' => 'text',
         'not null' => TRUE,
         'description' => '',
-      ),
-    ),
-    'primary key' => array('svid'),
-    'indexes' => array(
-      'engine' => array('engine'),
-    ),
-  );
+      ],
+    ],
+    'primary key' => ['svid'],
+    'indexes' => [
+      'engine' => ['engine'],
+    ],
+  ];
 
   return $schema;
 }

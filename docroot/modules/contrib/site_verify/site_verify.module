@@ -9,39 +9,39 @@
  * Implements hook_site_verify_engine_info().
  */
 function site_verify_site_verify_engine_info() {
-  $engines['google'] = array(
+  $engines['google'] = [
     'name' => t('Google'),
     'file' => TRUE,
     'file_contents' => TRUE,
     'file_example' => 'google1234567890abcdef.html',
     'meta' => TRUE,
     'meta_example' => '<meta name="google-site-verification" content="NbwaW3WIDp_SPsSsfl78Ive7F34-znm9lxLJXjuWNGE" />',
-  );
-  $engines['yahoo'] = array(
+  ];
+  $engines['yahoo'] = [
     'name' => t('Yahoo!'),
     'file' => TRUE,
     'file_contents' => TRUE,
     'meta' => TRUE,
-  );
-  $engines['bing'] = array(
+  ];
+  $engines['bing'] = [
     'name' => t('Bing'),
     'file' => TRUE,
     'file_contents' => TRUE,
     'meta' => TRUE,
-  );
-  $engines['yandex'] = array(
+  ];
+  $engines['yandex'] = [
     'name' => t('Yandex'),
     'file' => TRUE,
     'file_example' => 'yandex_b5741169901f6c20.txt',
     'meta' => TRUE,
     'meta_example' => '<meta name="yandex-verification" content="b5741169901f6c20" />',
-  );
-  $engines['custom'] = array(
+  ];
+  $engines['custom'] = [
     'name' => t('Custom verification'),
     'file' => TRUE,
     'file_contents' => TRUE,
     'meta' => TRUE,
-  );
+  ];
   return $engines;
 }
 
@@ -52,8 +52,8 @@ function site_verify_site_verify_engine_info() {
  */
 function site_verify_page_attachments(array &$page) {
   if (\Drupal::service('path.matcher')->isFrontPage()) {
-    $meta_tags = db_select('site_verify', 'site_verify')
-      ->fields('site_verify', array('svid', 'meta'))
+    $meta_tags = \Drupal::database()->select('site_verify', 'site_verify')
+      ->fields('site_verify', ['svid', 'meta'])
       ->condition('meta', '', '<>')
       ->execute()
       ->fetchAllKeyed();
@@ -62,16 +62,16 @@ function site_verify_page_attachments(array &$page) {
       preg_match('/name="(.*)" content/', $meta_tag, $name);
       preg_match('/content="(.*)"/', $meta_tag, $content);
 
-      $data = array(
+      $data = [
         '#type' => 'html_tag',
         '#tag' => 'meta',
-        '#attributes' => array(
+        '#attributes' => [
           'name' => $name[1],
           'content' => $content[1],
-        ),
-      );
+        ],
+      ];
 
-      $page['#attached']['html_head'][] = array($data, 'site_verify:' . $svid);
+      $page['#attached']['html_head'][] = [$data, 'site_verify:' . $svid];
     }
   }
 }

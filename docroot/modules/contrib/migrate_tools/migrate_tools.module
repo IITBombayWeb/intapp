@@ -9,7 +9,8 @@
  * Implements hook_entity_type_build().
  */
 function migrate_tools_entity_type_build(array &$entity_types) {
-  // Inject our UI into the general migration and migration group config entities.
+  // Inject our UI into the general migration and migration group config
+  // entities.
   /** @var \Drupal\Core\Config\Entity\ConfigEntityType[] $entity_types */
   $entity_types['migration']
     ->set('admin_permission', 'administer migrations')
