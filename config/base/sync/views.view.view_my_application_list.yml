@@ -1798,7 +1798,7 @@ display:
           empty: true
           tokenize: false
           content:
-            value: '<h3>No Result Fount.</h3>'
+            value: '<h3>No Results Found.</h3>'
             format: basic_html
           plugin_id: text
     cache_metadata:

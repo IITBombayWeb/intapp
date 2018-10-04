@@ -10,12 +10,12 @@ field_name: field_details_of_academic_record
 entity_type: profile
 type: tablefield
 settings:
-  cols: '8'
+  cols: '9'
   column_date: '0'
   column_select: '1'
   numbers: '4'
   col_opt:
-    - "Jan|Jan\r\nFeb|Feb\r\nMar|Mar\r\nApr|Apr\r\nMay|May\r\nJun|Jun\r\nJul|Jul\r\nAug|Aug\r\nSep|Sep\r\nOct|Oct\r\nNov|Nov\r\nDec|Dec"
+    - "January|January\r\nFebruary|February\r\nMarch|March\r\nApril|April\r\nMay|May\r\nJune|June\r\nJuly|July\r\nAugust|August\r\nSeptember|September\r\nOctober|October\r\nNovember|November\r\nDecember|December"
 module: tablefield
 locked: false
 cardinality: 1

@@ -10,6 +10,7 @@ dependencies:
     - field.field.profile.student_application_.field_country_school
     - field.field.profile.student_application_.field_date_of_birth
     - field.field.profile.student_application_.field_details_of_academic_record
+    - field.field.profile.student_application_.field_e
     - field.field.profile.student_application_.field_employment_details
     - field.field.profile.student_application_.field_file
     - field.field.profile.student_application_.field_first_name
@@ -84,6 +85,7 @@ third_party_settings:
         - field_research_professional_expe
         - field_employment_details
         - field_general_documents
+        - field_e
         - field_supporting_d
       parent_name: ''
       weight: 1
@@ -148,6 +150,13 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: tablefield
+    region: content
+  field_e:
+    weight: 18
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
     region: content
   field_employment_details:
     weight: 16
@@ -279,7 +288,7 @@ content:
     type: string
     region: content
   field_supporting_d:
-    weight: 18
+    weight: 19
     label: above
     settings: {  }
     third_party_settings: {  }

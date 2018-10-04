@@ -13,7 +13,7 @@ entity_type: profile
 bundle: student_application_
 label: 'Performance in Competitive Examination (such as GRE, GMAT)'
 description: ''
-required: false
+required: true
 translatable: false
 default_value:
   -

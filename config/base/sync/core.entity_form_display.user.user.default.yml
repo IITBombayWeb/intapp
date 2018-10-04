@@ -25,8 +25,8 @@ content:
     weight: 1
     region: content
     settings:
-      progress_indicator: throbber
       preview_image_style: thumbnail
+      progress_indicator: throbber
     third_party_settings: {  }
 hidden:
   contact: true
