@@ -12,12 +12,13 @@
 # core
 
 # Core's dependencies are managed with Composer.
-vendor
+docroot/vendor
+!docroot/core/assets/vendor
 
 # Ignore configuration files that may contain sensitive information.
 #sites/*/settings*.php
 ../sites/*/services*.yml
-
+private
 # Excludes for installed Drupal site
 docroot/sites/*/files
 docroot/sites/*/private
