@@ -18,22 +18,28 @@ use Drupal\Core\Url;
  * 
  */
 function excel_import_export_form_alter(&$form, FormStateInterface $form_state) {
-  if (($form["#id"] == "views-exposed-form-officers-application-list-page-1") && ($form["#form_id"] == "views_exposed_form")) {
+  if (($form["#id"] == "views-exposed-form-officers-application-list-page-1" || $form['#id'] == 'views-exposed-form-application-pdf-download-page-1') && ($form["#form_id"] == "views_exposed_form")) {
+    //dpm($form);
     $arg = explode('/', \Drupal::request()->getpathInfo());
     $url = URL::fromUserInput('/excel/content/application/export')->toString() . '?tid=' . $arg[2];
     $created = $_GET['created'];
     if (isset($_GET['created'])) {
       $url = $url . '&min=' . $created['min'] . '&max=' . $created['max'];
     }
+    //dpm($form['created']['max']['#title']->get('string'));
+    $form['created']['min']['#title'] = t('From');
+    $form['created']['max']['#title'] = t('To');
     $form['created']['min']['#type'] = 'date';
     $form['created']['max']['#type'] = 'date';
-    $form['export'] = array(
-      '#type' => 'markup',
-      '#markup' => '<a href="' . $url . '">Export</a>',
-      '#suffix' => t('Note: During export, applications have Applied, Need More Info and Details Appended status will exports.'),
-      '#submit' => array('excel_import_export_submit_handler'),
-      '#weight' => 100,
-    );
+    if($form['#id'] != 'views-exposed-form-application-pdf-download-page-1'){
+      $form['export'] = array(
+        '#type' => 'markup',
+        '#markup' => '<a href="' . $url . '">Export</a>',
+        '#suffix' => t('Note: During export, applications have Applied, Need More Info and Details Appended status will exports.'),
+        '#submit' => array('excel_import_export_submit_handler'),
+        '#weight' => 100,
+      );
+    }
      $form['#validate'][] ='validation';
   } 
 }

@@ -3,8 +3,9 @@ global-styling:
     theme:
       # *stylesheets/style.css: {}
       css/jquery.mCustomScrollbar.css: {}
+      # css/style.css: {}
       stylesheets/main.css: {}
-      stylesheets/pages.css: {}
+      stylesheets/pages.css: {}      
       css/font-awesome.min.css: {}
       //fonts.googleapis.com/css?family=Ek+Mukta:400,700: {type: external}
   js:

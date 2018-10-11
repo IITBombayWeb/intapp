@@ -5,7 +5,7 @@ site_verify.verifications_list:
     _controller: '\Drupal\site_verify\Controller\SiteVerifyController::verificationsListPage'
     _title: 'Verifications'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer site verify'
 
 site_verify.verification_add:
   path: '/admin/config/search/verifications/add'
@@ -13,7 +13,7 @@ site_verify.verification_add:
     _form: '\Drupal\site_verify\Form\SiteVerifyAdminForm'
     _title: 'Add verification'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer site verify'
 
 site_verify.verification_edit:
   path: '/admin/config/search/verifications/{site_verify}/edit'
@@ -21,7 +21,7 @@ site_verify.verification_edit:
     _form: '\Drupal\site_verify\Form\SiteVerifyAdminForm'
     _title: 'Edit verification'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer site verify'
 
 site_verify.verification_delete:
   path: '/admin/config/search/verifications/{site_verify}/delete'
@@ -29,7 +29,7 @@ site_verify.verification_delete:
     _form: '\Drupal\site_verify\Form\SiteVerifyDeleteForm'
     _title: 'Delete verification'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer site verify'
 
 site_verify.verification_add_engine:
   path: '/admin/config/search/verifications/add/{site_verify_engine}'
@@ -37,7 +37,7 @@ site_verify.verification_add_engine:
     _form: '\Drupal\site_verify\Form\SiteVerifyAdminForm'
     _title: 'Add'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer site verify'
 
 # Dynamic routes
 route_callbacks:

@@ -10,7 +10,11 @@ use GuzzleHttp\Exception\RequestException;
 /**
  * Retrieve data over an HTTP connection for migration.
  *
+<<<<<<< HEAD
  *  * Example:
+=======
+ * Example:
+>>>>>>> origin/development
  *
  * @code
  * source:
@@ -31,7 +35,7 @@ use GuzzleHttp\Exception\RequestException;
 class Http extends DataFetcherPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The HTTP Client
+   * The HTTP client.
    *
    * @var \GuzzleHttp\Client
    */
@@ -58,6 +62,11 @@ class Http extends DataFetcherPluginBase implements ContainerFactoryPluginInterf
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->httpClient = \Drupal::httpClient();
 
+<<<<<<< HEAD
+=======
+    // Ensure there is a 'headers' key in the configuration.
+    $configuration += ['headers' => []];
+>>>>>>> origin/development
     $this->setRequestHeaders($configuration['headers']);
   }
 

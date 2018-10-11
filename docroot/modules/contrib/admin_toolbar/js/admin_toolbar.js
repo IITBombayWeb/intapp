@@ -1,10 +1,19 @@
+<<<<<<< HEAD
 (function ($) {
+=======
+(function ($, Drupal) {
+>>>>>>> origin/development
   Drupal.behaviors.adminToolbar = {
     attach: function (context, settings) {
 
       $('a.toolbar-icon', context).removeAttr('title');
+<<<<<<< HEAD
   
       $('.toolbar-tray-horizontal li.menu-item--expanded, .toolbar-tray-horizontal ul li.menu-item--expanded .menu-item', context).hoverIntent({
+=======
+
+      $('.toolbar-tray li.menu-item--expanded, .toolbar-tray ul li.menu-item--expanded .menu-item', context).hoverIntent({
+>>>>>>> origin/development
         over: function () {
           // At the current depth, we should delete all "hover-intent" classes.
           // Other wise we get unwanted behaviour where menu items are expanded while already in hovering other ones.
@@ -16,13 +25,21 @@
         },
         timeout: 250
       });
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> origin/development
       // Make the toolbar menu navigable with keyboard.
       $('ul.toolbar-menu li.menu-item--expanded a', context).on('focusin', function () {
         $('li.menu-item--expanded', context).removeClass('hover-intent');
         $(this).parents('li.menu-item--expanded').addClass('hover-intent');
       });
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> origin/development
       $('ul.toolbar-menu li.menu-item a', context).keydown(function (e) {
         if ((e.shiftKey && (e.keyCode || e.which) == 9)) {
           if ($(this).parent('.menu-item').prev().hasClass('menu-item--expanded')) {
@@ -30,6 +47,7 @@
           }
         }
       });
+<<<<<<< HEAD
   
       $('.toolbar-menu:first-child > .menu-item:not(.menu-item--expanded) a, .toolbar-tab > a', context).on('focusin', function () {
         $('.menu-item--expanded').removeClass('hover-intent');
@@ -39,6 +57,17 @@
         $(this,'a').css("background: #fff;");
       });
   
+=======
+
+      $('.toolbar-menu:first-child > .menu-item:not(.menu-item--expanded) a, .toolbar-tab > a', context).on('focusin', function () {
+        $('.menu-item--expanded').removeClass('hover-intent');
+      });
+
+      $('.toolbar-menu:first-child > .menu-item', context).on('hover', function () {
+        $(this, 'a').css("background: #fff;");
+      });
+
+>>>>>>> origin/development
       $('ul:not(.toolbar-menu)', context).on({
         mousemove: function () {
           $('li.menu-item--expanded').removeClass('hover-intent');
@@ -50,4 +79,8 @@
 
     }
   };
+<<<<<<< HEAD
 })(jQuery);
+=======
+})(jQuery, Drupal);
+>>>>>>> origin/development

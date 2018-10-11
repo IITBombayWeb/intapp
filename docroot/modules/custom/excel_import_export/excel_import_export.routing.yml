@@ -1,7 +1,7 @@
 excel_import_export.content-import:
     path: '/excel/content/application/import'
     defaults:
-        _title: 'Excel Content Import'
+        _title: 'Upload Application Status'
         _controller: 'Drupal\excel_import_export\Controller\ExcelImportExportController::excelContentImportSettings'
     requirements:
         _permission: 'excel import'

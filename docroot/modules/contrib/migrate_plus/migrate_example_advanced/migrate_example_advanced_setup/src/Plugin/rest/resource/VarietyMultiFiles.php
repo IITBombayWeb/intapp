@@ -32,7 +32,12 @@ class VarietyMultiFiles extends ResourceBase {
     if (strtolower($type) != 'white') {
       $data['variety'][] = [
         'name' => 'Amarone',
+<<<<<<< HEAD
         'parent' => 3, // categoryid for 'red'.
+=======
+        // The categoryid for 'red'.
+        'parent' => 3,
+>>>>>>> origin/development
         'details' => 'Italian Venoto region',
         'attributes' => [
           'rich',
@@ -41,7 +46,12 @@ class VarietyMultiFiles extends ResourceBase {
       ];
       $data['variety'][] = [
         'name' => 'Barbaresco',
+<<<<<<< HEAD
         'parent' => 3, // categoryid for 'red'.
+=======
+        // The categoryid for 'red'.
+        'parent' => 3,
+>>>>>>> origin/development
         'details' => 'Italian Piedmont region',
         'attributes' => [
           'smoky',
@@ -52,13 +62,23 @@ class VarietyMultiFiles extends ResourceBase {
     if (strtolower($type) != 'red') {
       $data['variety'][] = [
         'name' => 'Kir',
+<<<<<<< HEAD
         'parent' => 1, // categoryid for 'white'.
+=======
+        // The categoryid for 'white'.
+        'parent' => 1,
+>>>>>>> origin/development
         'details' => 'French Burgundy region',
         'attributes' => [],
       ];
       $data['variety'][] = [
         'name' => 'Pinot Grigio',
+<<<<<<< HEAD
         'parent' => 1, // categoryid for 'white'.
+=======
+        // The categoryid for 'white'.
+        'parent' => 1,
+>>>>>>> origin/development
         'details' => 'From the northeast of Italy',
         'attributes' => [
           'fruity',

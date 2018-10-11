@@ -420,7 +420,12 @@ function form_validate_data2($form, &$form_state){
  */
 
 function form_validate_data1($form, &$form_state) {
+<<<<<<< HEAD
      
+=======
+     //dpm($form['field_details_of_academic_record']);
+     //dpm($form_state);
+>>>>>>> origin/development
    if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest') {
        
        if($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
@@ -578,35 +583,47 @@ function form_validate_data1($form, &$form_state) {
 	      }
           }   
        }
-       /*
-       // Details of Academic Record (Secondary onwards) 
-       $academic_rec = $form['field_details_of_academic_record']['widget'][0]['#value']['tablefield']['table'];
-       foreach ($academic_rec as $ac_clm_key => $ac_clm_value){   
+       
+       //Details of Academic Record (Secondary onwards) 
+       $academic_rec = $form['field_details_of_academic_record']['widget'][0]['#value']['tablefield']['table'][1];
+       //dpm($academic_rec);
+       foreach ($academic_rec as $ac_row_key => $ac_row_value){
+	      if(empty($ac_row_value)){
+	           $form_state->setError($form['field_details_of_academic_record']['widget'][0]['tablefield']['table'][1][$ac_row_key],"Please Fill Details of Academic Record.");
+	      }
+       } 
+       /*foreach ($academic_rec as $ac_clm_key => $ac_clm_value){
+	      dpm($ac_clm_value);
+	      dpm($ac_clm_key);
+	      
            foreach ($ac_clm_value as $ac_row_key => $ac_row_value){
 	      if(empty($ac_row_value)){
 	           $form_state->setError($form['field_details_of_academic_record']['widget'][0]['tablefield']['table'][$ac_clm_key][$ac_row_key],"Please Fill Details of Academic Record.");
 	      }
-          }   
-       }
+       } 
+       }*/
+            
+       
       
        // Research/ Professional Experience, Papers published etc. (upload a separate pdf for details, if required)
-	$research_exp = $form['field_research_professional_expe']['widget'][0]['#value']['tablefield']['table'];
-       foreach ($research_exp as $res_clm_key => $res_clm_value){   
-           foreach ($res_clm_value as $res_row_key => $res_row_value){
+	$research_exp = $form['field_research_professional_expe']['widget'][0]['#value']['tablefield']['table'][1];
+        
+           foreach ($research_exp as $res_row_key => $res_row_value){
 	      if(empty($res_row_value)){
-	           $form_state->setError($form['field_research_professional_expe']['widget'][0]['tablefield']['table'][$res_clm_key][$res_row_key]," Please Fill Research/ Professional Experience, Papers published etc.");
+	           $form_state->setError($form['field_research_professional_expe']['widget'][0]['tablefield']['table'][1][$res_row_key]," Please Fill Research/ Professional Experience, Papers published etc.");
 	      }
           }   
-       }
+       
+       
        // Employment Details
-	 $emp_det = $form['field_employment_details']['widget'][0]['#value']['tablefield']['table'];
-       foreach ($emp_det as $emp_clm_key => $emp_clm_value){   
-           foreach ($emp_clm_value as $emp_row_key => $emp_row_value){
+	 $emp_det = $form['field_employment_details']['widget'][0]['#value']['tablefield']['table'][1];
+         
+           foreach ($emp_det as $emp_row_key => $emp_row_value){
 	      if(empty($emp_row_value)){
-	           $form_state->setError($form['field_employment_details']['widget'][0]['tablefield']['table'][$emp_clm_key][$emp_row_key]," Please Fill Employment Details.");
+	           $form_state->setError($form['field_employment_details']['widget'][0]['tablefield']['table'][1][$emp_row_key]," Please Fill Employment Details.");
 	      }
           }   
-       }*/
+       
       
     }
  } 
@@ -676,12 +693,12 @@ function iitinap_node_view(array &$build, EntityInterface $node, EntityViewDispl
 }
 
 /*
- * Implements hook_menu_local_tasks_alter().
+ * Implement hook_menu_local_tasks_alter().
  */
 function iitinap_menu_local_tasks_alter(&$data, $route_name) {
-       $data['tabs'][0]['entity.profile.user_profile_form:profile.type.student_application_']['#link']['title'] = "Edit Applicant Details";
+       $data['tabs'][0]['entity.profile.user_profile_form:profile.type.student_application_']['#link']['title'] = "Profile Details";
        $data['tabs'][0]['entity.node.workflow_history']['#link']['title'] = "History";
-       $data['tabs'][0]['entity.user.edit_form']['#link']['title'] = "Account Details";
+       $data['tabs'][0]['entity.user.edit_form']['#link']['title'] = "Profile Settings";
 }
 
 /**
@@ -718,13 +735,20 @@ function iitinap_form_views_exposed_form_alter(array &$form, FormStateInterface 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
+<<<<<<< HEAD
 /*function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
     // Alter login form and add own custom submit handler.
+=======
+function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+    // Alter login form and add own custom submit handler
+>>>>>>> origin/development
     $form['#submit'][] = '_iitinap_user_login_form_submit';
     $form['social_login']=array(
           '#type' => 'markup',
-          '#markup' => '<div class="social_login"><a href="/user/simple-fb-connect">Continue with Facebook</a><a href="/user/login/google">Continue with Google</a></div>',
-
+		  '#markup' => '<div class="social_login">
+		  <a class="fb-button" href="/user/simple-fb-connect">Continue with Facebook</a>
+		  <a class="gle-buttton" href="/user/login/google">Continue with Google</a></div>',
+		  '#weight' => -10,
     	);
 }*/
 

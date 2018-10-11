@@ -36,6 +36,7 @@ class SearchApiString extends QueryTypePluginBase {
 
       // Set the options for the actual query.
       $options = &$query->getOptions();
+<<<<<<< HEAD
       $options['search_api_facets'][$field_identifier] = [
         'field' => $field_identifier,
         'limit' => $this->facet->getHardLimit(),
@@ -43,6 +44,9 @@ class SearchApiString extends QueryTypePluginBase {
         'min_count' => $this->facet->getMinCount(),
         'missing' => FALSE,
       ];
+=======
+      $options['search_api_facets'][$field_identifier] = $this->getFacetOptions();
+>>>>>>> origin/development
 
       // Add the filter to the query if there are active values.
       $active_items = $this->facet->getActiveItems();

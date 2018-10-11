@@ -273,7 +273,11 @@ function admin_toolbar_tools_menu_links_discovered_alter(&$links) {
       'weight' => -5,
     ];
     // Add node links for each content type.
+<<<<<<< HEAD
     foreach (\Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple() as $type) {
+=======
+    foreach ($entityTypeManager->getStorage('node_type')->loadMultiple() as $type) {
+>>>>>>> origin/development
       $links['node.add.' . $type->id()] = [
         'title' => t($type->label()),
         'route_name' => 'node.add',
@@ -418,7 +422,11 @@ function admin_toolbar_tools_menu_links_discovered_alter(&$links) {
       'weight' => '-1',
     ];
     if ($moduleHandler->moduleExists('webprofiler')) {
+<<<<<<< HEAD
       $links['admin_menu_tools.devel.webprofiler'] = [
+=======
+      $links['admin_toolbar_tools.devel.webprofiler'] = [
+>>>>>>> origin/development
         'title' => t('Web Profiler settings'),
         'route_name' => 'webprofiler.settings',
         'menu_name' => 'admin',
@@ -478,25 +486,63 @@ function admin_toolbar_tools_menu_links_discovered_alter(&$links) {
       'menu_name' => 'admin',
       'parent' => 'admin_development',
     ];
+<<<<<<< HEAD
+=======
+    // Menu link for the Toolbar module.
+    $links['admin_toolbar_tools.toolbar.settings'] = [
+      'title' => t('Toolbar settings'),
+      'route_name' => 'devel.toolbar.settings_form',
+      'menu_name' => 'admin',
+      'parent' => 'devel.admin_settings',
+    ];
+>>>>>>> origin/development
   }
 
   // If module Views Ui enabled.
   if ($moduleHandler->moduleExists('views_ui')) {
+<<<<<<< HEAD
     $links['views_ui.add'] = [
+=======
+    $links['admin_toolbar_tools.views_ui.add'] = [
+>>>>>>> origin/development
       'title' => t('Add new view'),
       'route_name' => 'views_ui.add',
       'menu_name' => 'admin',
       'parent' => 'entity.view.collection',
       'weight' => -5,
     ];
+<<<<<<< HEAD
   }
 
   $links['system.theme_settings_'] = [
+=======
+    $links['admin_toolbar_tools.views_ui.field_list'] = [
+      'title' => t('Used in views'),
+      'route_name' => 'views_ui.reports_fields',
+      'menu_name' => 'admin',
+      'parent' => 'entity.field_storage_config.collection',
+    ];
+  }
+
+  $links['admin_toolbar_tools.system.theme_settings'] = [
+>>>>>>> origin/development
     'title' => t('Settings'),
     'route_name' => 'system.theme_settings',
     'menu_name' => 'admin',
     'parent' => 'system.themes_page',
   ];
+<<<<<<< HEAD
+=======
+
+  if ($moduleHandler->moduleExists('webprofiler')) {
+    $links['admin_toolbar_tools.devel.webprofiler'] = [
+      'title' => t('Webprofiler settings'),
+      'route_name' => 'webprofiler.settings',
+      'menu_name' => 'admin',
+      'parent' => 'admin_development',
+    ];
+  }
+>>>>>>> origin/development
 
   if ($moduleHandler->moduleExists('webprofiler')) {
     $links['admin_menu_tools.devel.webprofiler'] = [
@@ -531,6 +577,7 @@ function admin_toolbar_tools_menu_links_discovered_alter(&$links) {
           'theme' => $key_theme,
         ],
       ];
+<<<<<<< HEAD
     }
   }
 
@@ -650,6 +697,57 @@ function admin_toolbar_tools_menu_links_discovered_alter(&$links) {
     }
   }
 
+=======
+    }
+  }
+
+  // If module Language enabled.
+  if ($moduleHandler->moduleExists('language')) {
+    $links['admin_toolbar_tools.language.negotiation'] = [
+      'title' => t('Detection and selection'),
+      'route_name' => 'language.negotiation',
+      'menu_name' => 'admin',
+      'parent' => 'entity.configurable_language.collection',
+    ];
+  }
+
+  // If module Media enabled.
+  if ($moduleHandler->moduleExists('media')) {
+    $links['admin_toolbar_tools.add_media'] = [
+      'title' => t('Add media'),
+      'route_name' => 'entity.media.add_page',
+      'menu_name' => 'admin',
+      'parent' => 'system.admin_content',
+    ];
+    // Add node links for each media type.
+    foreach (\Drupal::entityTypeManager()->getStorage('media_type')->loadMultiple() as $type) {
+      $links['node.add.' . $type->id()] = [
+        'title' => t($type->label()),
+        'route_name' => 'entity.media.add_form',
+        'parent' => 'admin_toolbar_tools.add_media',
+        'route_parameters' => ['media_type' => $type->id()],
+      ];
+    }
+  }
+
+  // If module Config enabled.
+  if ($moduleHandler->moduleExists('config')) {
+    $links['admin_toolbar_tools.config.import'] = [
+      'title' => t('Import'),
+      'route_name' => 'config.import_full',
+      'menu_name' => 'admin',
+      'parent' => 'config.sync',
+      'weight' => 1,
+    ];
+    $links['admin_toolbar_tools.config.export'] = [
+      'title' => t('Export'),
+      'route_name' => 'config.export_full',
+      'menu_name' => 'admin',
+      'parent' => 'config.sync',
+      'weight' => 2,
+    ];
+  }
+>>>>>>> origin/development
 }
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\site_verify\Controller\SiteVerifyController.
- */
-
 namespace Drupal\site_verify\Controller;
 
 use Drupal\Component\Utility\Html;
@@ -35,50 +30,50 @@ class SiteVerifyController extends ControllerBase {
     $engines = \Drupal::service('site_verify_service')->siteVerifyGetEngines();
     $destination = \Drupal::destination()->getAsArray();
 
-    $header = array(
-      array('data' => t('Engine'), 'field' => 'engine'),
-      array('data' => t('Meta tag'), 'field' => 'meta'),
-      array('data' => t('File'), 'field' => 'file'),
-      array('data' => t('Operations')),
-    );
+    $header = [
+      ['data' => $this->t('Engine'), 'field' => 'engine'],
+      ['data' => $this->t('Meta tag'), 'field' => 'meta'],
+      ['data' => $this->t('File'), 'field' => 'file'],
+      ['data' => $this->t('Operations')],
+    ];
 
-    $verifications = db_select('site_verify', 'sv')
+    $verifications = \Drupal::database()->select('site_verify', 'sv')
       ->fields('sv')
       ->execute();
 
-    $rows = array();
+    $rows = [];
     foreach ($verifications as $verification) {
-      $row = array('data' => array());
+      $row = ['data' => []];
       $row['data'][] = $engines[$verification->engine]['name'];
-      $row['data'][] = $verification->meta ? t('Yes') : t('No');
-      $row['data'][] = $verification->file ? \Drupal::l($verification->file, Url::fromRoute('site_verify.' . $verification->file)) : t('None');
-      $operations = array();
-      $operations['edit'] = array(
-        'title' => t('Edit'),
-        'url' => Url::fromRoute('site_verify.verification_edit', array('site_verify' => $verification->svid)),
+      $row['data'][] = $verification->meta ? $this->t('Yes') : $this->t('No');
+      $row['data'][] = $verification->file ? \Drupal::l($verification->file, Url::fromRoute('site_verify.' . $verification->file)) : $this->t('None');
+      $operations = [];
+      $operations['edit'] = [
+        'title' => $this->t('Edit'),
+        'url' => Url::fromRoute('site_verify.verification_edit', ['site_verify' => $verification->svid]),
         'query' => $destination,
-      );
-      $operations['delete'] = array(
-        'title' => t('Delete'),
-        'url' => Url::fromRoute('site_verify.verification_delete', array('site_verify' => $verification->svid)),
+      ];
+      $operations['delete'] = [
+        'title' => $this->t('Delete'),
+        'url' => Url::fromRoute('site_verify.verification_delete', ['site_verify' => $verification->svid]),
         'query' => $destination,
-      );
-      $row['data']['operations'] = array(
-        'data' => array(
+      ];
+      $row['data']['operations'] = [
+        'data' => [
           '#theme' => 'links',
           '#links' => $operations,
-          '#attributes' => array('class' => array('links', 'inline')),
-        ),
-      );
+          '#attributes' => ['class' => ['links', 'inline']],
+        ],
+      ];
       $rows[] = $row;
     }
 
-    $build['verification_table'] = array(
+    $build['verification_table'] = [
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => t('No verifications available. <a href="@add">Add verification</a>.', array('@add' => \Drupal::url('site_verify.verification_add'))),
-    );
+      '#empty' => $this->t('No verifications available. <a href="@add">Add verification</a>.', ['@add' => \Drupal::url('site_verify.verification_add')]),
+    ];
     // $build['verification_pager'] = array('#theme' => 'pager');
     return $build;
   }
@@ -97,11 +92,11 @@ class SiteVerifyController extends ControllerBase {
       return $response;
     }
     else {
-      $build = array();
+      $build = [];
       $build['#title'] = $this->t('Verification page');
-      $build['#markup'] = $this->t('This is a verification page for the !title search engine.', array(
+      $build['#markup'] = $this->t('This is a verification page for the !title search engine.', [
         '!title' => $verification['engine']['name'],
-      ));
+      ]);
 
       return $build;
     }

@@ -1,0 +1,5 @@
+{
+    "require": {
+        "drupal/social_auth_google": "~1.0"
+    }
+}

@@ -22,7 +22,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @FacetsProcessor(
  *   id = "list_item",
  *   label = @Translation("List item label"),
+<<<<<<< HEAD
  *   description = @Translation("Display the label instead of the key of fields that are a list (such as <em>List (integer)</em>) or <em>List (text)</em>) or a bundle field."),
+=======
+ *   description = @Translation("Display the label instead of the key of fields that are a list (such as <em>List (integer)</em>) or <em>List (text)</em>) or a bundle field. Keep in mind that transformations on the source of this field (such as transliteration or ignore characters) may break this functionality."),
+>>>>>>> origin/development
  *   stages = {
  *     "build" = 5
  *   }

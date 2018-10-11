@@ -15,6 +15,7 @@
  * @ingroup templates
  */
 #}
+<<<<<<< HEAD
 {% import _self as menus %}
 
 {#
@@ -54,3 +55,14 @@
     </ul>
   {% endif %}
 {% endmacro %}
+=======
+{% extends "menu.html.twig" %}
+{%
+  set classes = [
+    'menu',
+    'menu--' ~ menu_name|clean_class,
+    'nav',
+    'navbar-nav',
+  ]
+%}
+>>>>>>> origin/development

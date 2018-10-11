@@ -12,6 +12,11 @@ use Drupal\Core\Template\Attribute;
  
  
 function capit_preprocess_html(&$variables) {
+  // To add body tag class to homepage
+  $current_uri = \Drupal::request()->getRequestUri();
+  if($current_uri == "/homepage" || $current_uri == "/"){
+    $variables['attributes']['class'][] = 'poral-landing';
+  }
   // Add information about the number of sidebars.
   if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
     $variables['attributes']['class'][] = 'layout-two-sidebars';
@@ -43,9 +48,11 @@ function capit_preprocess_block(&$vars) {
 function capit_preprocess_page(&$variables) {
   $utility = \Drupal\basiccart\Utility::get_cart();
 	$variables['cntcart'] = count($utility['cart']);
-	// $userCurrent = \Drupal::currentUser();
- //  if($userCurrent->isAnonymous()){
- //    $variables['anony'] = 'no-view-anyms';
- //   }
+  //Cart
+  $user = \Drupal::currentUser()->getRoles();
+  if(!in_array("office", $user)) {
+    $Role = true;
+    $variables['cart_role'] = $Role;
+  } 
 }
 

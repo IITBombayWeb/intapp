@@ -38,7 +38,7 @@ class Thankyoupage extends FormBase {
         $tx = $_GET['tx'];
         module_load_include('inc', 'paypal');
         $tx_status = pdt_token($tx);
-        if ($tx_status == 'SUCCESS') {
+        //if ($tx_status == 'SUCCESS') {
         
           if ($result['payment_status'] == 'pending' && $result['before_amount'] == $_GET['amt']) {
             $time = time();
@@ -242,24 +242,135 @@ class Thankyoupage extends FormBase {
 					     }
 					     .ml {
 						    margin-left : 5px;
-					     }
+               }
+          
 				      </style>
 				 </head>
 				    <body>
 				      <div class="header middle">
 					     <h2>International Student Application to PG Programs 2017</h2>
 				      </div>
-				      <div class="address-wrap">
-					<div class="addr-inner-wrap alm width_75">
-					     <div class="addr-title"><h4>' . $first_name . ' ' . $sur_name . '</h4></div>
-					     <div class="alm width_50"><span class="label">Mobile:</span> <span class="ml">' . $fpa_mob_num . '</span></div>
-					     <div class="alm width_50"><span class="label">Email:</span> <span class="ml">' . $Email . '</span></div>
-					     <div><span class="label">Communication address:</span> <span class="ml">' . $field_permanent_address . ',' . $fpa_city . '-' . $fpa_pin . ',' . $fpa_state . ',' . $fpa_country . '</span></div>  
-					</div>
-					<div class="prof-img alm width_25">' . $image . '</div>
-					<div class="alm width_25"><span class="label">Gender:</span>' . $gender . '</div>
-					<div class="alm width_25"><span class="label">Date of Birth:</span>' . $dob . '</div>
-				      </div>
+            
+              <div class="testing">
+             
+              <table style="border:none;border:none;position:relative;left:12px;padding-left:-5px;">
+              <tr style="border:none;padding-left:0px;">
+                <td style="background-color:#fff;width:485px;border:none;padding-left:-15px;" valign="top">
+  
+                  <table style="border:none;padding-left:0px;">
+                      <tr style="border:none">
+                          <td style="height:22px;border:none;background-color:#fff"><b>' . $first_name . ' ' . $sur_name . '</b></td>
+                      </tr>
+                  </table>
+  
+                  <table style="border:none;position:relative;left-20px:padding-left:0px;">
+                      <tr style="border:none">
+                          <td style="width:215px;border:none;background-color:#fff;padding-left:0px;">
+                            <table style="border:none">
+                                <tr style="border:none;background-color:#fff">
+                                    <td style="width:80px;border:none;background-color:#fff"">
+                                        Gender
+                                    </td>
+                                    <td style="width:10px;border:none;background-color:#fff">
+                                        :
+                                    </td>
+                                    <td style="width:80px;border:none;background-color:#fff">
+                                          ' . $gender . '
+                                    </td>
+                                </tr>
+                            </table>
+                              
+                          </td>
+  
+                          <td style="width:200px;border:none;background-color:#fff;padding-left:0px;">
+                                  <table style="border:none">
+                                      <tr style="border:none">
+                                          <td style="width:80px;border:none;background-color:#fff">
+                                              DOB
+                                          </td>
+                                          <td style="width:10px;border:none;background-color:#fff">
+                                                  :
+                                          </td>
+                                          <td style="width:80px;border:none;background-color:#fff">
+                                                  ' . $dob . '
+                                          </td>
+                                      </tr>
+                                  </table>
+                                    
+                                </td>
+                      </tr>
+  
+  
+                      <tr>
+                              <td style="width:200px;border:none;background-color:#fff;padding-left:0px;">
+                                <table style="border:none">
+                                    <tr style="border:none">
+                                        <td style="width:80px;border:none;background-color:#fff;">
+                                            Mobile No
+                                        </td>
+                                        <td style="width:10px;border:none;background-color:#fff">
+                                            :
+                                        </td>
+                                        <td style="width:80px;border:none;background-color:#fff">
+                                              ' . $fpa_mob_num . '
+                                        </td>
+                                    </tr>
+                                </table>
+                                  
+                              </td>
+      
+                              <td style="width:180px;border:nonel;background-color:#fff;padding-left:0px;">
+                                      <table style="border:none">
+                                          <tr style="border:none">
+                                              <td style="width:80px;border:none;background-color:#fff">
+                                                Email
+                                              </td>
+                                              <td style="width:10px;border:none;background-color:#fff">
+                                                      :
+                                              </td>
+                                              <td style="width:80px;border:none;background-color:#fff">
+                                                      ' . $Email . '
+                                              </td>
+                                          </tr>
+                                      </table>
+                                        
+                                    </td>
+                          </tr>
+  
+                          <tr style="border:none">
+                                  <td style="width:540px;margin-top:10px;border:none;background-color:#fff;padding-left:0px;" colspan="2">
+                                    <table style="margin-top:25px;border:none">
+                                        <tr style="border:none">
+                                            <td style="width:120px;border:none;background-color:#fff" valign="top;">
+                                                  Communication Address
+                                            </td>
+                                            <td style="width:10p;border:none;background-color:#fff" valign="top">
+                                                :
+                                            </td>
+                                            <td style="width:395px;border:none;background-color:#fff" valign="top">
+                                          ' . $field_permanent_address . ',' . $fpa_city . '-' . $fpa_pin . ',' . $fpa_state . ',' . $fpa_country . '
+                                            </td>
+                                        </tr>
+                                    </table>
+                                      
+                                  </td>
+          
+                                  
+                              </tr>
+                  </table>
+                 
+  
+                </td>
+  
+  
+  
+                <td style="background-color:#fff;width:246px;height:200px;border:none" valign="top">' . $image . '</td>
+              </tr>
+              
+            </table>
+
+               </div>
+              
 				      <div class="main-container">
 					<h3>Programs Applied</h3> ' . $perform_pgm_apply_result . '
                                         <h3>Proficiency in English </h3>' . $proficiency_eng_result . '
@@ -291,6 +402,8 @@ class Thankyoupage extends FormBase {
               $institute_tid = taxonomy_term_load($institute_id);
               $institute_code = $institute_tid->getTranslation($langcode)->get('field_short_code')->getValue()[0]['value'];
               $created = date("Y") . '-' . date("m");
+              $user_id = \Drupal::currentUser()->id();
+              //print_r($doc_data); exit;
               $node = Node::create([
                 'type'        => 'application',
                 'title'       => $value->getTranslation($langcode)->get('title')->getValue()[0]['value'],
@@ -299,13 +412,19 @@ class Thankyoupage extends FormBase {
               ]);
               $node->save();
               $node_id = $node->id();
-              $filename = 'sites/default/private/applications/' . $username . '_' . $account . '_' . $node_id . '.pdf';
-              $file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE);
+              $privateDir = \Drupal::service('file_system')->realpath("private://");
               $node = Node::load($node_id);
-              $new_application_id = "$institute_code-$created-$node_id";
+              $new_application_id = "$institute_code-$created-$node_id-$user_id";
+              $studentDir = $privateDir.'/student_documents/'.$new_application_id;
+              file_prepare_directory($studentDir, FILE_CREATE_DIRECTORY);
+              $filename = $studentDir. '/' . $new_application_id.'.pdf';
+              file_prepare_directory($studentDir, $options = FILE_MODIFY_PERMISSIONS);
+              $file = file_unmanaged_save_data($pdfoutput, $filename, FILE_EXISTS_REPLACE);
               $node->setTitle($new_application_id);
               $node->set("field_status", 'apply_apply');
               $node->set("field_application_path", $filename);
+              $Curruser = \Drupal::currentUser()->id();
+              $node->set("field_user_id", $Curruser);
               $node->save();
               // Most popular programmes.
               $application_list = \Drupal::database()->insert('applications_list')
@@ -379,13 +498,13 @@ class Thankyoupage extends FormBase {
               }
             }
             basiccart_empty_cart();
-            $notify_msg = "Thank you!  Your transaction is successful and applied to " . count($applicationArray) . " programmes. Please note your Order ID : " . $order_id . " for future reference";
+            $notify_msg = "Thank you!  Your transaction is successful and applied to " . count($applicationArray) . " programmes. Please note your Application Packet Number : " . $order_id . " for future reference";
           }
           elseif ($result['payment_status'] == $_GET['st'] && $result['before_amount'] == $_GET['amt']) {
             // Application Already created.
             $notify_msg = "Your transaction has been completed. Please Contact Admin for any assistance.";
           }
-        }
+       // }
         elseif ($tx_status == 'FAIL') {
           drupal_set_message("Invalid Transaction Please Contact Admin for any assistance.");
         }

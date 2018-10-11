@@ -29,7 +29,11 @@ use Drupal\search_api\Query\ConditionGroupInterface;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\search_api\SearchApiException;
 use Drupal\search_api\Utility\DataTypeHelper;
+<<<<<<< HEAD
 use Drupal\search_api_autocomplete\Suggestion;
+=======
+use Drupal\search_api_autocomplete\SearchInterface;
+>>>>>>> origin/development
 use Drupal\search_api_autocomplete\Suggestion\SuggestionFactory;
 use Drupal\search_api_db\DatabaseCompatibility\DatabaseCompatibilityHandlerInterface;
 use Drupal\search_api_db\DatabaseCompatibility\GenericDatabase;
@@ -769,7 +773,7 @@ class Database extends BackendPluginBase implements PluginFormInterface {
     $db_field += [
       'description' => "The field's value for this item",
     ];
-    if ($new_table) {
+    if ($new_table || $type === 'field') {
       $db_field['not null'] = TRUE;
     }
     $this->database->schema()->addField($db['table'], $column, $db_field);
@@ -924,8 +928,13 @@ class Database extends BackendPluginBase implements PluginFormInterface {
           elseif ($this->sqlType($old_type) != $this->sqlType($new_type)) {
             // There is a change in SQL type. We don't have to clear the index,
             // since types can be converted.
-            $this->database->schema()->changeField($field['table'], 'value', 'value', $this->sqlType($new_type) + ['description' => "The field's value for this item"]);
-            $this->database->schema()->changeField($denormalized_table, $field['column'], $field['column'], $this->sqlType($new_type) + ['description' => "The field's value for this item"]);
+            $sql_spec = $this->sqlType($new_type);
+            $sql_spec += [
+              'description' => "The field's value for this item",
+            ];
+            $this->database->schema()->changeField($denormalized_table, $field['column'], $field['column'], $sql_spec);
+            $sql_spec['not null'] = TRUE;
+            $this->database->schema()->changeField($field['table'], 'value', 'value', $sql_spec);
             $reindex = TRUE;
           }
           elseif ($old_type == 'date' || $new_type == 'date') {
@@ -955,7 +964,7 @@ class Database extends BackendPluginBase implements PluginFormInterface {
               }
               $this->database->update($text_table)
                 ->expression('score', $expression, $args)
-                ->condition('field_name', self::getTextFieldName($field_id))
+                ->condition('field_name', static::getTextFieldName($field_id))
                 ->execute();
             }
             else {
@@ -1081,7 +1090,7 @@ class Database extends BackendPluginBase implements PluginFormInterface {
     if ($this->getDataTypeHelper()->isTextType($field['type'])) {
       // Remove data from the text table.
       $this->database->delete($field['table'])
-        ->condition('field_name', self::getTextFieldName($name))
+        ->condition('field_name', static::getTextFieldName($name))
         ->execute();
     }
     elseif ($this->database->schema()->tableExists($field['table'])) {
@@ -1253,7 +1262,13 @@ class Database extends BackendPluginBase implements PluginFormInterface {
           /** @var \Drupal\search_api\Plugin\search_api\data_type\value\TextTokenInterface $token */
           foreach ($values as $token) {
             $word = $token->getText();
-            $score = $token->getBoost();
+            $score = $token->getBoost() * $item->getBoost();
+
+            // In rare cases, tokens with leading or trailing whitespace can
+            // slip through. Since this can lead to errors when such tokens are
+            // part of a primary key (as in this case), we trim such whitespace
+            // here.
+            $word = trim($word);
 
             // In rare cases, tokens with leading or trailing whitespace can
             // slip through. Since this can lead to errors when such tokens are
@@ -1297,10 +1312,11 @@ class Database extends BackendPluginBase implements PluginFormInterface {
           }
           $denormalized_values[$column] = Unicode::substr(trim($denormalized_value), 0, 30);
           if ($unique_tokens) {
-            $field_name = self::getTextFieldName($field_id);
+            $field_name = static::getTextFieldName($field_id);
             $boost = $field_info['boost'];
             foreach ($unique_tokens as $token) {
-              $score = round($token['score'] * $boost * self::SCORE_MULTIPLIER);
+              $score = $token['score'] * $boost * self::SCORE_MULTIPLIER;
+              $score = round($score);
               // Take care that the score doesn't exceed the maximum value for
               // the database column (2^32-1).
               $score = min((int) $score, 4294967295);
@@ -1466,18 +1482,13 @@ class Database extends BackendPluginBase implements PluginFormInterface {
         return $value;
 
       case 'integer':
+      case 'date':
       case 'duration':
       case 'decimal':
         return 0 + $value;
 
       case 'boolean':
         return $value ? 1 : 0;
-
-      case 'date':
-        if (is_numeric($value) || !$value) {
-          return 0 + $value;
-        }
-        return strtotime($value);
 
       default:
         throw new SearchApiException("Unknown field type '$type'.");
@@ -2501,11 +2512,30 @@ class Database extends BackendPluginBase implements PluginFormInterface {
   }
 
   /**
-   * Implements AutocompleteBackendInterface::getAutocompleteSuggestions().
+   * Retrieves autocompletion suggestions for some user input.
    *
-   * @todo Add type-hint for $search as soon as we can rely on the class name.
+   * @param \Drupal\search_api\Query\QueryInterface $query
+   *   A query representing the base search, with all completely entered words
+   *   in the user input so far as the search keys.
+   * @param \Drupal\search_api_autocomplete\SearchInterface $search
+   *   An object containing details about the search the user is on, and
+   *   settings for the autocompletion. See the class documentation for details.
+   *   Especially $search->getOptions() should be checked for settings, like
+   *   whether to try and estimate result counts for returned suggestions.
+   * @param string $incomplete_key
+   *   The start of another fulltext keyword for the search, which should be
+   *   completed. Might be empty, in which case all user input up to now was
+   *   considered completed. Then, additional keywords for the search could be
+   *   suggested.
+   * @param string $user_input
+   *   The complete user input for the fulltext search keywords so far.
+   *
+   * @return \Drupal\search_api_autocomplete\Suggestion\SuggestionInterface[]
+   *   An array of autocomplete suggestions.
+   *
+   * @see \Drupal\search_api_autocomplete\AutocompleteBackendInterface::getAutocompleteSuggestions()
    */
-  public function getAutocompleteSuggestions(QueryInterface $query, $search, $incomplete_key, $user_input) {
+  public function getAutocompleteSuggestions(QueryInterface $query, SearchInterface $search, $incomplete_key, $user_input) {
     $settings = $this->configuration['autocomplete'];
 
     // If none of the options is checked, the user apparently chose a very
@@ -2522,10 +2552,14 @@ class Database extends BackendPluginBase implements PluginFormInterface {
     $fields = $this->getFieldInfo($index);
 
     $suggestions = [];
+<<<<<<< HEAD
     $factory = NULL;
     if (class_exists(SuggestionFactory::class)) {
       $factory = new SuggestionFactory($user_input);
     }
+=======
+    $factory = new SuggestionFactory($user_input);
+>>>>>>> origin/development
     $passes = [];
     $incomplete_like = NULL;
 
@@ -2580,6 +2614,7 @@ class Database extends BackendPluginBase implements PluginFormInterface {
           // Compute the total number of results so we can later sort out
           // matches that occur too often.
           $total = count($all_results);
+<<<<<<< HEAD
         }
         else {
           $table = $this->getTemporaryResultsTable($db_query);
@@ -2599,6 +2634,27 @@ class Database extends BackendPluginBase implements PluginFormInterface {
         $this->logException($e, '%type while trying to create autocomplete suggestions: @message in %function (line %line of %file).');
         continue;
       }
+=======
+        }
+        else {
+          $table = $this->getTemporaryResultsTable($db_query);
+          if (!$table) {
+            return [];
+          }
+          $all_results = $this->database->select($table, 't')
+            ->fields('t', ['item_id']);
+          $sql = "SELECT COUNT(item_id) FROM {{$table}}";
+          $total = $this->database->query($sql)->fetchField();
+        }
+      }
+      catch (SearchApiException $e) {
+        // If the exception was in createDbQuery(), we need to reset the
+        // configuration here.
+        $this->configuration = $configuration;
+        $this->logException($e, '%type while trying to create autocomplete suggestions: @message in %function (line %line of %file).');
+        continue;
+      }
+>>>>>>> origin/development
       $max_occurrences = $this->getConfigFactory()
         ->get('search_api_db.settings')
         ->get('autocomplete_max_occurrences');
@@ -2645,12 +2701,16 @@ class Database extends BackendPluginBase implements PluginFormInterface {
       $incomp_len = strlen($incomplete_key);
       foreach ($db_query->execute() as $row) {
         $suffix = ($pass == 1) ? substr($row->word, $incomp_len) : ' ' . $row->word;
+<<<<<<< HEAD
         if ($factory) {
           $suggestions[] = $factory->createFromSuggestionSuffix($suffix, $row->results);
         }
         else {
           $suggestions[] = Suggestion::fromSuggestionSuffix($suffix, $row->results, $user_input);
         }
+=======
+        $suggestions[] = $factory->createFromSuggestionSuffix($suffix, $row->results);
+>>>>>>> origin/development
       }
     }
 

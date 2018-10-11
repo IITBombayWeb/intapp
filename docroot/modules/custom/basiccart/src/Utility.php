@@ -413,6 +413,7 @@ public static function price_format($price) {
 else {
 
     $output .= '<div class="basiccart-grid basic-cart-block test bscart-pop clearfix">';
+    $output .= '<div class="tle clearfix"> Application Packets </div><div class="cart-x cell">x</div>';
 
   if(is_array($cart_cart) && count($cart_cart) >= 1){
     foreach($cart_cart as $nid => $node){

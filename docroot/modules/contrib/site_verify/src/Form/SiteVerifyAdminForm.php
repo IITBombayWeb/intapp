@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\site_verify\Form\SiteVerifyAdminForm.
- */
-
 namespace Drupal\site_verify\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
@@ -33,114 +28,114 @@ class SiteVerifyAdminForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $record = array(), $engine = NULL, $site_verify = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $record = [], $engine = NULL, $site_verify = NULL) {
     if (!empty($site_verify)) {
       $record = \Drupal::service('site_verify_service')->siteVerifyLoad($site_verify);
     }
 
     $storage = $form_state->getStorage();
     if (!isset($storage['step'])) {
-      $record += array(
+      $record += [
         'svid' => NULL,
         'file' => '',
-        'file_contents' => t('This is a verification page.'),
+        'file_contents' => $this->t('This is a verification page.'),
         'meta' => '',
         'engine' => $engine,
-      );
-      !empty($record['engine']) ? $form_state->setStorage(array('step' => 2, 'record' => $record)) : $form_state->setStorage(array('step' => 1, 'record' => $record));
+      ];
+      !empty($record['engine']) ? $form_state->setStorage(['step' => 2, 'record' => $record]) : $form_state->setStorage(['step' => 1, 'record' => $record]);
     }
     else {
       $record = $storage['record'];
     }
 
-    $form['actions'] = array('#type' => 'actions');
+    $form['actions'] = ['#type' => 'actions'];
 
     $storage = $form_state->getStorage();
     switch ($storage['step']) {
       case 1:
         $engines = \Drupal::service('site_verify_service')->siteVerifyGetEngines();
-        $options = array();
+        $options = [];
         foreach ($engines as $key => $engine) {
           $options[$key] = $engine['name'];
         }
         asort($options);
 
-        $form['engine'] = array(
+        $form['engine'] = [
           '#type' => 'select',
-          '#title' => t('Search engine'),
+          '#title' => $this->t('Search engine'),
           '#options' => $options,
-        );
+        ];
         break;
 
       case 2:
-        $form['svid'] = array(
+        $form['svid'] = [
           '#type' => 'value',
           '#value' => $record['svid'],
-        );
-        $form['engine'] = array(
+        ];
+        $form['engine'] = [
           '#type' => 'value',
           '#value' => $record['engine']['key'],
-        );
-        $form['engine_name'] = array(
+        ];
+        $form['engine_name'] = [
           '#type' => 'item',
-          '#title' => t('Search engine'),
+          '#title' => $this->t('Search engine'),
           '#markup' => $record['engine']['name'],
-        );
+        ];
         $form['#engine'] = $record['engine'];
 
-        $form['meta'] = array(
+        $form['meta'] = [
           '#type' => 'textfield',
-          '#title' => t('Verification META tag'),
+          '#title' => $this->t('Verification META tag'),
           '#default_value' => $record['meta'],
-          '#description' => t('This is the full meta tag provided for verification. Note that this meta tag will only be visible in the source code of your <a href="@frontpage">front page</a>.', array('@frontpage' => \Drupal::url('<front>'))),
+          '#description' => $this->t('This is the full meta tag provided for verification. Note that this meta tag will only be visible in the source code of your <a href="@frontpage">front page</a>.', ['@frontpage' => \Drupal::url('<front>')]),
           '#element_validate' => $record['engine']['meta_validate'],
           '#access' => $record['engine']['meta'],
           '#maxlength' => NULL,
-          '#attributes' => array(
+          '#attributes' => [
             'placeholder' => $record['engine']['meta_example'],
-          ),
-        );
+          ],
+        ];
 
-        $form['file_upload'] = array(
+        $form['file_upload'] = [
           '#type' => 'file',
-          '#title' => t('Upload an existing verification file'),
-          '#description' => t('If you have been provided with an actual file, you can simply upload the file.'),
+          '#title' => $this->t('Upload an existing verification file'),
+          '#description' => $this->t('If you have been provided with an actual file, you can simply upload the file.'),
           '#access' => $record['engine']['file'],
-        );
+        ];
 
-        $form['file'] = array(
+        $form['file'] = [
           '#type' => 'textfield',
-          '#title' => t('Verification file'),
+          '#title' => $this->t('Verification file'),
           '#default_value' => $record['file'],
-          '#description' => t('The name of the HTML verification file you were asked to upload.'),
+          '#description' => $this->t('The name of the HTML verification file you were asked to upload.'),
           '#element_validate' => $record['engine']['file_validate'],
           '#access' => $record['engine']['file'],
-          '#attributes' => array(
+          '#attributes' => [
             'placeholder' => $record['engine']['file_example'],
-          ),
-        );
+          ],
+        ];
 
-        $form['file_contents'] = array(
+        $form['file_contents'] = [
           '#type' => 'textarea',
-          '#title' => t('Verification file contents'),
+          '#title' => $this->t('Verification file contents'),
           '#default_value' => $record['file_contents'],
           '#element_validate' => $record['engine']['file_contents_validate'],
           '#wysiwyg' => FALSE,
           '#access' => $record['file_contents'],
-        );
+        ];
 
         if ($record['engine']['file']) {
-          $form['#attributes'] = array('enctype' => 'multipart/form-data');
+          $form['#attributes'] = ['enctype' => 'multipart/form-data'];
         }
         break;
     }
 
-    $form['actions']['cancel'] = array(
+    $form['actions']['cancel'] = [
       '#type' => 'link',
-      '#title' => t('Cancel'),
+      '#title' => $this->t('Cancel'),
       '#url' => isset($_GET['destination']) ? $_GET['destination'] : Url::fromRoute('site_verify.verifications_list'),
       '#weight' => 15,
-    );
+    ];
 
     return parent::buildForm($form, $form_state);
   }
@@ -162,13 +157,13 @@ class SiteVerifyAdminForm extends ConfigFormBase {
     if ($storage['record']['engine']['file']) {
 
       // Import the uploaded verification file.
-      $validators = array('file_validate_extensions' => array());
+      $validators = ['file_validate_extensions' => []];
       if ($file = file_save_upload('file_upload', $validators, FALSE, 0, FILE_EXISTS_REPLACE)) {
         $contents = @file_get_contents($file->getFileUri());
 
         $file->delete();
         if ($contents === FALSE) {
-          drupal_set_message(t('The verification file import failed, because the file %filename could not be read.', array('%filename' => $file->getFilename())), 'error');
+          drupal_set_message(t('The verification file import failed, because the file %filename could not be read.', ['%filename' => $file->getFilename()]), 'error');
         }
         else {
           $values['file'] = $file->getFilename();
@@ -177,11 +172,11 @@ class SiteVerifyAdminForm extends ConfigFormBase {
       }
 
       if ($values['file']) {
-        $existing_file = db_query("SELECT svid FROM {site_verify} WHERE LOWER(file) = LOWER(:file)", array(
+        $existing_file = \Drupal::database()->query("SELECT svid FROM {site_verify} WHERE LOWER(file) = LOWER(:file)", [
           ':file' => $values['file'],
-        ))->fetchField();
+        ])->fetchField();
         if ($existing_file && $values['svid'] !== $existing_file) {
-          $form_state->setErrorByName('file', $this->t('The file %filename is already being used in another verification.', array('%filename' => $values['file'])));
+          $form_state->setErrorByName('file', $this->t('The file %filename is already being used in another verification.', ['%filename' => $values['file']]));
         }
       }
     }
@@ -195,29 +190,29 @@ class SiteVerifyAdminForm extends ConfigFormBase {
 
     if ($storage['step'] == 1) {
       // Send the form to step 2 (verification details).
-      $form_state->setStorage(array(
-        'record' => array(
+      $form_state->setStorage([
+        'record' => [
           'engine' => \Drupal::service('site_verify_service')->siteVerifyEngineLoad($form_state->getValue('engine')),
-        ),
+        ],
         'step' => 2,
-      ));
+      ]);
       $form_state->setRebuild(TRUE);
     }
     else {
       // Save the verification to the database.
       \Drupal::database()->merge('site_verify')
         ->key('svid', $form_state->getValue('svid'))
-        ->fields(array(
+        ->fields([
           'engine' => $form_state->getValue('engine'),
           'file' => $form_state->getValue('file'),
           'file_contents' => $form_state->getValue('file_contents'),
           'meta' => $form_state->getValue('meta'),
-        ))
+        ])
         ->execute();
 
       drupal_set_message(t('Verification saved.'));
 
-      $form_state->setStorage(array());
+      $form_state->setStorage([]);
       $form_state->setRebuild(NULL);
       $form_state->setRedirect('site_verify.verifications_list');
 

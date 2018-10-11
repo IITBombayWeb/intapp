@@ -66,6 +66,12 @@ class SearchApiCommands extends DrushCommands {
    *
    * @return \Consolidation\OutputFormatters\StructuredData\RowsOfFields
    *   The table rows.
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\SearchApiException
+   *   Thrown if an index has a server which couldn't be loaded.
+>>>>>>> origin/development
    */
   public function listCommand() {
     $rows = $this->commandHelper->indexListCommand();
@@ -85,6 +91,12 @@ class SearchApiCommands extends DrushCommands {
    *   Enable the search index with the ID node_index.
    *
    * @aliases sapi-en,search-api-enable
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\ConsoleException
+   *   Thrown if no indexes could be loaded.
+>>>>>>> origin/development
    */
   public function enable($indexId) {
     $this->commandHelper->enableIndexCommand([$indexId]);
@@ -101,6 +113,12 @@ class SearchApiCommands extends DrushCommands {
    *   Alias to enable all disabled indexes.
    *
    * @aliases sapi-ena,search-api-enable-all
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\ConsoleException
+   *   Thrown if no indexes could be loaded.
+>>>>>>> origin/development
    */
   public function enableAll() {
     $this->commandHelper->enableIndexCommand();
@@ -139,6 +157,12 @@ class SearchApiCommands extends DrushCommands {
    *   Alias to disable all enabled indexes.
    *
    * @aliases sapi-disa,search-api-disable-all
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\ConsoleException
+   *   Thrown if no indexes could be loaded.
+>>>>>>> origin/development
    */
   public function disableAll() {
     $this->commandHelper->disableIndexCommand();
@@ -170,6 +194,12 @@ class SearchApiCommands extends DrushCommands {
    *
    * @return \Consolidation\OutputFormatters\StructuredData\RowsOfFields
    *   The table rows.
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\SearchApiException
+   *   Thrown if one of the affected indexes had an invalid tracker set.
+>>>>>>> origin/development
    */
   public function status($indexId = NULL) {
     $rows = $this->commandHelper->indexStatusCommand([$indexId]);
@@ -242,6 +272,13 @@ class SearchApiCommands extends DrushCommands {
    *   Schedule the search index with the ID node_index for reindexing.
    *
    * @aliases search-api-mark-all,search-api-reindex,sapi-r,search-api-reset-tracker
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\SearchApiException
+   *   Thrown if one of the affected indexes had an invalid tracker set, or some
+   *   other internal error occurred.
+>>>>>>> origin/development
    */
   public function resetTracker($indexId = NULL, array $options = ['entity-types' => []]) {
     $this->commandHelper->resetTrackerCommand([$indexId], $options['entity-types']);
@@ -264,6 +301,13 @@ class SearchApiCommands extends DrushCommands {
    *   Clear the search index with the ID node_index.
    *
    * @aliases sapi-c,search-api-clear
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\SearchApiException
+   *   Thrown if one of the affected indexes had an invalid tracker set, or some
+   *   other internal error occurred.
+>>>>>>> origin/development
    */
   public function clear($indexId = NULL) {
     $this->commandHelper->clearIndexCommand([$indexId]);
@@ -292,6 +336,15 @@ class SearchApiCommands extends DrushCommands {
    *
    * @return \Consolidation\OutputFormatters\StructuredData\RowsOfFields
    *   The table rows.
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\ConsoleException
+   *   Thrown if searching failed for any reason.
+   * @throws \Drupal\search_api\SearchApiException
+   *   Thrown if no search query could be created for the given index, for
+   *   example because it is disabled or its server could not be loaded.
+>>>>>>> origin/development
    */
   public function search($indexId, $keyword) {
     $rows = $this->commandHelper->searchIndexCommand($indexId, $keyword);
@@ -318,6 +371,12 @@ class SearchApiCommands extends DrushCommands {
    *
    * @return \Consolidation\OutputFormatters\StructuredData\RowsOfFields
    *   The table rows.
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\ConsoleException
+   *   Thrown if no servers could be loaded.
+>>>>>>> origin/development
    */
   public function serverList() {
     $rows = $this->commandHelper->serverListCommand();
@@ -339,6 +398,14 @@ class SearchApiCommands extends DrushCommands {
    *   Alias to enable the my_solr_server search server.
    *
    * @aliases sapi-se,search-api-server-enable
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\ConsoleException
+   *   Thrown if the server couldn't be loaded.
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   Thrown if an internal error occurred when saving the server.
+>>>>>>> origin/development
    */
   public function serverEnable($serverId) {
     $this->commandHelper->enableServerCommand($serverId);
@@ -358,6 +425,14 @@ class SearchApiCommands extends DrushCommands {
    *   Alias to disable the my_solr_server search server.
    *
    * @aliases sapi-sd,search-api-server-disable
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\ConsoleException
+   *   Thrown if the server couldn't be loaded.
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   Thrown if an internal error occurred when saving the server.
+>>>>>>> origin/development
    */
   public function serverDisable($serverId) {
     $this->commandHelper->disableServerCommand($serverId);
@@ -377,6 +452,15 @@ class SearchApiCommands extends DrushCommands {
    *   Alias to clear all search indexes on the search server my_solr_server.
    *
    * @aliases sapi-sc,search-api-server-clear
+<<<<<<< HEAD
+=======
+   *
+   * @throws \Drupal\search_api\ConsoleException
+   *   Thrown if the server couldn't be loaded.
+   * @throws \Drupal\search_api\SearchApiException
+   *   Thrown if one of the affected indexes had an invalid tracker set, or some
+   *   other internal error occurred.
+>>>>>>> origin/development
    */
   public function serverClear($serverId) {
     $this->commandHelper->clearServerCommand($serverId);

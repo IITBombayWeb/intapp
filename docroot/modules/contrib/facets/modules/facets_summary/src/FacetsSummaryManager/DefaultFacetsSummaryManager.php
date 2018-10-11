@@ -164,6 +164,14 @@ class DefaultFacetsSummaryManager {
           '#raw_value' => $result->getRawValue(),
         ];
         $item = (new Link($item, $result->getUrl()))->toRenderable();
+<<<<<<< HEAD
+=======
+        $item['#wrapper_attributes'] = [
+          'class' => [
+            'facet-summary-item--facet',
+          ],
+        ];
+>>>>>>> origin/development
         $items[] = $item;
       }
       if ($children = $result->getChildren()) {

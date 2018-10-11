@@ -76,6 +76,14 @@ $(document).ready(function() {
       clearTimeout(menulistbtn_timeout);
     }
   }
+
+  var chksize =  $(".tabs .tabs--primary li").length;
+  
+    if(chksize ==1){
+      $(".tabs .tabs--primary li").hide();
+    }
+ 
+
 });
 
 $(window).on('load', function(){
