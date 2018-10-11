@@ -57,13 +57,8 @@ class ViewsPropertyExtractionTest extends KernelTestBase {
     $datasource_id = 'entity:user';
 
     /** @var \Drupal\search_api\IndexInterface|\PHPUnit_Framework_MockObject_MockObject $index */
-<<<<<<< HEAD
-    $index = $this->getMock(IndexInterface::class);
-    $property2 = $this->getMock(ConfigurablePropertyInterface::class);
-=======
     $index = $this->createMock(IndexInterface::class);
     $property2 = $this->createMock(ConfigurablePropertyInterface::class);
->>>>>>> origin/development
     $property2->method('getProcessorId')->willReturn('processor2');
     $property2->method('getDataType')->willReturn('string');
     $property2->method('defaultConfiguration')->willReturn([]);
@@ -97,19 +92,11 @@ class ViewsPropertyExtractionTest extends KernelTestBase {
       };
     };
     $value1 = $processor_property_value ?: 'Processor 1';
-<<<<<<< HEAD
-    $processor1 = $this->getMock(ProcessorInterface::class);
-    $processor1->method('addFieldValues')
-      ->willReturnCallback($generate_add_field_values($value1));
-    $value2 = $processor_property_value ?: 'Processor 2';
-    $processor2 = $this->getMock(ProcessorInterface::class);
-=======
     $processor1 = $this->createMock(ProcessorInterface::class);
     $processor1->method('addFieldValues')
       ->willReturnCallback($generate_add_field_values($value1));
     $value2 = $processor_property_value ?: 'Processor 2';
     $processor2 = $this->createMock(ProcessorInterface::class);
->>>>>>> origin/development
     $processor2->method('addFieldValues')
       ->willReturnCallback($generate_add_field_values($value2));
     $index->method('getProcessor')->willReturnMap([

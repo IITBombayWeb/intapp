@@ -123,8 +123,6 @@ plugin.plugin_configuration.facets_processor.date_item:
     date_format:
       type: string
       label: 'Date format'
-<<<<<<< HEAD
-=======
 
 plugin.plugin_configuration.facets_processor.granularity_item:
   type: mapping
@@ -133,4 +131,3 @@ plugin.plugin_configuration.facets_processor.granularity_item:
     granularity:
       type: integer
       label: 'Granularity'
->>>>>>> origin/development

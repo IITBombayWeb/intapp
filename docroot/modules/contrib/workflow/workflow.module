@@ -597,17 +597,6 @@ function workflow_url_get_field_name() {
  * @return mixed|string
  */
 function workflow_url_get_operation() {
-<<<<<<< HEAD
-  $url = \Drupal\Core\Url::fromRoute('<current>');
-  // The last part of the path is the operation: edit, workflow, devel.
-  $url_parts = explode('/', $url->toString());
-  $operation = array_pop($url_parts);
-  // Except for view pages.
-  if (is_numeric($operation) || $operation == 'view') {
-    $operation = '';
-  }
-  return $operation;
-=======
   // $url = \Drupal\Core\Url::fromRoute('<current>');
   // // The last part of the path is the operation: edit, workflow, devel.
   // $url_parts = explode('/', $url->toString());
@@ -629,7 +618,6 @@ function workflow_url_get_operation() {
   } else {
     return $routename;
   }
->>>>>>> origin/development
 }
 
 /**

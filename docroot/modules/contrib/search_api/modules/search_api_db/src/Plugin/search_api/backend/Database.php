@@ -29,11 +29,7 @@ use Drupal\search_api\Query\ConditionGroupInterface;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\search_api\SearchApiException;
 use Drupal\search_api\Utility\DataTypeHelper;
-<<<<<<< HEAD
-use Drupal\search_api_autocomplete\Suggestion;
-=======
 use Drupal\search_api_autocomplete\SearchInterface;
->>>>>>> origin/development
 use Drupal\search_api_autocomplete\Suggestion\SuggestionFactory;
 use Drupal\search_api_db\DatabaseCompatibility\DatabaseCompatibilityHandlerInterface;
 use Drupal\search_api_db\DatabaseCompatibility\GenericDatabase;
@@ -1263,12 +1259,6 @@ class Database extends BackendPluginBase implements PluginFormInterface {
           foreach ($values as $token) {
             $word = $token->getText();
             $score = $token->getBoost() * $item->getBoost();
-
-            // In rare cases, tokens with leading or trailing whitespace can
-            // slip through. Since this can lead to errors when such tokens are
-            // part of a primary key (as in this case), we trim such whitespace
-            // here.
-            $word = trim($word);
 
             // In rare cases, tokens with leading or trailing whitespace can
             // slip through. Since this can lead to errors when such tokens are
@@ -2552,14 +2542,7 @@ class Database extends BackendPluginBase implements PluginFormInterface {
     $fields = $this->getFieldInfo($index);
 
     $suggestions = [];
-<<<<<<< HEAD
-    $factory = NULL;
-    if (class_exists(SuggestionFactory::class)) {
-      $factory = new SuggestionFactory($user_input);
-    }
-=======
     $factory = new SuggestionFactory($user_input);
->>>>>>> origin/development
     $passes = [];
     $incomplete_like = NULL;
 
@@ -2614,7 +2597,6 @@ class Database extends BackendPluginBase implements PluginFormInterface {
           // Compute the total number of results so we can later sort out
           // matches that occur too often.
           $total = count($all_results);
-<<<<<<< HEAD
         }
         else {
           $table = $this->getTemporaryResultsTable($db_query);
@@ -2634,27 +2616,6 @@ class Database extends BackendPluginBase implements PluginFormInterface {
         $this->logException($e, '%type while trying to create autocomplete suggestions: @message in %function (line %line of %file).');
         continue;
       }
-=======
-        }
-        else {
-          $table = $this->getTemporaryResultsTable($db_query);
-          if (!$table) {
-            return [];
-          }
-          $all_results = $this->database->select($table, 't')
-            ->fields('t', ['item_id']);
-          $sql = "SELECT COUNT(item_id) FROM {{$table}}";
-          $total = $this->database->query($sql)->fetchField();
-        }
-      }
-      catch (SearchApiException $e) {
-        // If the exception was in createDbQuery(), we need to reset the
-        // configuration here.
-        $this->configuration = $configuration;
-        $this->logException($e, '%type while trying to create autocomplete suggestions: @message in %function (line %line of %file).');
-        continue;
-      }
->>>>>>> origin/development
       $max_occurrences = $this->getConfigFactory()
         ->get('search_api_db.settings')
         ->get('autocomplete_max_occurrences');
@@ -2701,16 +2662,7 @@ class Database extends BackendPluginBase implements PluginFormInterface {
       $incomp_len = strlen($incomplete_key);
       foreach ($db_query->execute() as $row) {
         $suffix = ($pass == 1) ? substr($row->word, $incomp_len) : ' ' . $row->word;
-<<<<<<< HEAD
-        if ($factory) {
-          $suggestions[] = $factory->createFromSuggestionSuffix($suffix, $row->results);
-        }
-        else {
-          $suggestions[] = Suggestion::fromSuggestionSuffix($suffix, $row->results, $user_input);
-        }
-=======
         $suggestions[] = $factory->createFromSuggestionSuffix($suffix, $row->results);
->>>>>>> origin/development
       }
     }
 

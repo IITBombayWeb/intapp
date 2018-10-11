@@ -29,15 +29,10 @@ class MigrationGroupTest extends KernelTestBase {
         'migration_tags' => ['Drupal 6'],
         'source' => [
           'constants' => [
-<<<<<<< HEAD
-            'type' => 'image', // Not in migration, so will be added.
-            'cardinality' => '1', // In migration, so will be overridden.
-=======
             // Not in migration, so will be added.
             'type' => 'image',
             // In migration, so will be overridden.
             'cardinality' => '1',
->>>>>>> origin/development
           ],
         ],
         // Not in migration, so will be added.
@@ -62,12 +57,6 @@ class MigrationGroupTest extends KernelTestBase {
         'migration_dependencies' => [],
       ]);
     $migration->set('source', [
-<<<<<<< HEAD
-      'plugin' => 'empty', // Not in group, persists.
-      'constants' => [
-        'entity_type' => 'user', // Not in group, persists.
-        'cardinality' => '3', // Overrides group.
-=======
       // Not in group, persists.
       'plugin' => 'empty',
       'constants' => [
@@ -75,7 +64,6 @@ class MigrationGroupTest extends KernelTestBase {
         'entity_type' => 'user',
         // Overrides group.
         'cardinality' => '3',
->>>>>>> origin/development
       ],
     ]);
     $migration->save();

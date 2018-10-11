@@ -2,13 +2,8 @@
 
 namespace Drupal\facets\Plugin\facets\hierarchy;
 
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\facets\Hierarchy\HierarchyPluginBase;
-<<<<<<< HEAD
-=======
 use Drupal\taxonomy\TermStorageInterface;
->>>>>>> origin/development
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -23,19 +18,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Taxonomy extends HierarchyPluginBase {
 
   /**
-<<<<<<< HEAD
-   * The current primary database.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-=======
    * The term storage.
    *
    * @var \Drupal\taxonomy\TermStorageInterface
    */
   protected $termStorage;
->>>>>>> origin/development
 
   /**
    * Constructs a Drupal\Component\Plugin\PluginBase object.
@@ -46,21 +33,12 @@ class Taxonomy extends HierarchyPluginBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-<<<<<<< HEAD
-   * @param \Drupal\Core\Database\Connection $database
-   *   The current primary database.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->database = $database;
-=======
    * @param \Drupal\taxonomy\TermStorageInterface $termStorage
    *   The term storage.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, TermStorageInterface $termStorage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->termStorage = $termStorage;
->>>>>>> origin/development
   }
 
   /**
@@ -71,11 +49,7 @@ class Taxonomy extends HierarchyPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-<<<<<<< HEAD
-      $container->get('database')
-=======
       $container->get('entity_type.manager')->getStorage('taxonomy_term')
->>>>>>> origin/development
     );
   }
 
@@ -95,19 +69,6 @@ class Taxonomy extends HierarchyPluginBase {
    * {@inheritdoc}
    */
   public function getNestedChildIds($id) {
-<<<<<<< HEAD
-    $children = &drupal_static(__FUNCTION__, []);
-    if (!isset($children[$id])) {
-      $query = $this->database->select('taxonomy_term_hierarchy', 'h');
-      $query->addField('h', 'tid');
-      $query->condition('h.parent', $id);
-      $queried_children = $query->execute()->fetchCol();
-      $subchilds = [];
-      foreach ($queried_children as $child) {
-        $subchilds = array_merge($subchilds, $this->getNestedChildIds($child));
-      }
-      $children[$id] = array_merge($queried_children, $subchilds);
-=======
     $children = $this->termStorage->loadChildren($id);
     $children = array_filter(array_values(array_map(function ($it) {
       return $it->id();
@@ -116,7 +77,6 @@ class Taxonomy extends HierarchyPluginBase {
     $subchilds = [];
     foreach ($children as $child) {
       $subchilds = array_merge($subchilds, $this->getNestedChildIds($child));
->>>>>>> origin/development
     }
     return array_merge($children, $subchilds);
   }
@@ -125,27 +85,12 @@ class Taxonomy extends HierarchyPluginBase {
    * {@inheritdoc}
    */
   public function getChildIds(array $ids) {
-<<<<<<< HEAD
-    $result = $this->database->select('taxonomy_term_hierarchy', 'th')
-      ->fields('th', ['tid', 'parent'])
-      ->condition('th.parent', '0', '>')
-      ->condition((new Condition('OR'))
-        ->condition('th.tid', $ids, 'IN')
-        ->condition('th.parent', $ids, 'IN')
-      )
-      ->execute();
-
-    $parents = [];
-    foreach ($result as $record) {
-      $parents[$record->parent][] = $record->tid;
-=======
     $parents = [];
     foreach ($ids as $id) {
       $terms = $this->termStorage->loadChildren($id);
       $parents[$id] = array_filter(array_values(array_map(function ($it) {
         return $it->id();
       }, $terms)));
->>>>>>> origin/development
     }
     $parents = array_filter($parents);
     return $parents;
@@ -161,19 +106,9 @@ class Taxonomy extends HierarchyPluginBase {
    *   Returns FALSE if no parent is found, else parent tid.
    */
   protected function taxonomyGetParent($tid) {
-<<<<<<< HEAD
-    $parent = &drupal_static(__FUNCTION__, []);
-
-    if (!isset($parent[$tid])) {
-      $query = $this->database->select('taxonomy_term_hierarchy', 'h');
-      $query->addField('h', 'parent');
-      $query->condition('h.tid', $tid);
-      $parent[$tid] = $query->execute()->fetchField();
-=======
     $parents = $this->termStorage->loadParents($tid);
     if (empty($parents)) {
       return FALSE;
->>>>>>> origin/development
     }
     return reset($parents)->id();
   }

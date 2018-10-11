@@ -37,8 +37,6 @@ class MigrationListBuilder extends ConfigEntityListBuilder implements EntityHand
    * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
    */
   protected $migrationPluginManager;
-<<<<<<< HEAD
-=======
 
   /**
    * The logger service.
@@ -46,7 +44,6 @@ class MigrationListBuilder extends ConfigEntityListBuilder implements EntityHand
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
   protected $logger;
->>>>>>> origin/development
 
   /**
    * Constructs a new EntityListBuilder object.
@@ -62,18 +59,11 @@ class MigrationListBuilder extends ConfigEntityListBuilder implements EntityHand
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
    *   The logger service.
    */
-<<<<<<< HEAD
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, CurrentRouteMatch $current_route_match, MigrationPluginManagerInterface $migration_plugin_manager) {
-    parent::__construct($entity_type, $storage);
-    $this->currentRouteMatch = $current_route_match;
-    $this->migrationPluginManager = $migration_plugin_manager;
-=======
   public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, CurrentRouteMatch $current_route_match, MigrationPluginManagerInterface $migration_plugin_manager, LoggerChannelInterface $logger) {
     parent::__construct($entity_type, $storage);
     $this->currentRouteMatch = $current_route_match;
     $this->migrationPluginManager = $migration_plugin_manager;
     $this->logger = $logger;
->>>>>>> origin/development
   }
 
   /**
@@ -84,12 +74,8 @@ class MigrationListBuilder extends ConfigEntityListBuilder implements EntityHand
       $entity_type,
       $container->get('entity.manager')->getStorage($entity_type->id()),
       $container->get('current_route_match'),
-<<<<<<< HEAD
-      $container->get('plugin.manager.migration')
-=======
       $container->get('plugin.manager.migration'),
       $container->get('logger.channel.migrate_tools')
->>>>>>> origin/development
     );
   }
 
@@ -173,67 +159,6 @@ class MigrationListBuilder extends ConfigEntityListBuilder implements EntityHand
       ];
       $row['machine_name'] = $migration->id();
       $row['status'] = $migration->getStatusLabel();
-<<<<<<< HEAD
-    } catch (PluginException $e) {
-      return NULL;
-    }
-
-    try {
-      // Derive the stats.
-      $source_plugin = $migration->getSourcePlugin();
-      $row['total'] = $source_plugin->count();
-      $map = $migration->getIdMap();
-      $row['imported'] = $map->importedCount();
-      // -1 indicates uncountable sources.
-      if ($row['total'] == -1) {
-        $row['total'] = $this->t('N/A');
-        $row['unprocessed'] = $this->t('N/A');
-      }
-      else {
-        $row['unprocessed'] = $row['total'] - $map->processedCount();
-      }
-      $row['messages'] = [
-        'data' => [
-          '#type' => 'link',
-          '#title' => $map->messageCount(),
-          '#url' => Url::fromRoute("migrate_tools.messages", $route_parameters),
-        ],
-      ];
-      $migrate_last_imported_store = \Drupal::keyValue('migrate_last_imported');
-      $last_imported = $migrate_last_imported_store->get($migration->id(), FALSE);
-      if ($last_imported) {
-        /** @var \Drupal\Core\Datetime\DateFormatter $date_formatter */
-        $date_formatter = \Drupal::service('date.formatter');
-        $row['last_imported'] = $date_formatter->format($last_imported / 1000,
-          'custom', 'Y-m-d H:i:s');
-      }
-      else {
-        $row['last_imported'] = '';
-      }
-
-      $row['operations']['data'] = [
-        '#type' => 'dropbutton',
-        '#links' => [
-          'simple_form' => [
-            'title' => $this->t('Execute'),
-            'url' => Url::fromRoute('migrate_tools.execute', [
-              'migration_group' => $migration_group,
-              'migration' => $migration->id(),
-            ]),
-          ],
-        ],
-      ];
-    } catch (PluginException $e) {
-      // Derive the stats.
-      $row['status'] = $this->t('No data found');
-      $row['total'] = $this->t('N/A');
-      $row['imported'] = $this->t('N/A');
-      $row['unprocessed'] = $this->t('N/A');
-      $row['messages'] = $this->t('N/A');
-      $row['last_imported'] = $this->t('N/A');
-      $row['operations'] = $this->t('N/A');
-    }
-=======
     }
     catch (PluginException $e) {
       $this->logger->warning('Migration entity id %id is malformed', ['%id' => $migration_entity->id()]);
@@ -296,7 +221,6 @@ class MigrationListBuilder extends ConfigEntityListBuilder implements EntityHand
       $row['last_imported'] = $this->t('N/A');
       $row['operations'] = $this->t('N/A');
     }
->>>>>>> origin/development
 
     return $row;
   }

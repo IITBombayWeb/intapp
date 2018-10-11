@@ -420,12 +420,8 @@ function form_validate_data2($form, &$form_state){
  */
 
 function form_validate_data1($form, &$form_state) {
-<<<<<<< HEAD
-     
-=======
      //dpm($form['field_details_of_academic_record']);
      //dpm($form_state);
->>>>>>> origin/development
    if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest') {
        
        if($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
@@ -735,13 +731,8 @@ function iitinap_form_views_exposed_form_alter(array &$form, FormStateInterface 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-<<<<<<< HEAD
-/*function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-    // Alter login form and add own custom submit handler.
-=======
 function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
     // Alter login form and add own custom submit handler
->>>>>>> origin/development
     $form['#submit'][] = '_iitinap_user_login_form_submit';
     $form['social_login']=array(
           '#type' => 'markup',
@@ -750,7 +741,7 @@ function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_sta
 		  <a class="gle-buttton" href="/user/login/google">Continue with Google</a></div>',
 		  '#weight' => -10,
     	);
-}*/
+}
 
 /**
  * Custom submit handler for login form.

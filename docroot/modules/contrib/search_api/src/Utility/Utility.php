@@ -207,8 +207,6 @@ class Utility {
     return php_sapi_name() === 'cli';
   }
 
-<<<<<<< HEAD
-=======
   /**
    * Checks whether a certain value matches the configuration.
    *
@@ -239,5 +237,4 @@ class Utility {
     return in_array($value, $settings['selected']) != $settings['default'];
   }
 
->>>>>>> origin/development
 }

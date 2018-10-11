@@ -806,10 +806,7 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextNotContains('Boolean item label');
     $this->assertSession()->pageTextNotContains('Transform UID to user name');
     $this->assertSession()->pageTextNotContains('Transform entity ID to label');
-<<<<<<< HEAD
-=======
     $this->assertSession()->pageTextNotContains('Sort by taxonomy term weight');
->>>>>>> origin/development
   }
 
   /**
@@ -833,16 +830,12 @@ class ProcessorIntegrationTest extends FacetsTestBase {
       }
       // These processors are hidden by default, see also
       // ::testHiddenProcessors.
-<<<<<<< HEAD
-      if (in_array($processor->getPluginId(), ['boolean_item', 'translate_entity', 'uid_to_username_callback'])) {
-=======
       $hiddenProcessors = [
         'boolean_item',
         'translate_entity',
         'uid_to_username_callback',
       ];
       if (in_array($processor->getPluginId(), $hiddenProcessors)) {
->>>>>>> origin/development
         continue;
       }
 
@@ -851,8 +844,6 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     }
   }
 
-<<<<<<< HEAD
-=======
   /**
    * Tests the list item processor with underscores in the bundle.
    */
@@ -891,5 +882,4 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->assertFacetLabel('Test with underscore');
   }
 
->>>>>>> origin/development
 }

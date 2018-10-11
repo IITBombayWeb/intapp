@@ -2,12 +2,6 @@ name: Simple FB Connect - Rules Integration
 type: module
 description: 'Integrates Simple FB Connect with Rules.'
 package: Authentication
-<<<<<<< HEAD
-core: 8.x
-dependencies:
-  - simple_fb_connect
-  - rules
-=======
 # core: 8.x
 dependencies:
   - simple_fb_connect
@@ -18,4 +12,3 @@ version: '8.x-3.1'
 core: '8.x'
 project: 'simple_fb_connect'
 datestamp: 1501958347
->>>>>>> origin/development

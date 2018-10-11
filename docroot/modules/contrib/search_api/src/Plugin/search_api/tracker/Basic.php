@@ -196,14 +196,9 @@ class Basic extends TrackerPluginBase implements PluginFormInterface {
       $select->condition('datasource', $datasource_id);
     }
     $select->condition('sai.status', $this::STATUS_NOT_INDEXED, '=');
-<<<<<<< HEAD
-    $lifo = $this->configuration['indexing_order'] === 'lifo';
-    $select->orderBy('sai.changed', $lifo ? 'DESC' : 'ASC');
-=======
     // Use the same direction for both sorts to avoid performance problems.
     $order = $this->configuration['indexing_order'] === 'lifo' ? 'DESC' : 'ASC';
     $select->orderBy('sai.changed', $order);
->>>>>>> origin/development
     // Add a secondary sort on item ID to make the order completely predictable.
     $select->orderBy('sai.item_id', $order);
 

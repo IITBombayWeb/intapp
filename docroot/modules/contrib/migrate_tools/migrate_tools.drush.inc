@@ -299,13 +299,6 @@ function _drush_migrate_tools_execute_migration(MigrationInterface $migration, $
     $migration->getIdMap()->prepareUpdate();
   }
   $executable = new MigrateExecutable($migration, $log, $options);
-<<<<<<< HEAD
-  // drush_op() provides --simulate support
-  drush_op(array($executable, 'import'));
-  if ($count = $executable->getFailedCount()) {
-    // Nudge Drush to use a non-zero exit code.
-    drush_set_error('MIGRATE_ERROR', dt('!name Migration - !count failed.', array('!name' => $migration_id, '!count' => $count)));
-=======
   // Function drush_op() provides --simulate support.
   drush_op([$executable, 'import']);
   if ($count = $executable->getFailedCount()) {
@@ -314,7 +307,6 @@ function _drush_migrate_tools_execute_migration(MigrationInterface $migration, $
       '!name' => $migration_id,
       '!count' => $count,
     ]));
->>>>>>> origin/development
   }
 }
 

@@ -104,12 +104,9 @@ class FacetListBuilder extends DraggableListBuilder {
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\facets\FacetInterface $entity */
     $facet = $entity;
-<<<<<<< HEAD
-=======
     $facet_configs = \Drupal::entityTypeManager()
       ->getStorage('facets_facet')
       ->load($facet->getConfigTarget());
->>>>>>> origin/development
     $row = [
       'type' => [
         '#theme_wrappers' => [
@@ -122,11 +119,7 @@ class FacetListBuilder extends DraggableListBuilder {
       ],
       'title' => [
         '#type' => 'link',
-<<<<<<< HEAD
-        '#title' => $facet->label(),
-=======
         '#title' => $facet_configs->get('name'),
->>>>>>> origin/development
         '#suffix' => '<div>' . $entity->getFieldAlias() . ' - ' . $facet->getWidget()['type'] . '</div>',
         '#attributes' => [
           'class' => ['search-api-title'],

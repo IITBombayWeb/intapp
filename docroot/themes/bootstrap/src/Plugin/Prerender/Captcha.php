@@ -2,10 +2,6 @@
 
 namespace Drupal\bootstrap\Plugin\Prerender;
 
-<<<<<<< HEAD
-use Drupal\bootstrap\Annotation\BootstrapPrerender;
-=======
->>>>>>> origin/development
 use Drupal\bootstrap\Utility\Element;
 
 /**

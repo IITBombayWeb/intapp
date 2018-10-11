@@ -94,11 +94,7 @@ class EntityStatusTest extends UnitTestCase {
     // We therefore need to ensure each of these calls returns an appropriate
     // value.
     $self = $this;
-<<<<<<< HEAD:docroot/modules/contrib/search_api/tests/src/Unit/Processor/EntityStatusTest.php
-    $entity_type_manager = $this->getMock(EntityTypeManagerInterface::class);
-=======
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
->>>>>>> origin/development:docroot/modules/contrib/search_api/tests/src/Unit/Processor/EntityStatusTest.php
     $entity_type_manager->method('getDefinition')
       ->willReturnCallback(function ($entity_type_id) use ($self) {
         $entity_type = $self->getMock(EntityTypeInterface::class);

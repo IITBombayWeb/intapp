@@ -59,14 +59,11 @@ class ResetFacetsProcessor extends ProcessorPluginBase implements BuildProcessor
     $url->setOptions(['query' => $query_params]);
 
     $item = (new Link($configuration['settings']['link_text'], $url))->toRenderable();
-<<<<<<< HEAD
-=======
     $item['#wrapper_attributes'] = [
       'class' => [
         'facet-summary-item--clear',
       ],
     ];
->>>>>>> origin/development
     array_unshift($build['#items'], $item);
     return $build;
   }

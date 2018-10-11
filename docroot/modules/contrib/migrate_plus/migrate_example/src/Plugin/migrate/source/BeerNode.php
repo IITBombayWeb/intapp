@@ -40,13 +40,7 @@ class BeerNode extends SqlBase {
       'image_description',
     ];
     $query = $this->select('migrate_example_beer_node', 'b')
-<<<<<<< HEAD
-      ->fields('b', ['bid', 'name', 'body', 'excerpt', 'aid',
-                   'countries', 'image', 'image_alt', 'image_title',
-                   'image_description']);
-=======
       ->fields('b', $fields);
->>>>>>> origin/development
     return $query;
   }
 

@@ -204,8 +204,6 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
   }
 
   /**
-<<<<<<< HEAD
-=======
    * Tests sorting by weight of a taxonomy term.
    */
   public function testWeightSort() {
@@ -235,7 +233,6 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
   }
 
   /**
->>>>>>> origin/development
    * Verify the "Enable parent when child gets disabled" option is working.
    */
   protected function verifyEnableParentWhenChildGetsDisabledOption() {

@@ -16,15 +16,9 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @see \Drupal\Core\Render\Element\Actions::preRenderActionsDropbutton()
  *
-<<<<<<< HEAD
- * @todo Remove once core is fixed.
- *
- * @see https://www.drupal.org/node/2855458
-=======
  * @see https://www.drupal.org/node/2855458
  *
  * @todo Remove once core is fixed.
->>>>>>> origin/development
  */
 class ActionsDropbutton extends ProcessBase implements ProcessInterface {
 

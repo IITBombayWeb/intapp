@@ -63,19 +63,11 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
     // Test with a default filter key.
     $this->editFacetConfig(['filter_key' => 'f']);
     $this->breadcrumbTest();
-<<<<<<< HEAD
 
     // Test with an empty filter key.
     $this->editFacetConfig(['filter_key' => '']);
     $this->breadcrumbTest();
 
-=======
-
-    // Test with an empty filter key.
-    $this->editFacetConfig(['filter_key' => '']);
-    $this->breadcrumbTest();
-
->>>>>>> origin/development
     // Test with a specific filter key.
     $this->editFacetConfig(['filter_key' => 'my_filter_key']);
     $this->breadcrumbTest();
@@ -89,8 +81,6 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
   }
 
   /**
-<<<<<<< HEAD
-=======
    * Tests enabling + disabling the breadcrumb label prefix.
    */
   public function testBreadcrumbLabel() {
@@ -119,7 +109,6 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
   }
 
   /**
->>>>>>> origin/development
    * Edit the facet configuration with the given values.
    *
    * @param array $config

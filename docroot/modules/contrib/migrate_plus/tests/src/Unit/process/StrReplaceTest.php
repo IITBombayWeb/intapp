@@ -5,10 +5,6 @@ namespace Drupal\Tests\migrate_plus\Unit\process;
 use Drupal\migrate_plus\Plugin\migrate\process\StrReplace;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/development
 /**
  * Tests the str replace process plugin.
  *
@@ -59,10 +55,6 @@ class StrReplaceTest extends MigrateProcessTestCase {
 
   /**
    * Test for MigrateException for "search" configuration.
-<<<<<<< HEAD
-   *
-=======
->>>>>>> origin/development
    */
   public function testSearchMigrateException() {
     $value = 'vero eos et accusam et justo vero';
@@ -86,19 +78,11 @@ class StrReplaceTest extends MigrateProcessTestCase {
   /**
    * Test for multiple.
    */
-<<<<<<< HEAD
-  public function  testIsMultiple() {
-    $value = [
-      'vero eos et accusam et justo vero',
-      'et eos vero accusam vero justo et',
-      ];
-=======
   public function testIsMultiple() {
     $value = [
       'vero eos et accusam et justo vero',
       'et eos vero accusam vero justo et',
     ];
->>>>>>> origin/development
 
     $expected = [
       'vero eos that accusam that justo vero',

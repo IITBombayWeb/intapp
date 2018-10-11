@@ -257,12 +257,6 @@ class Highlight extends ProcessorPluginBase implements PluginFormInterface {
       $highlighted_fields = $this->highlightFields($result_items, $keys);
       foreach ($highlighted_fields as $item_id => $item_fields) {
         $item = $result_items[$item_id];
-<<<<<<< HEAD
-        // Maybe the backend or some other processor has already set highlighted
-        // field values.
-        $item_fields += $item->getExtraData('highlighted_fields', []);
-=======
->>>>>>> origin/development
         $item->setExtraData('highlighted_fields', $item_fields);
       }
     }

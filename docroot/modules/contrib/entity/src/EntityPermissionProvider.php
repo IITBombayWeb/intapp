@@ -2,12 +2,6 @@
 
 namespace Drupal\entity;
 
-<<<<<<< HEAD
-use Drupal\Core\Entity\EntityHandlerInterface;
-use Drupal\Core\Entity\EntityPublishedInterface;
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-=======
->>>>>>> origin/development
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**

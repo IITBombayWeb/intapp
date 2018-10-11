@@ -5,20 +5,12 @@ namespace Drupal\Tests\facets\Unit\Plugin\query_type;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\FacetInterface;
-<<<<<<< HEAD
-use Drupal\facets\Plugin\facets\query_type\SearchApiGranular;
-use Drupal\search_api\Backend\BackendInterface;
-use Drupal\search_api\IndexInterface;
-use Drupal\facets\Result\ResultInterface;
-use Drupal\facets\Widget\WidgetPluginInterface;
-=======
 use Drupal\facets\Plugin\facets\processor\GranularItemProcessor;
 use Drupal\facets\Plugin\facets\query_type\SearchApiGranular;
 use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\search_api\Backend\BackendInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\facets\Result\ResultInterface;
->>>>>>> origin/development
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\search_api\ServerInterface;
 use Drupal\Tests\UnitTestCase;
@@ -74,22 +66,11 @@ class SearchApiGranularTest extends UnitTestCase {
       ['query_operator' => 'AND', 'widget' => 'links'],
       'facets_facet'
     );
-<<<<<<< HEAD
-    $facetReflection = new \ReflectionClass(Facet::class);
-    $widget = $this->getMockBuilder(WidgetPluginInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $widget->method('getConfiguration')->will($this->returnValue(['granularity' => 10]));
-    $widget_instance = $facetReflection->getProperty('widgetInstance');
-    $widget_instance->setAccessible(TRUE);
-    $widget_instance->setValue($facet, $widget);
-=======
     $facet->addProcessor([
       'processor_id' => 'granularity_item',
       'weights' => [],
       'settings' => ['granularity' => 10],
     ]);
->>>>>>> origin/development
 
     // Results for the widget.
     $original_results = [

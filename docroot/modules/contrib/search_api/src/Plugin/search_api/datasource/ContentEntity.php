@@ -977,13 +977,7 @@ class ContentEntity extends DatasourcePluginBase implements EntityDatasourceInte
         // If the entity type supports bundles, we also have to filter out
         // indexes that exclude the entity's bundle.
         $config = $index->getDatasource($datasource_id)->getConfiguration();
-<<<<<<< HEAD
-        $default = !empty($config['bundles']['default']);
-        $bundle_set = in_array($entity_bundle, $config['bundles']['selected']);
-        if ($default == $bundle_set) {
-=======
         if (!Utility::matches($entity_bundle, $config['bundles'])) {
->>>>>>> origin/development
           unset($indexes[$index_id]);
         }
       }
@@ -1021,11 +1015,6 @@ class ContentEntity extends DatasourcePluginBase implements EntityDatasourceInte
     if (!isset($config['languages']['selected'])) {
       return $item_ids;
     }
-<<<<<<< HEAD
-    $default = !empty($config['languages']['default']);
-    $selected = $config['languages']['selected'];
-=======
->>>>>>> origin/development
     $always_valid = [
       LanguageInterface::LANGCODE_NOT_SPECIFIED,
       LanguageInterface::LANGCODE_NOT_APPLICABLE,
@@ -1038,11 +1027,7 @@ class ContentEntity extends DatasourcePluginBase implements EntityDatasourceInte
         continue;
       }
       $langcode = substr($item_id, $pos + 1);
-<<<<<<< HEAD
-      if ($default != in_array($langcode, $selected)
-=======
       if (Utility::matches($langcode, $config['languages'])
->>>>>>> origin/development
           || in_array($langcode, $always_valid)) {
         $valid_ids[] = $item_id;
       }

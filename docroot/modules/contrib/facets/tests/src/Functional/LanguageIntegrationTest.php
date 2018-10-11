@@ -43,9 +43,6 @@ class LanguageIntegrationTest extends FacetsTestBase {
     ]);
     $this->drupalLogin($this->adminUser);
 
-<<<<<<< HEAD
-    ConfigurableLanguage::create(['id' => 'xx-lolspeak'])->save();
-=======
     ConfigurableLanguage::create([
       'id' => 'xx-lolspeak',
       'label' => 'Lolspeak',
@@ -58,7 +55,6 @@ class LanguageIntegrationTest extends FacetsTestBase {
       'id' => 'es',
       'label' => 'Spanish',
     ])->save();
->>>>>>> origin/development
 
     $this->setUpExampleStructure();
     $this->insertExampleContent();
@@ -153,34 +149,22 @@ class LanguageIntegrationTest extends FacetsTestBase {
     $this->clickLink('item');
 
     // Check that the language code is still in the url.
-<<<<<<< HEAD
-    $this->assertTrue(strpos($this->getUrl(), 'xx-lolspeak/'), 'Found the language code in the url');
-    $this->assertTrue(strpos($this->getUrl(), 'barn_owl'), 'Found the facet in the url');
-=======
     $this->assertTrue((bool) strpos($this->getUrl(), 'xx-lolspeak/'), 'Found the language code in the url');
     $this->assertTrue((bool) strpos($this->getUrl(), 'barn_owl'), 'Found the facet in the url');
->>>>>>> origin/development
 
     // Translate the facet.
     $this->drupalGet('admin/config/search/facets/' . $facet_id . '/edit/translate/xx-lolspeak/add');
     $this->drupalPostForm(NULL, ['translation[config_names][facets.facet.barn_owl][url_alias]' => 'tyto_alba'], 'Save translation');
-<<<<<<< HEAD
-=======
     $this->drupalGet('admin/config/search/facets/' . $facet_id . '/edit/translate/nl/add');
     $this->drupalPostForm(NULL, ['translation[config_names][facets.facet.barn_owl][url_alias]' => 'uil'], 'Save translation');
     $this->drupalGet('admin/config/search/facets/' . $facet_id . '/edit/translate/es/add');
     $this->drupalPostForm(NULL, ['translation[config_names][facets.facet.barn_owl][url_alias]' => 'buho'], 'Save translation');
->>>>>>> origin/development
 
     // Go to the search view again and check that we now have the translated
     // facet in the url.
     $this->drupalGet('xx-lolspeak/search-api-test-fulltext');
     $this->assertFacetBlocksAppear();
     $this->clickLink('item');
-<<<<<<< HEAD
-    $this->assertTrue(strpos($this->getUrl(), 'xx-lolspeak/'), 'Found the language code in the url');
-    $this->assertTrue(strpos($this->getUrl(), 'tyto_alba'), 'Found the facet in the url');
-=======
     $this->assertTrue((bool) strpos($this->getUrl(), 'xx-lolspeak/'), 'Found the language code in the url');
     $this->assertTrue((bool) strpos($this->getUrl(), 'tyto_alba'), 'Found the facet in the url');
 
@@ -233,7 +217,6 @@ class LanguageIntegrationTest extends FacetsTestBase {
     $this->assertEquals('is-active', $links[0]->getParent()->getAttribute('class'));
     $this->assertTrue((bool) strpos($this->getUrl(), 'barn_owl'), 'Found the facet in the url');
 
->>>>>>> origin/development
   }
 
   /**
@@ -287,8 +270,6 @@ class LanguageIntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextNotContains('rofl');
   }
 
-<<<<<<< HEAD
-=======
   /**
    * Tests the admin translation screen.
    */
@@ -305,5 +286,4 @@ class LanguageIntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextContains('Tardigrade');
   }
 
->>>>>>> origin/development
 }

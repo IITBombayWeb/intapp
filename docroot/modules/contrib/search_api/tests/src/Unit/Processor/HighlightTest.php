@@ -100,11 +100,6 @@ class HighlightTest extends UnitTestCase {
       ->method('getQuery')
       ->willReturn(NULL);
     $results->expects($this->never())
-<<<<<<< HEAD:docroot/modules/contrib/search_api/tests/src/Unit/Processor/HighlightTest.php
-      ->method('getQuery');
-    $results->expects($this->never())
-=======
->>>>>>> origin/development:docroot/modules/contrib/search_api/tests/src/Unit/Processor/HighlightTest.php
       ->method('getResultItems');
     /** @var \Drupal\search_api\Query\ResultSet $results */
 
@@ -320,11 +315,7 @@ class HighlightTest extends UnitTestCase {
       ->willReturn(QueryInterface::PROCESSING_FULL);
     $query->expects($this->atLeastOnce())
       ->method('getOriginalKeys')
-<<<<<<< HEAD:docroot/modules/contrib/search_api/tests/src/Unit/Processor/HighlightTest.php
-      ->will($this->returnValue(['#conjunction' => 'AND', 'partial']));
-=======
       ->will($this->returnValue(['#conjunction' => 'AND', $keywords]));
->>>>>>> origin/development:docroot/modules/contrib/search_api/tests/src/Unit/Processor/HighlightTest.php
     /** @var \Drupal\search_api\Query\QueryInterface $query */
 
     $field = $this->createTestField('body', 'entity:node/body');
@@ -351,9 +342,6 @@ class HighlightTest extends UnitTestCase {
     $this->processor->postprocessSearchResults($results);
 
     $fields = $items[$this->itemIds[0]]->getExtraData('highlighted_fields');
-<<<<<<< HEAD:docroot/modules/contrib/search_api/tests/src/Unit/Processor/HighlightTest.php
-    $this->assertEquals('Some longwordtoshow<strong>partial</strong>matching value', $fields['body'][0], 'Highlighting is correctly applied to a partial match.');
-=======
     $this->assertEquals($highlighted, $fields['body'][0], 'Highlighting is correctly applied to a partial match.');
     $excerpt = $items[$this->itemIds[0]]->getExcerpt();
     $this->assertEquals("… $highlighted …", $excerpt, 'Highlighting is correctly applied to a partial match.');
@@ -389,7 +377,6 @@ class HighlightTest extends UnitTestCase {
     }
 
     return $data_sets;
->>>>>>> origin/development:docroot/modules/contrib/search_api/tests/src/Unit/Processor/HighlightTest.php
   }
 
   /**
@@ -946,11 +933,7 @@ class HighlightTest extends UnitTestCase {
 
     $this->processor->setConfiguration(['excerpt' => FALSE]);
     /** @var \Drupal\search_api\Query\QueryInterface|\PHPUnit_Framework_MockObject_MockObject $query */
-<<<<<<< HEAD:docroot/modules/contrib/search_api/tests/src/Unit/Processor/HighlightTest.php
-    $query = $this->getMock(QueryInterface::class);
-=======
     $query = $this->createMock(QueryInterface::class);
->>>>>>> origin/development:docroot/modules/contrib/search_api/tests/src/Unit/Processor/HighlightTest.php
     $query->method('getOriginalKeys')
       ->willReturn('foo');
     $query->expects($this->once())
@@ -976,8 +959,6 @@ class HighlightTest extends UnitTestCase {
     ];
     $fields = $item->getExtraData('highlighted_fields');
     $this->assertEquals($expected, $fields);
-<<<<<<< HEAD:docroot/modules/contrib/search_api/tests/src/Unit/Processor/HighlightTest.php
-=======
   }
 
   /**
@@ -1035,7 +1016,6 @@ class HighlightTest extends UnitTestCase {
     $fields = $items[$this->itemIds[1]]->getExtraData('highlighted_fields');
     $this->assertEquals('The <strong>foo</strong> title', $fields['title'][0], 'Highlighting is correctly applied to title field.');
     $this->assertEquals('Some <em>foo</em> value', $fields['body'][0], 'Existing highlighting data for body was correctly kept.');
->>>>>>> origin/development:docroot/modules/contrib/search_api/tests/src/Unit/Processor/HighlightTest.php
   }
 
   /**

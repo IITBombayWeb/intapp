@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-Admin Toolbar 8.1.22, 2017-XX-XX
---------------------------------
-Changes since 8.1.21:
-
-=======
 Admin Toolbar 8.1.23, 2018-02-06
 --------------------------------
 Changes since 8.1.22:
@@ -31,7 +25,6 @@ Changes since 8.1.21:
 
 - #2929053 by kkuhnen, eme, adriancid: admin_toolbar.js should use Drupal
   behaviors.
->>>>>>> origin/development
 - #2929061 by romainj, dsnopek, adriancid: admin_toolbar_links_access_filter
   doesn't do anything unless admin_toolbar is enabled.
 - #2928836 by eme: One extra pixel line under the admin toolbar.

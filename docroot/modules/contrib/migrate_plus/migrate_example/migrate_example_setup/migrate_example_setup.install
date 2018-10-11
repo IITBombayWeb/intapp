@@ -304,10 +304,6 @@ function migrate_example_beer_schema_account() {
  * Populate node table.
  */
 function migrate_example_beer_data_node() {
-<<<<<<< HEAD
-  $fields = ['bid', 'name', 'body', 'excerpt', 'countries', 'aid', 'image',
-    'image_alt', 'image_title', 'image_description'];
-=======
   $fields = [
     'bid',
     'name',
@@ -320,16 +316,10 @@ function migrate_example_beer_data_node() {
     'image_title',
     'image_description',
   ];
->>>>>>> origin/development
   $query = db_insert('migrate_example_beer_node')
     ->fields($fields);
   // Use high bid numbers to avoid overwriting an existing node id.
   $data = [
-<<<<<<< HEAD
-    [99999999, 'Heineken', 'Blab Blah Blah Green', 'Green', 'Netherlands|Belgium', 0, 'heineken.jpg', 'Heinekin alt', 'Heinekin title', 'Heinekin description'], // comes with migrate_example project.
-    [99999998, 'Miller Lite', 'We love Miller Brewing', 'Tasteless', 'USA|Canada', 1, NULL, NULL, NULL, NULL],
-    [99999997, 'Boddington', 'English occasionally get something right', 'A treat', 'United Kingdom', 1, NULL, NULL, NULL, NULL],
-=======
     // Comes with migrate_example project.
     [
       99999999,
@@ -367,7 +357,6 @@ function migrate_example_beer_data_node() {
       NULL,
       NULL,
     ],
->>>>>>> origin/development
   ];
   foreach ($data as $row) {
     $query->values(array_combine($fields, $row));
@@ -376,20 +365,6 @@ function migrate_example_beer_data_node() {
 }
 
 /**
-<<<<<<< HEAD
- * Note that alice has duplicate username. Exercises dedupe_entity plugin.
- *@TODO duplicate email also.
- */
-function migrate_example_beer_data_account() {
-  $fields = ['status', 'registered', 'username', 'nickname', 'password', 'email', 'sex', 'beers'];
-  $query = db_insert('migrate_example_beer_account')
-    ->fields($fields);
-  $data = [
-    [1, '2010-03-30 10:31:05', 'alice', 'alice in beerland', 'alicepass', 'alice@example.com', '1', '99999999|99999998|99999997'],
-    [1, '2010-04-04 10:31:05', 'alice', 'alice in aleland', 'alicepass', 'alice2@example.com', '1', '99999999|99999998|99999997'],
-    [0, '2007-03-15 10:31:05', 'bob', 'rebob', 'bobpass', 'bob@example.com', '0', '99999999|99999997'],
-    [1, '2004-02-29 10:31:05', 'charlie', 'charlie chocolate', 'mykids', 'charlie@example.com', '0', '99999999|99999998'],
-=======
  * Populate account table.
  *
  * Note that alice has duplicate username. Exercises dedupe_entity plugin.
@@ -449,7 +424,6 @@ function migrate_example_beer_data_account() {
       '0',
       '99999999|99999998',
     ],
->>>>>>> origin/development
   ];
   foreach ($data as $row) {
     $query->values(array_combine($fields, $row));
@@ -469,9 +443,6 @@ function migrate_example_beer_data_comment() {
     [99999998, NULL, 'im second', 'aromatic', 'alice', 'alice@example.com', 0],
     [99999999, NULL, 'im parent', 'malty', 'alice', 'alice@example.com', 0],
     [99999999, 1, 'im child', 'cold body', 'bob', NULL, 1],
-<<<<<<< HEAD
-    [99999999, 4, 'im grandchild', 'bitter body', 'charlie@example.com', NULL, 1],
-=======
     [
       99999999,
       4,
@@ -481,7 +452,6 @@ function migrate_example_beer_data_comment() {
       NULL,
       1,
     ],
->>>>>>> origin/development
   ];
   foreach ($data as $row) {
     $query->values(array_combine($fields, $row));
@@ -499,9 +469,6 @@ function migrate_example_beer_data_topic() {
   $data = [
     ['ale', 'traditional', NULL, 'Medieval British Isles', 'Medium'],
     ['red ale', 'colorful', 'ale', NULL, NULL],
-<<<<<<< HEAD
-    ['pilsner', 'refreshing', NULL, 'Pilsen, Bohemia (now Czech Republic)', 'Low'],
-=======
     [
       'pilsner',
       'refreshing',
@@ -509,7 +476,6 @@ function migrate_example_beer_data_topic() {
       'Pilsen, Bohemia (now Czech Republic)',
       'Low',
     ],
->>>>>>> origin/development
   ];
   foreach ($data as $row) {
     $query->values(array_combine($fields, $row));

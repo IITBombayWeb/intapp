@@ -2,14 +2,6 @@
     "name": "drupal/migrate_tools",
     "description": "Tools to assist in developing and running migrations.",
     "type": "drupal-module",
-<<<<<<< HEAD
-    "require-dev": {
-        "drupal/coder": "^8"
-    },
-    "license": "GPL-2.0+",
-    "require": {},
-    "minimum-stability": "dev"
-=======
     "homepage": "http://drupal.org/project/migrate_tools",
     "support": {
       "issues": "http://drupal.org/project/migrate_tools",
@@ -28,5 +20,4 @@
         }
       }
     }
->>>>>>> origin/development
 }

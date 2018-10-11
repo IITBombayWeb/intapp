@@ -39,16 +39,7 @@ class MigrationGroupFormBase extends EntityForm {
   }
 
   /**
-<<<<<<< HEAD
-   * Factory method for MigrationGroupFormBase.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   A container interface service.
-   *
-   * @return \Drupal\migrate_tools\Form\MigrationFormBase
-=======
    * {@inheritdoc}
->>>>>>> origin/development
    */
   public static function create(ContainerInterface $container) {
     return new static($container->get('entity.query'));

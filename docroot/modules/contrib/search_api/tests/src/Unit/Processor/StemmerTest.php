@@ -88,11 +88,7 @@ class StemmerTest extends UnitTestCase {
    */
   public function testPreprocessSearchQuery(array $languages = NULL, $should_process) {
     /** @var \Drupal\search_api\Query\QueryInterface|\PHPUnit_Framework_MockObject_MockObject $query */
-<<<<<<< HEAD:docroot/modules/contrib/search_api/tests/src/Unit/Processor/StemmerTest.php
-    $query = $this->getMock(QueryInterface::class);
-=======
     $query = $this->createMock(QueryInterface::class);
->>>>>>> origin/development:docroot/modules/contrib/search_api/tests/src/Unit/Processor/StemmerTest.php
     $query->method('getLanguages')->willReturn($languages);
     // Unfortunately, returning a reference (as getKeys() has to do for
     // processing to work) doesn't seem to be possible with a mock object. But

@@ -268,14 +268,6 @@ class MigrateExecutable extends MigrateExecutableBase {
     }
     $this->message->display(\Drupal::translation()->formatPlural($processed,
       $singular_message, $plural_message,
-<<<<<<< HEAD
-        ['@numitems' => $processed,
-              '@created' => $this->getCreatedCount(),
-              '@updated' => $this->getUpdatedCount(),
-              '@failures' => $this->getFailedCount(),
-              '@ignored' => $this->getIgnoredCount(),
-              '@name' => $this->migration->id()]));
-=======
         [
           '@numitems' => $processed,
           '@created' => $this->getCreatedCount(),
@@ -285,7 +277,6 @@ class MigrateExecutable extends MigrateExecutableBase {
           '@name' => $this->migration->id(),
         ]
     ));
->>>>>>> origin/development
   }
 
   /**
@@ -318,18 +309,12 @@ class MigrateExecutable extends MigrateExecutableBase {
       $plural_message = "Rolled back @numitems items - continuing with '@name'";
     }
     $this->message->display(\Drupal::translation()->formatPlural($rolled_back,
-<<<<<<< HEAD
-     $singular_message, $plural_message,
-       ['@numitems' => $rolled_back,
-             '@name' => $this->migration->id()]));
-=======
       $singular_message, $plural_message,
       [
         '@numitems' => $rolled_back,
         '@name' => $this->migration->id(),
       ]
     ));
->>>>>>> origin/development
   }
 
   /**

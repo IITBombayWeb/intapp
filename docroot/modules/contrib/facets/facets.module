@@ -352,8 +352,6 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
       $breadcrumb->addLink($link);
     }
   }
-<<<<<<< HEAD
-=======
 }
 
 /**
@@ -427,5 +425,4 @@ function facets_form_facets_facet_form_alter(&$form, FormStateInterface $form_st
   if (count($facet_sources) == 0) {
     unset($form['actions']);
   }
->>>>>>> origin/development
 }

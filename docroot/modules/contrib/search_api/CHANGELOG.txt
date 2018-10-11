@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 Search API 1.8 (2018-04-16):
 ----------------------------
 - #2960854 by nedjo, drunken monkey: Fixed "Database search defaults" index.
@@ -57,7 +55,6 @@ Search API 1.7 (2018-02-23):
 - #2928279 by drunken monkey, borisson_: Added a test for the default tracker
   plugin.
 
->>>>>>> origin/development
 Search API 1.6 (2017-12-24):
 ----------------------------
 - #2669962 by kevin.dutra, drunken monkey, kristofferwiklund, borisson_: Added

@@ -7,10 +7,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
 use Drupal\search_api\Utility\Utility;
-<<<<<<< HEAD:docroot/modules/contrib/search_api/tests/src/Kernel/System/CliTest.php
-=======
 use Drupal\Tests\search_api\Kernel\PostRequestIndexingTrait;
->>>>>>> origin/development:docroot/modules/contrib/search_api/tests/src/Kernel/System/CliTest.php
 
 /**
  * Tests Search API functionality when executed in the CLI.

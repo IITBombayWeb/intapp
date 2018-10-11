@@ -4,14 +4,10 @@ namespace Drupal\Tests\search_api_db\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database as CoreDatabase;
-<<<<<<< HEAD
-use Drupal\search_api\Entity\Server;
-=======
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\ItemInterface;
->>>>>>> origin/development
 use Drupal\search_api\Plugin\search_api\data_type\value\TextToken;
 use Drupal\search_api\Plugin\search_api\data_type\value\TextValue;
 use Drupal\search_api\Query\QueryInterface;
@@ -93,11 +89,8 @@ class BackendTest extends BackendTestBase {
     $this->regressionTest2511860();
     $this->regressionTest2846932();
     $this->regressionTest2926733();
-<<<<<<< HEAD
-=======
     $this->regressionTest2938646();
     $this->regressionTest2925464();
->>>>>>> origin/development
   }
 
   /**
@@ -527,8 +520,6 @@ class BackendTest extends BackendTestBase {
   }
 
   /**
-<<<<<<< HEAD
-=======
    * Tests indexing of items with boost.
    *
    * @see https://www.drupal.org/node/2938646
@@ -585,7 +576,6 @@ class BackendTest extends BackendTestBase {
   }
 
   /**
->>>>>>> origin/development
    * {@inheritdoc}
    */
   protected function checkIndexWithoutFields() {
@@ -691,8 +681,6 @@ class BackendTest extends BackendTestBase {
   }
 
   /**
-<<<<<<< HEAD
-=======
    * Indexes an item directly.
    *
    * @param \Drupal\search_api\IndexInterface $index
@@ -728,7 +716,6 @@ class BackendTest extends BackendTestBase {
   }
 
   /**
->>>>>>> origin/development
    * Tests whether a server on a non-default database is handled correctly.
    */
   public function testNonDefaultDatabase() {
@@ -782,8 +769,6 @@ class BackendTest extends BackendTestBase {
     $this->assertEquals($class, get_class($dbms_comp2));
   }
 
-<<<<<<< HEAD
-=======
   /**
    * Tests whether indexing of dates works correctly.
    */
@@ -839,5 +824,4 @@ class BackendTest extends BackendTestBase {
     }
   }
 
->>>>>>> origin/development
 }
