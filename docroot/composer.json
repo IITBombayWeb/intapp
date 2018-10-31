@@ -13,7 +13,7 @@
         "dompdf/dompdf": "^0.8.2"
     },
     "replace": {
-        "drupal/core": "^8.5"
+        "drupal/core": "^8.6"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
