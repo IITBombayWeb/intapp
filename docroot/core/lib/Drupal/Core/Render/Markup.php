@@ -18,6 +18,7 @@ use Drupal\Component\Render\MarkupTrait;
  *
  * @see \Drupal\Core\Template\TwigExtension::escapeFilter
  * @see \Twig_Markup
+ * @see \Drupal\Component\Utility\SafeMarkup
  */
 final class Markup implements MarkupInterface, \Countable {
   use MarkupTrait;

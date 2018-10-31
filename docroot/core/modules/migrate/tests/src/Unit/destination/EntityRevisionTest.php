@@ -176,6 +176,7 @@ class EntityRevisionTest extends UnitTestCase {
     $this->assertEquals([1234], $destination->save($entity->reveal(), []));
   }
 
+
   /**
    * Helper method to create an entity revision destination with mock services.
    *

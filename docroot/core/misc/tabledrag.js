@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 (function ($, Drupal, drupalSettings) {
   var showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'));
@@ -122,15 +121,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var cell = void 0;
     var columnIndex = void 0;
     Object.keys(this.tableSettings || {}).forEach(function (group) {
-      Object.keys(_this2.tableSettings[group]).some(function (tableSetting) {
-        var field = $table.find('.' + _this2.tableSettings[group][tableSetting].target).eq(0);
-        if (field.length && _this2.tableSettings[group][tableSetting].hidden) {
-          hidden = _this2.tableSettings[group][tableSetting].hidden;
-          cell = field.closest('td');
-          return true;
+      for (var d in _this2.tableSettings[group]) {
+        if (_this2.tableSettings[group].hasOwnProperty(d)) {
+          var field = $table.find('.' + _this2.tableSettings[group][d].target).eq(0);
+          if (field.length && _this2.tableSettings[group][d].hidden) {
+            hidden = _this2.tableSettings[group][d].hidden;
+            cell = field.closest('td');
+            break;
+          }
         }
-        return false;
-      });
+      }
 
       if (hidden && cell[0]) {
         columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
@@ -213,19 +213,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   Drupal.tableDrag.prototype.rowSettings = function (group, row) {
     var field = $(row).find('.' + group);
     var tableSettingsGroup = this.tableSettings[group];
-    return Object.keys(tableSettingsGroup).map(function (delta) {
-      var targetClass = tableSettingsGroup[delta].target;
-      var rowSettings = void 0;
-      if (field.is('.' + targetClass)) {
-        rowSettings = {};
-        Object.keys(tableSettingsGroup[delta]).forEach(function (n) {
-          rowSettings[n] = tableSettingsGroup[delta][n];
-        });
+
+    for (var delta in tableSettingsGroup) {
+      if (tableSettingsGroup.hasOwnProperty(delta)) {
+        var targetClass = tableSettingsGroup[delta].target;
+        if (field.is('.' + targetClass)) {
+          var rowSettings = {};
+
+          for (var n in tableSettingsGroup[delta]) {
+            if (tableSettingsGroup[delta].hasOwnProperty(n)) {
+              rowSettings[n] = tableSettingsGroup[delta][n];
+            }
+          }
+          return rowSettings;
+        }
       }
-      return rowSettings;
-    }).filter(function (rowSetting) {
-      return rowSetting;
-    })[0];
+    }
   };
 
   Drupal.tableDrag.prototype.makeDraggable = function (item) {
@@ -529,11 +532,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   };
 
   Drupal.tableDrag.prototype.findDropTargetRow = function (x, y) {
-    var _this3 = this;
-
     var rows = $(this.table.tBodies[0].rows).not(':hidden');
-
-    var _loop = function _loop(n) {
+    for (var n = 0; n < rows.length; n++) {
       var row = rows[n];
       var $row = $(row);
       var rowY = $row.offset().top;
@@ -546,49 +546,35 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
       if (y > rowY - rowHeight && y < rowY + rowHeight) {
-        if (_this3.indentEnabled) {
-          if (Object.keys(_this3.rowObject.group).some(function (o) {
-            return _this3.rowObject.group[o] === row;
-          })) {
-            return {
-              v: null
-            };
+        if (this.indentEnabled) {
+          for (n in this.rowObject.group) {
+            if (this.rowObject.group[n] === row) {
+              return null;
+            }
           }
-        } else if (row === _this3.rowObject.element) {
-            return {
-              v: null
-            };
+        } else if (row === this.rowObject.element) {
+            return null;
           }
 
-        if (!_this3.rowObject.isValidSwap(row)) {
-          return {
-            v: null
-          };
+        if (!this.rowObject.isValidSwap(row)) {
+          return null;
         }
 
         while ($row.is(':hidden') && $row.prev('tr').is(':hidden')) {
           $row = $row.prev('tr:first-of-type');
           row = $row.get(0);
         }
-        return {
-          v: row
-        };
+        return row;
       }
-    };
-
-    for (var n = 0; n < rows.length; n++) {
-      var _ret = _loop(n);
-
-      if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
     }
     return null;
   };
 
   Drupal.tableDrag.prototype.updateFields = function (changedRow) {
-    var _this4 = this;
+    var _this3 = this;
 
     Object.keys(this.tableSettings || {}).forEach(function (group) {
-      _this4.updateField(changedRow, group);
+      _this3.updateField(changedRow, group);
     });
   };
 
@@ -725,8 +711,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       delta = trigger / (windowHeight + scrollY - cursorY);
       delta = delta > 0 && delta < trigger ? delta : trigger;
       return delta * this.scrollSettings.amount;
-    }
-    if (cursorY - scrollY < trigger) {
+    } else if (cursorY - scrollY < trigger) {
       delta = trigger / (cursorY - scrollY);
       delta = delta > 0 && delta < trigger ? delta : trigger;
       return -delta * this.scrollSettings.amount;
@@ -941,10 +926,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   };
 
   Drupal.tableDrag.prototype.row.prototype.removeIndentClasses = function () {
-    var _this5 = this;
+    var _this4 = this;
 
     Object.keys(this.children || {}).forEach(function (n) {
-      $(_this5.children[n]).find('.js-indentation').removeClass('tree-child').removeClass('tree-child-first').removeClass('tree-child-last').removeClass('tree-child-horizontal');
+      $(_this4.children[n]).find('.js-indentation').removeClass('tree-child').removeClass('tree-child-first').removeClass('tree-child-last').removeClass('tree-child-horizontal');
     });
   };
 

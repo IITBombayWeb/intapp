@@ -2,13 +2,10 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\Menu;
 
-@trigger_error('The ' . __NAMESPACE__ . '\MenuResourceTestBase is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Instead, use Drupal\Tests\system\Functional\Rest\MenuResourceTestBase. See https://www.drupal.org/node/2971931.', E_USER_DEPRECATED);
-
 use Drupal\Tests\system\Functional\Rest\MenuResourceTestBase as MenuResourceTestBaseReal;
 
 /**
- * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
- *   Drupal\Tests\system\Functional\Rest\MenuResourceTestBase instead.
+ * Class for backward compatibility. It is deprecated in Drupal 8.6.x.
  *
  * @see https://www.drupal.org/node/2971931
  */

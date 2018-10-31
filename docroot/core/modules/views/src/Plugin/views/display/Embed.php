@@ -23,11 +23,6 @@ class Embed extends DisplayPluginBase {
   /**
    * {@inheritdoc}
    */
-  protected $usesAttachments = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
   public function buildRenderable(array $args = [], $cache = TRUE) {
     $build = parent::buildRenderable($args, $cache);
     $build['#embed'] = TRUE;

@@ -54,14 +54,4 @@ class AdminHtmlRouteProvider extends DefaultHtmlRouteProvider {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function getDeleteMultipleFormRoute(EntityTypeInterface $entity_type) {
-    if ($route = parent::getDeleteMultipleFormRoute($entity_type)) {
-      $route->setOption('_admin_route', TRUE);
-      return $route;
-    }
-  }
-
 }

@@ -22,7 +22,7 @@ use Drupal\Core\Database\Query\Condition;
  * practices.
  *
  * For more detailed information on the database abstraction layer, see
- * https://www.drupal.org/docs/8/api/database-api/database-api-overview.
+ * https://www.drupal.org/developing/api/database.
  *
  * @section sec_entity Querying entities
  * Any query on Drupal entities or fields should use the Entity Query API. See
@@ -30,20 +30,19 @@ use Drupal\Core\Database\Query\Condition;
  *
  * @section sec_simple Simple SELECT database queries
  * For simple SELECT queries that do not involve entities, the Drupal database
- * abstraction layer provides the functions \Drupal::database()->query() and
- * \Drupal::database()->queryRange(), which execute SELECT queries (optionally
- * with range limits) and return result sets that you can iterate over using
- * foreach loops. (The result sets are objects implementing the
- * \Drupal\Core\Database\StatementInterface interface.)
+ * abstraction layer provides the functions db_query() and db_query_range(),
+ * which execute SELECT queries (optionally with range limits) and return result
+ * sets that you can iterate over using foreach loops. (The result sets are
+ * objects implementing the \Drupal\Core\Database\StatementInterface interface.)
  * You can use the simple query functions for query strings that are not
  * dynamic (except for placeholders, see below), and that you are certain will
  * work in any database engine. See @ref sec_dynamic below if you have a more
  * complex query, or a query whose syntax would be different in some databases.
  *
- * Note: \Drupal::database() is used here as a shorthand way to get a reference
- * to the database connection object. In most classes, you should use dependency
- * injection and inject the 'database' service to perform queries. See
- * @ref sec_connection below for details.
+ * As a note, db_query() and similar functions are wrappers on connection object
+ * methods. In most classes, you should use dependency injection and the
+ * database connection object instead of these wrappers; See @ref sec_connection
+ * below for details.
  *
  * To use the simple database query functions, you will need to make a couple of
  * modifications to your bare SQL query:
@@ -56,8 +55,7 @@ use Drupal\Core\Database\Query\Condition;
  *   putting variables directly into the query, to protect against SQL
  *   injection attacks.
  * - LIMIT syntax differs between databases, so if you have a ranged query,
- *   use \Drupal::database()->queryRange() instead of
- *   \Drupal::database()->query().
+ *   use db_query_range() instead of db_query().
  *
  * For example, if the query you want to run is:
  * @code
@@ -66,7 +64,7 @@ use Drupal\Core\Database\Query\Condition;
  * @endcode
  * you would do it like this:
  * @code
- * $result = \Drupal::database()->queryRange('SELECT e.id, e.title, e.created
+ * $result = db_query_range('SELECT e.id, e.title, e.created
  *   FROM {example} e
  *   WHERE e.uid = :uid
  *   ORDER BY e.created DESC',
@@ -93,11 +91,16 @@ use Drupal\Core\Database\Query\Condition;
  * fields (see the @link entity_api Entity API topic @endlink for more on
  * entity queries).
  *
+ * As a note, db_select() and similar functions are wrappers on connection
+ * object methods. In most classes, you should use dependency injection and the
+ * database connection object instead of these wrappers; See @ref sec_connection
+ * below for details.
+ *
  * The dynamic query API lets you build up a query dynamically using method
  * calls. As an illustration, the query example from @ref sec_simple above
  * would be:
  * @code
- * $result = \Drupal::database()->select('example', 'e')
+ * $result = db_select('example', 'e')
  *   ->fields('e', array('id', 'title', 'created'))
  *   ->condition('e.uid', $uid)
  *   ->orderBy('e.created', 'DESC')
@@ -106,7 +109,7 @@ use Drupal\Core\Database\Query\Condition;
  * @endcode
  *
  * There are also methods to join to other tables, add fields with aliases,
- * isNull() to query for NULL values, etc. See
+ * isNull() to have a @code WHERE e.foo IS NULL @endcode condition, etc. See
  * https://www.drupal.org/developing/api/database for many more details.
  *
  * One note on chaining: It is common in the dynamic database API to chain
@@ -120,19 +123,17 @@ use Drupal\Core\Database\Query\Condition;
  * returns the query or something else, and only chain methods that return the
  * query.
  *
- * @section sec_insert INSERT, UPDATE, and DELETE queries
+ * @section_insert INSERT, UPDATE, and DELETE queries
  * INSERT, UPDATE, and DELETE queries need special care in order to behave
- * consistently across databases; you should never use
- * \Drupal::database()->query() to run an INSERT, UPDATE, or DELETE query.
- * Instead, use functions \Drupal::database()->insert(),
- * \Drupal::database()->update(), and \Drupal::database()->delete() to obtain
- * a base query on your table, and then add dynamic conditions (as illustrated
- * in @ref sec_dynamic above).
+ * consistently across databases; you should never use db_query() to run
+ * an INSERT, UPDATE, or DELETE query. Instead, use functions db_insert(),
+ * db_update(), and db_delete() to obtain a base query on your table, and then
+ * add dynamic conditions (as illustrated in @ref sec_dynamic above).
  *
- * Note: \Drupal::database() is used here as a shorthand way to get a reference
- * to the database connection object. In most classes, you should use dependency
- * injection and inject the 'database' service to perform queries. See
- * @ref sec_connection below for details.
+ * As a note, db_insert() and similar functions are wrappers on connection
+ * object methods. In most classes, you should use dependency injection and the
+ * database connection object instead of these wrappers; See @ref sec_connection
+ * below for details.
  *
  * For example, if your query is:
  * @code
@@ -141,7 +142,7 @@ use Drupal\Core\Database\Query\Condition;
  * You can execute it via:
  * @code
  * $fields = array('id' => 1, 'uid' => 2, 'path' => 'path', 'name' => 'Name');
- * \Drupal::database()->insert('example')
+ * db_insert('example')
  *   ->fields($fields)
  *   ->execute();
  * @endcode
@@ -149,26 +150,21 @@ use Drupal\Core\Database\Query\Condition;
  * @section sec_transaction Transactions
  * Drupal supports transactions, including a transparent fallback for
  * databases that do not support transactions. To start a new transaction,
- * call startTransaction(), like this:
- * @code
- * $transaction = \Drupal::database()->startTransaction();
- * @endcode
- * The transaction will remain open for as long as the variable $transaction
- * remains in scope; when $transaction is destroyed, the transaction will be
- * committed. If your transaction is nested inside of another then Drupal will
- * track each transaction and only commit the outer-most transaction when the
- * last transaction object goes out out of scope (when all relevant queries have
- * completed successfully).
+ * call @code $txn = db_transaction(); @endcode The transaction will
+ * remain open for as long as the variable $txn remains in scope; when $txn is
+ * destroyed, the transaction will be committed. If your transaction is nested
+ * inside of another then Drupal will track each transaction and only commit
+ * the outer-most transaction when the last transaction object goes out out of
+ * scope (when all relevant queries have completed successfully).
  *
  * Example:
  * @code
  * function my_transaction_function() {
- *   $connection = \Drupal::database();
  *   // The transaction opens here.
- *   $transaction = $connection->startTransaction();
+ *   $txn = db_transaction();
  *
  *   try {
- *     $id = $connection->insert('example')
+ *     $id = db_insert('example')
  *       ->fields(array(
  *         'field1' => 'mystring',
  *         'field2' => 5,
@@ -181,21 +177,20 @@ use Drupal\Core\Database\Query\Condition;
  *   }
  *   catch (Exception $e) {
  *     // Something went wrong somewhere, so roll back now.
- *     $transaction->rollBack();
+ *     $txn->rollBack();
  *     // Log the exception to watchdog.
  *     watchdog_exception('type', $e);
  *   }
  *
- *   // $transaction goes out of scope here.  Unless the transaction was rolled
- *   // back, it gets automatically committed here.
+ *   // $txn goes out of scope here.  Unless the transaction was rolled back, it
+ *   // gets automatically committed here.
  * }
  *
  * function my_other_function($id) {
- *   $connection = \Drupal::database();
  *   // The transaction is still open here.
  *
  *   if ($id % 2 == 0) {
- *     $connection->update('example')
+ *     db_update('example')
  *       ->condition('id', $id)
  *       ->fields(array('field2' => 10))
  *       ->execute();
@@ -204,19 +199,18 @@ use Drupal\Core\Database\Query\Condition;
  * @endcode
  *
  * @section sec_connection Database connection objects
- * The examples here all use functions like \Drupal::database()->select() and
- * \Drupal::database()->query(), which can be called from any Drupal method or
- * function code. In some classes, you may already have a database connection
- * object in a member variable, or it may be passed into a class constructor
- * via dependency injection. If that is the case, you can look at the code for
- * \Drupal::database()->select() and the other functions to see how to get a
- * query object from your connection variable. For example:
+ * The examples here all use functions like db_select() and db_query(), which
+ * can be called from any Drupal method or function code. In some classes, you
+ * may already have a database connection object in a member variable, or it may
+ * be passed into a class constructor via dependency injection. If that is the
+ * case, you can look at the code for db_select() and the other functions to see
+ * how to get a query object from your connection variable. For example:
  * @code
  * $query = $connection->select('example', 'e');
  * @endcode
  * would be the equivalent of
  * @code
- * $query = \Drupal::database()->select('example', 'e');
+ * $query = db_select('example', 'e');
  * @endcode
  * if you had a connection object variable $connection available to use. See
  * also the @link container Services and Dependency Injection topic. @endlink

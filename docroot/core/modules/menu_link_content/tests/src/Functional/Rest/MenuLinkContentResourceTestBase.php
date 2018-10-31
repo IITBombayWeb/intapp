@@ -27,7 +27,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
-    'changed' => NULL,
+    'changed',
   ];
 
   /**
@@ -59,15 +59,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
       'id' => 'llama',
       'title' => 'Llama Gabilondo',
       'description' => 'Llama Gabilondo',
-      'link' => [
-        'uri' => 'https://nl.wikipedia.org/wiki/Llama',
-        'options' => [
-          'fragment' => 'a-fragment',
-          'attributes' => [
-            'class' => ['example-class'],
-          ],
-        ],
-      ],
+      'link' => 'https://nl.wikipedia.org/wiki/Llama',
       'weight' => 0,
       'menu_name' => 'main',
     ]);
@@ -89,12 +81,6 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
       'link' => [
         [
           'uri' => 'http://www.urbandictionary.com/define.php?term=drama%20llama',
-          'options' => [
-            'fragment' => 'a-fragment',
-            'attributes' => [
-              'class' => ['example-class'],
-            ],
-          ],
         ],
       ],
       'bundle' => [
@@ -129,12 +115,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
         [
           'uri' => 'https://nl.wikipedia.org/wiki/Llama',
           'title' => NULL,
-          'options' => [
-            'fragment' => 'a-fragment',
-            'attributes' => [
-              'class' => ['example-class'],
-            ],
-          ],
+          'options' => [],
         ],
       ],
       'weight' => [

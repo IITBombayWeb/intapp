@@ -12,13 +12,6 @@ use Drupal\user\RoleInterface;
  * @ConfigEntityType(
  *   id = "user_role",
  *   label = @Translation("Role"),
- *   label_collection = @Translation("Roles"),
- *   label_singular = @Translation("role"),
- *   label_plural = @Translation("roles"),
- *   label_count = @PluralTranslation(
- *     singular = "@count role",
- *     plural = "@count roles",
- *   ),
  *   handlers = {
  *     "storage" = "Drupal\user\RoleStorage",
  *     "access" = "Drupal\user\RoleAccessControlHandler",

@@ -119,6 +119,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
     );
   }
 
+
   /**
    * Adds Moderation configuration to appropriate entity types.
    *

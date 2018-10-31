@@ -163,6 +163,7 @@ class ElementsTableSelectTest extends WebTestBase {
     $this->assertNoFieldByXPath('//th[@class="select-all"]', NULL, 'Do not display a "Select all" checkbox when #multiple is FALSE, even when #js_select is TRUE.');
   }
 
+
   /**
    * Test the whether the option checker gives an error on invalid tableselect values for checkboxes.
    */
@@ -186,6 +187,7 @@ class ElementsTableSelectTest extends WebTestBase {
 
   }
 
+
   /**
    * Test the whether the option checker gives an error on invalid tableselect values for radios.
    */
@@ -208,6 +210,7 @@ class ElementsTableSelectTest extends WebTestBase {
     list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => 'non_existing_value']);
     $this->assertTrue(isset($errors['tableselect']), 'Option checker disallows invalid values for radio buttons.');
   }
+
 
   /**
    * Helper function for the option check test to submit a form while collecting errors.
@@ -245,7 +248,7 @@ class ElementsTableSelectTest extends WebTestBase {
     $errors = $form_state->getErrors();
 
     // Clear errors and messages.
-    \Drupal::messenger()->deleteAll();
+    drupal_get_messages();
     $form_state->clearErrors();
 
     // Return the processed form together with form_state and errors

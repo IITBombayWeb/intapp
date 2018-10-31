@@ -76,28 +76,13 @@ abstract class PluginManagerBase implements PluginManagerInterface {
         return $this->getFactory()->createInstance($plugin_id, $configuration);
       }
       catch (PluginNotFoundException $e) {
-        return $this->handlePluginNotFound($plugin_id, $configuration);
+        $fallback_id = $this->getFallbackPluginId($plugin_id, $configuration);
+        return $this->getFactory()->createInstance($fallback_id, $configuration);
       }
     }
     else {
       return $this->getFactory()->createInstance($plugin_id, $configuration);
     }
-  }
-
-  /**
-   * Allows plugin managers to specify custom behavior if a plugin is not found.
-   *
-   * @param string $plugin_id
-   *   The ID of the missing requested plugin.
-   * @param array $configuration
-   *   An array of configuration relevant to the plugin instance.
-   *
-   * @return object
-   *   A fallback plugin instance.
-   */
-  protected function handlePluginNotFound($plugin_id, array $configuration) {
-    $fallback_id = $this->getFallbackPluginId($plugin_id, $configuration);
-    return $this->getFactory()->createInstance($fallback_id, $configuration);
   }
 
   /**

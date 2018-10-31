@@ -29,7 +29,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
-    'changed' => NULL,
+    'changed',
   ];
 
   /**
@@ -67,7 +67,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
         'format' => 'plain_text',
       ],
     ])
-      ->setUnpublished();
+      ->setPublished(FALSE);
     $block_content->save();
     return $block_content;
   }
@@ -90,11 +90,6 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
       'langcode' => [
         [
           'value' => 'en',
-        ],
-      ],
-      'reusable' => [
-        [
-          'value' => TRUE,
         ],
       ],
       'type' => [
@@ -165,6 +160,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
       ],
     ];
   }
+
 
   /**
    * {@inheritdoc}

@@ -14,8 +14,6 @@
         return;
       }
 
-      var $summaries = $details.find('> summary');
-
       function detailsToggle(matches) {
         if (matches) {
           $details.attr('open', true);
@@ -33,6 +31,7 @@
         detailsToggle(event.matches);
       }
 
+      var $summaries = $details.find('> summary');
       var mql = window.matchMedia('(min-width:48em)');
       mql.addListener(handleDetailsMQ);
       detailsToggle(mql.matches);

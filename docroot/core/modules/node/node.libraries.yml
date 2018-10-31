@@ -20,7 +20,6 @@ drupal.node.preview:
     - core/jquery
     - core/jquery.once
     - core/drupal
-    - core/drupal.dialog
     - core/drupal.form
 
 drupal.content_types:

@@ -2,7 +2,6 @@
 
 namespace Drupal\layout_builder\Controller;
 
-use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Layout\LayoutPluginManagerInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
@@ -62,8 +61,7 @@ class ChooseSectionController implements ContainerInjectionInterface {
     $output['#title'] = $this->t('Choose a layout');
 
     $items = [];
-    $definitions = $this->layoutManager->getFilteredDefinitions('layout_builder', [], ['section_storage' => $section_storage]);
-    foreach ($definitions as $plugin_id => $definition) {
+    foreach ($this->layoutManager->getDefinitions() as $plugin_id => $definition) {
       $layout = $this->layoutManager->createInstance($plugin_id);
       $item = [
         '#type' => 'link',

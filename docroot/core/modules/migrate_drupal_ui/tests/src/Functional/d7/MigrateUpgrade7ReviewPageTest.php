@@ -15,24 +15,6 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
-    'language',
-    'content_translation',
-    'telephone',
-    'aggregator',
-    'book',
-    'forum',
-    'statistics',
-    'syslog',
-    'tracker',
-    'update',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
     $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal7.php');
@@ -59,6 +41,7 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'date',
       'dblog',
       'email',
+      'entity_translation',
       'field',
       'field_sql_storage',
       'file',
@@ -76,7 +59,6 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'path',
       'phone',
       'profile',
-      'rdf',
       'search',
       'shortcut',
       'statistics',
@@ -110,7 +92,6 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'entity_feature',
       'entity_token',
       'entityreference',
-      'entity_translation',
       'field_ui',
       'help',
       'openid',
@@ -124,7 +105,6 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
       'simpletest',
       'stylizer',
       'term_depth',
-      'title',
       'toolbar',
       'translation',
       'trigger',
@@ -138,6 +118,7 @@ class MigrateUpgrade7ReviewPageTest extends MigrateUpgradeReviewPageTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'rdf',
       'views',
     ];
   }

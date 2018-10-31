@@ -17,24 +17,9 @@ use Prophecy\Prophecy\ProphecyInterface;
 class PluginDependencyTraitTest extends UnitTestCase {
 
   /**
-   * @covers ::getPluginDependencies
-   *
-   * @dataProvider providerTestPluginDependencies
-   */
-  public function testGetPluginDependencies(ProphecyInterface $plugin, $definition, array $expected) {
-    $test_class = new TestPluginDependency();
-
-    $plugin->getPluginDefinition()->willReturn($definition);
-
-    $actual = $test_class->getPluginDependencies($plugin->reveal());
-    $this->assertEquals($expected, $actual);
-    $this->assertEmpty($test_class->getDependencies());
-  }
-
-  /**
    * @covers ::calculatePluginDependencies
    *
-   * @dataProvider providerTestPluginDependencies
+   * @dataProvider providerTestCalculatePluginDependencies
    *
    * @param \Prophecy\Prophecy\ProphecyInterface $plugin
    *   A prophecy of a plugin instance.
@@ -53,9 +38,9 @@ class PluginDependencyTraitTest extends UnitTestCase {
   }
 
   /**
-   * Provides test data for plugin dependencies.
+   * Provides test data for ::testCalculatePluginDependencies().
    */
-  public function providerTestPluginDependencies() {
+  public function providerTestCalculatePluginDependencies() {
     $data = [];
 
     $plugin = $this->prophesize(PluginInspectionInterface::class);
@@ -126,7 +111,6 @@ class TestPluginDependency {
 
   use PluginDependencyTrait {
     calculatePluginDependencies as public;
-    getPluginDependencies as public;
   }
 
   /**

@@ -6,18 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-  function mapTextContentToAjaxResponse(content) {
-    if (content === '') {
-      return false;
-    }
-
-    try {
-      return JSON.parse(content);
-    } catch (e) {
-      return false;
-    }
-  }
-
   function bigPipeProcessPlaceholderReplacement(index, placeholderReplacement) {
     var placeholderId = placeholderReplacement.getAttribute('data-big-pipe-replacement-for-placeholder-with-id');
     var content = this.textContent.trim();
@@ -40,9 +28,17 @@
     }
   }
 
-  var interval = drupalSettings.bigPipeInterval || 50;
+  function mapTextContentToAjaxResponse(content) {
+    if (content === '') {
+      return false;
+    }
 
-  var timeoutID = void 0;
+    try {
+      return JSON.parse(content);
+    } catch (e) {
+      return false;
+    }
+  }
 
   function bigPipeProcessDocument(context) {
     if (!context.querySelector('script[data-big-pipe-event="start"]')) {
@@ -68,6 +64,10 @@
       }
     }, interval);
   }
+
+  var interval = drupalSettings.bigPipeInterval || 50;
+
+  var timeoutID = void 0;
 
   bigPipeProcess();
 

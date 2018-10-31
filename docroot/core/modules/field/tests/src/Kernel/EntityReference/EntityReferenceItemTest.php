@@ -5,6 +5,7 @@ namespace Drupal\Tests\field\Kernel\EntityReference;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -79,7 +80,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
 
     $this->vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
-      'vid' => mb_strtolower($this->randomMachineName()),
+      'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ]);
     $this->vocabulary->save();
@@ -282,7 +283,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     // Make sure the computed term reflects updates to the term id.
     $vocabulary2 = $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
-      'vid' => mb_strtolower($this->randomMachineName()),
+      'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ]);
     $vocabulary2->save();
@@ -353,13 +354,13 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
    * Tests that the 'handler' field setting stores the proper plugin ID.
    */
   public function testSelectionHandlerSettings() {
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'entity_reference',
       'settings' => [
-        'target_type' => 'entity_test',
+        'target_type' => 'entity_test'
       ],
     ]);
     $field_storage->save();
@@ -451,7 +452,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_node.0.entity');
 
     // Publish the node and try again.
-    $node->setPublished();
+    $node->setPublished(TRUE);
     $errors = $entity->validate();
     $this->assertEqual(0, count($errors));
 
@@ -501,7 +502,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertEqual($errors[1]->getPropertyPath(), 'field_test_node.1.target_id');
 
     // Publish one of the nodes and try again.
-    $saved_unpublished_node->setPublished();
+    $saved_unpublished_node->setPublished(TRUE);
     $saved_unpublished_node->save();
     $errors = $entity->validate();
     $this->assertEqual(1, count($errors));
@@ -509,7 +510,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_node.0.entity');
 
     // Publish the last invalid node and try again.
-    $unsaved_unpublished_node->setPublished();
+    $unsaved_unpublished_node->setPublished(TRUE);
     $errors = $entity->validate();
     $this->assertEqual(0, count($errors));
 
@@ -533,7 +534,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_comment.0.entity');
 
     // Publish the comment and try again.
-    $comment->setPublished();
+    $comment->setPublished(TRUE);
     $errors = $entity->validate();
     $this->assertEqual(0, count($errors));
 

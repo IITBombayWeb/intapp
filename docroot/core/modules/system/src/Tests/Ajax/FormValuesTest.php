@@ -10,7 +10,6 @@ use Drupal\Core\Ajax\DataCommand;
  * @group Ajax
  */
 class FormValuesTest extends AjaxTestBase {
-
   protected function setUp() {
     parent::setUp();
 

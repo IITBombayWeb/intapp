@@ -14,17 +14,6 @@
       handleClose: Drupal.t('Collapse')
     };
 
-    function toggleList($item, switcher) {
-      var $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
-      switcher = typeof switcher !== 'undefined' ? switcher : !$item.hasClass('open');
-
-      $item.toggleClass('open', switcher);
-
-      $toggle.toggleClass('open', switcher);
-
-      $toggle.find('.action').text(switcher ? ui.handleClose : ui.handleOpen);
-    }
-
     function toggleClickHandler(event) {
       var $toggle = $(event.target);
       var $item = $toggle.closest('li');
@@ -43,6 +32,17 @@
       event.stopPropagation();
     }
 
+    function toggleList($item, switcher) {
+      var $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
+      switcher = typeof switcher !== 'undefined' ? switcher : !$item.hasClass('open');
+
+      $item.toggleClass('open', switcher);
+
+      $toggle.toggleClass('open', switcher);
+
+      $toggle.find('.action').text(switcher ? ui.handleClose : ui.handleOpen);
+    }
+
     function initItems($menu) {
       var options = {
         class: 'toolbar-icon toolbar-handle',
@@ -56,9 +56,7 @@
         var $item = $(element);
         if ($item.children('ul.toolbar-menu').length) {
           var $box = $item.children('.toolbar-box');
-          options.text = Drupal.t('@label', {
-            '@label': $box.find('a').text()
-          });
+          options.text = Drupal.t('@label', { '@label': $box.find('a').text() });
           $item.children('.toolbar-box').append(Drupal.theme('toolbarMenuItemToggle', options));
         }
       });
@@ -74,9 +72,9 @@
     }
 
     function openActiveItem($menu) {
-      var pathItem = $menu.find('a[href="' + window.location.pathname + '"]');
+      var pathItem = $menu.find('a[href="' + location.pathname + '"]');
       if (pathItem.length && !activeItem) {
-        activeItem = window.location.pathname;
+        activeItem = location.pathname;
       }
       if (activeItem) {
         var $activeItem = $menu.find('a[href="' + activeItem + '"]').addClass('menu-item--active');
@@ -100,6 +98,6 @@
   };
 
   Drupal.theme.toolbarMenuItemToggle = function (options) {
-    return '<button class="' + options.class + '"><span class="action">' + options.action + '</span> <span class="label">' + options.text + '</span></button>';
+    return '<button class="' + options.class + '"><span class="action">' + options.action + '</span><span class="label">' + options.text + '</span></button>';
   };
 })(jQuery, Drupal, drupalSettings);

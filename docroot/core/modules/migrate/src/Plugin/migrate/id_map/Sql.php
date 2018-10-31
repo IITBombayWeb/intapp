@@ -2,7 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\id_map;
 
-use Drupal\Core\Database\DatabaseException;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -161,18 +161,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     $this->migration = $migration;
     $this->eventDispatcher = $event_dispatcher;
     $this->message = new MigrateMessage();
-
-    if (!isset($this->database)) {
-      $this->database = \Drupal::database();
-    }
-
-    // Default generated table names, limited to 63 characters.
-    $machine_name = str_replace(':', '__', $this->migration->id());
-    $prefix_length = strlen($this->database->tablePrefix());
-    $this->mapTableName = 'migrate_map_' . mb_strtolower($machine_name);
-    $this->mapTableName = mb_substr($this->mapTableName, 0, 63 - $prefix_length);
-    $this->messageTableName = 'migrate_message_' . mb_strtolower($machine_name);
-    $this->messageTableName = mb_substr($this->messageTableName, 0, 63 - $prefix_length);
   }
 
   /**
@@ -258,6 +246,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *   The map table name.
    */
   public function mapTableName() {
+    $this->init();
     return $this->mapTableName;
   }
 
@@ -268,6 +257,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *   The message table name.
    */
   public function messageTableName() {
+    $this->init();
     return $this->messageTableName;
   }
 
@@ -288,6 +278,9 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *   The database connection object.
    */
   public function getDatabase() {
+    if (!isset($this->database)) {
+      $this->database = \Drupal::database();
+    }
     $this->init();
     return $this->database;
   }
@@ -298,6 +291,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   protected function init() {
     if (!$this->initialized) {
       $this->initialized = TRUE;
+      // Default generated table names, limited to 63 characters.
+      $machine_name = str_replace(':', '__', $this->migration->id());
+      $prefix_length = strlen($this->getDatabase()->tablePrefix());
+      $this->mapTableName = 'migrate_map_' . Unicode::strtolower($machine_name);
+      $this->mapTableName = Unicode::substr($this->mapTableName, 0, 63 - $prefix_length);
+      $this->messageTableName = 'migrate_message_' . Unicode::strtolower($machine_name);
+      $this->messageTableName = Unicode::substr($this->messageTableName, 0, 63 - $prefix_length);
       $this->ensureTables();
     }
   }
@@ -701,17 +701,21 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * {@inheritdoc}
    */
   public function processedCount() {
-    return $this->countHelper(NULL, $this->mapTableName());
+    return (int) $this->getDatabase()->select($this->mapTableName())
+      ->countQuery()
+      ->execute()
+      ->fetchField();
   }
 
   /**
    * {@inheritdoc}
    */
   public function importedCount() {
-    return $this->countHelper([
-      MigrateIdMapInterface::STATUS_IMPORTED,
-      MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
-    ]);
+    return (int) $this->getDatabase()->select($this->mapTableName())
+      ->condition('source_row_status', [MigrateIdMapInterface::STATUS_IMPORTED, MigrateIdMapInterface::STATUS_NEEDS_UPDATE], 'IN')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
   }
 
   /**
@@ -738,28 +742,20 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * Counts records in a table.
    *
-   * @param int|array $status
-   *   (optional) Status code(s) to filter the source_row_status column.
+   * @param int $status
+   *   An integer for the source_row_status column.
    * @param string $table
    *   (optional) The table to work. Defaults to NULL.
    *
    * @return int
    *   The number of records.
    */
-  protected function countHelper($status = NULL, $table = NULL) {
-    // Use database directly to avoid creating tables.
-    $query = $this->database->select($table ?: $this->mapTableName());
+  protected function countHelper($status, $table = NULL) {
+    $query = $this->getDatabase()->select($table ?: $this->mapTableName());
     if (isset($status)) {
-      $query->condition('source_row_status', $status, is_array($status) ? 'IN' : '=');
+      $query->condition('source_row_status', $status);
     }
-    try {
-      $count = (int) $query->countQuery()->execute()->fetchField();
-    }
-    catch (DatabaseException $e) {
-      // The table does not exist, therefore there are no records.
-      $count = 0;
-    }
-    return $count;
+    return (int) $query->countQuery()->execute()->fetchField();
   }
 
   /**
@@ -985,9 +981,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     // Get the highest id from the list of map tables.
     $ids = [0];
     foreach ($map_tables as $map_table) {
-      // If the map_table does not exist then continue on to the next map_table.
       if (!$this->getDatabase()->schema()->tableExists($map_table)) {
-        continue;
+        break;
       }
 
       $query = $this->getDatabase()->select($map_table, 'map')

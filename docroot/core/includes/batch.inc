@@ -42,7 +42,7 @@ function _batch_page(Request $request) {
   if (!$batch) {
     $batch = \Drupal::service('batch.storage')->load($request_id);
     if (!$batch) {
-      \Drupal::messenger()->addError(t('No active batch.'));
+      drupal_set_message(t('No active batch.'), 'error');
       return new RedirectResponse(\Drupal::url('<front>', [], ['absolute' => TRUE]));
     }
   }

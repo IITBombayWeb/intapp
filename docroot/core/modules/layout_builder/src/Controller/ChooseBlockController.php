@@ -2,7 +2,6 @@
 
 namespace Drupal\layout_builder\Controller;
 
-use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Url;
@@ -63,15 +62,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
     $build['#type'] = 'container';
     $build['#attributes']['class'][] = 'block-categories';
 
-    // @todo Explicitly cast delta to an integer, remove this in
-    //   https://www.drupal.org/project/drupal/issues/2984509.
-    $delta = (int) $delta;
-
-    $definitions = $this->blockManager->getFilteredDefinitions('layout_builder', $this->getAvailableContexts($section_storage), [
-      'section_storage' => $section_storage,
-      'delta' => $delta,
-      'region' => $region,
-    ]);
+    $definitions = $this->blockManager->getDefinitionsForContexts($this->getAvailableContexts($section_storage));
     foreach ($this->blockManager->getGroupedDefinitions($definitions) as $category => $blocks) {
       $build[$category]['#type'] = 'details';
       $build[$category]['#open'] = TRUE;

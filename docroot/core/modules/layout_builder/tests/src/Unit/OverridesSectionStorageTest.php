@@ -223,7 +223,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
         ],
         [
           '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
         ],
         [
           'parameters' => [
@@ -243,7 +242,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
         ],
         [
           '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
         ],
         [
           'parameters' => [
@@ -263,7 +261,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
         ],
         [
           '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
         ],
         [
           'parameters' => [
@@ -283,7 +280,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
         ],
         [
           '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
         ],
         [
           'parameters' => [
@@ -305,7 +301,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
         ],
         [
           '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
           'with_integer_id' => '\d+',
         ],
         [
@@ -326,7 +321,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
         ],
         [
           '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
           'with_integer_id' => '\d+',
         ],
         [
@@ -347,7 +341,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
         ],
         [
           '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
           'with_integer_id' => '\d+',
         ],
         [
@@ -368,7 +361,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
         ],
         [
           '_has_layout_section' => 'true',
-          '_layout_builder_access' => 'view',
           'with_integer_id' => '\d+',
         ],
         [

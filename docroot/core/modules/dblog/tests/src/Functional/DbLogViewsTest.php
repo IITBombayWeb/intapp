@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\dblog\Functional;
 
-use Drupal\views\Views;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Generate events and verify dblog entries; verify user access to log reports
@@ -44,16 +44,27 @@ class DbLogViewsTest extends DbLogTest {
   }
 
   /**
-   * Tests the empty text for the watchdog view is not using an input format.
+   * {@inheritdoc}
    */
-  public function testEmptyText() {
-    $view = Views::getView('watchdog');
-    $data = $view->storage->toArray();
-    $area = $data['display']['default']['display_options']['empty']['area'];
+  public function testDBLogAddAndClear() {
+    // Is necesary to create the basic_html format because if absent after
+    // delete the logs, a new log entry is created indicating that basic_html
+    // format do not exists.
+    $basic_html_format = FilterFormat::create([
+      'format' => 'basic_html',
+      'name' => 'Basic HTML',
+      'filters' => [
+        'filter_html' => [
+          'status' => 1,
+          'settings' => [
+            'allowed_html' => '<p> <br> <strong> <a> <em>',
+          ],
+        ],
+      ],
+    ]);
+    $basic_html_format->save();
 
-    $this->assertEqual('text_custom', $area['plugin_id']);
-    $this->assertEqual('area_text_custom', $area['field']);
-    $this->assertEqual('No log messages available.', $area['content']);
+    parent::testDBLogAddAndClear();
   }
 
 }

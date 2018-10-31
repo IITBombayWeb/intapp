@@ -23,7 +23,6 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
   public static $modules = [
     'language',
     'content_translation',
-    'config_translation',
     'migrate_drupal_ui',
     'telephone',
     'aggregator',
@@ -31,8 +30,6 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
     'forum',
     'statistics',
     'migration_provider_test',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**
@@ -69,7 +66,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'editor' => 2,
       'field_config' => 89,
       'field_storage_config' => 63,
-      'file' => 7,
+      'file' => 8,
       'filter_format' => 7,
       'image_style' => 5,
       'language_content_settings' => 3,
@@ -86,7 +83,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'menu' => 8,
       'taxonomy_term' => 8,
       'taxonomy_vocabulary' => 7,
-      'tour' => 5,
+      'tour' => 4,
       'user' => 7,
       'user_role' => 6,
       'menu_link_content' => 10,
@@ -109,7 +106,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts['comment'] = 7;
     $counts['entity_view_display'] = 55;
     $counts['entity_view_mode'] = 14;
-    $counts['file'] = 8;
+    $counts['file'] = 9;
     $counts['menu_link_content'] = 11;
     $counts['node'] = 18;
     $counts['taxonomy_term'] = 9;
@@ -135,11 +132,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'filefield',
       'filter',
       'forum',
-      'i18n',
-      'i18nblocks',
       'i18nmenu',
-      'i18nprofile',
-      'i18nstrings',
       'i18ntaxonomy',
       'imagecache',
       'imagefield',
@@ -166,6 +159,8 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
       'date_api',
       'date_timezone',
       'event',
+      'i18n',
+      'i18nstrings',
       'imageapi',
       'number',
       'php',
@@ -179,8 +174,12 @@ class MigrateUpgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'i18nblocks',
       'i18ncck',
       'i18ncontent',
+      // This module is in the missing path list because it is installed on the
+      // source site but it is not installed on the destination site.
+      'i18nprofile',
     ];
   }
 

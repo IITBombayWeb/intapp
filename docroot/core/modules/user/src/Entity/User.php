@@ -22,13 +22,6 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "user",
  *   label = @Translation("User"),
- *   label_collection = @Translation("Users"),
- *   label_singular = @Translation("user"),
- *   label_plural = @Translation("users"),
- *   label_count = @PluralTranslation(
- *     singular = "@count user",
- *     plural = "@count users",
- *   ),
  *   handlers = {
  *     "storage" = "Drupal\user\UserStorage",
  *     "storage_schema" = "Drupal\user\UserStorageSchema",
@@ -355,7 +348,6 @@ class User extends ContentEntityBase implements UserInterface {
   public function isAuthenticated() {
     return $this->id() > 0;
   }
-
   /**
    * {@inheritdoc}
    */
@@ -428,7 +420,7 @@ class User extends ContentEntityBase implements UserInterface {
         'name' => [LanguageInterface::LANGCODE_DEFAULT => ''],
         // Explicitly set the langcode to ensure that field definitions do not
         // need to be fetched to figure out a default.
-        'langcode' => [LanguageInterface::LANGCODE_DEFAULT => LanguageInterface::LANGCODE_NOT_SPECIFIED],
+        'langcode' => [LanguageInterface::LANGCODE_DEFAULT => LanguageInterface::LANGCODE_NOT_SPECIFIED]
       ], $entity_type->id());
     }
     return clone static::$anonymousUser;

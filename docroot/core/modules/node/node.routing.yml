@@ -2,17 +2,8 @@ node.multiple_delete_confirm:
   path: '/admin/content/node/delete'
   defaults:
     _form: '\Drupal\node\Form\DeleteMultiple'
-    entity_type_id: 'node'
   requirements:
-    _entity_delete_multiple_access: 'node'
-
-entity.node.delete_multiple_form:
-  path: '/admin/content/node/delete'
-  defaults:
-    _form: '\Drupal\node\Form\DeleteMultiple'
-    entity_type_id: 'node'
-  requirements:
-    _entity_delete_multiple_access: 'node'
+    _permission: 'administer nodes'
 
 node.add_page:
   path: '/node/add'

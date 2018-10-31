@@ -29,7 +29,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * @group Ajax
  */
 class CommandsTest extends AjaxTestBase {
-
   /**
    * Tests the various Ajax Commands.
    */

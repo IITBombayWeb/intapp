@@ -4,7 +4,6 @@ namespace Drupal\rest\Plugin\rest\resource;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -277,8 +276,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
   protected function checkPatchFieldAccess(FieldItemListInterface $original_field, FieldItemListInterface $received_field) {
     // If the user is allowed to edit the field, it is always safe to set the
     // received value. We may be setting an unchanged value, but that is ok.
-    $field_edit_access = $original_field->access('edit', NULL, TRUE);
-    if ($field_edit_access->isAllowed()) {
+    if ($original_field->access('edit')) {
       return TRUE;
     }
 
@@ -297,14 +295,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     // It's helpful and safe to let the user know when they are not allowed to
     // update a field.
     $field_name = $received_field->getName();
-    $error_message = "Access denied on updating field '$field_name'.";
-    if ($field_edit_access instanceof AccessResultReasonInterface) {
-      $reason = $field_edit_access->getReason();
-      if ($reason) {
-        $error_message .= ' ' . $reason;
-      }
-    }
-    throw new AccessDeniedHttpException($error_message);
+    throw new AccessDeniedHttpException("Access denied on updating field '$field_name'.");
   }
 
   /**

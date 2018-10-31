@@ -148,7 +148,7 @@ class BulkFormTest extends BrowserTestBase {
     $errors = $this->xpath('//div[contains(@class, "messages--status")]');
     $this->assertFalse($errors, 'No action message shown.');
     $this->drupalPostForm(NULL, [], t('Delete'));
-    $this->assertText(t('Deleted 5 content items.'));
+    $this->assertText(t('Deleted 5 posts.'));
     // Check if we got redirected to the original page.
     $this->assertUrl('test_bulk_form');
   }

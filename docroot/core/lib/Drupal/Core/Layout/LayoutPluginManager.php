@@ -12,14 +12,11 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator;
 use Drupal\Core\Layout\Annotation\Layout;
-use Drupal\Core\Plugin\FilteredPluginManagerTrait;
 
 /**
  * Provides a plugin manager for layouts.
  */
 class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginManagerInterface {
-
-  use FilteredPluginManagerTrait;
 
   /**
    * The theme handler.
@@ -45,16 +42,8 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
     parent::__construct('Plugin/Layout', $namespaces, $module_handler, LayoutInterface::class, Layout::class);
     $this->themeHandler = $theme_handler;
 
-    $type = $this->getType();
-    $this->setCacheBackend($cache_backend, $type);
-    $this->alterInfo($type);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getType() {
-    return 'layout';
+    $this->setCacheBackend($cache_backend, 'layout');
+    $this->alterInfo('layout');
   }
 
   /**

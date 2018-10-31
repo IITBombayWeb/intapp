@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.card
+    - core.entity_view_mode.node.highlighted_small
     - node.type.article
   module:
     - node
@@ -58,7 +58,7 @@ display:
         type: 'entity:node'
         options:
           relationship: none
-          view_mode: card
+          view_mode: highlighted_small
       fields:
         title:
           id: title

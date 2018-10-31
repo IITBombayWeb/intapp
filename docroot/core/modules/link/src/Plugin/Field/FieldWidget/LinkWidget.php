@@ -252,7 +252,7 @@ class LinkWidget extends WidgetBase {
         }
 
         $element['title']['#states']['required'] = [
-          ':input[name="' . $selector . '[' . $delta . '][uri]"]' => ['filled' => TRUE],
+          ':input[name="' . $selector . '[' . $delta . '][uri]"]' => ['filled' => TRUE]
         ];
       }
     }
@@ -397,6 +397,7 @@ class LinkWidget extends WidgetBase {
     }
     return $values;
   }
+
 
   /**
    * {@inheritdoc}

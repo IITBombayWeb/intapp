@@ -8,7 +8,6 @@ namespace Drupal\system\Tests\Ajax;
  * @group Ajax
  */
 class ElementValidationTest extends AjaxTestBase {
-
   /**
    * Tries to post an Ajax change to a form that has a validated element.
    *

@@ -16,8 +16,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestForm",
- *       "delete" = "Drupal\entity_test\EntityTestDeleteForm",
- *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm"
+ *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"
  *     },
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
@@ -42,7 +41,6 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "add-form" = "/entity_test_rev/add",
  *     "canonical" = "/entity_test_rev/manage/{entity_test_rev}",
  *     "delete-form" = "/entity_test/delete/entity_test_rev/{entity_test_rev}",
- *     "delete-multiple-form" = "/entity_test_rev/delete_multiple",
  *     "edit-form" = "/entity_test_rev/manage/{entity_test_rev}/edit",
  *     "revision" = "/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/view",
  *   }
@@ -67,7 +65,7 @@ class EntityTestRev extends EntityTest {
       ->setCardinality(1)
       ->setReadOnly(TRUE);
 
-    return $fields;
+    return $fields + \Drupal::state()->get($entity_type->id() . '.additional_base_field_definitions', []);
   }
 
 }

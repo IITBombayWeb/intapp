@@ -137,14 +137,7 @@ function hook_user_login($account) {
   $config = \Drupal::config('system.date');
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
-    \Drupal::messenger()
-      ->addStatus(t('Configure your <a href=":user-edit">account time zone setting</a>.', [
-        ':user-edit' => $account->url('edit-form', [
-          'query' => \Drupal::destination()
-            ->getAsArray(),
-          'fragment' => 'edit-timezone',
-        ]),
-      ]));
+    drupal_set_message(t('Configure your <a href=":user-edit">account time zone setting</a>.', [':user-edit' => $account->url('edit-form', ['query' => \Drupal::destination()->getAsArray(), 'fragment' => 'edit-timezone'])]));
   }
 }
 

@@ -185,18 +185,17 @@ function update_page_top() {
     foreach (['core', 'contrib'] as $report_type) {
       $type = 'update_' . $report_type;
       // hook_requirements() supports render arrays therefore we need to render
-      // them before using
-      // \Drupal\Core\Messenger\MessengerInterface::addStatus().
+      // them before using drupal_set_message().
       if (isset($status[$type]['description']) && is_array($status[$type]['description'])) {
         $status[$type]['description'] = \Drupal::service('renderer')->renderPlain($status[$type]['description']);
       }
       if (!empty($verbose)) {
         if (isset($status[$type]['severity'])) {
           if ($status[$type]['severity'] == REQUIREMENT_ERROR) {
-            \Drupal::messenger()->addError($status[$type]['description']);
+            drupal_set_message($status[$type]['description'], 'error');
           }
           elseif ($status[$type]['severity'] == REQUIREMENT_WARNING) {
-            \Drupal::messenger()->addWarning($status[$type]['description']);
+            drupal_set_message($status[$type]['description'], 'warning');
           }
         }
       }
@@ -206,7 +205,7 @@ function update_page_top() {
         if (isset($status[$type])
             && isset($status[$type]['reason'])
             && $status[$type]['reason'] === UPDATE_NOT_SECURE) {
-          \Drupal::messenger()->addError($status[$type]['description']);
+          drupal_set_message($status[$type]['description'], 'error');
         }
       }
     }
@@ -495,15 +494,15 @@ function update_fetch_data_finished($success, $results) {
   if ($success) {
     if (!empty($results)) {
       if (!empty($results['updated'])) {
-        \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural($results['updated'], 'Checked available update data for one project.', 'Checked available update data for @count projects.'));
+        drupal_set_message(\Drupal::translation()->formatPlural($results['updated'], 'Checked available update data for one project.', 'Checked available update data for @count projects.'));
       }
       if (!empty($results['failures'])) {
-        \Drupal::messenger()->addError(\Drupal::translation()->formatPlural($results['failures'], 'Failed to get available update data for one project.', 'Failed to get available update data for @count projects.'));
+        drupal_set_message(\Drupal::translation()->formatPlural($results['failures'], 'Failed to get available update data for one project.', 'Failed to get available update data for @count projects.'), 'error');
       }
     }
   }
   else {
-    \Drupal::messenger()->addError(t('An error occurred trying to get available update data.'), 'error');
+    drupal_set_message(t('An error occurred trying to get available update data.'), 'error');
   }
 }
 
@@ -665,6 +664,7 @@ function template_preprocess_update_last_check(&$variables) {
  * version of Drupal core.
  *
  * @see \Drupal\Core\Extension\ExtensionDiscovery
+ * @see _system_rebuild_module_data()
  */
 function update_verify_update_archive($project, $archive_file, $directory) {
   $errors = [];

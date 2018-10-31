@@ -4,9 +4,8 @@ namespace Drupal\serialization\Encoder;
 
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use Symfony\Component\Serializer\Encoder\SerializerAwareEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder as BaseXmlEncoder;
-use Symfony\Component\Serializer\SerializerAwareInterface;
-use Symfony\Component\Serializer\SerializerAwareTrait;
 
 /**
  * Adds XML support for serializer.
@@ -18,9 +17,7 @@ use Symfony\Component\Serializer\SerializerAwareTrait;
  *   This encoder should not be used directly. Rather, use the `serializer`
  *   service.
  */
-class XmlEncoder implements SerializerAwareInterface, EncoderInterface, DecoderInterface {
-
-  use SerializerAwareTrait;
+class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, DecoderInterface {
 
   /**
    * The formats that this Encoder supports.

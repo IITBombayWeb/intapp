@@ -9,6 +9,7 @@ namespace Drupal\Tests\views\Kernel;
  */
 use Drupal\views\Plugin\views\filter\Standard;
 use Drupal\views\Views;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Render\FormattableMarkup;
 
 class ModuleTest extends ViewsKernelTestBase {
@@ -28,7 +29,7 @@ class ModuleTest extends ViewsKernelTestBase {
   public static $modules = ['field', 'user', 'block'];
 
   /**
-   * Stores the last triggered error.
+   * Stores the last triggered error, for example via debug().
    *
    * @var string
    *
@@ -255,7 +256,7 @@ class ModuleTest extends ViewsKernelTestBase {
       list($plugin_type, $plugin_id) = explode(':', $key);
       $plugin_def = $this->container->get("plugin.manager.views.$plugin_type")->getDefinition($plugin_id);
 
-      $this->assertTrue(isset($plugin_list[$key]), new FormattableMarkup('The expected @key plugin list key was found.', ['@key' => $key]));
+      $this->assertTrue(isset($plugin_list[$key]), SafeMarkup::format('The expected @key plugin list key was found.', ['@key' => $key]));
       $plugin_details = $plugin_list[$key];
 
       $this->assertEqual($plugin_details['type'], $plugin_type, 'The expected plugin type was found.');

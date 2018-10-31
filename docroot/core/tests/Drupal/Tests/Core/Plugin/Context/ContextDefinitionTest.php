@@ -110,6 +110,7 @@ class ContextDefinitionTest extends UnitTestCase {
    * @dataProvider providerGetDataDefinition
    * @covers ::getDataDefinition
    * @uses \Drupal
+   * @uses \Drupal\Component\Utility\SafeMarkup
    */
   public function testGetDataDefinitionInvalidType($is_multiple) {
     // Since we're trying to make getDataDefinition() throw an exception in

@@ -522,7 +522,6 @@ function template_preprocess_forums(&$variables) {
         $table['#rows'][] = $row;
       }
 
-      $variables['topics_original'] = $variables['topics'];
       $variables['topics'] = $table;
       $variables['topics_pager'] = [
         '#type' => 'pager',

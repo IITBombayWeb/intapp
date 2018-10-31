@@ -68,8 +68,6 @@ abstract class EntityViewDisplayResourceTestBase extends EntityResourceTestBase 
         'links' => [
           'region' => 'content',
           'weight' => 100,
-          'settings' => [],
-          'third_party_settings' => [],
         ],
       ],
       'dependencies' => [

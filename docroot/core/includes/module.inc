@@ -57,7 +57,7 @@ function system_list($type) {
  */
 function system_list_reset() {
   drupal_static_reset('system_list');
-  \Drupal::service('extension.list.module')->reset();
+  drupal_static_reset('system_rebuild_module_data');
   \Drupal::cache('bootstrap')->delete('system_list');
 }
 

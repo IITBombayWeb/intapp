@@ -30,17 +30,17 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
-    'status' => "The 'administer comments' permission is required.",
-    'pid' => NULL,
-    'entity_id' => NULL,
-    'uid' => "The 'administer comments' permission is required.",
-    'name' => "The 'administer comments' permission is required.",
-    'homepage' => "The 'administer comments' permission is required.",
-    'created' => "The 'administer comments' permission is required.",
-    'changed' => NULL,
-    'thread' => NULL,
-    'entity_type' => NULL,
-    'field_name' => NULL,
+    'status',
+    'pid',
+    'entity_id',
+    'uid',
+    'name',
+    'homepage',
+    'created',
+    'changed',
+    'thread',
+    'entity_type',
+    'field_name',
   ];
 
   /**
@@ -107,7 +107,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     ]);
     $comment->setSubject('Llama')
       ->setOwnerId(static::$auth ? $this->account->id() : 0)
-      ->setPublished()
+      ->setPublished(TRUE)
       ->setCreatedTime(123456789)
       ->setChangedTime(123456789);
     $comment->save();
@@ -267,8 +267,8 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
   /**
    * Tests POSTing a comment without critical base fields.
    *
-   * Tests with the most minimal normalization possible: the one returned by
-   * ::getNormalizedPostEntity().
+   * testPost() is testing with the most minimal normalization possible: the one
+   * returned by ::getNormalizedPostEntity().
    *
    * But Comment entities have some very special edge cases:
    * - base fields that are not marked as required in
@@ -335,8 +335,6 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
         return "The 'access comments' permission is required and the comment must be published.";
       case 'POST';
         return "The 'post comments' permission is required.";
-      case 'PATCH';
-        return "The 'edit own comments' permission is required, the user must be the comment author, and the comment must be published.";
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }

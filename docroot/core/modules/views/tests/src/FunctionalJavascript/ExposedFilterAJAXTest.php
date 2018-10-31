@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\simpletest\ContentTypeCreationTrait;
 use Drupal\simpletest\NodeCreationTrait;
 
@@ -11,7 +11,7 @@ use Drupal\simpletest\NodeCreationTrait;
  *
  * @group views
  */
-class ExposedFilterAJAXTest extends WebDriverTestBase {
+class ExposedFilterAJAXTest extends JavascriptTestBase {
 
   use ContentTypeCreationTrait;
   use NodeCreationTrait;
@@ -19,14 +19,12 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'views', 'views_test_modal'];
+  public static $modules = ['node', 'views'];
 
   /**
-   * {@inheritdoc}
+   * Tests if exposed filtering via AJAX works for the "Content" View.
    */
-  protected function setUp() {
-    parent::setUp();
-
+  public function testExposedFiltering() {
     // Enable AJAX on the /admin/content View.
     \Drupal::configFactory()->getEditable('views.view.content')
       ->set('display.default.display_options.use_ajax', TRUE)
@@ -45,12 +43,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
       'edit any page content',
     ]);
     $this->drupalLogin($user);
-  }
 
-  /**
-   * Tests if exposed filtering via AJAX works for the "Content" View.
-   */
-  public function testExposedFiltering() {
     // Visit the View page.
     $this->drupalGet('admin/content');
 
@@ -96,54 +89,6 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains('Page One');
     $this->assertSession()->pageTextContains('Page Two');
     $this->assertFalse($session->getPage()->hasButton('Reset'));
-  }
-
-  /**
-   * Tests if exposed filtering via AJAX works in a modal.
-   */
-  public function testExposedFiltersInModal() {
-    $this->drupalGet('views-test-modal/modal');
-
-    $assert = $this->assertSession();
-
-    $assert->elementExists('named', ['link', 'Administer content'])->click();
-    $dialog = $assert->waitForElementVisible('css', '.views-test-modal');
-
-    $session = $this->getSession();
-    // Ensure that the Content we're testing for is present.
-    $html = $session->getPage()->getHtml();
-    $this->assertContains('Page One', $html);
-    $this->assertContains('Page Two', $html);
-
-    // Search for "Page One".
-    $session->getPage()->fillField('title', 'Page One');
-    $assert->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Filter');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-
-    // Verify that only the "Page One" Node is present.
-    $html = $session->getPage()->getHtml();
-    $this->assertContains('Page One', $html);
-    $this->assertNotContains('Page Two', $html);
-
-    // Close and re-open the modal.
-    $assert->buttonExists('Close', $dialog)->press();
-    $assert->elementExists('named', ['link', 'Administer content'])->click();
-    $assert->waitForElementVisible('css', '.views-test-modal');
-
-    // Ensure that the Content we're testing for is present.
-    $html = $session->getPage()->getHtml();
-    $this->assertContains('Page One', $html);
-    $this->assertContains('Page Two', $html);
-
-    // Search for "Page One".
-    $session->getPage()->fillField('title', 'Page One');
-    $assert->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Filter');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-
-    // Verify that only the "Page One" Node is present.
-    $html = $session->getPage()->getHtml();
-    $this->assertContains('Page One', $html);
-    $this->assertNotContains('Page Two', $html);
   }
 
 }

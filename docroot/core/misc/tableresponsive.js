@@ -6,6 +6,18 @@
 **/
 
 (function ($, Drupal, window) {
+  Drupal.behaviors.tableResponsive = {
+    attach: function attach(context, settings) {
+      var $tables = $(context).find('table.responsive-enabled').once('tableresponsive');
+      if ($tables.length) {
+        var il = $tables.length;
+        for (var i = 0; i < il; i++) {
+          TableResponsive.tables.push(new TableResponsive($tables[i]));
+        }
+      }
+    }
+  };
+
   function TableResponsive(table) {
     this.table = table;
     this.$table = $(table);
@@ -20,18 +32,6 @@
 
     $(window).on('resize.tableresponsive', $.proxy(this, 'eventhandlerEvaluateColumnVisibility')).trigger('resize.tableresponsive');
   }
-
-  Drupal.behaviors.tableResponsive = {
-    attach: function attach(context, settings) {
-      var $tables = $(context).find('table.responsive-enabled').once('tableresponsive');
-      if ($tables.length) {
-        var il = $tables.length;
-        for (var i = 0; i < il; i++) {
-          TableResponsive.tables.push(new TableResponsive($tables[i]));
-        }
-      }
-    }
-  };
 
   $.extend(TableResponsive, {
     tables: []

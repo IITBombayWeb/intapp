@@ -15,13 +15,6 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  * @ConfigEntityType(
  *   id = "action",
  *   label = @Translation("Action"),
- *   label_collection = @Translation("Actions"),
- *   label_singular = @Translation("action"),
- *   label_plural = @Translation("actions"),
- *   label_count = @PluralTranslation(
- *     singular = "@count action",
- *     plural = "@count actions",
- *   ),
  *   admin_permission = "administer actions",
  *   entity_keys = {
  *     "id" = "id",

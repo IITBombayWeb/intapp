@@ -5,6 +5,7 @@ namespace Drupal\Core;
 use Composer\Autoload\ClassLoader;
 use Drupal\Component\Assertion\Handle;
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
@@ -999,9 +1000,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // numbers handling.
     setlocale(LC_ALL, 'C');
 
-    // Set appropriate configuration for multi-byte strings.
-    mb_internal_encoding('utf-8');
-    mb_language('uni');
+    // Detect string handling method.
+    Unicode::check();
 
     // Indicate that code is operating in a test child site.
     if (!defined('DRUPAL_TEST_IN_CHILD_SITE')) {
@@ -1604,14 +1604,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function getInstallProfile() {
     $config = $this->getConfigStorage()->read('core.extension');
-    if (isset($config['profile'])) {
+    if (!empty($config['profile'])) {
       $install_profile = $config['profile'];
     }
     // @todo https://www.drupal.org/node/2831065 remove the BC layer.
     else {
       // If system_update_8300() has not yet run fallback to using settings.
-      $settings = Settings::getAll();
-      $install_profile = isset($settings['install_profile']) ? $settings['install_profile'] : NULL;
+      $install_profile = Settings::get('install_profile');
     }
 
     // Normalize an empty string to a NULL value.

@@ -8,44 +8,17 @@
  * $('.toolbar-menu').drupalToolbarMenu();
  */
 
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   /**
    * Store the open menu tray.
    */
   let activeItem = Drupal.url(drupalSettings.path.currentPath);
 
-  $.fn.drupalToolbarMenu = function() {
+  $.fn.drupalToolbarMenu = function () {
     const ui = {
       handleOpen: Drupal.t('Extend'),
       handleClose: Drupal.t('Collapse'),
     };
-
-    /**
-     * Toggle the open/close state of a list is a menu.
-     *
-     * @param {jQuery} $item
-     *   The li item to be toggled.
-     *
-     * @param {Boolean} switcher
-     *   A flag that forces toggleClass to add or a remove a class, rather than
-     *   simply toggling its presence.
-     */
-    function toggleList($item, switcher) {
-      const $toggle = $item
-        .children('.toolbar-box')
-        .children('.toolbar-handle');
-      switcher =
-        typeof switcher !== 'undefined' ? switcher : !$item.hasClass('open');
-      // Toggle the item open state.
-      $item.toggleClass('open', switcher);
-      // Twist the toggle.
-      $toggle.toggleClass('open', switcher);
-      // Adjust the toggle text.
-      $toggle
-        .find('.action')
-        // Expand Structure, Collapse Structure.
-        .text(switcher ? ui.handleClose : ui.handleOpen);
-    }
 
     /**
      * Handle clicks from the disclosure button on an item with sub-items.
@@ -84,6 +57,30 @@
     }
 
     /**
+     * Toggle the open/close state of a list is a menu.
+     *
+     * @param {jQuery} $item
+     *   The li item to be toggled.
+     *
+     * @param {Boolean} switcher
+     *   A flag that forces toggleClass to add or a remove a class, rather than
+     *   simply toggling its presence.
+     */
+    function toggleList($item, switcher) {
+      const $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
+      switcher = (typeof switcher !== 'undefined') ? switcher : !$item.hasClass('open');
+      // Toggle the item open state.
+      $item.toggleClass('open', switcher);
+      // Twist the toggle.
+      $toggle.toggleClass('open', switcher);
+      // Adjust the toggle text.
+      $toggle
+        .find('.action')
+        // Expand Structure, Collapse Structure.
+        .text((switcher) ? ui.handleClose : ui.handleOpen);
+    }
+
+    /**
      * Add markup to the menu elements.
      *
      * Items with sub-elements have a list toggle attached to them. Menu item
@@ -107,11 +104,8 @@
         const $item = $(element);
         if ($item.children('ul.toolbar-menu').length) {
           const $box = $item.children('.toolbar-box');
-          options.text = Drupal.t('@label', {
-            '@label': $box.find('a').text(),
-          });
-          $item
-            .children('.toolbar-box')
+          options.text = Drupal.t('@label', { '@label': $box.find('a').text() });
+          $item.children('.toolbar-box')
             .append(Drupal.theme('toolbarMenuItemToggle', options));
         }
       });
@@ -130,7 +124,7 @@
      *   The current level number to be assigned to the list elements.
      */
     function markListLevels($lists, level) {
-      level = !level ? 1 : level;
+      level = (!level) ? 1 : level;
       const $lis = $lists.children('li').addClass(`level-${level}`);
       $lists = $lis.children('ul');
       if ($lists.length) {
@@ -148,23 +142,19 @@
      *   The root of the menu.
      */
     function openActiveItem($menu) {
-      const pathItem = $menu.find(`a[href="${window.location.pathname}"]`);
+      const pathItem = $menu.find(`a[href="${location.pathname}"]`);
       if (pathItem.length && !activeItem) {
-        activeItem = window.location.pathname;
+        activeItem = location.pathname;
       }
       if (activeItem) {
-        const $activeItem = $menu
-          .find(`a[href="${activeItem}"]`)
-          .addClass('menu-item--active');
-        const $activeTrail = $activeItem
-          .parentsUntil('.root', 'li')
-          .addClass('menu-item--active-trail');
+        const $activeItem = $menu.find(`a[href="${activeItem}"]`).addClass('menu-item--active');
+        const $activeTrail = $activeItem.parentsUntil('.root', 'li').addClass('menu-item--active-trail');
         toggleList($activeTrail, true);
       }
     }
 
     // Return the jQuery object.
-    return this.each(function(selector) {
+    return this.each(function (selector) {
       const $menu = $(this).once('toolbar-menu');
       if ($menu.length) {
         // Bind event handlers.
@@ -196,9 +186,7 @@
    * @return {string}
    *   A string representing a DOM fragment.
    */
-  Drupal.theme.toolbarMenuItemToggle = function(options) {
-    return `<button class="${options.class}"><span class="action">${
-      options.action
-    }</span> <span class="label">${options.text}</span></button>`;
+  Drupal.theme.toolbarMenuItemToggle = function (options) {
+    return `<button class="${options.class}"><span class="action">${options.action}</span><span class="label">${options.text}</span></button>`;
   };
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

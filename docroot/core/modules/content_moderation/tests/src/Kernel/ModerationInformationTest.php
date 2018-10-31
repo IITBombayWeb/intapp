@@ -6,15 +6,13 @@ use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use Drupal\workflows\Entity\Workflow;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\ModerationInformation
  * @group content_moderation
  */
 class ModerationInformationTest extends KernelTestBase {
-
-  use ContentModerationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -50,7 +48,7 @@ class ModerationInformationTest extends KernelTestBase {
 
     ConfigurableLanguage::createFromLangcode('de')->save();
 
-    $workflow = $this->createEditorialWorkflow();
+    $workflow = Workflow::load('editorial');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_mulrevpub', 'entity_test_mulrevpub');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
     $workflow->save();

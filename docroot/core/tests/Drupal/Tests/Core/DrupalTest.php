@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\Core;
 
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -121,21 +120,8 @@ class DrupalTest extends UnitTestCase {
    * @covers ::classResolver
    */
   public function testClassResolver() {
-    $class_resolver = $this->prophesize(ClassResolverInterface::class);
-    $this->setMockContainerService('class_resolver', $class_resolver->reveal());
-    $this->assertInstanceOf(ClassResolverInterface::class, \Drupal::classResolver());
-  }
-
-  /**
-   * Tests the classResolver method when called with a class.
-   *
-   * @covers ::classResolver
-   */
-  public function testClassResolverWithClass() {
-    $class_resolver = $this->prophesize(ClassResolverInterface::class);
-    $class_resolver->getInstanceFromDefinition(static::class)->willReturn($this);
-    $this->setMockContainerService('class_resolver', $class_resolver->reveal());
-    $this->assertSame($this, \Drupal::classResolver(static::class));
+    $this->setMockContainerService('class_resolver');
+    $this->assertNotNull(\Drupal::classResolver());
   }
 
   /**

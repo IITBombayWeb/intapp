@@ -2,8 +2,10 @@
 
 namespace Drupal\contextual;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,13 +18,12 @@ class ContextualController implements ContainerInjectionInterface {
 
   /**
    * The renderer.
-   *
    * @var \Drupal\Core\Render\RendererInterface
    */
-  protected $renderer;
+  protected $render;
 
   /**
-   * Constructors a new ContextualController.
+   * Constructors a new ContextualController
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
@@ -46,16 +47,10 @@ class ContextualController implements ContainerInjectionInterface {
    * Given a list of contextual links IDs, render them. Hence this must be
    * robust to handle arbitrary input.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The Symfony request object.
+   * @see contextual_preprocess()
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The JSON response.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-   *   Thrown when the request contains no ids.
-   *
-   * @see contextual_preprocess()
    */
   public function render(Request $request) {
     $ids = $request->request->get('ids');
@@ -63,8 +58,16 @@ class ContextualController implements ContainerInjectionInterface {
       throw new BadRequestHttpException(t('No contextual ids specified.'));
     }
 
+    $tokens = $request->request->get('tokens');
+    if (!isset($tokens)) {
+      throw new BadRequestHttpException(t('No contextual ID tokens specified.'));
+    }
+
     $rendered = [];
-    foreach ($ids as $id) {
+    foreach ($ids as $key => $id) {
+      if (!isset($tokens[$key]) || !Crypt::hashEquals($tokens[$key], Crypt::hmacBase64($id, Settings::getHashSalt() . \Drupal::service('private_key')->get()))) {
+        throw new BadRequestHttpException('Invalid contextual ID specified.');
+      }
       $element = [
         '#type' => 'contextual_links',
         '#contextual_links' => _contextual_id_to_links($id),
