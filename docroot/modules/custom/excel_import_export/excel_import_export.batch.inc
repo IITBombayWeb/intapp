@@ -31,7 +31,7 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
   // Work flow status.
   $transition = WorkflowTransition::create(["apply_apply", 'field_name' => 'field_status']);
   $current_state = $transition->getFromState();
-  $workFlowOption = $current_state->getOptions();
+  $workFlowOption = $current_state->getOptions($entity = NULL, $field_name = NULL);
   
   // Valid statuses only added in export, After Download status are excluded from reports.
   $validWorkFlowOption = array('apply_apply', 'apply_need_more_info', 'apply_details_appended', 'apply_downloaded_for_department_processing');
@@ -329,7 +329,7 @@ function excel_import_export_batch_import($filepath, &$context) {
   // Work flow status.
   $transition = WorkflowTransition::create(["apply_downloaded_for_department_processing", 'field_name' => 'field_status']);
   $current_state = $transition->getFromState();
-  $workFlowOption = $current_state->getOptions();
+  $workFlowOption = $current_state->getOptions($entity = NULL, $field_name = NULL);
   $limit = 10;
   // See our module's info file below.
   $chunk_filter = new ChunkReadFilter();
