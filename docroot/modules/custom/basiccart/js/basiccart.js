@@ -23,7 +23,9 @@
       $('#forquantitydynamictext_'+$(this).find('a').attr('href').split('/node/')[1]).closest('article').removeClass('pct-hvr');
       
     });
-    
+    $( document ).ready(function() { // in dashboard page cart count not updated
+      $("#cnt").html($('.basicart-view .basiccart-cart-contents').length);
+    });
   // $(".addtocart-link-class").append('<div class="tooltip pck-tooltip">Please add the course to your application packet</div>');
   // $(".msg-pck").append('<div class="tooltip">view your application list here</div>');
   // $(".basiccart-delete-image-image").append('<div class="tooltip">Click to remove the course </div>');

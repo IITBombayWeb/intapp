@@ -152,33 +152,39 @@ class ExcelImportExportController extends ControllerBase {
     $query->condition('eiei.sid', $sid);
     $result = $query->execute()->fetchAll(\PDO::FETCH_OBJ);
     $markup = '';
+    $markup .= '<table class="imp-det-tbl">';
     foreach ($result as $row) {
-      $markup .= '<br><h4>Imported By </h4>: ' . user_load($row->uid)->get('name')->value;
-      $markup .= '<br><h4>Imported On </h4>: ' . date('Y M d, H:i', $row->timestamp);
-      $markup .= '<br><h4>Total Records submitted </h4>: ' . $row->total_import;
-      $markup .= '<br><h4>Total valid applications submitted </h4>: ' . ($row->total_import - $row->total_invalid_nodes);
-      $markup .= '<br><h4>Total invalid applications submitted </h4>: ' . ($row->total_invalid_nodes);
-      $markup .= '<br><h4>Non Valid Application IDs </h4>: ';
+      $markup .= '<tr><th class="imp-tbl-th"> Imported By </th><td class="imp-tbl-td"> '.user_load($row->uid)->get('name')->value.'</td></tr>';
+      $markup .= '<tr><th  class="imp-tbl-th" > Imported On </th><td class="imp-tbl-td"> ' . date('Y M d, H:i', $row->timestamp) .'</td></tr>' ;
+      $markup .= '<tr><th  class="imp-tbl-th"> Total Records submitted </th><td class="imp-tbl-td" > ' . $row->total_import .'</td></tr>' ;
+      $markup .= '<tr><th  class="imp-tbl-th"> Total valid applications submitted </th><td class="imp-tbl-td" > ' . ($row->total_import - $row->total_invalid_nodes) .'</td></tr>';
+      $markup .= '<tr><th  class="imp-tbl-th"> Total invalid applications submitted </th><td class="imp-tbl-td" > ' . ($row->total_invalid_nodes) .'</td></tr>' ;
+      $markup .= '<tr><th  class="imp-tbl-th"> Non Valid Application IDs </th><td class="imp-tbl-td">  ';
       // Invalid Applications details.
       $invalidApplications = excelImportExportUnserialize($row->invalid_nodes);
       foreach ($invalidApplications as $value) {
-        $markup .= $value . '<br/>';  
+        $markup .= $value . '<br>';  
       }
+      $markup .= '</td></tr>';
       // Valid Import details.
-      $markup .= '<br><h4>Total valid status updates </h4>: ' . ($row->total_valid_imports);
-      $markup .= '<br><h4>Valid Import IDs </h4>: ';
+      $markup .= '<tr><th  class="imp-tbl-th"> Total valid status updates </th><td class="imp-tbl-td" >' . ($row->total_valid_imports) .'</td></tr>' ;
+      $markup .= '<tr><th  class="imp-tbl-th"> Valid Import IDs </th>
+      <td class="imp-tbl-td">';
       $validStatus = excelImportExportUnserialize($row->valid_imports);
       foreach ($validStatus as $value) {
-        $markup .= $value . '<br/>';  
+        $markup .= $value . '<br>';  
       }
+        $markup .= '</td></tr>';
       // Invalid Import details.
-      $markup .= '<br><h4>Total Invalid status updates </h4>: ' . ($row->total_invalid_imports);
-      $markup .= '<br><h4>Invalid Import IDs </h4>: ';
+      $markup .= '<tr><th  class="imp-tbl-th">Total Invalid status updates </th><td class="imp-tbl-td"> ' . ($row->total_invalid_imports);
+      $markup .= '<tr><th  class="imp-tbl-th">Invalid Import IDs </th><td class="imp-tbl-td" >';
       $invalidStatus = excelImportExportUnserialize($row->invalid_imports);
       foreach ($invalidStatus as $value) {
-        $markup .= $value . '<br/>';  
+        $markup .= $value . '<br>';  
       }
+      $markup .= '</td></tr>';
     }
+    $markup .= '</table>';
     return array(
       '#markup' => $markup,
     );
