@@ -1,6 +1,6 @@
 uuid: 4819a5af-c91c-4e63-9e3b-ddd3cfca9e5d
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - field.storage.node.field_tags
@@ -112,22 +112,23 @@ datasource_settings:
       default: true
       selected: {  }
 processor_settings:
-  add_url:
-    weights:
-      preprocess_index: -30
   aggregated_field:
     weights:
       add_properties: 20
-  rendered_item:
-    weights:
-      add_properties: 0
-      pre_index_save: -10
   content_access:
     weights:
       preprocess_index: -6
       preprocess_query: -4
+  add_url:
+    weights:
+      preprocess_index: -30
+  rendered_item:
+    weights:
+      add_properties: 0
+      pre_index_save: -10
 tracker_settings:
-  default: {  }
+  default:
+    indexing_order: fifo
 options:
   index_directly: true
   cron_limit: 50

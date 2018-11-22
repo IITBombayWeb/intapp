@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.application.field_programme
     - field.field.node.application.field_specific_d
     - field.field.node.application.field_status
+    - field.field.node.application.field_user_id
     - node.type.application
   module:
     - entity_print
@@ -31,4 +32,5 @@ hidden:
   field_programme: true
   field_specific_d: true
   field_status: true
+  field_user_id: true
   links: true

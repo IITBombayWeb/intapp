@@ -5,11 +5,11 @@ dependencies:
   module:
     - node
 id: node_pattern
-label: 'Node Pattern'
+label: 'Node Pattern for content type Article &  Basic Page'
 type: 'canonical_entities:node'
 pattern: '[node:title]'
 selection_criteria:
-  d2c98602-7629-4feb-a90e-b0e9d2a44910:
+  39ea23bf-2ef2-4fcc-9955-f4529b8c4790:
     id: node_type
     bundles:
       article: article
@@ -17,7 +17,7 @@ selection_criteria:
     negate: false
     context_mapping:
       node: node
-    uuid: d2c98602-7629-4feb-a90e-b0e9d2a44910
+    uuid: 39ea23bf-2ef2-4fcc-9955-f4529b8c4790
 selection_logic: and
 weight: -5
 relationships: {  }

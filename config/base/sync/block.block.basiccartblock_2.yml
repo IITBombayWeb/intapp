@@ -27,6 +27,7 @@ visibility:
     id: user_role
     roles:
       anonymous: anonymous
+      administrator: administrator
       student: student
     negate: false
     context_mapping:

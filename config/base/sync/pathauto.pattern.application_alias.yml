@@ -1,0 +1,22 @@
+uuid: 48305a33-52aa-4e74-afac-0702d6e1d9ea
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: application_alias
+label: 'Application Alias Pattern'
+type: 'canonical_entities:node'
+pattern: 'application/[node:title]'
+selection_criteria:
+  78f26b12-1968-40e1-9e1d-5dc9453fb70f:
+    id: node_type
+    bundles:
+      application: application
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 78f26b12-1968-40e1-9e1d-5dc9453fb70f
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -15,7 +15,7 @@ third_party_settings:
 id: copyright
 theme: capit
 region: footer
-weight: 0
+weight: -14
 provider: null
 plugin: 'block_content:457fcfe5-885c-49c9-86bc-794bb9886081'
 settings:

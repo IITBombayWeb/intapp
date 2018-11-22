@@ -183,7 +183,8 @@ content:
   field_general_documents:
     weight: 17
     label: above
-    settings: {  }
+    settings:
+      use_description_as_link_text: true
     third_party_settings: {  }
     type: file_default
     region: content
@@ -290,7 +291,8 @@ content:
   field_supporting_d:
     weight: 19
     label: above
-    settings: {  }
+    settings:
+      use_description_as_link_text: true
     third_party_settings: {  }
     type: file_default
     region: content
@@ -322,4 +324,5 @@ hidden:
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
   field_application_path: true
+  field_e: true
   field_file: true

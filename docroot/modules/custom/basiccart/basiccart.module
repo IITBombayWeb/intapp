@@ -69,16 +69,24 @@ function basiccart_entity_insert(EntityInterface $node) {
 /**
 * Implements hook_form_alter() iitinap
 */
-
 function basiccart_form_alter(&$form,FormStateInterface $form_state, $form_id) {
-   $form_ids = array('node_basiccart_order_edit_form', 'node_basiccart_order_form' );
-   if(in_array($form_id,$form_ids)) {
-      $form['title']['widget'][0]['value']['#title'] = t('Name');
+  $form_ids = array('node_basiccart_order_edit_form', 'node_basiccart_order_form' );
+  if(in_array($form_id,$form_ids)) {
+    $form['title']['widget'][0]['value']['#title'] = t('Name');
 
-      unset($form['basiccart_vat']);
-      unset($form['basiccart_total_price']);
-      $form['actions']['submit']['#value'] = t('Place Order');
-   }
+    unset($form['basiccart_vat']);
+    unset($form['basiccart_total_price']);
+    $form['actions']['submit']['#value'] = t('Place Order');
+  }
+
+  if($form_id == "profile_student_application__edit_form"){
+  
+    $form['#markup'] = '<div class="alert alert-warning alert-dismissible" role="alert">
+    <a href="#" role="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></a>
+        <h4 class="sr-only">Status message</h4>
+          <strong>Note :</strong> Please review or complete the Application Form to proceed further
+    </div>';
+  }
 }
 
 /**
@@ -249,7 +257,6 @@ function basiccart_order_tokens_format(&$tokens) {
 function basiccart_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $replacements = array();
   $utility = new Utility();
-  $order = $data["node"];
   // The first thing that we're going to check for is the type of token - node,
   // user etc...
   if ($type == 'basiccart_order') {
@@ -277,22 +284,31 @@ function basiccart_tokens($type, $tokens, array $data, array $options, Bubbleabl
           $replacements[$original] = $new;
           break;
          case 'basiccart_total_price':
-          $total = $utility::get_total_price();
-          $langcode = $order->language()->getId();
-          $title = $order->getTranslation($langcode)->get('title')->getValue();
-          $replacements[$original] = !empty($total) && isset($total->total) ? $total->total : 0;
+          if(isset($data["node"])){
+            $order = $data["node"];
+            $total = $utility::get_total_price();
+            $langcode = $order->language()->getId();
+            $title = $order->getTranslation($langcode)->get('title')->getValue();
+            $replacements[$original] = !empty($total) && isset($total->total) ? $total->total : 0;
+          }
+          
          break;
         case 'basiccart_email':
-          $langcode = $order->language()->getId();
-          $email = $order->getTranslation($langcode)->get('basiccart_email')->getValue();
-          $replacements[$original] = isset($email[0]['value']) ? $email[0]['value'] : "" ;
+          if(isset($data["node"])){
+            $order = $data["node"];
+            $langcode = $order->language()->getId();
+            $email = $order->getTranslation($langcode)->get('basiccart_email')->getValue();
+            $replacements[$original] = isset($email[0]['value']) ? $email[0]['value'] : "" ;
+          }
          break;
         case 'basiccart_vat':
-          $order = $data["node"];
-          $total = $utility::get_total_price();
-          $langcode = $order->language()->getId();
-          $vat = $order->getTranslation($langcode)->get('basiccart_vat')->getValue();
-          $replacements[$original] = isset($vat[0]['value']) ? $vat[0]['value'] : 0;
+          if(isset($data["node"])){
+            $order = $data["node"];
+            $total = $utility::get_total_price();
+            $langcode = $order->language()->getId();
+            $vat = $order->getTranslation($langcode)->get('basiccart_vat')->getValue();
+            $replacements[$original] = isset($vat[0]['value']) ? $vat[0]['value'] : 0;
+          }
          break;             
       }
     }

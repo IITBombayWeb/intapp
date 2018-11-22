@@ -4,10 +4,13 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.storage.node.field_institute
     - node.type.application
+    - taxonomy.vocabulary.iit_institute
     - user.role.office
   module:
     - node
+    - taxonomy
     - user
 id: office_application_download
 label: 'Office Application download'
@@ -44,7 +47,7 @@ display:
         type: basic
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
@@ -448,6 +451,69 @@ display:
           entity_type: node
           entity_field: uid
           plugin_id: field
+        field_institute:
+          id: field_institute
+          table: node__field_institute
+          field: field_institute
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Institute
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: true
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
       filters:
         type:
           id: type
@@ -537,6 +603,54 @@ display:
           expose:
             operator: ''
           group: 1
+        field_institute_target_id:
+          id: field_institute_target_id
+          table: node__field_institute
+          field: field_institute_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_institute_target_id_op
+            label: 'Institute (field_institute)'
+            description: ''
+            use_operator: false
+            operator: field_institute_target_id_op
+            identifier: field_institute_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              student: '0'
+              office: '0'
+              developer: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: iit_institute
+          hierarchy: true
+          error_message: true
+          plugin_id: taxonomy_index_tid
       sorts:
         created:
           id: created
@@ -556,7 +670,20 @@ display:
       title: 'Office Application download'
       header: {  }
       footer: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: 'No Results Found.'
+            format: basic_html
+          plugin_id: text
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
@@ -569,26 +696,31 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - user
         - 'user.node_grants:view'
         - user.roles
-      tags: {  }
+      tags:
+        - 'config:field.storage.node.field_institute'
   page_1:
     display_plugin: page
     id: page_1
     display_title: Page
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender: {  }
       path: office-application-download
     cache_metadata:
       max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - user
         - 'user.node_grants:view'
         - user.roles
-      tags: {  }
+      tags:
+        - 'config:field.storage.node.field_institute'

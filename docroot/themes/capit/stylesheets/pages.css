@@ -18,6 +18,10 @@ h2{
   padding-right: 10px;
   margin-right: auto;
 }
+.bcks {
+	font-size: 35%;
+	float: right !important; 
+}
 .am {
   text-align: center;
 }
@@ -789,10 +793,15 @@ a.basiccart-get-quantity:hover {
 			border-bottom: 1.2px solid #ccc;
 		}
 		.region-sidebar-second #block-quicklinks a::before {
-			content: '\25ba';
-			padding-right: 0.5em;
-			color:#2477b9;
-		  }
+			content: '';
+			height: 8px;
+			width: 8px;
+			background: #227ca7;
+			display: block;
+			position: relative;
+			top: 15px;
+			right: 22px;
+		}
 		  .region-sidebar-second #block-quicklinks a{
 			display: block;
 			border-bottom: 1.2px solid #ccc;
@@ -801,7 +810,8 @@ a.basiccart-get-quantity:hover {
 			font-size: 1.17em;
 		}
 		.region-sidebar-second #block-quicklinks a:hover{
-            text-decoration: none;
+			text-decoration: none;
+			color: #1e7ab8;
 		}
 		.region-sidebar-second #block-quicklinks .quick-search{
 			border-bottom: none;
@@ -1587,4 +1597,20 @@ text-align: center;
 	.profile-form h3 {
 		margin: 20px 0px;
 	}
+}
+
+.imp-det-tbl{
+	border: 1px solid black;
+	width: 100% 
+}
+
+.imp-tbl-th{	
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	padding: 6px 6px 6px 30px;
+} 
+
+.imp-tbl-td{
+	border-bottom: 1px solid black;
+	padding: 6px 6px 6px 30px;
 }

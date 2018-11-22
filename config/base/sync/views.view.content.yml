@@ -603,7 +603,8 @@ display:
         description: 'Find and manage content'
         menu_name: admin
         weight: -10
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender: {  }
       access:
         type: perm
         options:

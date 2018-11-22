@@ -31,13 +31,13 @@ mode: default
 content:
   add_to_cart:
     type: addtocart
-    weight: 127
+    weight: 131
     settings: {  }
     third_party_settings: {  }
     region: content
   add_to_cart_price:
     type: number
-    weight: 126
+    weight: 130
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -178,5 +178,8 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+    region: content
+  url_redirects:
+    weight: 50
     region: content
 hidden: {  }

@@ -262,7 +262,7 @@ content:
     type: datetime_default
     region: content
   field_details_of_academic_record:
-    weight: 7
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     type: tablefield
@@ -276,7 +276,7 @@ content:
     type: string_textarea
     region: content
   field_employment_details:
-    weight: 9
+    weight: 6
     settings: {  }
     third_party_settings: {  }
     type: tablefield
@@ -296,7 +296,7 @@ content:
     type: options_select
     region: content
   field_general_documents:
-    weight: 10
+    weight: 7
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
@@ -334,7 +334,7 @@ content:
     type: string_textfield
     region: content
   field_performance_in_competitive:
-    weight: 5
+    weight: 2
     settings: {  }
     third_party_settings: {  }
     type: tablefield
@@ -364,13 +364,13 @@ content:
     type: string_textfield
     region: content
   field_proficiency_in_english:
-    weight: 6
+    weight: 3
     settings: {  }
     third_party_settings: {  }
     type: tablefield
     region: content
   field_research_professional_expe:
-    weight: 8
+    weight: 5
     settings: {  }
     third_party_settings: {  }
     type: tablefield
@@ -400,7 +400,7 @@ content:
     type: string_textfield
     region: content
   field_supporting_d:
-    weight: 12
+    weight: 8
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
@@ -429,4 +429,5 @@ content:
     region: content
 hidden:
   field_application_path: true
+  field_e: true
   field_file: true
