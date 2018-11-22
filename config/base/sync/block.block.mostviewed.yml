@@ -15,7 +15,7 @@ third_party_settings:
 id: mostviewed
 theme: capit
 region: featured_iner
-weight: -11
+weight: -9
 provider: null
 plugin: 'block_content:1bc76801-032e-4944-87e7-3d12873f9699'
 settings:

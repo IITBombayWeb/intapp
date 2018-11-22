@@ -1,0 +1,43 @@
+uuid: 7fe6fa0c-4e4d-4a0b-876e-8e6ee7770ec1
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:6e741866-fa16-40b7-935d-e664631fa17f'
+  module:
+    - block_class
+    - block_content
+    - system
+    - user
+  theme:
+    - capit
+third_party_settings:
+  block_class:
+    classes: ''
+id: login
+theme: capit
+region: sidebar_second
+weight: -13
+provider: null
+plugin: 'block_content:6e741866-fa16-40b7-935d-e664631fa17f'
+settings:
+  id: 'block_content:6e741866-fa16-40b7-935d-e664631fa17f'
+  label: Login
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: "<front>\r\n/search\r\n/user/*"
+    negate: true
+    context_mapping: {  }
+  user_role:
+    id: user_role
+    roles:
+      anonymous: anonymous
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

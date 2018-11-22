@@ -9,7 +9,7 @@ _core:
 id: capit_page_title
 theme: capit
 region: content
-weight: -12
+weight: -14
 provider: null
 plugin: page_title_block
 settings:

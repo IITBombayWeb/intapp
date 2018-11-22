@@ -17,7 +17,7 @@ _core:
 id: capit_footer
 theme: capit
 region: footer
-weight: -7
+weight: -15
 provider: null
 plugin: 'system_menu_block:footer'
 settings:

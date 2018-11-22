@@ -1,0 +1,22 @@
+uuid: 9c443f2e-dd75-4d31-9502-1480fbbd0abf
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: programme_pattern
+label: 'Programme Alias Pattern'
+type: 'canonical_entities:node'
+pattern: 'programme/[node:title]'
+selection_criteria:
+  c663ad27-0ffc-4314-867c-c5f993183696:
+    id: node_type
+    bundles:
+      programme: programme
+    negate: false
+    context_mapping:
+      node: node
+    uuid: c663ad27-0ffc-4314-867c-c5f993183696
+selection_logic: and
+weight: -5
+relationships: {  }

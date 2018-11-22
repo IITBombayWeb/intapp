@@ -1,0 +1,44 @@
+uuid: d9b05ebb-9789-4cc3-b220-8591c7d9b260
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:4ed3dafd-56f6-441c-bfea-a31bed12f101'
+  module:
+    - block_class
+    - block_content
+    - system
+    - user
+  theme:
+    - capit
+third_party_settings:
+  block_class:
+    classes: qk-lnk-blk
+id: quicklinks
+theme: capit
+region: sidebar_second
+weight: -14
+provider: null
+plugin: 'block_content:4ed3dafd-56f6-441c-bfea-a31bed12f101'
+settings:
+  id: 'block_content:4ed3dafd-56f6-441c-bfea-a31bed12f101'
+  label: 'Quick Links'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: "<front>\r\n/search\r\n\r\n"
+    negate: true
+    context_mapping: {  }
+  user_role:
+    id: user_role
+    roles:
+      administrator: administrator
+      student: student
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

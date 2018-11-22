@@ -31,43 +31,62 @@ mode: search_result
 content:
   add_to_cart:
     label: hidden
-    weight: 5
+    weight: 11
     type: addtocart
     settings: {  }
     third_party_settings: {  }
     region: content
+  add_to_cart_price:
+    label: inline
+    type: number_decimal
+    weight: 11
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    region: content
   field_course_duration:
     type: list_default
-    weight: 4
+    weight: 5
     label: inline
     settings: {  }
     third_party_settings: {  }
     region: content
   field_degree:
-    weight: 3
+    weight: 4
     label: inline
     settings: {  }
     third_party_settings: {  }
     type: list_default
     region: content
   field_departments:
-    weight: 2
+    weight: 3
     label: inline
     settings:
       link: false
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  field_institute:
+    type: entity_reference_label
+    weight: 1
+    region: content
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {  }
   field_institute_link:
     type: link
-    weight: 1
+    weight: 2
     label: inline
     settings:
       trim_length: null
-      url_only: false
+      url_only: true
+      target: _blank
       url_plain: false
       rel: '0'
-      target: '0'
     third_party_settings: {  }
     region: content
   field_specialisation:
@@ -79,7 +98,6 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
-  add_to_cart_price: true
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
@@ -87,7 +105,6 @@ hidden:
   field_description: true
   field_e: true
   field_enter_number_of_supporting: true
-  field_institute: true
   field_supporting_documents: true
   field_thumb: true
   flag_bookmark: true

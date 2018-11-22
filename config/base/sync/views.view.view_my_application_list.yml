@@ -6,6 +6,7 @@ dependencies:
     - field.storage.node.field_programme
     - field.storage.node.field_status
     - node.type.application
+    - user.role.administrator
     - user.role.student
   module:
     - node
@@ -31,6 +32,7 @@ display:
         type: role
         options:
           role:
+            administrator: administrator
             student: student
       cache:
         type: tag
@@ -47,7 +49,7 @@ display:
         type: basic
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
@@ -453,6 +455,8 @@ display:
           text: view
           entity_type: node
           plugin_id: entity_link
+          output_url_as_text: false
+          absolute: false
         delete_node:
           id: delete_node
           table: node
@@ -699,47 +703,6 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
-        field_status_value:
-          id: field_status_value
-          table: node__field_status
-          field: field_status_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: word
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_status_value_op
-            label: Status
-            description: ''
-            use_operator: false
-            operator: field_status_value_op
-            identifier: field_status_value
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              student: '0'
-              office: '0'
-              developer: '0'
-          is_grouped: true
-          group_info:
-            label: 'Status (field_status)'
-            description: null
-            identifier: field_status_value
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: string
         uid_current:
           id: uid_current
           table: users
@@ -813,11 +776,10 @@ display:
       display_extenders: {  }
       use_ajax: false
     cache_metadata:
-      max-age: 0
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - url
         - url.query_args
         - user
         - 'user.node_grants:view'
@@ -1122,7 +1084,6 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - url
         - user
         - 'user.node_grants:view'
         - user.roles
@@ -1135,7 +1096,8 @@ display:
     display_title: Page
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender: {  }
       path: view-my-application-list
       fields:
         title:
@@ -1430,6 +1392,8 @@ display:
           text: view
           entity_type: node
           plugin_id: entity_link
+          output_url_as_text: false
+          absolute: false
         delete_node:
           id: delete_node
           table: node
@@ -1594,6 +1558,8 @@ display:
           text: 'View Details'
           entity_type: node
           plugin_id: entity_link
+          output_url_as_text: false
+          absolute: false
         dropbutton:
           id: dropbutton
           table: views
@@ -1672,6 +1638,7 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
+          group: 1
         field_status_value:
           id: field_status_value
           table: node__field_status
@@ -1679,8 +1646,17 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          operator: word
-          value: ''
+          operator: or
+          value:
+            all: all
+            apply_apply: apply_apply
+            apply_need_more_info: apply_need_more_info
+            apply_details_appended: apply_details_appended
+            apply_downloaded_for_department_processing: apply_downloaded_for_department_processing
+            apply_application_rejected: apply_application_rejected
+            apply_offer_given: apply_offer_given
+            apply_offer_accepted: apply_offer_accepted
+            apply_offer_rejected: apply_offer_rejected
           group: 1
           exposed: true
           expose:
@@ -1700,10 +1676,11 @@ display:
               student: '0'
               office: '0'
               developer: '0'
-          is_grouped: true
+            reduce: false
+          is_grouped: false
           group_info:
-            label: 'Status '
-            description: ''
+            label: 'Status (field_status)'
+            description: null
             identifier: field_status_value
             optional: true
             widget: select
@@ -1712,39 +1689,11 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items:
-              1:
-                title: Applied
-                operator: '='
-                value: apply_apply
-              2:
-                title: 'Office needs info'
-                operator: '='
-                value: apply_need_more_info
-              3:
-                title: 'Applicant responded'
-                operator: '='
-                value: apply_details_appended
-              4:
-                title: Processing
-                operator: '='
-                value: apply_downloaded_for_department_processing
-              5:
-                title: 'Application Rejected'
-                operator: '='
-                value: apply_application_rejected
-              6:
-                title: 'Offer made'
-                operator: '='
-                value: apply_offer_given
-              7:
-                title: 'Offer Accepted'
-                operator: '='
-                value: apply_offer_accepted
-              8:
-                title: 'Offer Rejected'
-                operator: '='
-                value: apply_offer_rejected
-          plugin_id: string
+              1: {  }
+              2: {  }
+              3: {  }
+          reduce_duplicates: false
+          plugin_id: workflow_state
         uid_current:
           id: uid_current
           table: users
@@ -1798,11 +1747,11 @@ display:
           empty: true
           tokenize: false
           content:
-            value: '<h3>No Result Fount.</h3>'
+            value: 'No Results Found.'
             format: basic_html
           plugin_id: text
     cache_metadata:
-      max-age: 0
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'

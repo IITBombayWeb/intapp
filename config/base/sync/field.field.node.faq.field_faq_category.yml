@@ -5,7 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_faq_category
     - node.type.faq
-    - taxonomy.vocabulary.faq
+    - taxonomy.vocabulary.iit_institute
 id: node.faq.field_faq_category
 field_name: field_faq_category
 entity_type: node
@@ -20,9 +20,9 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      faq: faq
+      iit_institute: iit_institute
     sort:
       field: _none
     auto_create: true
-    auto_create_bundle: ''
+    auto_create_bundle: faq
 field_type: entity_reference

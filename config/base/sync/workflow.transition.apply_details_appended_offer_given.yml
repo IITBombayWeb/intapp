@@ -9,7 +9,7 @@ from_sid: apply_details_appended
 to_sid: apply_offer_given
 roles:
   office: office
-  workflow_author: 0
-  authenticated: 0
-  administrator: 0
-  student: 0
+  workflow_author: '0'
+  authenticated: '0'
+  administrator: '0'
+  student: '0'

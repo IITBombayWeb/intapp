@@ -10,6 +10,7 @@ dependencies:
     - field.field.profile.student_application_.field_country_school
     - field.field.profile.student_application_.field_date_of_birth
     - field.field.profile.student_application_.field_details_of_academic_record
+    - field.field.profile.student_application_.field_e
     - field.field.profile.student_application_.field_employment_details
     - field.field.profile.student_application_.field_file
     - field.field.profile.student_application_.field_first_name
@@ -174,7 +175,8 @@ content:
   field_general_documents:
     weight: 17
     label: above
-    settings: {  }
+    settings:
+      use_description_as_link_text: true
     third_party_settings: {  }
     type: file_default
     region: content
@@ -279,9 +281,10 @@ content:
     type: string
     region: content
   field_supporting_d:
-    weight: 18
+    weight: 19
     label: above
-    settings: {  }
+    settings:
+      use_description_as_link_text: true
     third_party_settings: {  }
     type: file_default
     region: content
@@ -313,4 +316,5 @@ hidden:
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
   field_application_path: true
+  field_e: true
   field_file: true

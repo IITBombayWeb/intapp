@@ -21,7 +21,7 @@ settings:
   id: landing_block
   label: 'Find, Apply, Accept'
   provider: iitinap_general
-  label_display: visible
+  label_display: '0'
 visibility:
   request_path:
     id: request_path

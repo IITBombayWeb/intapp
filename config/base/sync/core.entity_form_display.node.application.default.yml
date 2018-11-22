@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.application.field_programme
     - field.field.node.application.field_specific_d
     - field.field.node.application.field_status
+    - field.field.node.application.field_user_id
     - node.type.application
   module:
     - path
@@ -19,63 +20,86 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 3
+    weight: 2
     settings: {  }
     third_party_settings: {  }
+    region: content
   field_application_path:
-    weight: 30
+    weight: 9
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
   field_documents_uploaded:
-    weight: 29
+    weight: 8
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
   field_general_documents:
-    weight: 26
+    weight: 6
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
+    region: content
   field_programme:
     weight: 0
     settings: {  }
     third_party_settings: {  }
     type: options_select
+    region: content
   field_specific_d:
-    weight: 27
+    weight: 7
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
+    region: content
   path:
     type: path
-    weight: 6
+    weight: 5
     settings: {  }
     third_party_settings: {  }
+    region: content
   promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 3
+    third_party_settings: {  }
+    region: content
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 11
+    third_party_settings: {  }
+    region: content
+  sticky:
     type: boolean_checkbox
     settings:
       display_label: true
     weight: 4
     third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 5
-    third_party_settings: {  }
+    region: content
   uid:
     type: entity_reference_autocomplete
-    weight: 2
+    weight: 1
     settings:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
     third_party_settings: {  }
+    region: content
+  url_redirects:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   field_status: true
+  field_user_id: true
   title: true

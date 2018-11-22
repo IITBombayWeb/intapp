@@ -1,0 +1,35 @@
+uuid: d9a97930-7efc-4e7a-9a82-34ecc80a9d01
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:2570cd6e-055b-4b98-8949-45f4369c5606'
+  module:
+    - block_class
+    - block_content
+    - system
+  theme:
+    - capit
+third_party_settings:
+  block_class:
+    classes: ''
+id: help
+theme: capit
+region: sidebar_second
+weight: -12
+provider: null
+plugin: 'block_content:2570cd6e-055b-4b98-8949-45f4369c5606'
+settings:
+  id: 'block_content:2570cd6e-055b-4b98-8949-45f4369c5606'
+  label: 'Help '
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: "<front>\r\n/search\r\n"
+    negate: true
+    context_mapping: {  }

@@ -10,6 +10,6 @@ to_sid: apply_apply
 roles:
   workflow_author: workflow_author
   student: student
-  authenticated: 0
-  administrator: 0
-  office: 0
+  authenticated: '0'
+  administrator: '0'
+  office: '0'

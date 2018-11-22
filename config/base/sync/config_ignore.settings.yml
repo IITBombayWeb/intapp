@@ -2,5 +2,9 @@ ignored_config_entities:
   0: simple_fb_connect.settings
   2: smtp.settings
   4: social_auth_google.settings
+  6: search_api.server.iitinap
+  8: search_api.server.default_solr_server
+  10: paypal.settings_file
+  12: social_auth.settings
 _core:
   default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk

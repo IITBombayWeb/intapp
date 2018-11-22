@@ -2,7 +2,7 @@ auth:
   social_auth_google:
     route: social_auth_google.redirect_to_google
     img_path: modules/social_auth_google/img/google_logo.svg
-post_login: /user
+post_login: /cart
 redirect_user_form: false
 disable_admin_login: true
 disabled_roles:

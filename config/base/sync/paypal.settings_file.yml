@@ -1,5 +1,7 @@
 email: malathi.s@unimity.com
-return: 'http://iitinapdev.unimity.com/paypal/thankyou'
-cancel: 'http://iitinapdev.unimity.com/paypal/conform'
-notify: 'http://iitinapdev.unimity.com/paypal/ipn_notification'
+return: 'http://newintapp.unimity.com/paypal/thankyou'
+cancel: 'http://newintapp.unimity.com/paypal/confirm'
+notify: 'http://newintapp.unimity.com/paypal/ipn_notification'
 cc: USD
+hostname: www.sandbox.paypal.com
+auth_token: GfqCw6b45-T-AZYVEMwCwy0IB4gNCO8QXVvHd0irgnbk4hhB80Xm437MddW

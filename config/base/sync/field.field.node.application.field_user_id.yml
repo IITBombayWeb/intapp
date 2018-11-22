@@ -1,0 +1,23 @@
+uuid: 4b4b05ab-d1fd-4702-bc06-f32de9770d5e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_user_id
+    - node.type.application
+id: node.application.field_user_id
+field_name: field_user_id
+entity_type: node
+bundle: application
+label: 'User ID'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

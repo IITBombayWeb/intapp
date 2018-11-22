@@ -1,6 +1,6 @@
 uuid: 2decd154-e0c2-40e0-ac2b-fbaaaa039423
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - system.menu.landing-page-menu
@@ -14,8 +14,8 @@ third_party_settings:
     classes: knw-abt
 id: landingpagemenu
 theme: capit
-region: sidebar_second
-weight: -12
+region: content
+weight: -9
 provider: null
 plugin: 'system_menu_block:landing-page-menu'
 settings:

@@ -17,6 +17,6 @@ name: Order
 type: basiccart_order
 description: 'Orders created by Basic Cart Module'
 help: ''
-new_revision: false
+new_revision: true
 preview_mode: 1
 display_submitted: false

@@ -1,0 +1,85 @@
+uuid: c2c44c3b-0e26-4bf3-be30-f6d13c245ecc
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - term_migration
+_core:
+  default_config_hash: A2D9RuGe7awnDueQfNmabG952EVG3llgqHSNcIMmFBM
+id: program_data_iit_kanpur
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - node
+  - programme
+migration_group: program_data_iit_kanpur
+label: 'Academic program and associated data.'
+source:
+  plugin: csv
+  path: 'public://program_data_iit_kanpur.csv'
+  header_row_count: 1
+  keys:
+    - ID
+  fields:
+    ID: 'Unique identifier for the program as in the data source.'
+    Title: 'Name of the program.'
+    'Institute Name': 'Name of the Institute.'
+    Department: 'Name of the Department.'
+    Degree: 'Name of the Degree.'
+    Specialisation: Specialisation
+    Packet: 'Send to packet'
+    field_description: Description
+    field_enter_number_of_supporting: 'Additional Supporting Documents'
+  constants:
+    bool_0: 0
+    bool_1: 1
+    uid_root: 1
+    restricted_html: restricted_html
+    url: 'http://www.iitk.ac.in'
+    text: 'IIT Kanpur'
+    packet: 1
+    conj: in
+    seprator: at
+process:
+  title:
+    plugin: concat
+    source:
+      - Degree
+      - constants/conj
+      - Specialisation
+      - constants/seprator
+      - 'Institute Name'
+    delimiter: ' '
+  field_degree: Degree
+  field_specialisation: Specialisation
+  field_institute_link/uri: constants/url
+  field_institute_link/title: constants/text
+  field_course_duration: 'Course Duration'
+  add_to_cart: constants/packet
+  field_description: Description
+  field_enter_number_of_supporting: 'Additional Supporting Documents'
+  sticky: constants/bool_0
+  promote: constants/bool_1
+  uid: constants/uid_root
+  body/value: Body
+  body/format: constants/restricted_html
+  field_departments:
+    plugin: entity_generate
+    source: 'Department Name'
+    entity_type: taxonomy_term
+    bundle_key: vid
+    bundle: departments
+    value_key: name
+  field_institute:
+    plugin: entity_generate
+    source: 'Institute Name'
+    entity_type: taxonomy_term
+    bundle_key: vid
+    bundle: iit_institute
+    value_key: name
+destination:
+  plugin: 'entity:node'
+  default_bundle: programme
+migration_dependencies: null
