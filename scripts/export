@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo ""
+echo "Switching to project Development docroot."
+cd /var/www/html/intapp/dev/docroot
+echo ""
+echo "Configuration Export from Development Environment."
+drush config-export -y
+echo ""
+echo "Clearing drush caches."
+drush cache-clear drush
+echo ""
+echo "Clearing drush caches."
+drush cr
+echo ""
+echo "Copying Exported Sync files to Stage sync files."
+rsync -avp /var/www/html/intapp/dev/config/base/sync/ /var/www/html/intapp/stage/config/base/sync/
+echo ""
+echo "Switching to project Stage docroot."
+cd /var/www/html/intapp/stage/docroot
+echo ""
+echo "Configuration Import from Development to Stage Environment."
+drush config-import -y
+echo "Configuration complete."
