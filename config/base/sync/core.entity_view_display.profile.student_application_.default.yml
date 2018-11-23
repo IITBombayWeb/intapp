@@ -85,7 +85,6 @@ third_party_settings:
         - field_research_professional_expe
         - field_employment_details
         - field_general_documents
-        - field_e
         - field_supporting_d
       parent_name: ''
       weight: 1
@@ -150,13 +149,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: tablefield
-    region: content
-  field_e:
-    weight: 18
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: basic_string
     region: content
   field_employment_details:
     weight: 16
