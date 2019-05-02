@@ -1,11 +1,18 @@
 <?php
 
-  use Drupal\taxonomy\Entity\Term;
-  use Drupal\workflow\Entity\WorkflowTransition;
-  use Drupal\Core\Url;
-  use Drupal\Core\StreamWrapper\PrivateStream;  
+/**
+ * @file
+ * Contains Functions.
+ */
 
-function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = NULL, &$context) {
+use Drupal\taxonomy\Entity\Term;
+use Drupal\workflow\Entity\WorkflowTransition;
+use Drupal\Core\Url;
+
+/**
+ * Excel Import and Export.
+ */
+function excel_import_export_batch_export($nids, &$context, $file_path = NULL, $zip_path = NULL) {
   // Zip folder lib file.
   module_load_include('inc', 'excel_import_export', '/lib/zip_min');
   // List of Departments.
@@ -13,31 +20,37 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
   $query->condition('vid', "departments");
   $tids = $query->execute();
   $terms = Term::loadMultiple($tids);
-  $departments = array();
+  $departments = [];
   foreach ($terms as $tid => $term) {
     $departments[$tid] = $term->get('name')->value;
   }
-  
+
   // List of Departments.
   $query = \Drupal::entityQuery('taxonomy_term');
   $query->condition('vid', "iit_institute");
   $tids = $query->execute();
   $terms = Term::loadMultiple($tids);
-  $institute = array();
+  $institute = [];
   foreach ($terms as $tid => $term) {
     $institute[$tid] = $term->get('name')->value;
   }
-  
+
   // Work flow status.
   $transition = WorkflowTransition::create(["apply_apply", 'field_name' => 'field_status']);
   $current_state = $transition->getFromState();
   $workFlowOption = $current_state->getOptions($entity = NULL, $field_name = NULL);
-  
-  // Valid statuses only added in export, After Download status are excluded from reports.
-  $validWorkFlowOption = array('apply_apply', 'apply_need_more_info', 'apply_details_appended', 'apply_downloaded_for_department_processing');
+
+  // Valid statuses only added in export.
+  // After Download status are excluded from reports.
+  $validWorkFlowOption = [
+    'apply_apply',
+    'apply_need_more_info',
+    'apply_details_appended',
+    'apply_downloaded_for_department_processing',
+  ];
 
   // Creating Headers for Export.
-  $export['header'] = array(
+  $export['header'] = [
     0 => 'Unique ID',
     1 => 'Application ID',
     2 => 'Programme',
@@ -59,49 +72,51 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
     18 => 'Board/ Univ',
     19 => 'Last Degree',
     20 => 'Year of Passing',
-  );
-  
+  ];
+
   // If document download enabled.
   if ($zip_path != NULL) {
     $export['header'][21] = 'Documents';
   }
-  
-  $export['rows'] = array();
+
+  $export['rows'] = [];
   foreach ($nids as $nid) {
-    $itemsArray = array(); // Array to hold Row wise data.
-    // Export{0}: nid
+    // Array to hold Row wise data.
+    $itemsArray = [];
+
+    // Export{0}: nid.
     $itemsArray[0] = $nid;
     $application = node_load($nid);
-    
+
     // Export{1}: application title.
     $itemsArray[1] = excelImportExport_getFieldValue($application, 'title', 'array');
-    
+
     // Skip if Application not exist.
     if (!is_object($application)) {
       continue;
     }
-    
-    // programme values.
+
+    // Programme values.
     $programme_id = $application->get('field_programme')->getValue();
     $programme = node_load($programme_id[0]['target_id']);
-    
+
     // Skip if Programme not exist.
     if (!is_object($programme)) {
       continue;
     }
-    
-    /**
+
+    /*
      * Start Programme details.
      */
-    // Export{2}: programme_name
+    // Export{2}: programme_name.
     $itemsArray[2] = excelImportExport_getFieldValue($programme, 'title', 'array');
-    
+
     // Institue Details.
-    // Export{3}: institute_name
+    // Export{3}: institute_name.
     $itemsArray[3] = $institute[excelImportExport_getFieldValue($programme, 'field_institute', 'reference')];
 
     // Department Details.
-    // Export{4}: department_name
+    // Export{4}: department_name.
     $itemsArray[4] = $departments[excelImportExport_getFieldValue($programme, 'field_departments', 'reference')];
 
     // Get Degree name.
@@ -116,28 +131,28 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
     // Get Application workflow Status value.
     // Export{6}: field_status.
     $itemsArray[6] = $workFlowOption[$workFlowstatus];
-    
+
     // Updating wrokflow status while downloading.
     $application->field_status->setValue('apply_downloaded_for_department_processing');
     $application->save();
-    
-    /**
+
+    /*
      * End of Programme details.
      */
-    /**
-     * Content Author/ Applicant Details 
+    /*
+     * Content Author/ Applicant Details.
      */
 
     $user = $application->get('uid')->entity;
-    
-    /**
-     * User Profile values
+
+    /*
+     * User Profile values.
      */
     $profileArray = \Drupal::entityTypeManager()
       ->getStorage('profile')
       ->loadByProperties([
-      'uid' => $user->id(),
-    ]);
+        'uid' => $user->id(),
+      ]);
     $profile = $profileArray[key($profileArray)];
     // User Given Name / First name.
     // Export{7}: uname.
@@ -194,8 +209,8 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
     // User Year of Passing.
     // Export{20}: field_year_of_passing.
     $itemsArray[20] = excelImportExport_getFieldValue($profile, 'field_year_of_passing', 'array');
-    
-    // User Supporting and General documents to Zipfolder
+
+    // User Supporting and General documents to Zipfolder.
     if ($zip_path != NULL) {
       $wrapper = \Drupal::service('stream_wrapper_manager')->getViaUri($zip_path . '/' . $user->get('name')->value . '.zip');
       $zip_write_path = $wrapper->realpath();
@@ -203,18 +218,18 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
       if (!file_exists($zip_write_path)) {
         $zipfile = new zipfile();
         $general_doc = $profile->get('field_general_documents')->getValue();
-        $file_array = array();
+        $file_array = [];
         foreach ($general_doc as $doc_key => $file) {
           $fileObj = file_load($file['target_id']);
-          $zipfile -> addFile(file_get_contents(\Drupal::service('stream_wrapper_manager')->getViaUri($fileObj->get('uri')->value)->realpath()), $fileObj->get('filename')->value);
+          $zipfile->addFile(file_get_contents(\Drupal::service('stream_wrapper_manager')->getViaUri($fileObj->get('uri')->value)->realpath()), $fileObj->get('filename')->value);
         }
         $support_doc = $profile->get('field_supporting_d')->getValue();
         foreach ($support_doc as $doc_key => $file) {
           $fileObj = file_load($file['target_id']);
-          $zipfile -> addFile(file_get_contents(\Drupal::service('stream_wrapper_manager')->getViaUri($fileObj->get('uri')->value)->realpath()), $fileObj->get('filename')->value);
+          $zipfile->addFile(file_get_contents(\Drupal::service('stream_wrapper_manager')->getViaUri($fileObj->get('uri')->value)->realpath()), $fileObj->get('filename')->value);
         }
         if (file_prepare_directory($zip_path, FILE_CREATE_DIRECTORY)) {
-          $contents = $zipfile -> file();
+          $contents = $zipfile->file();
           file_put_contents($zip_write_path, $contents);
         }
       }
@@ -222,17 +237,18 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
       // Export{21}: zip file path.
       $itemsArray[21] = $zip_write_path;
     }
-    
-    /**
+
+    /*
      * End of User data & Profile values.
      */
     // Appending Each Arrays.
     $export['rows'][] = $itemsArray;
   }
   module_load_include('inc', 'phpexcel');
-  
+
   // Generate a file name. If it's unique, it's less likely to conflict with an
-  // existing file. You could also put up some more checks on this, if it's likely
+  // existing file. You could also put up some more checks on this,
+  // if it's likely
   // to conflict (like, when you have many export/download requests).
   if (!isset($context['sandbox']['progress'])) {
     $uri = 'temporary://';
@@ -240,15 +256,15 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
       $uri = $file_path . '/';
       file_prepare_directory($file_path, FILE_CREATE_DIRECTORY);
     }
-    
+
     $wrapper = \Drupal::service('stream_wrapper_manager')->getViaUri($uri);
     $context['sandbox']['filename'] = 'student-applications-' . uniqid() . '.xls';
     $context['sandbox']['file'] = $wrapper->realpath() . '/' . $context['sandbox']['filename'];
     // Prepare the Excel file.
-    $result = phpexcel_export($export['header'], array(
+    $result = phpexcel_export($export['header'], [
       // Provide some empty data. We will append data later on.
-      array(),
-    ), $context['sandbox']['file']);
+      [],
+    ], $context['sandbox']['file']);
 
     if ($result !== PHPEXCEL_SUCCESS) {
       drupal_set_message("Something went wrong", 'error');
@@ -268,16 +284,16 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
   }
 
   $limit = 10;
-  while($limit) {
-    $result = phpexcel_export($export['header'], $export['rows'], $context['sandbox']['file'], array(
+  while ($limit) {
+    $result = phpexcel_export($export['header'], $export['rows'], $context['sandbox']['file'], [
       // Use our previously prepared file as a "template", which means we
       // will append data to it, instead of starting from scratch again.
       'template' => $context['sandbox']['file'],
-    ));
+    ]);
     if ($result !== PHPEXCEL_SUCCESS) {
-      drupal_set_message(t("Something went wrong on pass !pass", array(
+      drupal_set_message(t("Something went wrong on pass !pass", [
         '!pass' => $context['sandbox']['progress'],
-      )), 'error');
+      ]), 'error');
       $context['sandbox']['finished'] = 1;
       $context['success'] = FALSE;
       return;
@@ -292,23 +308,29 @@ function excel_import_export_batch_export($nids, $file_path = NULL, $zip_path = 
   }
 }
 
+/**
+ * Excel Import and Export.
+ */
 function excel_import_export_batch_export_finish($success, $filepath, $operations) {
-  
+
   if ($success) {
     $host = \Drupal::request()->getHost();
     $url = URL::fromUserInput('/excel/export/download?download=' . $filepath)->toString();
-    //drupal_set_message(t('Please click <a href="!link">here</a> to download export file or export file will available on !file', array('!file' => $filepath, '!link' => $url)));
-	drupal_set_message(t('Please click <a href="' . $url . '">here</a> to download export file.'));
-    \Drupal::logger('excel_import_export')->notice("Excel exported by user ID !uid", array('@uid' => \Drupal::currentUser()->id(),));
-  } else {
+    drupal_set_message(t('Please click <a href="@url">here</a> to download export file.', ['@url' => $url]));
+    \Drupal::logger('excel_import_export')->notice("Excel exported by user ID !uid", ['@uid' => \Drupal::currentUser()->id()]);
+  }
+  else {
     drupal_set_message("Error in Download please try later", ERROR);
   }
 }
 
+/**
+ * Excel batch Import and Export.
+ */
 function excel_import_export_batch_import($filepath, &$context) {
   module_load_include('inc', 'phpexcel');
   module_load_include('inc', 'excel_import_export', '/lib/chunk');
-  
+
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     // We have no idea how many lines we have to load. Provide some large
@@ -337,9 +359,9 @@ function excel_import_export_batch_import($filepath, &$context) {
   $data = phpexcel_import($filepath, TRUE, FALSE);
 
   if (!is_array($data)) {
-    drupal_set_message(t("Something went wrong on pass !pass", array(
+    drupal_set_message(t("Something went wrong on pass !pass", [
       '!pass' => $context['sandbox']['progress'],
-    )), 'error');
+    ]), 'error');
     $context['sandbox']['finished'] = 1;
     $context['success'] = FALSE;
     return;
@@ -349,28 +371,28 @@ function excel_import_export_batch_import($filepath, &$context) {
   $data = $data[0];
 
   $i = 0;
-  while($i < $limit) {
+  while ($i < $limit) {
     if (!empty($data[$i])) {
       // Do something with the data, like creating a node...
-      
       $context['results']['totalNodeObj'][] = $data[$i]['Unique ID'];
-      
+
       // Updating Workflow status.
       $application = node_load($data[$i]['Unique ID']);
       if (is_object($application) && ($application->getType() == 'application')) {
         $updateStatus = array_search(trim($data[$i]['Status']), $workFlowOption);
-        //dpm($data[$i]['Status']);
         if (!empty($updateStatus)) {
           $application->field_status->setValue($updateStatus);
           $application->save();
           $context['results']['validStatus'][] = $data[$i]['Unique ID'];
-        } else {
+        }
+        else {
           $context['results']['wrongStatus'][] = $data[$i]['Unique ID'];
         }
-      } else {
+      }
+      else {
         $context['results']['notNodeObj'][] = $data[$i]['Unique ID'];
       }
-      
+
       $context['sandbox']['progress']++;
       $i++;
     }
@@ -387,22 +409,25 @@ function excel_import_export_batch_import($filepath, &$context) {
   }
 }
 
+/**
+ * Excel Import and Export Finish.
+ */
 function excel_import_export_batch_import_finish($success, $results, $operations) {
   if ($success) {
     $totalNodeObj = $results['totalNodeObj'];
     $notNodeObj = $results['notNodeObj'];
     $validStatus = $results['validStatus'];
     $wrongStatus = $results['wrongStatus'];
-    
+
     $total_import = count($totalNodeObj);
     $total_invalid_nodes = count($notNodeObj);
     $total_valid_imports = count($validStatus);
     $total_invalid_imports = count($wrongStatus);
-    
-    // Logging information
+
+    // Logging information.
     \Drupal::database()
       ->insert('excel_import_export_imports')
-      ->fields( array(
+      ->fields([
         'sid' => NULL,
         'uid' => \Drupal::currentUser()->id(),
         'timestamp' => time(),
@@ -413,21 +438,37 @@ function excel_import_export_batch_import_finish($success, $results, $operations
         'total_valid_imports' => $total_valid_imports,
         'invalid_imports' => excelImportExport_serialize_nids($wrongStatus),
         'total_invalid_imports' => $total_invalid_imports,
-      ))
+      ])
       ->execute();
     // Watchdog entries.
-    \Drupal::logger('excel_import_export')->notice("Total import rows : '@total_valid_row'. Total valid status update : '@total_valid_status'.  Total invalid status : '@total_invalid_status'.  Total invalid node objects : '@total_invalid_row'.", array('@total_valid_row' => $total_import, '@total_invalid_row' => $total_invalid_nodes, '@total_valid_status' => $total_valid_imports, '@total_invalid_status' => $total_invalid_imports,));
-    
+    \Drupal::logger('excel_import_export')->notice("Total import rows : '@total_valid_row'. Total valid status update :
+    '@total_valid_status'.  Total invalid status : '@total_invalid_status'.  Total invalid node objects : '@total_invalid_row'.",
+    [
+      '@total_valid_row' => $total_import,
+      '@total_invalid_row' => $total_invalid_nodes,
+      '@total_valid_status' => $total_valid_imports,
+      '@total_invalid_status' => $total_invalid_imports,
+    ]
+    );
+
     // Status message.
-    drupal_set_message(t("Total rows in import is @total_import.", array('@total_import' => $total_import)));
+    drupal_set_message(t("Total rows in import is @total_import.", [
+      '@total_import' => $total_import,
+    ]));
     if ($total_invalid_nodes) {
-      drupal_set_message(t("Total invalid IDs in import @total_invalid.", array('@total_invalid' => $total_invalid_nodes)), 'error');
+      drupal_set_message(t("Total invalid IDs in import @total_invalid.", [
+        '@total_invalid' => $total_invalid_nodes,
+      ]), 'error');
     }
     if ($total_valid_imports) {
-      drupal_set_message(t("Total valid Status updates @total_valid.", array('@total_valid' => $total_valid_imports)));
+      drupal_set_message(t("Total valid Status updates @total_valid.", [
+        '@total_valid' => $total_valid_imports,
+      ]));
     }
     if ($total_invalid_imports) {
-      drupal_set_message(t("Total invalid status in import @total_invalid.", array('@total_invalid' => $total_invalid_imports)), 'error');
+      drupal_set_message(t("Total invalid status in import @total_invalid.", [
+        '@total_invalid' => $total_invalid_imports,
+      ]), 'error');
     }
     drupal_set_message($message);
   }
@@ -435,12 +476,15 @@ function excel_import_export_batch_import_finish($success, $results, $operations
 
 /**
  * Helper Function for Get Field Value by object.
+ *
  * @param1 {object} : Object to get value.
  * @param2 {string} : Property String.
  * @param3 {string} : Type of parse field.
- * @return {string} : Return Value.
+ *
+ * @return string
+ *   Return Value.
  */
-function excelImportExport_getFieldValue($entityObject, $property, $type = FALSE) {
+function excel_import_export_get_field_value($entityObject, $property, $type = FALSE) {
   $valueObject = $entityObject->get($property);
   if (is_object($valueObject)) {
     $return = $valueObject->getValue();
@@ -449,9 +493,11 @@ function excelImportExport_getFieldValue($entityObject, $property, $type = FALSE
         case 'array':
           $return = $return[0]['value'];
           break;
+
         case 'reference':
           $return = $return[0]['target_id'];
           break;
+
         case 'entity':
           $return = $return->entity;
           break;
@@ -460,12 +506,12 @@ function excelImportExport_getFieldValue($entityObject, $property, $type = FALSE
     return $return;
   }
 }
-  
+
 /**
  * Helper function to node ids.
  */
-function excelImportExport_serialize_nids($nidsArray) {
-  $nids = array();
+function excel_import_export_serialize_nids($nidsArray) {
+  $nids = [];
   foreach ($nidsArray as $nid) {
     if ($nid) {
       $nids[] = $nid;

@@ -5,7 +5,8 @@ namespace Drupal\basiccart\Plugin\Field\FieldType;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\basiccart\Utility; 
+use Drupal\basiccart\Utility;
+
 /**
  * Plugin implementation of the 'addtocart' field type.
  *
@@ -20,19 +21,20 @@ use Drupal\basiccart\Utility;
  * )
  */
 class AddToCartItem extends FieldItemBase {
+
   /**
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array(
-      'columns' => array(
-        'value' => array(
+    return [
+      'columns' => [
+        'value' => [
           'type' => 'int',
           'size' => 'tiny',
           'not null' => FALSE,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -49,7 +51,7 @@ class AddToCartItem extends FieldItemBase {
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $config = Utility::cart_settings();
     $properties['value'] = DataDefinition::create('boolean')
-      ->setLabel(t($config->get('add_to_cart_button')));
+      ->setLabel(t("@value", ['@value' => $config->get('add_to_cart_button')]));
     return $properties;
   }
 

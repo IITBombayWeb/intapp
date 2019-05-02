@@ -5,7 +5,7 @@ namespace Drupal\basiccart\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Url;
-use Drupal\Core\Link;
+
 /**
  * Plugin implementation of the 'addtocartwithquantity' formatter.
  *
@@ -27,37 +27,38 @@ class AddtoCartWithQuantityFormatter extends FormatterBase {
     $config = \Drupal::config('basiccart.settings');
     $entity = $items->getEntity();
     $config = \Drupal::config('basiccart.settings');
-    $elements = array();
+    $elements = [];
 
-     $option = [
-    'query' => ['entitytype' => $entity->getEntityTypeId(),'quantity' => ''],
-    'absolute' => TRUE
+    $option = [
+      'query' => ['entitytype' => $entity->getEntityTypeId(), 'quantity' => ''],
+      'absolute' => TRUE,
     ];
-    $url = Url::fromRoute('basiccart.cartadd',["nid"=>$entity->id()],$option);
-     $link = '<a id="forquantitydynamictext_'.$entity->id().'" class="basiccart-get-quantity button use-basiccart-ajax" href="'.$url->toString().'">'.$this->t($config->get('add_to_cart_button')).'</a>';
-  $link_options = [
-    'attributes' => [
-      'class' => [
-        'basiccart-get-quantity',
-        'use-basiccart-ajax',
-        'button',
+    $url = Url::fromRoute('basiccart.cartadd', ["nid" => $entity->id()], $option);
+    $link = '<a id="forquantitydynamictext_' . $entity->id() . '" class="basiccart-get-quantity button use-basiccart-ajax" href="' . $url->toString() . '">' . $this->t("@value", ['@value' => $config->get('add_to_cart_button')]) . '</a>';
+    $link_options = [
+      'attributes' => [
+        'class' => [
+          'basiccart-get-quantity',
+          'use-basiccart-ajax',
+          'button',
+        ],
       ],
-    ],
-  ];
-  $url->setOptions($link_options);
+    ];
+    $url->setOptions($link_options);
 
-$quantity_content = $config->get('quantity_status') ? '<div id="quantity-wrapper_'.$entity->id().'" class="addtocart-quantity-wrapper-container"></div>' : '';
+    $quantity_content = $config->get('quantity_status') ? '<div id="quantity-wrapper_' . $entity->id() . '" class="addtocart-quantity-wrapper-container"></div>' : '';
     foreach ($items as $delta => $item) {
-      $elements[$delta] = ['#type' => 'container',
-      '#attributes' => ['class' => 'ajax-addtocart-wrapper' ,'id' => 'ajax-addtocart-message-'.$entity->id()],
-      '#prefix' =>'<div class="addtocart-wrapper-container">'.$quantity_content.'<div class="addtocart-link-class">'.$link."</div>",
-      '#suffix' =>'</div>',
+      $elements[$delta] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => 'ajax-addtocart-wrapper' , 'id' => 'ajax-addtocart-message-' . $entity->id()],
+        '#prefix' => '<div class="addtocart-wrapper-container">' . $quantity_content . '<div class="addtocart-link-class">' . $link . "</div>",
+        '#suffix' => '</div>',
       ];
     }
-   
-     $elements['#attached']['library'][] = 'core/drupal.ajax';
-     return $elements;
-   
+
+    $elements['#attached']['library'][] = 'core/drupal.ajax';
+    return $elements;
+
   }
 
 }

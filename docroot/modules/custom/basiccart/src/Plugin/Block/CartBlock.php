@@ -4,8 +4,6 @@ namespace Drupal\basiccart\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\basiccart\Utility;
-use Drupal\Core\Url;
-use Drupal\Core\Link;
 
 /**
  * Provides a 'Basic Cart' block.
@@ -22,12 +20,13 @@ class CartBlock extends BlockBase {
    */
   public function build() {
     $utility = new Utility();
-  	$config = $utility::cart_settings();
-     return array(	
+    $config = $utility::cart_settings();
+    return [
       '#type' => 'markup',
       '#title' => $config->get('cart_block_title'),
       '#markup' => $utility->get_cart_content(),
-      '#cache' => array('max-age' => 0),
-    );
+      '#cache' => ['max-age' => 0],
+    ];
   }
+
 }

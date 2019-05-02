@@ -1,106 +1,110 @@
 <?php
 
+/**
+ * @file
+ * Schema for paypal payment.
+ */
+
+/**
+ * Implements paypal_schema().
+ */
 function paypal_schema() {
- 
-  $schema['paypal_payment_status'] = array(
-    'fields' => array(
-        'order_id'=>array(
-        'type'=>'serial',
+
+  $schema['paypal_payment_status'] = [
+    'fields' => [
+      'order_id' => [
+        'type' => 'serial',
         'not null' => TRUE,
-      ),
-      'user_id'=>array(
+      ],
+      'user_id' => [
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
-      ),
-      'programme_id'=>array(
+      ],
+      'programme_id' => [
         'type' => 'varchar',
         'length' => 240,
         'not null' => TRUE,
-      ),
-      'before_amount'=>array(
+      ],
+      'before_amount' => [
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
-      ),
-      'after_amount'=>array(
+      ],
+      'after_amount' => [
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
-      ),
-       'currency_code'=>array(
+      ],
+      'currency_code' => [
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
-      ),
-       'custom_id'=>array(
+      ],
+      'custom_id' => [
         'type' => 'varchar',
         'length' => 240,
         'not null' => TRUE,
-      ),
-       'transaction_id'=>array(
+      ],
+      'transaction_id' => [
         'type' => 'varchar',
         'length' => 240,
         'not null' => TRUE,
-      ),
-       'payment_status'=>array(
+      ],
+      'payment_status' => [
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
-      ),
-      'created'=>array(
+      ],
+      'created' => [
         'type' => 'varchar',
         'length' => 50,
         'not null' => TRUE,
-      ),
-      'updated'=>array(
+      ],
+      'updated' => [
         'type' => 'varchar',
         'length' => 50,
         'not null' => TRUE,
-      ),
-       
-    ),
-    'primary key' => array('order_id'),
-  );
-  
-  
-  $schema['applications_list'] = array(
-    
-    'fields' => array(
-        'id'=>array(
-        'type'=>'serial',
+      ],
+
+    ],
+    'primary key' => ['order_id'],
+  ];
+  $schema['applications_list'] = [
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
         'not null' => TRUE,
-      ),
-      'user_id'=>array(
+      ],
+      'user_id' => [
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
-      ),
-      'order_id'=>array(
+      ],
+      'order_id' => [
         'type' => 'varchar',
         'length' => 240,
         'not null' => TRUE,
-      ),
-      'programme_id'=>array(
+      ],
+      'programme_id' => [
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
-      ),
-      'application_id'=>array(
+      ],
+      'application_id' => [
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
-      ),
-      'created'=>array(
+      ],
+      'created' => [
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
-      ),
-      
-    ),
-    'primary key' => array('id'),
-  );
- 
+      ],
+
+    ],
+    'primary key' => ['id'],
+  ];
+
   return $schema;
 }
-

@@ -1,7 +1,16 @@
 <?php
 
-function term_migration_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+/**
+ * @file
+ * Contains module functions.
+ */
 
-//dpm($entity);
+use Drupal\Core\Entity\EntityInterface;
 
+/**
+ * Implements term_migration_entity_presave().
+ */
+function term_migration_entity_presave(EntityInterface $entity) {
+
+  // dpm($entity);
 }
