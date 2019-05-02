@@ -10,7 +10,8 @@
         "drupal/simple_fb_connect": "~3.1",
         "facebook/graph-sdk": "^5.6",
         "drupal/social_auth_google": "~1.0",
-        "dompdf/dompdf": "^0.8.2"
+        "dompdf/dompdf": "^0.8.2",
+        "drupal/phpexcel": "^3.0"
     },
     "replace": {
         "drupal/core": "^8.6"
