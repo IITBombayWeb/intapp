@@ -153,7 +153,7 @@ class ExcelImportExportController extends ControllerBase {
       $markup .= '<tr><th  class="imp-tbl-th"> Total invalid applications submitted </th><td class="imp-tbl-td" > ' . ($row->total_invalid_nodes) . '</td></tr>';
       $markup .= '<tr><th  class="imp-tbl-th"> Non Valid Application IDs </th><td class="imp-tbl-td">  ';
       // Invalid Applications details.
-      $invalidApplications = excelImportExportUnserialize($row->invalid_nodes);
+      $invalidApplications = $this->excelImportExportUnserialize($row->invalid_nodes);
       foreach ($invalidApplications as $value) {
         $markup .= $value . '<br>';
       }
@@ -162,7 +162,7 @@ class ExcelImportExportController extends ControllerBase {
       $markup .= '<tr><th  class="imp-tbl-th"> Total valid status updates </th><td class="imp-tbl-td" >' . ($row->total_valid_imports) . '</td></tr>';
       $markup .= '<tr><th  class="imp-tbl-th"> Valid Import IDs </th>
       <td class="imp-tbl-td">';
-      $validStatus = excelImportExportUnserialize($row->valid_imports);
+      $validStatus = $this->excelImportExportUnserialize($row->valid_imports);
       foreach ($validStatus as $value) {
         $markup .= $value . '<br>';
       }
@@ -170,7 +170,7 @@ class ExcelImportExportController extends ControllerBase {
       // Invalid Import details.
       $markup .= '<tr><th  class="imp-tbl-th">Total Invalid status updates </th><td class="imp-tbl-td"> ' . ($row->total_invalid_imports);
       $markup .= '<tr><th  class="imp-tbl-th">Invalid Import IDs </th><td class="imp-tbl-td" >';
-      $invalidStatus = excelImportExportUnserialize($row->invalid_imports);
+      $invalidStatus = $this->excelImportExportUnserialize($row->invalid_imports);
       foreach ($invalidStatus as $value) {
         $markup .= $value . '<br>';
       }
@@ -180,6 +180,22 @@ class ExcelImportExportController extends ControllerBase {
     return [
       '#markup' => $markup,
     ];
+  }
+
+  /**
+     *
+     * Helper function for unserialize nids.
+     *
+     */
+    function excelImportExportUnserialize($nodeArray) {
+      $nids = unserialize($nodeArray);
+      $nidArray = array();
+      if (!empty($nids)) {
+          foreach ($nids as $nid) {
+              $nidArray[] = $nid;
+          }
+      }
+      return $nidArray;
   }
 
 }
