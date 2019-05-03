@@ -7,7 +7,7 @@ namespace Drupal\basiccart;
  */
 class OrderConnectStorage {
 
-  const TABLE =  'basiccart_order_connect';
+  const TABLE = 'basiccart_order_connect';
 
   /**
    * Save an entry in the database.
@@ -30,7 +30,7 @@ class OrderConnectStorage {
    *
    * @see db_insert()
    */
-  public static function insert($entry) {
+  public static function insert(array $entry) {
     $return_value = NULL;
     try {
       $return_value = db_insert(self::TABLE)
@@ -38,10 +38,10 @@ class OrderConnectStorage {
         ->execute();
     }
     catch (\Exception $e) {
-      drupal_set_message(t('db_insert failed. Message = %message, query= %query', array(
+      drupal_set_message(t('db_insert failed. Message = %message, query= %query', [
         '%message' => $e->getMessage(),
         '%query' => $e->query_string,
-      )
+      ]
       ), 'error');
     }
     return $return_value;
@@ -58,20 +58,20 @@ class OrderConnectStorage {
    *
    * @see db_update()
    */
-  public static function update($entry) {
+  public static function update(array $entry) {
     try {
       // db_update()...->execute() returns the number of rows updated.
       $count = db_update(self::TABLE)
-          ->fields($entry)
-          ->condition('oid', $entry['oid'])
-          ->condition('id', $entry['id'])
-          ->execute();
+        ->fields($entry)
+        ->condition('oid', $entry['oid'])
+        ->condition('id', $entry['id'])
+        ->execute();
     }
     catch (\Exception $e) {
-      drupal_set_message(t('db_update failed. Message = %message, query= %query', array(
+      drupal_set_message(t('db_update failed. Message = %message, query= %query', [
         '%message' => $e->getMessage(),
         '%query' => $e->query_string,
-      )
+      ]
       ), 'error');
     }
     return $count;
@@ -86,20 +86,28 @@ class OrderConnectStorage {
    *
    * @see db_delete()
    */
-  public static function delete($entry) {
+  public static function delete(array $entry) {
     db_delete(self::TABLE)
-         ->condition('oid', $entry['oid'])
-         ->condition('entitytype', $entry['entitytype'])
-         ->condition('id', $entry['id'])
-        ->execute();
+      ->condition('oid', $entry['oid'])
+      ->condition('entitytype', $entry['entitytype'])
+      ->condition('id', $entry['id'])
+      ->execute();
   }
 
-
-  public static function order_delete($entry) {
+  /**
+   * Delete an order from the database.
+   *
+   * @param array $entry
+   *   An array containing at least the order identifier 'oid' element of the
+   *   entry to delete.
+   *
+   * @see db_delete()
+   */
+  public static function order_delete(array $entry) {
     db_delete(self::TABLE)
-         ->condition('oid', $entry['oid'])
-         ->condition('entitytype', $entry['entitytype'])
-        ->execute();
+      ->condition('oid', $entry['oid'])
+      ->condition('entitytype', $entry['entitytype'])
+      ->execute();
   }
 
   /**
@@ -117,36 +125,35 @@ class OrderConnectStorage {
    * perfectly acceptable in Drupal 8. See
    * @link http://drupal.org/node/310072 the handbook page on static queries @endlink
    *
+   * But for more dynamic queries, Drupal provides the db_select()
+   * API method, so there are several ways to perform the same SQL query. See
+   * the
+   * @link http://drupal.org/node/310075 handbook page on dynamic queries. @endlink
+   *
    * @code
    *   // SELECT * FROM {dbtng_example} WHERE uid = 0 AND name = 'John'
    *   db_query(
    *     "SELECT * FROM {dbtng_example} WHERE uid = :uid and name = :name",
    *     array(':uid' => 0, ':name' => 'John')
    *   )->execute();
-   * @endcode
    *
-   * But for more dynamic queries, Drupal provides the db_select()
-   * API method, so there are several ways to perform the same SQL query. See
-   * the
-   * @link http://drupal.org/node/310075 handbook page on dynamic queries. @endlink
-   * @code
    *   // SELECT * FROM {dbtng_example} WHERE uid = 0 AND name = 'John'
    *   db_select('dbtng_example')
    *     ->fields('dbtng_example')
    *     ->condition('uid', 0)
    *     ->condition('name', 'John')
    *     ->execute();
-   * @endcode
+   *
    *
    * Here is db_select with named placeholders:
-   * @code
+   *
    *   // SELECT * FROM {dbtng_example} WHERE uid = 0 AND name = 'John'
    *   $arguments = array(':name' => 'John', ':uid' => 0);
    *   db_select('dbtng_example')
    *     ->fields('dbtng_example')
    *     ->where('uid = :uid AND name = :name', $arguments)
    *     ->execute();
-   * @endcode
+   *
    *
    * Conditions are stacked and evaluated as AND and OR depending on the type of
    * query. For more information, read the conditional queries handbook page at:
@@ -154,7 +161,7 @@ class OrderConnectStorage {
    *
    * The condition argument is an 'equal' evaluation by default, but this can be
    * altered:
-   * @code
+   *
    *   // SELECT * FROM {dbtng_example} WHERE age > 18
    *   db_select('dbtng_example')
    *     ->fields('dbtng_example')
@@ -174,7 +181,7 @@ class OrderConnectStorage {
    * @see http://drupal.org/node/310072
    * @see http://drupal.org/node/310075
    */
-  public static function load($entry = array()) {
+  public static function load(array $entry = []) {
     // Read all fields from the dbtng_example table.
     $select = db_select(self::TABLE, 'order_connect');
     $select->fields('order_connect');
@@ -187,50 +194,47 @@ class OrderConnectStorage {
     return $select->execute()->fetchAll();
   }
 
-  /**
-   * Load dbtng_example records joined with user records.
-   *
-   * DBTNG also helps processing queries that return several rows, providing the
-   * found objects in the same query execution call.
-   *
-   * This function queries the database using a JOIN between users table and the
-   * example entries, to provide the username that created the entry, and
-   * creates a table with the results, processing each row.
-   *
-   * SELECT
-   *  e.pid as pid, e.name as name, e.surname as surname, e.age as age
-   *  u.name as username
-   * FROM
-   *  {dbtng_example} e
-   * JOIN
-   *  users u ON e.uid = u.uid
-   * WHERE
-   *  e.name = 'John' AND e.age > 18
-   *
-   * @see db_select()
-   * @see http://drupal.org/node/310075
+  /*
+  Load dbtng_example records joined with user records.
+
+  DBTNG also helps processing queries that return several rows, providing the
+  found objects in the same query execution call.
+  This function queries the database using a JOIN between users table and the
+  example entries, to provide the username that created the entry, and
+  creates a table with the results, processing each row.
+
+  SELECT
+  e.pid as pid, e.name as name, e.surname as surname, e.age as age
+  u.name as username
+  FROM
+  {dbtng_example} e
+  JOIN
+  users u ON e.uid = u.uid
+  WHERE
+  e.name = 'John' AND e.age > 18
+
+  @see db_select()
+  @see http://drupal.org/node/310075
    */
   /*
   public static function advancedLoad() {
-    $select = db_select('dbtng_example', 'e');
-    // Join the users table, so we can get the entry creator's username.
-    $select->join('users_field_data', 'u', 'e.uid = u.uid');
-    // Select these specific fields for the output.
-    $select->addField('e', 'pid');
-    $select->addField('u', 'name', 'username');
-    $select->addField('e', 'name');
-    $select->addField('e', 'surname');
-    $select->addField('e', 'age');
-    // Filter only persons named "John".
-    $select->condition('e.name', 'John');
-    // Filter only persons older than 18 years.
-    $select->condition('e.age', 18, '>');
-    // Make sure we only get items 0-49, for scalability reasons.
-    $select->range(0, 50);
-
-    $entries = $select->execute()->fetchAll(\PDO::FETCH_ASSOC);
-
-    return $entries;
+  $select = db_select('dbtng_example', 'e');
+  // Join the users table, so we can get the entry creator's username.
+  $select->join('users_field_data', 'u', 'e.uid = u.uid');
+  // Select these specific fields for the output.
+  $select->addField('e', 'pid');
+  $select->addField('u', 'name', 'username');
+  $select->addField('e', 'name');
+  $select->addField('e', 'surname');
+  $select->addField('e', 'age');
+  // Filter only persons named "John".
+  $select->condition('e.name', 'John');
+  // Filter only persons older than 18 years.
+  $select->condition('e.age', 18, '>');
+  // Make sure we only get items 0-49, for scalability reasons.
+  $select->range(0, 50);
+  $entries = $select->execute()->fetchAll(\PDO::FETCH_ASSOC);
+  return $entries;
   } */
 
 }

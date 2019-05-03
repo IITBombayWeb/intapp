@@ -1,68 +1,63 @@
 <?php
 
+/**
+ * @file
+ * Contains Module functions.
+ */
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\profile\Entity\Profile;
-use Drupal\profile\Entity\ProfileType;
-use Drupal\field\FieldConfigInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\user\UserInterface;
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use \Drupal\node\Entity\Node;
+use Drupal\node\Entity\Node;
 use Drupal\Core\Url;
-use Drupal\workflow\Entity\Workflow;
 use Drupal\workflow\Entity\WorkflowState;
-use Drupal\workflow\Entity\WorkflowConfigTransition;
 use Drupal\workflow\Entity\WorkflowTransitionInterface;
-use Drupal\workflow\Controller\WorkflowTransitionListController;
-use Drupal\user\Entity\user;
-use Drupal\file\Entity\File;
-use Dompdf\Dompdf;
-use Drupal\basiccart\Controller\CartController;
-use Drupal\basiccart\Utility;
 use Drupal\basiccart\Form\CartForm;
-
+use Drupal\field\FieldStorageConfigInterface;
 
 /**
-* Implements hook_mail().
-*/
+ * Implements hook_mail().
+ */
 function iitinap_mail($key, &$message, $params) {
-       $options = array(
-	 'langcode' => $message['langcode'],
-       );
-       switch ($key) {
-	     case 'status_change':
-		     $message['from'] = \Drupal::config('system.site')->get('mail');
-		     $subject = ($params['user_subject'] != '') ? $params['user_subject'] : 'Your application '.$params['app_id'].' have new state';
-		     $message['subject'] = t($subject, $options);
-		     $message['body'][] = $params['message'];
-	     break;
-	     case 'application_created':
-		     $message['from'] = \Drupal::config('system.site')->get('mail');
-		     $subject = ($params['user_subject'] != '') ? $params['user_subject'] : 'Congratulation, Your application created : '.$params['app_id'];
-		     $message['subject'] = t($subject, $options);
-		     $message['body'][] = $params['message'];
-	     break;
-	     case 'admin_mail':
-		     $message['from'] = \Drupal::config('system.site')->get('mail');
-		     $subject = ($params['admin_subject'] != '') ? $params['admin_subject'] : $params['title'];
-		     $message['subject'] = t($subject, $options);
-		     $message['body'][] = $params['message'];
-	     break;
-             case 'create_user':
-		     $message['from'] = \Drupal::config('system.site')->get('mail');
-		     $message['subject'] = t('Welcome to the site!'.\Drupal::config('system.site')->get('name'));
-		     $message['body'][] = $params['message'];
-             break;
-       }
- }
+  $options = [
+    'langcode' => $message['langcode'],
+  ];
+  switch ($key) {
+    case 'status_change':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $subject = ($params['user_subject'] != '') ? $params['user_subject'] : 'Your application ' . $params['app_id'] . ' have new state';
+      $message['subject'] = t($subject, $options);
+      $message['body'][] = $params['message'];
+      break;
+
+    case 'application_created':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $subject = ($params['user_subject'] != '') ? $params['user_subject'] : 'Congratulation, Your application created : ' . $params['app_id'];
+      $message['subject'] = t($subject, $options);
+      $message['body'][] = $params['message'];
+      break;
+
+    case 'admin_mail':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $subject = ($params['admin_subject'] != '') ? $params['admin_subject'] : $params['title'];
+      $message['subject'] = t($subject, $options);
+      $message['body'][] = $params['message'];
+      break;
+
+    case 'create_user':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = t('Welcome to the site!' . \Drupal::config('system.site')->get('name'));
+      $message['body'][] = $params['message'];
+      break;
+
+  }
+}
 
 /**
-* Implements hook_workflow().
-*/
-
+ * Implements hook_workflow().
+ */
 function iitinap_workflow($op, WorkflowTransitionInterface $transition, UserInterface $user) {
   $mailConfig = \Drupal::config('workflow_mail.settings');
   $send_mail_admin = $mailConfig->get('send_mail_admin');
@@ -73,623 +68,612 @@ function iitinap_workflow($op, WorkflowTransitionInterface $transition, UserInte
   $send_to = $mailConfig->get('send_to');
   $old_state = $transition->getFromState()->label;
   $new_state = $transition->getToState()->label;
-  // Sending mail to end user
+  // Sending mail to end user.
   $mailManager = \Drupal::service('plugin.manager.mail');
-       if ($old_state != '(Creation)') {
-	 $comment = $transition->getComment();
-	 $to = $transition->getTargetEntity()->getOwner()->getEmail();
-	 $module = 'iitinap';
-	 $entity = $transition->getTargetEntity();
-	 $langcode = $entity->language()->getId();
-	 $user_name = $transition->getTargetEntity()->getOwner()->getUsername();
-	 $app_id = $entity->getTranslation($langcode)->get('title')->getValue()[0]['value'];
-	 $nid = $entity->getTranslation($langcode)->get('field_programme')->getValue()[0]['target_id'];
-	 $node = Node::load($nid);
-	 $ownermail = $node->getOwner()->getEmail();
-	 $degree  = $node->getTranslation($langcode)->get('field_degree')->getValue()[0]['value'];
-	 $depart  = $node->getTranslation($langcode)->get('field_departments')->getValue()[0]['target_id'];
-	 $departs = taxonomy_term_load($depart);
-	 $departments = $departs->getTranslation($langcode)->get('name')->getValue()[0]['value'];
-	 $term = $node->field_institute;
-	 $tax = $term->target_id;
-	 $ins = taxonomy_term_load($tax);
-	 $institute = $ins->getTranslation($langcode)->get('name')->getValue()[0]['value'];
-	      if ($new_state == 'Application Rejected') {
-		$content = 'We are sorry your application is not selected.<p></p> Comment : <b>'.$comment.'</b>';
-	      } else {
-		$content = 'Congratulation,<br><p></p> Your aplication has changed from <b>'.$old_state.'</b> to <b>'.$new_state.'</b><p></p> Comment : <b>'.$comment.'</b>';  
-	      }
-	      if ($send_mail_user == '1') {
-		$params['message'] = 'Dear '.$user_name.',<br><p></p>'.$content.'<table cellpadding = "3" cellspacing = "3" ><tr><td>Application</td><td> : <b>'.$app_id.'</b></td></tr><tr><td>Instittue</td><td> : '.$institute.'</td></tr><tr><td>Degree</td><td> : '.$degree.'</td></tr><tr><td>Department</td><td> : '.$departments.'</td></tr></table> <br> Regards,<br>'.$institute;
-		$key = 'status_change';
-		$params['app_id'] = $app_id;
-		$params['user_subject'] = $mail_subject_user;
-		$send = true;
-		$result = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
-		if ($result['result'] === true) {
-		  drupal_set_message(t('Application status has been changed.'));
-		}
-	      }  
-	     if ($send_mail_admin == '1') {
-	       $key = 'admin_mail';
-	       $to = $ownermail;
-	       $params['title'] = 'Application '.$app_id .' have new state';
-	       $params['admin_subject'] = $mail_subject_admin;
-	       $params['message'] = 'Dear Admin,<br><p></p><p>Application '.$app_id.' has changed from <b>'.$old_state.'</b> to <b>'.$new_state.'</b>';
-	       $send = true;
-	       $response = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
-	       if ($response['result'] === true) {
-		   drupal_set_message(t('Details send to Department'));
-	       }
-	     }
-       }
-
-       if ($new_state == 'Need More Info'){
-	 $langcode = $entity->language()->getId();
-	 $comment = $transition->getComment();
-	 $entity = $transition->getTargetEntity();
-	 $nid_workflow = $entity->getTranslation($langcode)->get('nid')->getValue()[0]['value'];
-       }
+  if ($old_state != '(Creation)') {
+    $comment = $transition->getComment();
+    $to = $transition->getTargetEntity()->getOwner()->getEmail();
+    $module = 'iitinap';
+    $entity = $transition->getTargetEntity();
+    $langcode = $entity->language()->getId();
+    $user_name = $transition->getTargetEntity()->getOwner()->getUsername();
+    $app_id = $entity->getTranslation($langcode)->get('title')->getValue()[0]['value'];
+    $nid = $entity->getTranslation($langcode)->get('field_programme')->getValue()[0]['target_id'];
+    $node = Node::load($nid);
+    $ownermail = $node->getOwner()->getEmail();
+    $degree = $node->getTranslation($langcode)->get('field_degree')->getValue()[0]['value'];
+    $depart = $node->getTranslation($langcode)->get('field_departments')->getValue()[0]['target_id'];
+    $departs = taxonomy_term_load($depart);
+    $departments = $departs->getTranslation($langcode)->get('name')->getValue()[0]['value'];
+    $term = $node->field_institute;
+    $tax = $term->target_id;
+    $ins = taxonomy_term_load($tax);
+    $institute = $ins->getTranslation($langcode)->get('name')->getValue()[0]['value'];
+    if ($new_state == 'Application Rejected') {
+      $content = 'We are sorry your application is not selected.<p></p> Comment : <b>' . $comment . '</b>';
+    }
+    else {
+      $content = 'Congratulation,<br><p></p> Your aplication has changed from <b>' . $old_state . '</b> to <b>' . $new_state . '</b><p></p> Comment : <b>' . $comment . '</b>';
+    }
+    if ($send_mail_user == '1') {
+      $params['message'] = 'Dear ' . $user_name . ',<br><p></p>' . $content . '<table cellpadding = "3" cellspacing = "3" ><tr><td>Application</td><td> : <b>' . $app_id . '</b></td></tr><tr><td>Instittue</td><td> : ' . $institute . '</td></tr><tr><td>Degree</td><td> : ' . $degree . '</td></tr><tr><td>Department</td><td> : ' . $departments . '</td></tr></table> <br> Regards,<br>' . $institute;
+      $key = 'status_change';
+      $params['app_id'] = $app_id;
+      $params['user_subject'] = $mail_subject_user;
+      $send = TRUE;
+      $result = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
+      if ($result['result'] === TRUE) {
+        drupal_set_message(t('Application status has been changed.'));
+      }
+    }
+    if ($send_mail_admin == '1') {
+      $key = 'admin_mail';
+      $to = $ownermail;
+      $params['title'] = 'Application ' . $app_id . ' have new state';
+      $params['admin_subject'] = $mail_subject_admin;
+      $params['message'] = 'Dear Admin,<br><p></p><p>Application ' . $app_id . ' has changed from <b>' . $old_state . '</b> to <b>' . $new_state . '</b>';
+      $send = TRUE;
+      $response = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
+      if ($response['result'] === TRUE) {
+        drupal_set_message(t('Details send to Department'));
+      }
+    }
+  }
+  if ($new_state == 'Need More Info') {
+    $langcode = $entity->language()->getId();
+    $comment = $transition->getComment();
+    $entity = $transition->getTargetEntity();
+    $nid_workflow = $entity->getTranslation($langcode)->get('nid')->getValue()[0]['value'];
+  }
 }
 
 /**
  * Implements hook_theme().
  */
 function iitinap_theme() {
-  return array(
-    'programme_apply_button' => array(
-      'variables' => array('link' => NULL),
-    ),
-  );
+  return [
+    'programme_apply_button' => [
+      'variables' => ['link' => NULL],
+    ],
+  ];
 }
 
 /**
  * Implements hook_form_alter().
  */
-
-function iitinap_form_alter(&$form,FormStateInterface $form_state, $form_id) {
-       
-       if ($form['#form_id'] == 'workflow-transition-field-status-form--2') {	     
-	    //Node id
-	    $node = \Drupal::routeMatch()->getParameter('node');
-	      if ($node) {
-		// You can get nid and anything else you need from the node object.
-		$curr_nid = $node->id();
-	      }
-	    $curr_state = $form['to_sid']['#default_value'];
-	    //Get Current workflow State
-	    $query = \Drupal::database()->select('workflow_transition_history', 'wf');
-	    $query->addField('wf', 'comment');
-	    $query->condition('wf.to_sid', $curr_state);
-	    $query->condition('wf.from_sid', $curr_state,'!=');
-	    $query->condition('wf.entity_id', $curr_nid);
-	    $cur_wf_nid = $query->execute()->fetchField();
-	    $wf_curr_st = WorkflowState::load($curr_state);
-	    $wf_curr_st_lab =$wf_curr_st->label;
-	    //From Field tile alter
-	    $form['to_sid']['#options'][$curr_state]= 'Please Select';
-	    $form['to_sid']['#title'] = 'Change status to';
-	    $form['comment']['#title'] ='Additional comments';
-	    $form['actions']['submit']['#value']='Update application status';
-	  
-	    if (!empty ($wf_curr_st_lab)) {
-		     $form['field_current_status'] = array (
-			   '#type' => 'item',
-			   '#title' => t('Current status'),
-			   '#prefix' => '<div class="example-wrapper">',
-			   '#suffix' => '</div>',
-			   '#markup' => t("<br>".$wf_curr_st_lab),
-			   '#weight' => '0',
-		     );
-		     $form['field_current_comment'] = array (
-			   '#type' => 'item',
-			   '#title' => t('Status description'),
-			   '#markup' => t("<br>". $cur_wf_nid),
-			   '#weight' => '0',
-		     );
-	      }
-       }
-       
-       if ($form['#form_id'] == 'search_api_page_block_form'){
-	    $form['#prefix']="<div style = 'display:none'>";
-            $form['#suffix']="</div>";  
-       }
-       $current_path = \Drupal::service('path.current')->getPath();
-       if ((strpos($form_id, 'transition-field-status-form')) && ($current_path == '/view-my-application-list' || strpos($current_path, 'view-application-lists'))) {
-	     unset($form['comment']);
-	     unset($form['to_sid']['#title']);
-       }
-       
-       module_load_include('inc', 'basiccart');
-       $application_id = basiccart_get_cart();
-       if ((isset($application_id['cart']) && is_array($application_id['cart']) && ($form['#form_id'] == 'profile_student_application__edit_form' || $form['#form_id'] == 'profile_student_application__add_form'))) {
-	      $cartform = new CartForm();
-       //Custom Submit 	  
-       $form['actions']['submit']['#submit'][] = "application_save_submit";
-          $cart = $application_id;
-          $cart_cart = $cart['cart'];
-	  $cart_data = array();
-          $i=0;
-       if (is_array($cart_cart) && count($cart_cart) >= 1) {
-	      foreach($cart_cart as $nid => $node){
-		    $langcode = $node->language()->getId();
-		    $degree = $node->getTranslation($langcode)->get('field_degree')->getValue()[0]['value'];
-		    $depart = $node->getTranslation($langcode)->get('field_departments')->getValue()[0]['target_id'];
-		    $specialisation = $node->getTranslation($langcode)->get('field_specialisation')->getValue()[0]['value'];
-		    $departs = taxonomy_term_load($depart);
-		    $departments = $departs->getTranslation($langcode)->get('name')->getValue()[0]['value'];
-		    $in = $node->getTranslation($langcode)->get('field_institute')->getValue()[0]['target_id'];
-		    $ins = taxonomy_term_load($in);
-		    $institute = $ins->getTranslation($langcode)->get('name')->getValue()[0]['value'];
-		    $title = $node->getTranslation($langcode)->get('title')->getValue();
-		    $cart_data[$i] = $title[0]['value'];
-		    $no_of_doc = $node->getTranslation($langcode)->get('field_enter_number_of_supporting')->getValue();
-		    $no_doc[$i] = $no_of_doc[0]['value'];
-		    $doc_name = $node->getTranslation($langcode)->get('field_e')->getValue();
-		    $name_doc[$i] = $doc_name[0]['value'];
-		    $pgm_apply[] = array($institute,$departments,$degree,$specialisation);
-		    $data .= '<li><div class="programs"><h4 class="programs-apply">Program : </h4>' . $cart_data[$i] .', <h4 class="programs-apply">Degree : </h4>'
-			      . $degree .',<h4 class="programs-apply">Departments : </h4>'
-			      . $departments .',<h4 class="programs-apply">Institute : </h4>'
-			      . $institute . "</br></div></li>";
-		    $i++;
-	      }
-       }
-       $j=0;
-       $count = 0;
-       $m=0;
-       for ($k=0;$k<count($no_doc);$k++) {
-	      $name[$j] = explode(',',$name_doc[$k]);
-	      $count = $count + $no_doc[$k];
-	      $j++;
-       }
-       if (is_array($name)){
-       foreach ($name as $key => $value) {
-	      foreach ($value as $key1 => $val) {
-		     if (!empty($val)) {            
-			$push[] = $val;
-		     }
-	      }
-       }
-   }
-       $document = (array_values(array_unique($push)));
-       for ($i=0;$i<count($document);$i++) {
-	      $sup_doc[$document[$i]] = $document[$i];
-       }
-       $cardinality = count($document);	   
-       if (!empty($data)) {
-	      $form['custom_form'] = array(
-		   '#type' => 'markup',
-		   '#markup' => '<ul>' . $data . '</ul>',
-		   '#$pgm_apply' => $pgm_apply,
-		   '#prefix' => '<b>List of programs Applied</b>',
-		   '#weight' => -2,
-	      );
-       }
-	      $form['custom_title'] = array(
-		'#weight' => -1,
-		'#prefix' => '<h3 class="applicant"><b>Applicant Details</b></h3>'  
-	      );
-       if ($count!=0) {
-	      $form['document_checkbox'] = array(
-		     '#type' => 'checkboxes',
-		     '#title' => 'programme supporting specific documents:',
-		     '#weight' => 31,
-		     '#options' => $sup_doc,
-		     '#suffix' => '<h5><b>please select the files which you uploaded the following above</h5></b><br>',
-	      );
-	      $form['field_supporting_d']['#suffix'] = '<h5><b>Note : Please upload minimum ' . $cardinality . ' files</b></h5>';
-       }else {
-	      $form['field_supporting_d']['#type'] = 'hidden';
-       }
-	      $form['actions']['submit']['#value']="Apply";	
-	      $form['#validate'][] = 'form_validate_data1';
-	      $form['field_supporting_d']['#no_doc'] = $cardinality;
-	      $form['actions']['submit']['#submit'][]='custom_form_submit';
-	      unset($form['actions']['set_default']);
-       }
-       $session = \Drupal::service('user.private_tempstore')->get('hello_world');
-       $application_id =  $session->get('application_id');
-       if (isset($application_id) && isset($programme_id) && ($form['#form_id'] == 'profile_student_application_edit_form')) {
-	      $form['actions']['submit']['#submit'][] = "application_save_submit";
-       }
-
-       if ($form['#form_id'] == 'node_application_edit_form') {
-	      $sup_doc_val = explode(',',$form['field_documents_uploaded']['widget'][0]['value']['#default_value']);
-	      foreach ($sup_doc_val as $key=>$val) {
-		      if ($val == null){
-			     unset($sup_doc_val[$key]);
-		      }
-	      }
-	      for($i=0;$i<count($sup_doc_val);$i++){
-	       $sup_doc[$i] = explode(':',$sup_doc_val[$i]);
-	      }
-	      for($i=0;$i<count($sup_doc);$i++){
-		      for($j=0;$j<count($sup_doc[$i]);$j++){
-			      $sup_documents[$sup_doc[$i][$j]] = $sup_doc[$i][$j];
-		      }
-	      }
-	      $langcode = 'en';
-	      $program_data = Node::load($form['field_programme']['widget']['#default_value'][0]);
-	      $supname = $program_data->getTranslation($langcode)->get('field_e')->getValue()[0]['value']; 
-	      $val = explode(',',$supname);
-	      if(!empty($supname)){
-		     for($i=0;$i<count($val);$i++){
-			    $data[$val[$i]] = $val[$i];
-		     }
-		     $form['supporting_document'] = array(
-			    '#type' => 'checkboxes',
-			    '#title' => 'Programme Supporting Specific Documents',
-			    '#options' => $data,
-			    '#weight' => 30,
-			    '#value' => array_intersect($sup_documents,$data),
-			    '#disabled' => TRUE,
-		     );
-	      }
-	      foreach ($form['field_programme']['widget']['#options'] as $key => $value){
-		   foreach ($form['field_programme']['widget']['#default_value'] as $keys => $values){
-			    if ($key == $values) {	
-			       $node = Node::load($key);
-			       $degree .= $node->getTranslation('en')->get('field_degree')->getValue()[0]['value'];
-			       $depart = $node->getTranslation('en')->get('field_departments')->getValue()[0]['target_id'];
-			       $departs = taxonomy_term_load($depart);
-			       $departments = $departs->getTranslation('en')->get('name')->getValue()[0]['value'];
-			       $term = $node->field_institute;
-			       $tax = $term->target_id;
-			       $ins = taxonomy_term_load($tax);
-			       $institute .= $ins->getTranslation('en')->get('name')->getValue()[0]['value'];
-			       $program .= $value;
-			    }
-		     }
-	      }
-	      $form['field_programme'] = array(
-		    '#type' => 'markup',
-		    '#markup' => '<div class="programs"><h4 class="programs-apply">Programs Applied For : </h4>'.$program.'</div>',
-		    '#prefix' => '<div class="application-details">',	
-	      );
-	      $form['field_institute'] = array(
-		    '#type' => 'markup',
-		    '#markup' => '<div class="programs"><h4 class="programs-apply">Institute : </h4>'.$institute.'</div>',
-	      );
-	      $form['field_degree'] = array(
-		    '#type' => 'markup',
-		    '#markup' => '<div class="programs"><h4 class="programs-apply">Degree : </h4>'.$degree.'</div>',
-	      );
-	      $form['field_departments'] = array(
-		    '#type' => 'markup',
-		    '#markup' => '<div class="programs"><h4 class="programs-apply">Department : </h4>'.$departments.'</div>',
-		    '#suffix' => '</div>',
-	      );
-  	
-       }
-       global $base_url;
-       $node = \Drupal::routeMatch()->getParameter('node');
-       if ($form_id == 'profile_student_application__form' && $current_path = '/node/'.$node.'/edit_application') {
-	      $form['actions']['submit']['#submit'][] = 'form_submit';
-
-       }
-       if ($form_id == 'basiccart_cart_form') {
-	      $form['buttons']['update']['#value'] = t('Apply');
-	      $form['#submit'][] = 'iitnap_basiccart_alter_submit'; 
-	      $form['actions']['submit']['#submit'][] = 'form_submit';
-       }
-       if ($form['#form_id'] == 'user_register_form' || $form['#form_id'] == 'user_form')
-           
-        {
-	      $form['pass_condition'] = array(
-		     '#type' => 'markup',
-		     '#markup' => '<div class="password_chk"><h4 class="programs-apply">Password has following Requirement(s):</h4><br>
-			&#8226;  Password must contain at least one Digit.<br>
-			&#8226;  Password must contain at least one Uppercase character.<br>
-			&#8226;  Password must contain at least one Lowercase character.<br>
-			&#8226;  Password must contain at least one Special character.<br>
-			&#8226;  Password must be at least 6 characters in length.<br><br><br>',
-		     '#suffix' => '</div>',
-	      );
-	       
-	           $form['#validate'][] = 'form_validate_data2';
-       }
-}
-
-
-/**
- *Implements form_validation() for registration.
- */
-function form_validate_data2($form, &$form_state){
-       /*
-              $email = filter_var($form['account']['mail']['#value'], FILTER_VALIDATE_EMAIL);
-       if(!($email)){
-	      $form_state->setError($form['account']['mail'],"Invalid Email Format");
-       }
-       if (preg_match('/[^a-z-0-9_-]/i', $form['account']['name']['#value'])) {
-	      $form_state->setError($form['account']['name'],"Please use - or _ character to split username");
-       }
-       $password = $form['account']['pass']['#value']['pass1'];
-       $uppercase = preg_match('@[A-Z]@', $password);
-       $lowercase = preg_match('@[a-z]@', $password);
-       $number    = preg_match('@[0-9]@', $password);
-       $special   = preg_match('@[\W]+@', $password); 
-       if(!$uppercase || !$lowercase || !$number || strlen($password) < 6 || !$special) {
-           $form_state->setError($form['account']['pass']['pass1'],"Password Should Match with below Requirement(s)");
-           $form_state->setError($form['account']['pass']['pass2'],"Password Should Match with below Requirement(s)"); 
-       }
-       */
-}
-/**
- *Implements form_validation() for application.
- */
-
-function form_validate_data1($form, &$form_state) {
-     //dpm($form['field_details_of_academic_record']);
-     //dpm($form_state);
-   if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest') {
-       
-       if($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
-	  $form_state->setError($form['document_checkbox'],"Please select all files");
-       }
-       
-       if($form['field_supporting_d']['#type']!='hidden'){
-	if($form['field_supporting_d']['widget']['#file_upload_delta']<$form['field_supporting_d']['#no_doc']) {
-	    $form_state->setError($form['field_supporting_d'],"Please upload all files");
-	    }
-       }
-  
-       //First Name
-       $field_first_name = $form['field_first_name']['widget'][0]['value']['#value'];
-       if(!empty($field_first_name)){
-	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_first_name)){
-	     	 $form_state->setError($form['field_first_name']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed in first name.");
-	      }
-       }
-       //Sure Name
-       $field_surname = $form['field_surname']['widget'][0]['value']['#value'];
-       if(!empty($field_surname)){
-	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_surname)){
-	     	 $form_state->setError($form['field_surname']['widget'][0]['value'],"Special Characters & Numeric are Not Allowed in surname.");
-	      }
-       }
-       
-       //Date of Birth
-       if(!empty($form['field_date_of_birth']['widget'][0]['value']['#value']['date'])){
-         $Date_of_birth = date(strtotime($form['field_date_of_birth']['widget'][0]['value']['#value']['date']));
-         $cur_date = date('Y-m-d', strtotime("-18 year"));
-         $restrict_date = date(strtotime($cur_date));
-	      if(!($Date_of_birth < $restrict_date)){
-	          $form_state->setError($form['field_date_of_birth']['widget'][0]['value'],"DOB should be above 18 years.");
-	      }
-       }
-       
-       //Mobile No
-       $field_mobile_num_com = $form['field_mobile_num_com']['widget'][0]['value']['#value'];
-       if(!empty($field_mobile_num_com)){
-          if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_mobile_num_com)){
-	      $form_state->setError($form['field_mobile_num_com']['widget'][0]['value'],"Please Enter Valid Mobile Number.");
-          }
-       }
-       //Telephone no
-       // $field_telephone_num_com = $form['field_telephone_num_com']['widget'][0]['value']['#value'];
-       // if(!empty($field_telephone_num_com)){
-       //     if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",$field_telephone_num_com)){
-	      //   $form_state->setError($form['field_telephone_num_com']['widget'][0]['value'],"Please Enter Valid Phone Number.");
-       //     }
-       // }
-       //city
-       $city = $form['field_city']['widget'][0]['value']['#value'];
-       if(!empty($city)){
-          if(!preg_match("/^[\pL\pM\p{Zs}.-]+$/u",$city)){
-	      $form_state->setError($form['field_city']['widget'][0]['value'],"Please Enter Valid City Name.");
-          }
-       }
-       
-       //school city
-       $city_school= $form['field_city_school']['widget'][0]['value']['#value'];
-       if(!empty($city_school)){
-          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$city_school)){
-	      $form_state->setError($form['field_city_school']['widget'][0]['value'],"Please Enter Valid City Name.");
-          }
-       }
-       //State
-       $state = $form['field_state']['widget'][0]['value']['#value'];
-       if(!empty($state)){
-          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$state)){
-	      $form_state->setError($form['field_state']['widget'][0]['value'],"Please Enter Valid State Name. ");
-          }
-       }
-       //State School
-       $state_school = $form['field_state_school']['widget'][0]['value']['#value'];
-       if(!empty($state_school)){
-          if(!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/",$state_school)){
-	      $form_state->setError($form['field_state_school']['widget'][0]['value'],"Please Enter Valid State Name.");
-          }
-       }
-       //Pincode
-       $pincode=$form['field_pin']['widget'][0]['value']['#value'];
-       if(!empty($pincode)){
-       	if(!preg_match("/^[a-zA-Z0-9]+/", $pincode)){
-       	$form_state->setError($form['field_pin']['widget'][0]['value'],"Please Enter Valid Pincode.");
-       	}
-       }
-	   //Pincode School
-       $pincode_school=$form['field_pincode_school']['widget'][0]['value']['#value'];
-       if(!empty($pincode_school)){
-       	if(!preg_match("/^[a-zA-Z0-9]+/", $pincode_school)){
-	 $form_state->setError($form['field_pincode_school']['widget'][0]['value'],"Please Enter Valid  Pincode.");
-       }
-       }
-       //Name of the Qualifying Examination
-       $Qulify_exam = $form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'];
-       if(!empty($form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'])){
-            if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/",$Qulify_exam)){
-	      $form_state->setError($form['field_name_of_the_qualifying_exa']['widget'][0]['value'],"Please Enter Name of the Qualifying Examination.");
-	    }
-       }
-       
-       // Name of the Board/University and Country
-       $board_uni = $form['field_name_of_the_board_universi']['widget'][0]['value']['#value'];
-       if(!empty($form['field_name_of_the_board_universi']['widget'][0]['value']['#value'])){
-	       if(!preg_match("/^[\pL\pM\p{Zs}.-]+$/u",$board_uni)){
-	 $form_state->setError($form['field_name_of_the_board_universi']['widget'][0]['value'],"Please Enter Name of the Board/University and Country.");
-       }
-       
-       // School/Institution Last Studied
-       $school = $form['field_school']['widget'][0]['value']['#value'];
-       if(!empty($form['field_school']['widget'][0]['value']['#value'])){
-	      if(!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.|\&)?([A-Za-z])+))*$/",$school)){
-	         $form_state->setError($form['field_school']['widget'][0]['value'],"Please Enter School/Institution Last Studied.");
-	      }
-       }
-       //country
-       $country1=$form['field_country']['widget']['#value'];
-       if(empty($country1)){
-       	$form_state->setError($form['field_country']['widget']['#value'],"Please select the Country");
-       }
-       //gender
-       $gender=$form['field_gender']['widget']['#value'];
-       if(empty($gender)){
-       	$form_state->setError($form['field_gender']['widget']['#value'],"Please select the Gender");
-       }
-       //Medium of Instruction
-       $medium_ins = $form['field_medium_of_instruction_']['widget'][0]['value']['#value'];
-        if(!empty($form['field_medium_of_instruction_']['widget'][0]['value']['#value'])){
-	        if(!preg_match("/^[A-Za-z]+((\s)?([A-Za-z])+)*$/",$medium_ins)){
-		     $form_state->setError($form['field_medium_of_instruction_']['widget'][0]['value'],"Please Enter Medium of Instruction.");
-	         }
-	      }
-       }
-       // if(empty($form['field_general_documents']['widget']['#file_upload_delta'])){
-       //  $form_state->setError($form['field_general_documents'],"Please upload general document");
-       // }
-       
-        // Performance in Competitive Examination (such as GRE, GMAT) 
-       $comp_per = $form['field_performance_in_competitive']['widget'][0]['#value']['tablefield']['table'];
-       foreach ($comp_per as $cp_clm_key => $cp_clm_value){   
-           foreach ($cp_clm_value as $cp_row_key => $cp_row_value){
-	      if(empty($cp_row_value)){
-	           $form_state->setError($form['field_performance_in_competitive']['widget'][0]['tablefield']['table'][$cp_clm_key][$cp_row_key],"Please Fill Performance in Competitive Examination.");
-	      }
-          }   
-       }
-       
-       // Proficiency in English (TOEFL / IELTS)
-       $eng_prof = $form['field_proficiency_in_english']['widget'][0]['#value']['tablefield']['table'];
-       foreach ($eng_prof as $cp_clm_key => $cp_clm_value){   
-           foreach ($cp_clm_value as $cp_row_key => $cp_row_value){
-	      if(empty($cp_row_value)){
-	           $form_state->setError($form['field_proficiency_in_english']['widget'][0]['tablefield']['table'][$cp_clm_key][$cp_row_key],"Please Fill Proficiency in English.");
-	      }
-          }   
-       }
-       
-       //Details of Academic Record (Secondary onwards) 
-       $academic_rec = $form['field_details_of_academic_record']['widget'][0]['#value']['tablefield']['table'][1];
-       //dpm($academic_rec);
-       foreach ($academic_rec as $ac_row_key => $ac_row_value){
-	      if(empty($ac_row_value)){
-	           $form_state->setError($form['field_details_of_academic_record']['widget'][0]['tablefield']['table'][1][$ac_row_key],"Please Fill Details of Academic Record.");
-	      }
-       } 
-       /*foreach ($academic_rec as $ac_clm_key => $ac_clm_value){
-	      dpm($ac_clm_value);
-	      dpm($ac_clm_key);
-	      
-           foreach ($ac_clm_value as $ac_row_key => $ac_row_value){
-	      if(empty($ac_row_value)){
-	           $form_state->setError($form['field_details_of_academic_record']['widget'][0]['tablefield']['table'][$ac_clm_key][$ac_row_key],"Please Fill Details of Academic Record.");
-	      }
-       } 
-       }*/
-            
-       
-      
-       // Research/ Professional Experience, Papers published etc. (upload a separate pdf for details, if required)
-	$research_exp = $form['field_research_professional_expe']['widget'][0]['#value']['tablefield']['table'][1];
-        
-           foreach ($research_exp as $res_row_key => $res_row_value){
-	      if(empty($res_row_value)){
-	           $form_state->setError($form['field_research_professional_expe']['widget'][0]['tablefield']['table'][1][$res_row_key]," Please Fill Research/ Professional Experience, Papers published etc.");
-	      }
-          }   
-       
-       
-       // Employment Details
-	 $emp_det = $form['field_employment_details']['widget'][0]['#value']['tablefield']['table'][1];
-         
-           foreach ($emp_det as $emp_row_key => $emp_row_value){
-	      if(empty($emp_row_value)){
-	           $form_state->setError($form['field_employment_details']['widget'][0]['tablefield']['table'][1][$emp_row_key]," Please Fill Employment Details.");
-	      }
-          }   
-       
-      
+function iitinap_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form['#form_id'] == 'workflow-transition-field-status-form--2') {
+    // Node id.
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if ($node) {
+      // You can get nid and anything else you need from the node object.
+      $curr_nid = $node->id();
     }
- } 
- 
- /*
+    $curr_state = $form['to_sid']['#default_value'];
+    // Get Current workflow State.
+    $query = \Drupal::database()->select('workflow_transition_history', 'wf');
+    $query->addField('wf', 'comment');
+    $query->condition('wf.to_sid', $curr_state);
+    $query->condition('wf.from_sid', $curr_state, '!=');
+    $query->condition('wf.entity_id', $curr_nid);
+    $cur_wf_nid = $query->execute()->fetchField();
+    $wf_curr_st = WorkflowState::load($curr_state);
+    $wf_curr_st_lab = $wf_curr_st->label;
+    // From Field tile alter.
+    $form['to_sid']['#options'][$curr_state] = 'Please Select';
+    $form['to_sid']['#title'] = 'Change status to';
+    $form['comment']['#title'] = 'Additional comments';
+    $form['actions']['submit']['#value'] = 'Update application status';
+    if (!empty($wf_curr_st_lab)) {
+      $form['field_current_status'] = [
+        '#type' => 'item',
+        '#title' => t('Current status'),
+        '#prefix' => '<div class="example-wrapper">',
+        '#suffix' => '</div>',
+        '#markup' => t("<br>" . $wf_curr_st_lab),
+        '#weight' => '0',
+      ];
+      $form['field_current_comment'] = [
+        '#type' => 'item',
+        '#title' => t('Status description'),
+        '#markup' => t("<br>" . $cur_wf_nid),
+        '#weight' => '0',
+      ];
+    }
+  }
+  if ($form['#form_id'] == 'search_api_page_block_form') {
+    $form['#prefix'] = "<div style = 'display:none'>";
+    $form['#suffix'] = "</div>";
+  }
+  $current_path = \Drupal::service('path.current')->getPath();
+  if ((strpos($form_id, 'transition-field-status-form')) && ($current_path == '/view-my-application-list' || strpos($current_path, 'view-application-lists'))) {
+    unset($form['comment']);
+    unset($form['to_sid']['#title']);
+  }
+  module_load_include('inc', 'basiccart');
+  $application_id = basiccart_get_cart();
+  if ((isset($application_id['cart']) && is_array($application_id['cart']) && ($form['#form_id'] == 'profile_student_application__edit_form' || $form['#form_id'] == 'profile_student_application__add_form'))) {
+    $cartform = new CartForm();
+    // Custom Submit.
+    $form['actions']['submit']['#submit'][] = "application_save_submit";
+    $cart = $application_id;
+    $cart_cart = $cart['cart'];
+    $cart_data = [];
+    $i = 0;
+    if (is_array($cart_cart) && count($cart_cart) >= 1) {
+      foreach ($cart_cart as $nid => $node) {
+        $langcode = $node->language()->getId();
+        $degree = $node->getTranslation($langcode)->get('field_degree')->getValue()[0]['value'];
+        $depart = $node->getTranslation($langcode)->get('field_departments')->getValue()[0]['target_id'];
+        $specialisation = $node->getTranslation($langcode)->get('field_specialisation')->getValue()[0]['value'];
+        $departs = taxonomy_term_load($depart);
+        $departments = $departs->getTranslation($langcode)->get('name')->getValue()[0]['value'];
+        $in = $node->getTranslation($langcode)->get('field_institute')->getValue()[0]['target_id'];
+        $ins = taxonomy_term_load($in);
+        $institute = $ins->getTranslation($langcode)->get('name')->getValue()[0]['value'];
+        $title = $node->getTranslation($langcode)->get('title')->getValue();
+        $cart_data[$i] = $title[0]['value'];
+        $no_of_doc = $node->getTranslation($langcode)->get('field_enter_number_of_supporting')->getValue();
+        $no_doc[$i] = $no_of_doc[0]['value'];
+        $doc_name = $node->getTranslation($langcode)->get('field_e')->getValue();
+        $name_doc[$i] = $doc_name[0]['value'];
+        $pgm_apply[] = [$institute, $departments, $degree, $specialisation];
+        $data .= '<li><div class="programs"><h4 class="programs-apply">Program : </h4>' . $cart_data[$i] . ', <h4 class="programs-apply">Degree : </h4>'
+         . $degree . ',<h4 class="programs-apply">Departments : </h4>'
+         . $departments . ',<h4 class="programs-apply">Institute : </h4>'
+         . $institute . "</br></div></li>";
+        $i++;
+      }
+    }
+    $j = 0;
+    $count = 0;
+    $m = 0;
+    for ($k = 0; $k < count($no_doc); $k++) {
+      $name[$j] = explode(',', $name_doc[$k]);
+      $count = $count + $no_doc[$k];
+      $j++;
+    }
+    if (is_array($name)) {
+      foreach ($name as $key => $value) {
+        foreach ($value as $key1 => $val) {
+          if (!empty($val)) {
+            $push[] = $val;
+          }
+        }
+      }
+    }
+    $document = (array_values(array_unique($push)));
+    for ($i = 0; $i < count($document); $i++) {
+      $sup_doc[$document[$i]] = $document[$i];
+    }
+    $cardinality = count($document);
+    if (!empty($data)) {
+      $form['custom_form'] = [
+        '#type' => 'markup',
+        '#markup' => '<ul>' . $data . '</ul>',
+        '#$pgm_apply' => $pgm_apply,
+        '#prefix' => '<b>List of programs Applied</b>',
+        '#weight' => -2,
+      ];
+    }
+    $form['custom_title'] = [
+      '#weight' => -1,
+      '#prefix' => '<h3 class="applicant"><b>Applicant Details</b></h3>',
+    ];
+    if ($count != 0) {
+      $form['document_checkbox'] = [
+        '#type' => 'checkboxes',
+        '#title' => 'programme supporting specific documents:',
+        '#weight' => 31,
+        '#options' => $sup_doc,
+        '#suffix' => '<h5><b>please select the files which you uploaded the following above</h5></b><br>',
+      ];
+      $form['field_supporting_d']['#suffix'] = '<h5><b>Note : Please upload minimum ' . $cardinality . ' files</b></h5>';
+    }
+    else {
+      $form['field_supporting_d']['#type'] = 'hidden';
+    }
+    $form['actions']['submit']['#value'] = "Apply";
+    $form['#validate'][] = 'form_validate_data1';
+    $form['field_supporting_d']['#no_doc'] = $cardinality;
+    $form['actions']['submit']['#submit'][] = 'custom_form_submit';
+    unset($form['actions']['set_default']);
+  }
+  $session = \Drupal::service('user.private_tempstore')->get('hello_world');
+  $application_id = $session->get('application_id');
+  if (isset($application_id) && isset($programme_id) && ($form['#form_id'] == 'profile_student_application_edit_form')) {
+    $form['actions']['submit']['#submit'][] = "application_save_submit";
+  }
+  if ($form['#form_id'] == 'node_application_edit_form') {
+    $sup_doc_val = explode(',', $form['field_documents_uploaded']['widget'][0]['value']['#default_value']);
+    foreach ($sup_doc_val as $key => $val) {
+      if ($val == NULL) {
+        unset($sup_doc_val[$key]);
+      }
+    }
+    for ($i = 0; $i < count($sup_doc_val); $i++) {
+      $sup_doc[$i] = explode(':', $sup_doc_val[$i]);
+    }
+    for ($i = 0; $i < count($sup_doc); $i++) {
+      for ($j = 0; $j < count($sup_doc[$i]); $j++) {
+        $sup_documents[$sup_doc[$i][$j]] = $sup_doc[$i][$j];
+      }
+    }
+    $langcode = 'en';
+    $program_data = Node::load($form['field_programme']['widget']['#default_value'][0]);
+    $supname = $program_data->getTranslation($langcode)->get('field_e')->getValue()[0]['value'];
+    $val = explode(',', $supname);
+    if (!empty($supname)) {
+      for ($i = 0; $i < count($val); $i++) {
+        $data[$val[$i]] = $val[$i];
+      }
+      $form['supporting_document'] = [
+        '#type' => 'checkboxes',
+        '#title' => 'Programme Suppůrting Specific Documents',
+        '#options' => $data,
+        '#weight' => 30,
+        '#value' => array_intersect($sup_documents, $data),
+        '#disabled' => TRUE,
+      ];
+    }
+    foreach ($form['field_programme']['widget']['#options'] as $key => $value) {
+      foreach ($form['field_programme']['widget']['#default_value'] as $keys => $values) {
+        if ($key == $values) {
+          $node = Node::load($key);
+          $degree .= $node->getTranslation('en')->get('field_degree')->getValue()[0]['value'];
+          $depart = $node->getTranslation('en')->get('field_departments')->getValue()[0]['target_id'];
+          $departs = taxonomy_term_load($depart);
+          $departments = $departs->getTranslation('en')->get('name')->getValue()[0]['value'];
+          $term = $node->field_institute;
+          $tax = $term->target_id;
+          $ins = taxonomy_term_load($tax);
+          $institute .= $ins->getTranslation('en')->get('name')->getValue()[0]['value'];
+          $program .= $value;
+        }
+      }
+    }
+    $form['field_programme'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="programs"><h4 class="programs-apply">Programs Applied For : </h4>' . $program . '</div>',
+      '#prefix' => '<div class="application-details">',
+    ];
+    $form['field_institute'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="programs"><h4 class="programs-apply">Institute : </h4>' . $institute . '</div>',
+    ];
+    $form['field_degree'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="programs"><h4 class="programs-apply">Degree : </h4>' . $degree . '</div>',
+    ];
+    $form['field_departments'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="programs"><h4 class="programs-apply">Department : </h4>' . $departments . '</div>',
+      '#suffix' => '</div>',
+    ];
+  }
+  global $base_url;
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($form_id == 'profile_student_application__form' && $current_path = '/node/' . $node . '/edit_application') {
+    $form['actions']['submit']['#submit'][] = 'form_submit';
+  }
+  if ($form_id == 'basiccart_cart_form') {
+    $form['buttons']['update']['#value'] = t('Apply');
+    $form['#submit'][] = 'iitnap_basiccart_alter_submit';
+    $form['actions']['submit']['#submit'][] = 'form_submit';
+  }
+  if ($form['#form_id'] == 'user_register_form' || $form['#form_id'] == 'user_form') {
+    $form['pass_condition'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="password_chk"><h4 class="programs-apply">Password has following Requirement(s):</h4><br>
+        &#8226;  Password must contain at least one Digit.<br>
+        &#8226;  Password must contain at least one Uppercase character.<br>
+        &#8226;  Password must contain at least one Lowercase character.<br>
+        &#8226;  Password must contain at least one Special character.<br>
+        &#8226;  Password must be at least 6 characters in length.<br><br><br>',
+      '#suffix' => '</div>',
+    ];
+    $form['#validate'][] = 'form_validate_data2';
+  }
+}
+
+/**
+ * Implements form_validation() for registration.
+ */
+function form_validate_data2($form, &$form_state) {
+  /*
+  $email = filter_var($form['account']['mail']['#value'],
+  FILTER_VALIDATE_EMAIL);
+  if(!($email)){
+  $form_state->setError($form['account']['mail'],"Invalid Email Format");
+  }
+  if (preg_match('/[^a-z-0-9_-]/i', $form['account']['name']['#value'])) {
+  $form_state->setError($form['account']['name'],
+  "Please use - or _ character to split username");
+  }
+  $password = $form['account']['pass']['#value']['pass1'];
+  $uppercase = preg_match('@[A-Z]@', $password);
+  $lowercase = preg_match('@[a-z]@', $password);
+  $number    = preg_match('@[0-9]@', $password);
+  $special   = preg_match('@[\W]+@', $password);
+  if(!$uppercase || !$lowercase || !$number || strlen($password) < 6
+  || !$special) {
+  $form_state->setError($form['account']['pass']['pass1'],
+  "Password Should Match with below Requirement(s)");
+  $form_state->setError($form['account']['pass']['pass2'],
+  "Password Should Match with below Requirement(s)");
+  }
+   */
+}
+
+/**
+ * Implements form_validation() for application.
+ */
+function form_validate_data1($form, &$form_state) {
+  if ($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') {
+    if ($form['document_checkbox']['#value'] != $form['document_checkbox']['#options']) {
+      $form_state->setError($form['document_checkbox'], "Please select all files");
+    }
+    if ($form['field_supporting_d']['#type'] != 'hidden') {
+      if ($form['field_supporting_d']['widget']['#file_upload_delta'] < $form['field_supporting_d']['#no_doc']) {
+        $form_state->setError($form['field_supporting_d'], "Please upload all files");
+      }
+    }
+    // First Name.
+    $field_first_name = $form['field_first_name']['widget'][0]['value']['#value'];
+    if (!empty($field_first_name)) {
+      if (!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_first_name)) {
+        $form_state->setError($form['field_first_name']['widget'][0]['value'], "Special Characters & Numeric are Not Allowed in first name.");
+      }
+    }
+    // Sure Name.
+    $field_surname = $form['field_surname']['widget'][0]['value']['#value'];
+    if (!empty($field_surname)) {
+      if (!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $field_surname)) {
+        $form_state->setError($form['field_surname']['widget'][0]['value'], "Special Characters & Numeric are Not Allowed in surname.");
+      }
+    }
+    // Date of Birth.
+    if (!empty($form['field_date_of_birth']['widget'][0]['value']['#value']['date'])) {
+      $Date_of_birth = date(strtotime($form['field_date_of_birth']['widget'][0]['value']['#value']['date']));
+      $cur_date = date('Y-m-d', strtotime("-18 year"));
+      $restrict_date = date(strtotime($cur_date));
+      if (!($Date_of_birth < $restrict_date)) {
+        $form_state->setError($form['field_date_of_birth']['widget'][0]['value'], "DOB should be above 18 years.");
+      }
+    }
+    // Mobile No.
+    $field_mobile_num_com = $form['field_mobile_num_com']['widget'][0]['value']['#value'];
+    if (!empty($field_mobile_num_com)) {
+      if (!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/", $field_mobile_num_com)) {
+        $form_state->setError($form['field_mobile_num_com']['widget'][0]['value'], "Please Enter Valid Mobile Number.");
+      }
+    }
+    // Telephone no.
+    /* $field_telephone_num_com =
+    $form['field_telephone_num_com']['widget'][0]['value']['#value'];
+    if(!empty($field_telephone_num_com)){
+    if(!preg_match("/^\+?(\d[.\- ]*){9,14}(e?xt?\d{1,5})?$/",
+    $field_telephone_num_com)){
+    $form_state->setError($form['field_telephone_num_com']['widget'][0]['value'],
+    "Please Enter Valid Phone Number.");
+    }
+    } */
+    // City.
+    $city = $form['field_city']['widget'][0]['value']['#value'];
+    if (!empty($city)) {
+      if (!preg_match("/^[\pL\pM\p{Zs}.-]+$/u", $city)) {
+        $form_state->setError($form['field_city']['widget'][0]['value'], "Please Enter Valid City Name.");
+      }
+    }
+
+    // School city.
+    $city_school = $form['field_city_school']['widget'][0]['value']['#value'];
+    if (!empty($city_school)) {
+      if (!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/", $city_school)) {
+        $form_state->setError($form['field_city_school']['widget'][0]['value'], "Please Enter Valid City Name.");
+      }
+    }
+    // State.
+    $state = $form['field_state']['widget'][0]['value']['#value'];
+    if (!empty($state)) {
+      if (!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/", $state)) {
+        $form_state->setError($form['field_state']['widget'][0]['value'], "Please Enter Valid State Name. ");
+      }
+    }
+    // State School.
+    $state_school = $form['field_state_school']['widget'][0]['value']['#value'];
+    if (!empty($state_school)) {
+      if (!preg_match("/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/", $state_school)) {
+        $form_state->setError($form['field_state_school']['widget'][0]['value'], "Please Enter Valid State Name.");
+      }
+    }
+    // Pincode.
+    $pincode = $form['field_pin']['widget'][0]['value']['#value'];
+    if (!empty($pincode)) {
+      if (!preg_match("/^[a-zA-Z0-9]+/", $pincode)) {
+        $form_state->setError($form['field_pin']['widget'][0]['value'], "Please Enter Valid Pincode.");
+      }
+    }
+    // Pincode School.
+    $pincode_school = $form['field_pincode_school']['widget'][0]['value']['#value'];
+    if (!empty($pincode_school)) {
+      if (!preg_match("/^[a-zA-Z0-9]+/", $pincode_school)) {
+        $form_state->setError($form['field_pincode_school']['widget'][0]['value'], "Please Enter Valid  Pincode.");
+      }
+    }
+    // Name of the Qualifying Examination.
+    $Qulify_exam = $form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'];
+    if (!empty($form['field_name_of_the_qualifying_exa']['widget'][0]['value']['#value'])) {
+      if (!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/", $Qulify_exam)) {
+        $form_state->setError($form['field_name_of_the_qualifying_exa']['widget'][0]['value'], "Please Enter Name of the Qualifying Examination.");
+      }
+    }
+
+    // Name of the Board/University and Country.
+    $board_uni = $form['field_name_of_the_board_universi']['widget'][0]['value']['#value'];
+    if (!empty($form['field_name_of_the_board_universi']['widget'][0]['value']['#value'])) {
+      if (!preg_match("/^[\pL\pM\p{Zs}.-]+$/u", $board_uni)) {
+        $form_state->setError($form['field_name_of_the_board_universi']['widget'][0]['value'], "Please Enter Name of the Board/University and Country.");
+      }
+
+      // School/Institution Last Studied.
+      $school = $form['field_school']['widget'][0]['value']['#value'];
+      if (!empty($form['field_school']['widget'][0]['value']['#value'])) {
+        if (!preg_match("/^[A-Za-z]+((\s)?((\'|\-|\.|\&)?([A-Za-z])+))*$/", $school)) {
+          $form_state->setError($form['field_school']['widget'][0]['value'], "Please Enter School/Institution Last Studied.");
+        }
+      }
+      // Country.
+      $country1 = $form['field_country']['widget']['#value'];
+      if (empty($country1)) {
+        $form_state->setError($form['field_country']['widget']['#value'], "Please select the Country");
+      }
+      // Gender.
+      $gender = $form['field_gender']['widget']['#value'];
+      if (empty($gender)) {
+        $form_state->setError($form['field_gender']['widget']['#value'], "Please select the Gender");
+      }
+      // Medium of Instruction.
+      $medium_ins = $form['field_medium_of_instruction_']['widget'][0]['value']['#value'];
+      if (!empty($form['field_medium_of_instruction_']['widget'][0]['value']['#value'])) {
+        if (!preg_match("/^[A-Za-z]+((\s)?([A-Za-z])+)*$/", $medium_ins)) {
+          $form_state->setError($form['field_medium_of_instruction_']['widget'][0]['value'], "Please Enter Medium of Instruction.");
+        }
+      }
+    }
+    /* if(empty($form['field_general_documents']['widget']['#file_upload_delta'])){
+    $form_state->setError($form['field_general_documents'],
+    "Please upload general document");
+    } */
+
+    // Performance in Competitive Examination (such as GRE, GMAT)
+    $comp_per = $form['field_performance_in_competitive']['widget'][0]['#value']['tablefield']['table'];
+    foreach ($comp_per as $cp_clm_key => $cp_clm_value) {
+      foreach ($cp_clm_value as $cp_row_key => $cp_row_value) {
+        if (empty($cp_row_value)) {
+          $form_state->setError($form['field_performance_in_competitive']['widget'][0]['tablefield']['table'][$cp_clm_key][$cp_row_key], "Please Fill Performance in Competitive Examination.");
+        }
+      }
+    }
+
+    // Proficiency in English (TOEFL / IELTS)
+    $eng_prof = $form['field_proficiency_in_english']['widget'][0]['#value']['tablefield']['table'];
+    foreach ($eng_prof as $cp_clm_key => $cp_clm_value) {
+      foreach ($cp_clm_value as $cp_row_key => $cp_row_value) {
+        if (empty($cp_row_value)) {
+          $form_state->setError($form['field_proficiency_in_english']['widget'][0]['tablefield']['table'][$cp_clm_key][$cp_row_key], "Please Fill Proficiency in English.");
+        }
+      }
+    }
+
+    // Details of Academic Record (Secondary onwards)
+    $academic_rec = $form['field_details_of_academic_record']['widget'][0]['#value']['tablefield']['table'][1];
+    foreach ($academic_rec as $ac_row_key => $ac_row_value) {
+      if (empty($ac_row_value)) {
+        $form_state->setError($form['field_details_of_academic_record']['widget'][0]['tablefield']['table'][1][$ac_row_key], "Please Fill Details of Academic Record.");
+      }
+    }
+    /*Foreach ($academic_rec as $ac_clm_key => $ac_clm_value){
+    dpm($ac_clm_value);
+    dpm($ac_clm_key);
+    foreach ($ac_clm_value as $ac_row_key => $ac_row_value){
+    if(empty($ac_row_value)){
+    $form_state->setError($form['field_details_of_academic_record']
+    ['widget'][0]['tablefield']['table'][$ac_clm_key][$ac_row_key],
+    "Please Fill Details of Academic Record.");
+    }
+    }
+    }*/
+    // Research/ Professional Experience, Papers published etc.
+    // (upload a separate pdf for details, if required)
+    $research_exp = $form['field_research_professional_expe']['widget'][0]['#value']['tablefield']['table'][1];
+    foreach ($research_exp as $res_row_key => $res_row_value) {
+      if (empty($res_row_value)) {
+        $form_state->setError($form['field_research_professional_expe']['widget'][0]['tablefield']['table'][1][$res_row_key], " Please Fill Research/ Professional Experience, Papers published etc.");
+      }
+    }
+    // Employment Details.
+    $emp_det = $form['field_employment_details']['widget'][0]['#value']['tablefield']['table'][1];
+    foreach ($emp_det as $emp_row_key => $emp_row_value) {
+      if (empty($emp_row_value)) {
+        $form_state->setError($form['field_employment_details']['widget'][0]['tablefield']['table'][1][$emp_row_key], " Please Fill Employment Details.");
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_alter_submit().
  */
-
-function iitnap_basiccart_alter_submit(array &$form, FormStateInterface $form_state) {   
-       $user = \Drupal::currentUser();
-       if ($user ->isAuthenticated()) {
-	      $url = new Url('entity.profile.type.student_application_.user_profile_form',array("user"=>$user->id(),"profile_type" => "student_application_"));    
-	      $form_state->setRedirectUrl($url);
-       }else {
-	      $url = URL::fromUserInput('/user/login/?destination=get-profile');
-	      $form_state->setRedirectUrl($url);
-       }
+function iitnap_basiccart_alter_submit(array &$form, FormStateInterface $form_state) {
+  $user = \Drupal::currentUser();
+  if ($user->isAuthenticated()) {
+    $url = new Url('entity.profile.type.student_application_.user_profile_form', ["user" => $user->id(), "profile_type" => "student_application_"]);
+    $form_state->setRedirectUrl($url);
+  }
+  else {
+    $url = URL::fromUserInput('/user/login/?destination=get-profile');
+    $form_state->setRedirectUrl($url);
+  }
 }
 
+/**
+ * Implements form_submit().
+ */
 function form_submit(array &$form, FormStateInterface $form_state) {
-       if($_SERVER['HTTP_X_REQUESTED_WITH']!='XMLHttpRequest'){
-	      $node = \Drupal::routeMatch()->getParameter('node');
-	      $url = URL::fromUserInput('/node/'.$node);
-	      $form_state->setRedirectUrl($url);
-       }
+  if ($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    $url = URL::fromUserInput('/node/' . $node);
+    $form_state->setRedirectUrl($url);
+  }
 }
 
-function application_save_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
-           $user = \Drupal::currentUser()->id();
-            module_load_include('inc', 'basiccart');
-	      $application_id = basiccart_get_cart();
-	      $applicationArray = $application_id['cart'];
-              foreach ($applicationArray as $key => $value) {
-	       $iit[] =$key;
-              }
-		     if(empty($iit)){
-			  $url = URL::fromUserInput('/user/'.$user);
-			  $form_state->setRedirectUrl($url);
-		     }else{
-		    
-			  $form_state->setRedirect('paypal.confirm');
-		     }       
-	      return;     
- }
-/*
- * hook_page_attachments
+/**
+ * Implements application_save_submit().
+ */
+function application_save_submit(&$form, FormStateInterface $form_state) {
+  $user = \Drupal::currentUser()->id();
+  module_load_include('inc', 'basiccart');
+  $application_id = basiccart_get_cart();
+  $applicationArray = $application_id['cart'];
+  foreach ($applicationArray as $key => $value) {
+    $iit[] = $key;
+  }
+  if (empty($iit)) {
+    $url = URL::fromUserInput('/user/' . $user);
+    $form_state->setRedirectUrl($url);
+  }
+  else {
+    $form_state->setRedirect('paypal.confirm');
+  }
+  /* return; */
+}
+
+/**
+ * Implements hook_page_attachments().
  */
 function iitinap_page_attachments(array &$attachments) {
-    $attachments['#attached']['library'][] = 'iitinap/iitinap';
+  $attachments['#attached']['library'][] = 'iitinap/iitinap';
 }
+
 /**
  * Implements field_views_data_views_data_alter().
  */
-function iitinap_field_views_data_views_data_alter(array &$data, \Drupal\field\FieldStorageConfigInterface $field){
-  
+function iitinap_field_views_data_views_data_alter(array &$data, FieldStorageConfigInterface $field) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_view() for node entities.
+ * Implements hook_ENTITY_TYPE_view() for iitinap_node_view().
  */
 function iitinap_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
-       $user = \Drupal::currentUser()->getRoles();
-       if($user[1] == 'office'){
-	      unset($build['add_to_cart']);
-       }
-      
+  $user = \Drupal::currentUser()->getRoles();
+  if ($user[1] == 'office') {
+    unset($build['add_to_cart']);
+  }
 }
 
-/*
- * Implement hook_menu_local_tasks_alter().
+/**
+ * Implements hook_menu_local_tasks_alter().
  */
 function iitinap_menu_local_tasks_alter(&$data, $route_name) {
   $data['tabs'][0]['entity.profile.user_profile_form:profile.type.student_application_']['#link']['title'] = "Application Details";
@@ -701,90 +685,91 @@ function iitinap_menu_local_tasks_alter(&$data, $route_name) {
  * Implements hook_local_tasks_alter() for node entities.
  */
 function iitinap_local_tasks_alter(&$local_tasks) {
-       unset($local_tasks['entity.comment.delete_form_tab']);
-       unset($local_tasks['devel.entities:block.devel_tab']);
-       // Change 'Results' route to display the results 'Table'.
-       $local_tasks['entity.webform.results']['route_name'] = 'entity.webform.results_table';
-       // Move the 'Table' sub task to be first.
-       $local_tasks['entity.webform.results_table']['weight'] = -100;
-       // OPTIONAL: Remove the 'Submissions' task.
-       unset($local_tasks['entity.webform.results_submissions']);
-       // Apply the same changes the Webform node local tasks.
-       if (\Drupal::moduleHandler()->moduleExists('webform_node')) {
-	 $local_tasks['entity.node.webform.results']['route_name'] = 'entity.node.webform.results_table';
-	 $local_tasks['entity.node.webform.results_table']['weight'] = -100;
-	 unset($local_tasks['entity.node.webform.results_submissions']);
-       }
+  unset($local_tasks['entity.comment.delete_form_tab']);
+  unset($local_tasks['devel.entities:block.devel_tab']);
+  // Change 'Results' route to display the results 'Table'.
+  $local_tasks['entity.webform.results']['route_name'] = 'entity.webform.results_table';
+  // Move the 'Table' sub task to be first.
+  $local_tasks['entity.webform.results_table']['weight'] = -100;
+  // OPTIONAL: Remove the 'Submissions' task.
+  unset($local_tasks['entity.webform.results_submissions']);
+  // Apply the same changes the Webform node local tasks.
+  if (\Drupal::moduleHandler()->moduleExists('webform_node')) {
+    $local_tasks['entity.node.webform.results']['route_name'] = 'entity.node.webform.results_table';
+    $local_tasks['entity.node.webform.results_table']['weight'] = -100;
+    unset($local_tasks['entity.node.webform.results_submissions']);
+  }
 }
 
-/*
- * hook_form_views_exposed_form_alter for search page plcaeholder.
+/**
+ * Implements hook_form_views_exposed_form_alter() for search page plcaeholder.
  */
-function iitinap_form_views_exposed_form_alter(array &$form, FormStateInterface $form_state, $form_id) {    
-       switch ($form['#id']) {
-	  case 'views-exposed-form-solr-s-page-1':
-	    //Setting placeholder
-		 $form['aggregated_field']['#attributes']['placeholder'] = t('Search Programs, Departments, Institutes');
-       }
+function iitinap_form_views_exposed_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  switch ($form['#id']) {
+    case 'views-exposed-form-solr-s-page-1':
+      // Setting placeholder.
+      $form['aggregated_field']['#attributes']['placeholder'] = t('Search Programs, Departments, Institutes');
+  }
 }
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
 function iitinap_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-    // Alter login form and add own custom submit handler
-    $form['#submit'][] = '_iitinap_user_login_form_submit';
-    $form['social_login']=array(
-          '#type' => 'markup',
-		  '#markup' => '<div class="social_login">
-		  <a class="fb-button" href="/user/simple-fb-connect">Continue with Facebook</a>
-		  <a class="gle-buttton" href="/user/login/google">Continue with Google</a></div>',
-		  '#weight' => -10,
-    	);
+  // Alter login form and add own custom submit handler.
+  $form['#submit'][] = '_iitinap_user_login_form_submit';
+  $form['social_login'] = [
+    '#type' => 'markup',
+    '#markup' => '<div class="social_login">
+	<a class="fb-button" href="/user/simple-fb-connect">Continue with Facebook</a>
+	<a class="gle-buttton" href="/user/login/google">Continue with Google</a></div>',
+    '#weight' => -10,
+  ];
 }
 
 /**
  * Custom submit handler for login form.
  */
 function _iitinap_user_login_form_submit($form, FormStateInterface $form_state) {
-   
-      
-	      $user = \Drupal::currentUser()->getRoles();
-		     if($user[1] == 'office'){
-			    $account = \Drupal::currentUser()->id();
-			    $query = \Drupal::entityQuery('profile')
-				   ->condition('status', 1)
-				   ->condition('uid', $account );
-			    $nids = $query->execute();
-			    $nid_key=array_keys($nids);
-			    $profile = Profile::load($nid_key[0]);
-			    $ins_id = $profile->get('field_institute')->getValue()[0][target_id];
-			    $url = URL::fromUserInput('/view-application-lists/'.$ins_id);
-			    $form_state->setRedirectUrl($url);
-		     }else if($user[1] == 'student'){
-			 $url = URL::fromUserInput('/user/'.$account);
-		         $form_state->setRedirectUrl($url);
-		     } else{
-			    
-			    }
-		     return;
-  
+  $user = \Drupal::currentUser()->getRoles();
+  if ($user[1] == 'office') {
+    $account = \Drupal::currentUser()->id();
+    $query = \Drupal::entityQuery('profile')
+      ->condition('status', 1)
+      ->condition('uid', $account);
+    $nids = $query->execute();
+    $nid_key = array_keys($nids);
+    $profile = Profile::load($nid_key[0]);
+    $ins_id = $profile->get('field_institute')->getValue()[0][target_id];
+    $url = URL::fromUserInput('/view-application-lists/' . $ins_id);
+    $form_state->setRedirectUrl($url);
+  }
+  elseif ($user[1] == 'student') {
+    $url = URL::fromUserInput('/user/' . $account);
+    $form_state->setRedirectUrl($url);
+  }
+  else {
+  }
+  /* return; */
 }
 
+/**
+ * Implements iitinap_user_insert().
+ */
 function iitinap_user_insert($account) {
 
   $config = \Drupal::config('system.site');
-  $site_name= $config->get('name');
+  $site_name = $config->get('name');
   $mailManager = \Drupal::service('plugin.manager.mail');
   $module = 'iitinap';
   $key = 'create_user';
   $to = $account->getEmail();
-  $params['message'] = 'Hi '.$account->getUsername().',<br> Thanks for registering '.$site_name.' You can use Further login in the site using below Credentials.<br><p></p><table cellpadding = "3" cellspacing = "3" ><tr><td>Username</td><td>:<b>'.$account->getUsername().'</b></td></tr><tr><td>Password</td><td>:Your Password</td></tr></table><br> Regards,<br>'.$site_name;
+  $params['message'] = 'Hi ' . $account->getUsername() . ',<br> Thanks for registering ' . $site_name . ' You can use Further login in the site using below Credentials.<br><p></p><table cellpadding = "3" cellspacing = "3" ><tr><td>Username</td><td>:<b>' . $account->getUsername() . '</b></td></tr><tr><td>Password</td><td>:Your Password</td></tr></table><br> Regards,<br>' . $site_name;
   $langcode = $account->getPreferredLangcode();
-  $send = true;
+  $send = TRUE;
 
   $result = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
-  if ($result['result'] !== true) {
+  if ($result['result'] !== TRUE) {
     drupal_set_message(t('There was a problem sending your message and it was not sent.'), 'error');
   }
   else {
@@ -793,21 +778,21 @@ function iitinap_user_insert($account) {
 
 }
 
-
 /*function iitinap_mail_alter(&$message) {
-     if($message[id] == 'user_register_no_approval_required'){
-       $message['send'] = FALSE;
-       return; 
-     }
-    
+if($message[id] == 'user_register_no_approval_required'){
+$message['send'] = FALSE;
+return;
+}
 }*/
 
-
-function iitinap_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
-       /*
-    if($entity->getEntityTypeId() == 'user'){
-       $user_name = str_replace(" ","_",$entity->getUsername());
-       $entity->setUsername($user_name);
-    }
-    */
+/**
+ * Implements iitinap_entity_presave().
+ */
+function iitinap_entity_presave(EntityInterface $entity) {
+  /*
+  if($entity->getEntityTypeId() == 'user'){
+  $user_name = str_replace(" ","_",$entity->getUsername());
+  $entity->setUsername($user_name);
+  }
+   */
 }

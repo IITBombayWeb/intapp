@@ -2,10 +2,11 @@
 
 /**
  * @file
+ * Paypal inc.
  */
 
 /**
- *
+ * Implements pdt_token().
  */
 function pdt_token($tx) {
   $paypal_url = \Drupal::config('paypal.settings_file')->get('hostname');
@@ -23,8 +24,8 @@ function pdt_token($tx) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-  // Set cacert.pem verisign certificate path in curl using 'CURLOPT_CAINFO' field here,
-  // if your server does not bundled with default verisign certificates.
+  /* Set cacert.pem verisign certificate path in curl using 'CURLOPT_CAINFO'
+  field here,if your server does not bundled with default verisign certificates. */
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
   curl_setopt($ch, CURLOPT_HTTPHEADER, ["Host: $pp_hostname"]);
   $res = curl_exec($ch);

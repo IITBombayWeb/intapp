@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\faq\Form\ExpertsForm.
- */
-
 namespace Drupal\excel_import_export\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
@@ -33,57 +28,57 @@ class ExportConfigureForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    
-    $excel_export_settings =  \Drupal::config('excel_import_export.settings');
-    
-    $form['export'] = array(
+
+    $excel_export_settings = \Drupal::config('excel_import_export.settings');
+
+    $form['export'] = [
       '#type' => 'details',
       '#title' => $this->t('Export configuration:'),
       '#open' => TRUE,
-    );
-     
-    $form['export']['enable_zip'] = array(
+    ];
+
+    $form['export']['enable_zip'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable Document export'),
       '#description' => $this->t('Enable to export supporting documents file to zip.'),
       '#default_value' => $excel_export_settings->get('enable_zip'),
-    );
-    
-    $form['export']['export_file_location'] = array(
+    ];
+
+    $form['export']['export_file_location'] = [
       '#type' => 'textfield',
       '#title' => $this->t('XLS file Path'),
       '#description' => $this->t('Specify valid server path to hold zip exports. please ends with "/". Example: public://export/'),
       '#default_value' => $excel_export_settings->get('export_file_location'),
-    );
-    
-    $form['export']['export_zip_locaton'] = array(
+    ];
+
+    $form['export']['export_zip_locaton'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Zip file Path'),
       '#description' => $this->t('Specify valid server path to hold zip exports. please ends with "/". Example: public://export/'),
       '#default_value' => $excel_export_settings->get('export_zip_locaton'),
-    );
-    
-    $form['submit'] = array(
+    ];
+
+    $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Save'),
-    );
+      '#value' => $this->t('Save'),
+    ];
     return $form;
   }
-  
+
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Remove unnecessary values.
     $form_state->cleanValues();
-    
+
     $this->configFactory()->getEditable('excel_import_export.settings')
       ->set('enable_zip', $form_state->getValue('enable_zip'))
       ->set('export_zip_locaton', $form_state->getValue('export_zip_locaton'))
       ->set('export_file_location', $form_state->getValue('export_file_location'))
       ->save();
-      
+
     parent::submitForm($form, $form_state);
   }
-  
+
 }

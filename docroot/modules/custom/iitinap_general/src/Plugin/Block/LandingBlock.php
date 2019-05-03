@@ -5,7 +5,7 @@ namespace Drupal\iitinap_general\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 
 /**
- * Provides a 'Homelanding' Block
+ * Provides a 'Homelanding' Block.
  *
  * @Block(
  *   id = "landing_block",
@@ -13,15 +13,16 @@ use Drupal\Core\Block\BlockBase;
  * )
  */
 class LandingBlock extends BlockBase {
+
   /**
    * {@inheritdoc}
    */
   public function build() {
     $landingConfig = \Drupal::config('iitinap_general.settings');
     $body_content = $landingConfig->get('instruction');
-    return array(
+    return [
       '#markup' => $body_content,
-    );
+    ];
   }
+
 }
-?>

@@ -1,20 +1,21 @@
 <?php
+
 /**
  * @file
  * Bootstrap sub-theme.
  *
  * Place your custom PHP code in this file.
  */
-use Drupal\Core\Template\Attribute;
+
+use Drupal\basiccart\Utility;
+
 /**
- * Implements hook_form_alter() to add classes to the search form.
+ * Implements hook_form_alter() for the search form.
  */
- 
- 
 function capit_preprocess_html(&$variables) {
-  // To add body tag class to homepage
+  // To add body tag class to homepage.
   $current_uri = \Drupal::request()->getRequestUri();
-  if($current_uri == "/homepage" || $current_uri == "/"){
+  if ($current_uri == "/homepage" || $current_uri == "/") {
     $variables['attributes']['class'][] = 'poral-landing';
   }
   // Add information about the number of sidebars.
@@ -32,27 +33,36 @@ function capit_preprocess_html(&$variables) {
   else {
     $variables['attributes']['class'][] = 'layout-no-sidebars';
   }
-} 
- 
-function capit_preprocess(&$vars) {
-	$site_config = \Drupal::config('system.site');
-	
-	$vars['site_slogan1'] = $site_config->get('slogan');
-
 }
+
+/**
+ * Implements capit_preprocess().
+ */
+function capit_preprocess(&$vars) {
+  $site_config = \Drupal::config('system.site');
+  $vars['site_slogan1'] = $site_config->get('slogan');
+}
+
+/**
+ * Implements capit_preprocess_block().
+ */
 function capit_preprocess_block(&$vars) {
-	if ($vars['plugin_id'] == 'search_api_page_form_block') {
+  if ($vars['plugin_id'] == 'search_api_page_form_block') {
     $vars['attributes']['class'][] = 'search-div';
   }
 }
-function capit_preprocess_page(&$variables) {
-  $utility = \Drupal\basiccart\Utility::get_cart();
-	$variables['cntcart'] = count($utility['cart']);
-  //Cart
-  $user = \Drupal::currentUser()->getRoles();
-  if(!in_array("office", $user)) {
-    $Role = true;
-    $variables['cart_role'] = $Role;
-  } 
-}
 
+/**
+ * Implements capit_preprocess_page().
+ */
+function capit_preprocess_page(&$variables) {
+  $utility = Utility::get_cart();
+  $variables['cntcart'] = count($utility['cart']);
+  // Cart.
+  $user = \Drupal::currentUser()->getRoles();
+  if (!in_array("office", $user)) {
+    $role = TRUE;
+    $variables['cart_role'] = $role;
+  }
+
+}

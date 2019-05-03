@@ -25,13 +25,14 @@ class AddToCartWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $value = isset($items[$delta]->value) ? $items[$delta]->value : '';
-    $element += array(
+    $element += [
       '#type' => 'hidden',
       '#default_value' => 1,
       '#value' => 1,
       '#size' => 1,
       '#maxlength' => 1,
-    );
-    return array('value' => $element);
+    ];
+    return ['value' => $element];
   }
+
 }
