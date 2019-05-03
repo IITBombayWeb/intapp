@@ -484,7 +484,7 @@ function excel_import_export_batch_import_finish($success, $results, $operations
  * @return string
  *   Return Value.
  */
-function excel_import_export_get_field_value($entityObject, $property, $type = FALSE) {
+function excelImportExport_getFieldValue($entityObject, $property, $type = FALSE) {
   $valueObject = $entityObject->get($property);
   if (is_object($valueObject)) {
     $return = $valueObject->getValue();
@@ -510,7 +510,7 @@ function excel_import_export_get_field_value($entityObject, $property, $type = F
 /**
  * Helper function to node ids.
  */
-function excel_import_export_serialize_nids($nidsArray) {
+function excelImportExport_serialize_nids($nidsArray) {
   $nids = [];
   foreach ($nidsArray as $nid) {
     if ($nid) {
