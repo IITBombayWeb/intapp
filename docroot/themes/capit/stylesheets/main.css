@@ -21,8 +21,7 @@ h3,
 h3,
 h4,
 h5,
-h6,
-{
+h6 {
   margin: 0;
   padding: 0;
 }
@@ -30,7 +29,7 @@ a {
   text-decoration: none;
 }
 ul li {
-  list-style-type: none;
+  /* list-style-type: none; */
 }
 .nopadding {
   margin: 0;
