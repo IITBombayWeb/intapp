@@ -783,7 +783,7 @@ a.basiccart-get-quantity:hover {
 
 	.region-sidebar-second #block-quicklinks,#block-workflowtransitionform{
 		border-bottom: 1.5px solid #fff;
-		padding: 10px 30px 20px;
+		padding: 10px 30px 20px 30px;
 	}
 	.region-sidebar-second #block-workflowtransitionform{
 		border-bottom: 1.5px solid #fff;
@@ -792,7 +792,7 @@ a.basiccart-get-quantity:hover {
 	.region-sidebar-second #block-quicklinks h2{
 			border-bottom: 1.2px solid #ccc;
 		}
-		.region-sidebar-second ul li, #block-homepage2ndblock {
+		.region-sidebar-second ul li, #block-homepage2ndblock ul li{
 			list-style-type: none;
 		}
 		.region-sidebar-second ul li::before {
@@ -917,7 +917,7 @@ a.basiccart-get-quantity:hover {
 		 }
 			
 	#block-help{
-		padding: 10px 30px 40px;
+		padding: 10px 30px 40px 30px;
 		font-size: 1.17em;
 	}
 		
