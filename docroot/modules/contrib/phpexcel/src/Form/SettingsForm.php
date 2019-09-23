@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\phpexcel\Form\SettingsForm.
- */
-
 namespace Drupal\phpexcel\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
@@ -37,16 +32,16 @@ class SettingsForm extends ConfigFormBase {
 
     $form['cache_mechanism'] = array(
       '#type' => 'radios',
-      '#title' => t("Cache mechanism"),
-      '#description' => t("The PHPExcel library uses an average of 1k of memory for <em>each cell</em>. This can quickly use up available memory. This can be reduced, however, by specifiying a caching method. This will cache each cell, reducing memory usage. Note, however, that all caching methods are slower than the default <em>Cache in memory</em> method."),
+      '#title' => $this->t("Cache mechanism"),
+      '#description' => $this->t("The PHPExcel library uses an average of 1k of memory for <em>each cell</em>. This can quickly use up available memory. This can be reduced, however, by specifiying a caching method. This will cache each cell, reducing memory usage. Note, however, that all caching methods are slower than the default <em>Cache in memory</em> method."),
       '#options' => array(
-        'cache_in_memory' => t("Cache in memory. Default method. Fastest, but uses a lot of memory"),
-        'cache_in_memory_serialized' => t("Cache in memory, serialized. Fast, uses slightly less memory than the previous option."),
-        'cache_in_memory_gzip' => t("Cache in memory, GZipped. Fast, uses slightly less memory that the previous option."),
-        'cache_to_phpTemp' => t("Cache to php://temp. Slow. Will still cache to memory up to a certain limit (default 1MB) to speed up the process."),
-        'cache_to_apc' => t("Cache to APC. Fast."),
-        'cache_to_memcache' => t("Cache to Memcache. Fast."),
-        'cache_to_sqlite3' => t("Cache to SQLite 3. Slowest, but most memory-efficient."),
+        'cache_in_memory' => $this->t("Cache in memory. Default method. Fastest, but uses a lot of memory"),
+        'cache_in_memory_serialized' => $this->t("Cache in memory, serialized. Fast, uses slightly less memory than the previous option."),
+        'cache_in_memory_gzip' => $this->t("Cache in memory, GZipped. Fast, uses slightly less memory that the previous option."),
+        'cache_to_phpTemp' => $this->t("Cache to php://temp. Slow. Will still cache to memory up to a certain limit (default 1MB) to speed up the process."),
+        'cache_to_apc' => $this->t("Cache to APC. Fast."),
+        'cache_to_memcache' => $this->t("Cache to Memcache. Fast."),
+        'cache_to_sqlite3' => $this->t("Cache to SQLite 3. Slowest, but most memory-efficient."),
       ),
       '#default_value' => $config->get('cache_mechanism'),
     );
@@ -54,7 +49,7 @@ class SettingsForm extends ConfigFormBase {
     // PHPTemp settings.
     $form['phptemp'] = array(
       '#type' => 'fieldset',
-      '#title' => t("PHPTemp options"),
+      '#title' => $this->t("PHPTemp options"),
       '#states' => array(
         'visible' => array(
           ':input[value="cache_to_phpTemp"]' => array('checked' => TRUE),
@@ -62,8 +57,8 @@ class SettingsForm extends ConfigFormBase {
       ),
     );
     $form['phptemp']['phptemp_limit'] = array(
-      '#title' => t("PHPTemp memory cache size"),
-      '#description' => t("The limit before which PHPExcel will still use memory instead of disk for cell caching. Value in MB (only give a numerical value)."),
+      '#title' => $this->t("PHPTemp memory cache size"),
+      '#description' => $this->t("The limit before which PHPExcel will still use memory instead of disk for cell caching. Value in MB (only give a numerical value)."),
       '#type' => 'textfield',
       '#default_value' => $config->get('phptemp_limit'),
     );
@@ -71,7 +66,7 @@ class SettingsForm extends ConfigFormBase {
     // APC settings.
     $form['apc'] = array(
       '#type' => 'fieldset',
-      '#title' => t("APC options"),
+      '#title' => $this->t("APC options"),
       '#states' => array(
         'visible' => array(
           ':input[value="cache_to_apc"]' => array('checked' => TRUE),
@@ -79,8 +74,8 @@ class SettingsForm extends ConfigFormBase {
       ),
     );
     $form['apc']['apc_cachetime'] = array(
-      '#title' => t("APC cache timeout"),
-      '#description' => t("The time the cell data remains valid in APC. Defaults to 600 seconds. Data is automatically cleared from the cache when the script terminates."),
+      '#title' => $this->t("APC cache timeout"),
+      '#description' => $this->t("The time the cell data remains valid in APC. Defaults to 600 seconds. Data is automatically cleared from the cache when the script terminates."),
       '#type' => 'textfield',
       '#default_value' => $config->get('apc_cachetime'),
     );
@@ -88,7 +83,7 @@ class SettingsForm extends ConfigFormBase {
     // Memcache settings.
     $form['memcache'] = array(
       '#type' => 'fieldset',
-      '#title' => t("Memcache options"),
+      '#title' => $this->t("Memcache options"),
       '#states' => array(
         'visible' => array(
           ':input[value="cache_to_memcache"]' => array('checked' => TRUE),
@@ -96,20 +91,20 @@ class SettingsForm extends ConfigFormBase {
       ),
     );
     $form['memcache']['memcache_host'] = array(
-      '#title' => t("Memcache server"),
-      '#description' => t("If you use Memcache, specify it's host here (e.g. 'localhost')."),
+      '#title' => $this->t("Memcache server"),
+      '#description' => $this->t("If you use Memcache, specify it's host here (e.g. 'localhost')."),
       '#type' => 'textfield',
       '#default_value' => $config->get('memcache_host'),
     );
     $form['memcache']['memcache_port'] = array(
-      '#title' => t("Memcache port"),
-      '#description' => t("If you use Memcache, specify it's port here."),
+      '#title' => $this->t("Memcache port"),
+      '#description' => $this->t("If you use Memcache, specify it's port here."),
       '#type' => 'textfield',
       '#default_value' => $config->get('memcache_port'),
     );
     $form['memcache']['memcache_cachetime'] = array(
-      '#title' => t("Memcache cache timeout"),
-      '#description' => t("The time the cell data remains valid in Memcache. Defaults to 600 seconds. Data is automatically cleared from the cache when the script terminates."),
+      '#title' => $this->t("Memcache cache timeout"),
+      '#description' => $this->t("The time the cell data remains valid in Memcache. Defaults to 600 seconds. Data is automatically cleared from the cache when the script terminates."),
       '#type' => 'textfield',
       '#default_value' => $config->get('memcache_cachetime'),
     );
