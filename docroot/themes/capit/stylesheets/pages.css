@@ -792,7 +792,7 @@ a.basiccart-get-quantity:hover {
 	.region-sidebar-second #block-quicklinks h2{
 			border-bottom: 1.2px solid #ccc;
 		}
-		.region-sidebar-second ul li {
+		.region-sidebar-second ul li, #block-homepage2ndblock {
 			list-style-type: none;
 		}
 		.region-sidebar-second ul li::before {
