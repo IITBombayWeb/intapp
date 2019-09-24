@@ -1,0 +1,14 @@
+uuid: 2acec41d-1936-4b76-b8c8-736659859c4a
+langcode: en
+status: true
+dependencies: {  }
+id: editor
+label: Editor
+weight: 6
+is_admin: null
+permissions:
+  - 'access in-place editing'
+  - 'access user contact forms'
+  - 'edit any faq content'
+  - 'edit any page content'
+  - 'use text format restricted_html'
