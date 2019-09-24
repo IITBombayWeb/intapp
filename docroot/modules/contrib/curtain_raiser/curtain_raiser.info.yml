@@ -1,0 +1,12 @@
+name: Curtain Raiser
+type: module
+description: Provides a curatin effect for the site Inauguration.
+# core: 8.x
+# version: 8.x-1.0
+package: Custom
+
+# Information added by Drupal.org packaging script on 2016-11-15
+version: '8.x-1.x-dev'
+core: '8.x'
+project: 'curtain_raiser'
+datestamp: 1479216576
