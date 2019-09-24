@@ -59,9 +59,9 @@
   color: #fff;
 }
 .curtain-raiser-content input {
-  width: 350px !important;
+  width: 100%;
   padding: 10px !important;
-  background-color: rgba(0,0,0,.5) !important;
+  background-color: rgba(236, 235, 234, 0.88) !important;
   border: none !important;
   color: #595959 !important;
   border-radius: 2px !important;
@@ -76,4 +76,7 @@
   width: auto !important;
   background: none !important;
   border: none !important;
+}
+.curtain-raiser-content .btn {
+    margin: 10px !important;
 }
