@@ -13,7 +13,7 @@ entity_type: profile
 bundle: student_application_
 label: 'Details of Academic Record (Secondary onwards)'
 description: ''
-required: false
+required: true
 translatable: false
 default_value:
   -
@@ -22,15 +22,15 @@ default_value:
       rows: '5'
     value:
       -
-        8: ' Exam Passed/ Appeared'
-        0: 'University/ Institute'
-        1: Branch
-        2: Subject
-        3: "Month\_of Passing"
-        4: " Year\_of Passing"
-        5: 'Class/ Division'
-        6: '% of Marks'
-        7: Grade/CPI/CGPA
+        - 'University/ Institute'
+        - Branch
+        - Subject
+        - "Month\_of Passing"
+        - " Year\_of Passing"
+        - 'Class/ Division'
+        - '% of Marks'
+        - Grade/CPI/CGPA
+        - ' Exam Passed/ Appeared'
       -
         - ''
         - ''

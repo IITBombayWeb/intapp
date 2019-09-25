@@ -1,6 +1,6 @@
 ## IMPORTANT NOTE ##
 
-This file contains installation instructions for the 8.x-1.x version of the
+This file contains installation instructions for the 8.x-2.x version of the
 Drupal Memcache module. Configuration differs between 8.x and 7.x versions
 of the module, so be sure to follow the 7.x instructions if you are configuring
 the 7.x-1.x version of this module!
@@ -32,11 +32,14 @@ is important.
     is localhost on port 11211. By default the main settings will be:
       $settings['memcache']['servers'] = ['127.0.0.1:11211' => 'default'];
       $settings['memcache']['bins'] = ['default' => 'default'];
-      $settings['memcache']['key_prefix'] => '';
+      $settings['memcache']['key_prefix'] = '';
  7. Edit settings.php to make memcache the default cache class, for example:
       $settings['cache']['default'] = 'cache.backend.memcache';
+ 8. If you wish to arbitrarily send cache bins to memcache, then you can do the
+    following. E.g. for the cache_render bin:
+      $settings['cache']['bins']['render'] = 'cache.backend.memcache';
 
-## ADVANCED CCONFIGURATION ##
+## ADVANCED CONFIGURATION ##
 
 ### Multiple memcache backends ###
 
@@ -80,37 +83,6 @@ The bin/cluster/server model can be described as follows:
 
 - If a bin can not be found it will map to 'default'.
 
-### Stampede Protection ###
-
-Memcache includes stampede protection for rebuilding expired and invalid cache
-items.  To enable stampede protection, add the following config in settings.php:
-
-$settings['memcache']['stampede_protection'] = TRUE;
-
-To avoid lock stampedes, it is important that you enable the memacache lock
-implementation when enabling stampede protection -- enabling stampede protection
-without enabling the Memache lock implementation can cause worse performance.
-
-Only change the following values if you're sure you know what you're doing,
-which requires reading the memcachie.inc code.
-
-The value passed to lock_acquire, defaults to '15':
-  $conf['memcache_stampede_semaphore'] = 15;
-
-The value passed to lock_wait, defaults to 5:
-  $conf['memcache_stampede_wait_time'] = 5;
-
-The maximum number of calls to lock_wait() due to stampede protection during a
-single request, defaults to 3:
-  $conf['memcache_stampede_wait_limit'] = 3;
-
-When adjusting these variables, be aware that:
- - there is unlikely to be a good use case for setting wait_time higher
-   than stampede_semaphore;
- - wait_time * wait_limit is designed to default to a number less than
-   standard web server timeouts (i.e. 15 seconds vs. apache's default of
-   30 seconds).
-
 ### Prefixing ###
 
 If you want to have multiple Drupal installations share memcached instances,
@@ -119,7 +91,7 @@ config in settings.php:
 
   $settings['memcache']['key_prefix'] = 'something_unique';
 
-### Key Hash Algorithm
+### Key Hash Algorithm ###
 
 Note: if the length of your prefix + key + bin combine to be more than 250
 characters, they will be automatically hashed. Memcache only supports key
@@ -155,7 +127,124 @@ the default in this case but could be set using:
 
 ## LOCKS ##
 
-Locks have not yet been implemented using the memcache module.
+Memcache locks can be enabled through the services.yml file.
+
+services:
+  # Replaces the default lock backend with a memcache implementation.
+  lock:
+    class: Drupal\Core\Lock\LockBackendInterface
+    factory: memcache.lock.factory:get
+
+## Cache Container on bootstrap (with cache tags on database) ##
+By default Drupal starts the cache_container on the database, in order to override that you can use the following code on your settings.php file. Make sure that the $class_load->addPsr4 is poiting to the right location of memcache (on this case modules/contrib/memcache/src)
+
+In this mode, the database is still bootstrapped so that cache tag invalidation can be handled. If you want to avoid database bootstrap, see the container definition in the next section instead.
+
+$memcache_exists = class_exists('Memcache', FALSE);
+$memcached_exists = class_exists('Memcached', FALSE);
+if ($memcache_exists || $memcached_exists) {
+  $class_loader->addPsr4('Drupal\\memcache\\', 'modules/contrib/memcache/src');
+
+  // Define custom bootstrap container definition to use Memcache for cache.container.
+  $settings['bootstrap_container_definition'] = [
+    'parameters' => [],
+    'services' => [
+      'database' => [
+        'class' => 'Drupal\Core\Database\Connection',
+        'factory' => 'Drupal\Core\Database\Database::getConnection',
+        'arguments' => ['default'],
+      ],
+      'settings' => [
+        'class' => 'Drupal\Core\Site\Settings',
+        'factory' => 'Drupal\Core\Site\Settings::getInstance',
+      ],
+      'memcache.settings' => [
+        'class' => 'Drupal\memcache\MemcacheSettings',
+        'arguments' => ['@settings'],
+      ],
+      'memcache.factory' => [
+        'class' => 'Drupal\memcache\Driver\MemcacheDriverFactory',
+        'arguments' => ['@memcache.settings'],
+      ],
+      'memcache.timestamp.invalidator.bin' => [
+        'class' => 'Drupal\memcache\Invalidator\MemcacheTimestampInvalidator',
+        # Adjust tolerance factor as appropriate when not running memcache on localhost.
+        'arguments' => ['@memcache.factory', 'memcache_bin_timestamps', 0.001],
+      ],
+      'memcache.backend.cache.container' => [
+        'class' => 'Drupal\memcache\DrupalMemcacheInterface',
+        'factory' => ['@memcache.factory', 'get'],
+        'arguments' => ['container'],
+      ],
+      'cache_tags_provider.container' => [
+        'class' => 'Drupal\Core\Cache\DatabaseCacheTagsChecksum',
+        'arguments' => ['@database'],
+      ],
+      'cache.container' => [
+        'class' => 'Drupal\memcache\MemcacheBackend',
+        'arguments' => ['container', '@memcache.backend.cache.container', '@cache_tags_provider.container', '@memcache.timestamp.invalidator.bin'],
+      ],
+    ],
+  ];
+}
+
+## Cache Container on bootstrap (pure memcache) ##
+By default Drupal starts the cache_container on the database, in order to override that you can use the following code on your settings.php file. Make sure that the $class_load->addPsr4 is poiting to the right location of memcache (on this case modules/contrib/memcache/src)
+
+For this mode to work correctly, you must be using the overridden cache_tags.invalidator.checksum service.
+See example.services.yml for the corresponding configuration.
+
+$memcache_exists = class_exists('Memcache', FALSE);
+$memcached_exists = class_exists('Memcached', FALSE);
+if ($memcache_exists || $memcached_exists) {
+  $class_loader->addPsr4('Drupal\\memcache\\', 'modules/contrib/memcache/src');
+
+  // Define custom bootstrap container definition to use Memcache for cache.container.
+  $settings['bootstrap_container_definition'] = [
+    'parameters' => [],
+    'services' => [
+      # Dependencies.
+      'settings' => [
+        'class' => 'Drupal\Core\Site\Settings',
+        'factory' => 'Drupal\Core\Site\Settings::getInstance',
+      ],
+      'memcache.settings' => [
+        'class' => 'Drupal\memcache\MemcacheSettings',
+        'arguments' => ['@settings'],
+      ],
+      'memcache.factory' => [
+        'class' => 'Drupal\memcache\Driver\MemcacheDriverFactory',
+        'arguments' => ['@memcache.settings'],
+      ],
+      'memcache.timestamp.invalidator.bin' => [
+        'class' => 'Drupal\memcache\Invalidator\MemcacheTimestampInvalidator',
+        # Adjust tolerance factor as appropriate when not running memcache on localhost.
+        'arguments' => ['@memcache.factory', 'memcache_bin_timestamps', 0.001],
+      ],
+      'memcache.timestamp.invalidator.tag' => [
+        'class' => 'Drupal\memcache\Invalidator\MemcacheTimestampInvalidator',
+        # Remember to update your main service definition in sync with this!
+        # Adjust tolerance factor as appropriate when not running memcache on localhost.
+        'arguments' => ['@memcache.factory', 'memcache_tag_timestamps', 0.001],
+      ],
+      'memcache.backend.cache.container' => [
+        'class' => 'Drupal\memcache\DrupalMemcacheInterface',
+        'factory' => ['@memcache.factory', 'get'],
+        # Actual cache bin to use for the container cache.
+        'arguments' => ['container'],
+      ],
+      # Define a custom cache tags invalidator for the bootstrap container.
+      'cache_tags_provider.container' => [
+        'class' => 'Drupal\memcache\Cache\TimestampCacheTagsChecksum',
+        'arguments' => ['@memcache.timestamp.invalidator.tag'],
+      ],
+      'cache.container' => [
+        'class' => 'Drupal\memcache\MemcacheBackend',
+        'arguments' => ['container', '@memcache.backend.cache.container', '@cache_tags_provider.container', '@memcache.timestamp.invalidator.bin'],
+      ],
+    ],
+  ];
+}
 
 ## TROUBLESHOOTING ##
 
@@ -188,21 +277,21 @@ the memcached extension, this new extension doesn't read in options that way.
 Instead, it takes options directly from Drupal. Because of this, you must
 configure memcached in settings.php. Please look here for possible options:
 
-http://us2.php.net/manual/en/memcached.constants.php
+https://secure.php.net/manual/en/memcached.constants.php
 
 An example configuration block is below, this block also illustrates our
 default options (selected through performance testing). These options will be
 set unless overridden in settings.php.
 
   $settings['memcache']['options'] = [
-    Memcached::OPT_COMPRESSION => FALSE,
+    Memcached::OPT_COMPRESSION => TRUE,
     Memcached::OPT_DISTRIBUTION => Memcached::DISTRIBUTION_CONSISTENT,
   ];
 
 These are as follows:
 
- * Turn off compression, as this takes more CPU cycles than it's worth for most
-   users
+ * Turn on compression, as this allows more data to be stored and in turn
+   should result in less evictions.
  * Turn on consistent distribution, which allows you to add/remove servers
    easily
 
@@ -213,10 +302,35 @@ Other options you could experiment with:
       with this feature enabled. It should only be enabled on extremely high
       traffic networks where memcache network traffic is a bottleneck.
       Additional reading about the binary protocol:
-        http://code.google.com/p/memcached/wiki/MemcacheBinaryProtocol
+        https://raw.githubusercontent.com/memcached/old-wiki/master/MemcacheBinaryProtocol.wiki
+        Note: The information on the link above will eventually be ported to
+        the new wiki under https://github.com/memcached/memcached/wiki.
 
  + Memcached::OPT_TCP_NODELAY => TRUE,
     * This enables the no-delay feature for connecting sockets; it's been
       reported that this can speed up the Binary protocol (see above). This
       tells the TCP stack to send packets immediately and without waiting for
       a full payload, reducing per-packet network latency (disabling "Nagling").
+
+It's possible to enable SASL authentication as documented here:
+  http://php.net/manual/en/memcached.setsaslauthdata.php
+  https://code.google.com/p/memcached/wiki/SASLHowto
+
+SASL authentication requires a memcached server with SASL support (version 1.4.3
+or greater built with --enable-sasl and started with the -S flag) and the PECL
+memcached client version 2.0.0 or greater also built with SASL support. Once
+these requirements are satisfied you can then enable SASL support in the Drupal
+memcache module by enabling the binary protocol and setting
+memcache_sasl_username and memcache_sasl_password in settings.php. For example:
+
+$settings['memcache']['sasl'] = [
+  'username' => 'user',
+  'password' => 'password',
+];
+
+// When using SASL, Memcached extension needs to be used
+// because Memcache extension doesn't support it.
+$settings['memcache']['extension'] = 'Memcached';
+$settings['memcache']['options'] = [
+  \Memcached::OPT_BINARY_PROTOCOL => TRUE,
+];

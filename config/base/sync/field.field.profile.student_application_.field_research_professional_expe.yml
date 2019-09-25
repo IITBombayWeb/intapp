@@ -13,7 +13,7 @@ entity_type: profile
 bundle: student_application_
 label: 'Research/ Professional Experience, Papers published etc. (upload a separate pdf for details, if required)'
 description: ''
-required: false
+required: true
 translatable: false
 default_value:
   -
@@ -57,7 +57,6 @@ settings:
   export: 0
   restrict_rebuild: 1
   restrict_import: 1
-  restrict_addrow: 1
   lock_values: 1
   cell_processing: '0'
   empty_rules:

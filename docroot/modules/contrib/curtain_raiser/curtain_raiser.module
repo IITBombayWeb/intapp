@@ -22,15 +22,16 @@ function curtain_raiser_page_top(array &$page_top) {
 
     $module_path = drupal_get_path('module', 'curtain_raiser');
     $page_top['form'] = $form;
-    $page_top['form']['#prefix'] = '
-      <div class="curtain-raiser">
-        <div id="effect">
-          <img src="/' . $module_path . '/images/curtain.jpg" id="curtain1">
-          <img src="/' . $module_path . '/images/curtain.jpg" id="curtain2">
-          <div class="curtain-raiser-content">
+    $page_top['form']['#prefix'] = "
+      <div class='curtain-raiser'>
+        <div id='effect'>
+          <img src='/modules/contrib/curtain_raiser/images/curtain.jpg' id='curtain1'>
+          <img src='/modules/contrib/curtain_raiser/images/curtain.jpg' id='curtain2'>
+          <div class='curtain-raiser-content'>
             <div>
-              <h1>COMING SOON</h1>
-            ';
+            <h3>Inauguration by Honourable Human Resource Development
+Minister <br><i>Mr. Ramesh Pokhriyal 'Nishank'</i> <br>on 27th Sept 2019</h3>
+            ";
       $page_top['form']['#suffix'] = '</div>
         </div>
       </div>
