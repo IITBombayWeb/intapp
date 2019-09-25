@@ -616,6 +616,9 @@ a.basiccart-get-quantity:hover {
 .field--name-add-to-cart .addtocart-link-class {
 	float: none !important;
 }
+.field--name-add-to-cart .ajax-addtocart-wrapper {
+	float: right;
+}
 .path-node .region-content {
 	position: relative;
 }

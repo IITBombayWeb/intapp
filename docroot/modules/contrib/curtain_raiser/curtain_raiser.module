@@ -25,8 +25,8 @@ function curtain_raiser_page_top(array &$page_top) {
     $page_top['form']['#prefix'] = "
       <div class='curtain-raiser'>
         <div id='effect'>
-          <img src='http://localhost/intapp/docroot/modules/contrib/curtain_raiser/images/curtain.jpg' id='curtain1'>
-          <img src='http://localhost/intapp/docroot/modules/contrib/curtain_raiser/images/curtain.jpg' id='curtain2'>
+          <img src='/modules/contrib/curtain_raiser/images/curtain.jpg' id='curtain1'>
+          <img src='/modules/contrib/curtain_raiser/images/curtain.jpg' id='curtain2'>
           <div class='curtain-raiser-content'>
             <div>
             <h3>Inauguration by Honourable Human Resource Development
