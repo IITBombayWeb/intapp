@@ -1,13 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\memcache\MemcacheLockBackend.
- */
-
-namespace Drupal\memcache;
+namespace Drupal\memcache\Lock;
 
 use Drupal\Core\Lock\LockBackendAbstract;
+use Drupal\memcache\DrupalMemcacheInterface;
 
 /**
  * Defines a Memcache lock backend.
@@ -19,14 +15,14 @@ class MemcacheLockBackend extends LockBackendAbstract {
    *
    * @var array
    */
-  protected $locks = array();
+  protected $locks = [];
 
   /**
    * The bin name for this lock.
    *
    * @var string
    */
-  protected $bin = 'semaphore';
+  protected $bin;
 
   /**
    * The memcache wrapper object.
@@ -37,12 +33,19 @@ class MemcacheLockBackend extends LockBackendAbstract {
 
   /**
    * Constructs a new MemcacheLockBackend.
+   *
+   * @param string $bin
+   *   The bin name for this lock.
+   * @param \Drupal\memcache\DrupalMemcacheInterface $memcache
+   *   The memcache wrapper object.
    */
-  public function __construct(DrupalMemcacheFactory $memcache_factory) {
-    $this->memcache = $memcache_factory->get($this->bin);
+  public function __construct($bin, DrupalMemcacheInterface $memcache) {
+    $this->bin = $bin;
+    $this->memcache = $memcache;
+
     // __destruct() is causing problems with garbage collections, register a
     // shutdown function instead.
-    drupal_register_shutdown_function(array($this, 'releaseAll'));
+    drupal_register_shutdown_function([$this, 'releaseAll']);
   }
 
   /**
@@ -52,19 +55,34 @@ class MemcacheLockBackend extends LockBackendAbstract {
     // Ensure that the timeout is at least 1 sec. This is a limitation imposed
     // by memcached.
     $timeout = (int) max($timeout, 1);
+
     $lock_id = $this->getLockId();
 
-    if ($this->memcache->set($name, $lock_id, $timeout)) {
-      $this->locks[$name] = $lock_id;
-    }
-    elseif (($result = $this->memcache->get($name)) && isset($this->locks[$name]) && ($this->locks[$name] == $lock_id)) {
-      // Only renew the lock if we already set it and it has not expired.
-      $this->memcache->set($name, $lock_id, $timeout);
+    if (isset($this->locks[$name])) {
+      // Try to extend the expiration of a lock we already acquired.
+      $success = !$this->lockMayBeAvailable($name) && $this->memcache->set($name, $lock_id, $timeout);
+
+      if (!$success) {
+        // The lock was broken.
+        unset($this->locks[$name]);
+      }
+
+      return $success;
     }
     else {
-      // Failed to acquire the lock. Unset the key from the $locks array even if
-      // not set.
-      unset($this->locks[$name]);
+      if ($this->lockMayBeAvailable($name)) {
+        $success = $this->memcache->add($name, $lock_id, $timeout);
+
+        if (!$success) {
+          return FALSE;
+        }
+
+        // We track all acquired locks in the global variable, if successful.
+        $this->locks[$name] = TRUE;
+      }
+      else {
+        return FALSE;
+      }
     }
 
     return isset($this->locks[$name]);
@@ -90,12 +108,19 @@ class MemcacheLockBackend extends LockBackendAbstract {
    * {@inheritdoc}
    */
   public function releaseAll($lock_id = NULL) {
+    if (empty($lock_id)) {
+      $lock_id = $this->getLockId();
+    }
+
     foreach ($this->locks as $name => $id) {
       $value = $this->memcache->get($name);
-      if ($value == $id) {
+
+      if ($value == $lock_id) {
         $this->memcache->delete($name);
       }
     }
+
+    $this->locks = [];
   }
 
 }

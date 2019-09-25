@@ -179,13 +179,13 @@ h2{
   padding: 0;
   list-style: none;
 }
-.cm-blk ul li a {
+.cm-blk ul li a, .block-views-blockmost-popular-programmes-block-1 a {
   text-decoration: none;
   font-family: 'Ek Mukta', sans-serif;
   font-size: 17px;
   color: #333;
 }
-.cm-blk ul li a:hover {
+.cm-blk ul li a:hover, .block-views-blockmost-popular-programmes-block-1 a:hover {
 	color: #1e7ab7;
 }
 /*--- search form---*/
@@ -601,6 +601,7 @@ h2{
 a.basiccart-get-quantity:hover {
 		background-color: #1e7ab7;
 		color: #fff;
+		text-decoration: none;
 }
 .addtocart-wrapper-container a.sent-pckt:hover {
 		background-color: #ccc;
@@ -608,6 +609,12 @@ a.basiccart-get-quantity:hover {
 }
 .send-to-pckt .addtocart-link-class {
 	margin: 0;
+}
+.field--name-add-to-cart {
+	float: right;
+}
+.field--name-add-to-cart .addtocart-link-class {
+	float: none !important;
 }
 .path-node .region-content {
 	position: relative;

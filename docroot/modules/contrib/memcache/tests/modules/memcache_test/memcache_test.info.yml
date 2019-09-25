@@ -1,8 +1,10 @@
-name: Memcache
-description: 'High performance integration with memcache.'
+name: 'Memcache test'
 type: module
-package: 'Performance and scalability'
+description: 'Support module for memcache testing.'
+package: Testing
 # core: 8.x
+dependencies:
+  - memcache
 
 # Information added by Drupal.org packaging script on 2018-10-26
 version: '8.x-2.0'

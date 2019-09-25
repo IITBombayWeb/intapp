@@ -1,18 +1,13 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\memcache\DrupalMemcacheConfig.
- */
-
 namespace Drupal\memcache;
 
 use Drupal\Core\Site\Settings;
 
 /**
- * Class for holding Memcache related config
+ * Class for holding Memcache related config.
  */
-class DrupalMemcacheConfig {
+class MemcacheSettings {
 
   /**
    * Array with the settings.
@@ -60,4 +55,5 @@ class DrupalMemcacheConfig {
   public function getAll() {
     return $this->settings;
   }
+
 }
