@@ -245,6 +245,11 @@ class Tablefield extends FormElement {
           'class' => array('tablefield-rebuild'),
         ),
         '#submit' => array(array(get_called_class(), 'submitCallbackRebuild')),
+        '#limit_validation_errors' => [
+          array_merge($parents, ['tablefield', 'rebuild', 'cols']),
+          array_merge($parents, ['tablefield', 'rebuild', 'rows']),
+          array_merge($parents, ['tablefield', 'rebuild', 'rebuild']),
+        ],
         '#ajax' => array(
           'callback' => 'Drupal\tablefield\Element\Tablefield::ajaxCallbackRebuild',
           'progress' => array('type' => 'throbber', 'message' => NULL),
@@ -275,6 +280,10 @@ class Tablefield extends FormElement {
           'class' => array('tablefield-rebuild'),
         ),
         '#submit' => array(array(get_called_class(), 'submitCallbackRebuild')),
+        '#limit_validation_errors' => [
+          array_merge($parents, ['tablefield', 'import', 'csv']),
+          array_merge($parents, ['tablefield', 'import', 'import']),
+        ],
         '#ajax' => array(
           'callback' => 'Drupal\tablefield\Element\Tablefield::ajaxCallbackRebuild',
           'progress' => array('type' => 'throbber', 'message' => NULL),
