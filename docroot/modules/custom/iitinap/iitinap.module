@@ -586,19 +586,19 @@ function form_validate_data1($form, &$form_state) {
     }*/
     // Research/ Professional Experience, Papers published etc.
     // (upload a separate pdf for details, if required)
-    $research_exp = $form['field_research_professional_expe']['widget'][0]['#value']['tablefield']['table'][1];
-    foreach ($research_exp as $res_row_key => $res_row_value) {
-      if (empty($res_row_value)) {
-        $form_state->setError($form['field_research_professional_expe']['widget'][0]['tablefield']['table'][1][$res_row_key], " Please Fill Research/ Professional Experience, Papers published etc.");
-      }
-    }
+    //$research_exp = $form['field_research_professional_expe']['widget'][0]['#value']['tablefield']['table'][1];
+    //foreach ($research_exp as $res_row_key => $res_row_value) {
+      //if (empty($res_row_value)) {
+        //$form_state->setError($form['field_research_professional_expe']['widget'][0]['tablefield']['table'][1][$res_row_key], " Please Fill Research/ Professional Experience, Papers published etc.");
+      //}
+    //}
     // Employment Details.
-    $emp_det = $form['field_employment_details']['widget'][0]['#value']['tablefield']['table'][1];
-    foreach ($emp_det as $emp_row_key => $emp_row_value) {
-      if (empty($emp_row_value)) {
-        $form_state->setError($form['field_employment_details']['widget'][0]['tablefield']['table'][1][$emp_row_key], " Please Fill Employment Details.");
-      }
-    }
+    //$emp_det = $form['field_employment_details']['widget'][0]['#value']['tablefield']['table'][1];
+    //foreach ($emp_det as $emp_row_key => $emp_row_value) {
+      //if (empty($emp_row_value)) {
+        //$form_state->setError($form['field_employment_details']['widget'][0]['tablefield']['table'][1][$emp_row_key], " Please Fill Employment Details.");
+      //}
+    //}
   }
 }
 
