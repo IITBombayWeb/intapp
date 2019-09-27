@@ -47,7 +47,7 @@ class Tablefield extends FormElement {
    * Processes a checkboxes form element.
    */
   public static function processTablefield(&$element, FormStateInterface $form_state, &$complete_form) {
-   
+    $parents = $element['#parents'];
     $value = is_array($element['#value']) ? $element['#value'] : array();
     // string to uniquely identify DOM elements
     $id = implode('-', $element['#parents']);
