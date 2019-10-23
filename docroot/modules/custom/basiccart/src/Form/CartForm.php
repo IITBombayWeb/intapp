@@ -25,6 +25,7 @@ class CartForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Getting the shopping cart.
+    $connection = \Drupal::database();
     $utility = new Utility();
     $cart = $utility::get_cart();
     $config = $utility::cart_settings();
@@ -54,6 +55,20 @@ class CartForm extends FormBase {
         "#prefix" => $this->get_quantity_prefix_suffix($nid, $langcode),
         '#default_value' => $quantity,
       ];
+      if ($user->id()) {
+        if($nid) {
+          $number_of_rows = $connection->select('basiccart_cart','c');
+          $number_of_rows->condition('c.uid', $user->id());
+          $number_of_rows->condition('c.id', $nid);
+          $rows_count = $number_of_rows->countQuery()->execute()->fetchField();
+          if(!$rows_count) {
+            $entity_type = $cart['cart'][$nid]->getEntityTypeId();
+            $query = $connection->insert('basiccart_cart')->fields(['uid' => $user->id(), 'id' => $nid, 'entitytype' => $entity_type, 'quantity' => $quantity])->execute();
+          } else {
+            $update_quantity = $connection->update('basiccart_cart')->fields(['quantity' => $quantity])->condition('uid', $user->id())->condition('id', $nid)->execute();
+          }
+        }
+      }
     }
 
     // Total price.

@@ -55,6 +55,18 @@ class CartController extends ControllerBase {
   public function remove_from_cart($nid) {
     \Drupal::service('page_cache_kill_switch')->trigger();
     $cart = Utility::remove_from_cart($nid);
+    $user = \Drupal::currentUser();
+    if ($user->id()) {
+      $connection = \Drupal::database();
+      $number_of_rows = $connection->select('basiccart_cart','c');
+      $number_of_rows->condition('c.uid', $user->id());
+      $number_of_rows->condition('c.id', $nid);
+      $rows_count = $number_of_rows->countQuery()->execute()->fetchField();
+      if($rows_count) {
+        $delete_course = $connection->delete('basiccart_cart')->condition('uid', $user->id())->condition('id', $nid)->execute();
+      }
+      //$rows_count = $number_of_rows->countQuery()->execute()->fetchField();
+    }
     return new RedirectResponse(Url::fromUri($_SERVER['HTTP_REFERER'])->toString());
   }
 

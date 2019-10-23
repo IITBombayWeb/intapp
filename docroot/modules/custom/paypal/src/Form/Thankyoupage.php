@@ -492,6 +492,14 @@ class Thankyoupage extends FormBase {
                 $det_send = " Details send to Department.";
               }
             }
+            // delete the programme id from basiccart_cart table. For tracking, in user login we are storing the programme id from cart in custom table basiccart_cart. In payment gateway if the paypal status is completed we are deleting this course programme ids from custom table basiccart_cart
+            $number_of_rows = \Drupal::database()->select('basiccart_cart','c');
+            $number_of_rows->condition('c.uid', $user_id);
+            $number_of_rows->condition('c.id', $programme_id);
+            $rows_count = $number_of_rows->countQuery()->execute()->fetchField();
+            if($rows_count) {
+              $delete_course = \Drupal::database()->delete('basiccart_cart')->condition('uid', $user_id)->condition('id', $programme_id)->execute();
+            }
           }
           basiccart_empty_cart();
           $notify_msg = "Thank you!  Your transaction is successful and applied to " . count($applicationArray) . " programmes. Please note your Application Packet Number : " . $order_id . " for future reference";
