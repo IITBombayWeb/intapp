@@ -709,6 +709,7 @@ function iitinap_form_views_exposed_form_alter(array &$form, FormStateInterface 
     case 'views-exposed-form-solr-s-page-1':
       // Setting placeholder.
       $form['aggregated_field']['#attributes']['placeholder'] = t('Search Programs, Departments, Institutes');
+      $form['aggregated_field']['#title_display'] = 'invisible';
   }
 }
 
