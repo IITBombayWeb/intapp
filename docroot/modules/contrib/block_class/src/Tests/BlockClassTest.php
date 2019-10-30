@@ -54,7 +54,7 @@ class BlockClassTest extends WebTestBase {
     // Assert the custom class in the content block.
     $this->assertRaw('<div id="block-mainpagecontent" class="TestClass_content block block-system block-system-main-block">');
     // Assert the custom class in user menu.
-    $this->assertRaw('<nav role="navigation" aria-labelledby="block-useraccountmenu-menu" id="block-useraccountmenu" class="TestClass_menu block block-menu navigation menu--account">');
+    $this->assertRaw('<nav role="navigation" aria-labelledby="block-useraccountmenu" id="block-useraccountmenu" class="TestClass_menu block block-menu navigation menu--account">');
   }
 
 }
