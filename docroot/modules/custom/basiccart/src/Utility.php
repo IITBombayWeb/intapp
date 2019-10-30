@@ -59,6 +59,29 @@ class Utility {
     if (isset($nid)) {
       return ["cart" => $_SESSION['basiccart']['cart'][$nid], "cart_quantity" => $_SESSION['basiccart']['cart_quantity'][$nid]];
     }
+    // Courses added by user & didn't go to payment gateway (or) logout from site
+    $user = \Drupal::currentUser();
+    if ($user->id()) {
+      $connection = \Drupal::database();
+      $number_of_rows = $connection->select('basiccart_cart','c');
+      $number_of_rows->condition('c.uid', $user->id());
+      //$number_of_rows->condition('c.id', $nid);
+      $rows_count = $number_of_rows->countQuery()->execute()->fetchField();
+      if($rows_count) {
+        $users_pending_packet_query = $connection->select('basiccart_cart','c')->fields('c', ['uid','id','entitytype','quantity']);
+        $users_pending_packet_query->condition('c.uid', $user->id());
+        $result = $users_pending_packet_query->execute()->fetchAll();
+        foreach($result as $entity_data) {
+          $entity = \Drupal::entityTypeManager()->getStorage($entity_data->entitytype)->load($entity_data->id);
+          $_SESSION['basiccart']['cart'][$entity_data->id] = $entity;
+          if(in_array($entity_data->id, array_keys($_SESSION['basiccart']['cart'])) && (isset($_SESSION['basiccart']['cart_quantity'][$entity_data->id]) && $_SESSION['basiccart']['cart_quantity'][$entity_data->id])) {
+            $_SESSION['basiccart']['cart_quantity'][$entity_data->id] = $_SESSION['basiccart']['cart_quantity'][$entity_data->id];
+          } else {
+            $_SESSION['basiccart']['cart_quantity'][$entity_data->id] = $entity_data->quantity;
+          }
+        }
+      }
+    }
     if (isset($_SESSION['basiccart']['cart'])) {
       return ["cart" => $_SESSION['basiccart']['cart'], "cart_quantity" => $_SESSION['basiccart']['cart_quantity']];
     }
