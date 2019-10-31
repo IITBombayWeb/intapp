@@ -1189,3 +1189,5 @@ and (orientation : portrait) {
     height: 270px;
   }
 }
+
+#block-findapplyaccept a { color: #1F476B; }
