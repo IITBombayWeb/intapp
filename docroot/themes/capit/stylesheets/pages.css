@@ -469,7 +469,7 @@ h2{
     text-align: center;
     cursor: pointer;
     border: 1px solid transparent;
-	background: #1a7dc1;
+	background: #135B8B;
     width: 70px;
 	padding: 6px 0;
 	color: #fff;
@@ -749,7 +749,7 @@ a.basiccart-get-quantity:hover {
 }
 .btn-info, .btn-info:hover, .btn-default:hover, .btn-default:focus {
 	color: #FFF;
-	background-color: #1A7DC1;
+	background-color: #135B8B;
 	border-color: #1A7DC1;
 }
 
@@ -931,7 +931,7 @@ a.basiccart-get-quantity:hover {
 * Table Style
 */
 .mCSB_container table tbody tr td:last-child a{
-	color: #1a7dc1;
+	color: #125887;
     text-decoration: underline;
 }
 
