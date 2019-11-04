@@ -469,7 +469,7 @@ h2{
     text-align: center;
     cursor: pointer;
     border: 1px solid transparent;
-	background: #1a7dc1;
+	background: #135B8B;
     width: 70px;
 	padding: 6px 0;
 	color: #fff;
@@ -744,12 +744,12 @@ a.basiccart-get-quantity:hover {
 	background-image: none;
 	border: 1px solid transparent;
 	border-radius: 0;
-	background: #1a7dc1;
+	background: #135B8B;
 	color: #fff;
 }
 .btn-info, .btn-info:hover, .btn-default:hover, .btn-default:focus {
 	color: #FFF;
-	background-color: #1A7DC1;
+	background-color: #135B8B;
 	border-color: #1A7DC1;
 }
 
@@ -882,10 +882,10 @@ a.basiccart-get-quantity:hover {
 			text-decoration: none;
 		}
 		#block-login .loginBtn--google {
-			background: #DD4B39;
+			background: #A12B1B;
 		}
        #block-login .loginBtn--google {
-           background: #DD4B39;
+           background: #A12B1B;
            padding-right: 28px;
         }
 		#block-login .loginBtn--google:before {
@@ -931,7 +931,7 @@ a.basiccart-get-quantity:hover {
 * Table Style
 */
 .mCSB_container table tbody tr td:last-child a{
-	color: #1a7dc1;
+	color: #125887;
     text-decoration: underline;
 }
 
@@ -1614,3 +1614,5 @@ text-align: center;
 	border-bottom: 1px solid black;
 	padding: 6px 6px 6px 30px;
 }
+
+#block-capit-footer h2 { color:#FCFCFC; }

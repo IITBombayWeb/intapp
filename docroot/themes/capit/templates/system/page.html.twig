@@ -79,23 +79,23 @@
           <div class="mnu-lst">
                   {% if cart_role  %}
                     <div class="msg-pck">
-                      <a><img src="/themes/capit/images/packet-icon.png"><span class="circle" id="cnt">{{cntcart}}</span></a>
+                      <a><img src="/themes/capit/images/packet-icon.png" alt="Packet icon"><span class="circle" id="cnt">{{cntcart}}</span></a>
                     </div>
                   {% endif %}
                   {% if logged_in %}
                       <div class="lgn-lst">
-                        <span class="dsk-lgn">Settings<i class="fa fa-caret-down"></i></span>
-                          <span class="mbl-lgn"><i class="fa fa-user"></i></span>
+                        <span class="dsk-lgn">Settings<em class="fa fa-caret-down"></em></span>
+                          <span class="mbl-lgn"><em class="fa fa-user"></em></span>
                       </div>
                   {% else %}
                       <div class="lgn-lst">
-                        <span class="dsk-lgn">Login<i class="fa fa-caret-down"></i></span>
-                        <span class="mbl-lgn"><i class="fa fa-user"></i></span>
+                        <span class="dsk-lgn">Login<em class="fa fa-caret-down"></em></span>
+                        <span class="mbl-lgn"><em class="fa fa-user"></em></span>
                       </div>
                   {% endif %}
               {{ page.header_second }}
                <div class="menu-icn">
-                    <a><i class="fa fa-bars"></i></a>
+                    <a><em class="fa fa-bars"></em></a>
                 </div>
           </div>
         {% endblock %}

@@ -727,7 +727,7 @@ margin-bottom: 0px;
   right: 22px;
 }
 .region-content .admission-block{
-  background-color: #119a80;
+  background-color: #0A5244;
   color: #fff;
   padding: 25px;
   margin-top: 30px;
@@ -811,7 +811,7 @@ background-size: 25px 25px;
 }
 
 .user-login-form .social_login .gle-buttton{
-  background-color: #DD4B39;
+  background-color: #A12B1B;
   box-sizing: border-box;
   position: relative;
   margin: 0.2em;
@@ -1189,3 +1189,5 @@ and (orientation : portrait) {
     height: 270px;
   }
 }
+
+#block-findapplyaccept a { color: #1F476B; }
