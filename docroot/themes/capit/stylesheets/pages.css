@@ -378,7 +378,7 @@ h2{
 	font-family: 'Roboto Condensed', sans-serif;
 	font-size: 20px;
 	float: none;
-	background: #1A7DC1;
+	background: #1A7BBC;
 	padding: 5px 35px;
 	text-decoration: none;
 	color: #fff;
@@ -573,6 +573,7 @@ h2{
 }
  .addtocart-wrapper-container a.sent-pckt {
 	  background-color: #ccc;
+	  color:#545454;
   }
  a.basiccart-get-quantity {
 	border: 1px solid #aaa;
