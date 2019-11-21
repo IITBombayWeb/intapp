@@ -73,16 +73,16 @@ abstract class AdvancedPluginSelectorBase extends PluginSelectorBase implements 
     $cacheability_metadata->applyTo($form);
 
     $plugin_selector_form_state_key = static::setPluginSelector($form_state, $this);
-    $form['container'] = array(
-      '#attributes' => array(
-        'class' => array('plugin-selector-' . Html::getClass($this->getPluginId())),
-      ),
+    $form['container'] = [
+      '#attributes' => [
+        'class' => ['plugin-selector-' . Html::getClass($this->getPluginId())],
+      ],
       '#available_plugins' => $available_plugins,
       '#plugin_selector_form_state_key' => $plugin_selector_form_state_key,
       '#process' => [[get_class(), 'processBuildSelectorForm']],
       '#tree' => TRUE,
       '#type' => 'container',
-    );
+    ];
 
     return $form;
   }
@@ -210,12 +210,12 @@ abstract class AdvancedPluginSelectorBase extends PluginSelectorBase implements 
    * @return array
    */
   protected function buildPluginForm(FormStateInterface $form_state) {
-    $element = array(
-      '#attributes' => array(
+    $element = [
+      '#attributes' => [
         'class' => [Html::getClass(sprintf('plugin-selector-%s-plugin-form', $this->getPluginId()))],
-      ),
+      ],
       '#type' => 'container',
-    );
+    ];
 
     $selectedPlugin = $this->getSelectedPlugin();
     if ($this->getCollectPluginConfiguration() && $selectedPlugin instanceof PluginFormInterface) {
@@ -229,18 +229,18 @@ abstract class AdvancedPluginSelectorBase extends PluginSelectorBase implements 
    * Builds the form elements for when there are no available plugins.
    */
   public function buildNoAvailablePlugins(array $element, FormStateInterface $form_state) {
-    $element['select']['container'] = array(
+    $element['select']['container'] = [
       '#type' => 'container',
-    );
-    $element['select']['container']['plugin_id'] = array(
+    ];
+    $element['select']['container']['plugin_id'] = [
       '#type' => 'value',
       '#value' => NULL,
-    );
-    $element['select']['message'] = array(
+    ];
+    $element['select']['message'] = [
       '#markup' => $this->t('There are no available options.'),
       '#title' => $this->getLabel(),
       '#type' => 'item',
-    );
+    ];
 
     return $element;
   }
@@ -257,17 +257,17 @@ abstract class AdvancedPluginSelectorBase extends PluginSelectorBase implements 
       $this->setSelectedPlugin($plugin);
     }
 
-    $element['select']['message'] = array(
+    $element['select']['message'] = [
       '#title' => $this->getLabel(),
       '#type' => 'item',
-    );
-    $element['select']['container'] = array(
+    ];
+    $element['select']['container'] = [
       '#type' => 'container',
-    );
-    $element['select']['container']['plugin_id'] = array(
+    ];
+    $element['select']['container']['plugin_id'] = [
       '#type' => 'value',
       '#value' => $this->getSelectedPlugin()->getPluginId(),
-    );
+    ];
     $element['plugin_form'] = $this->buildPluginForm($form_state);
 
     return $element;
@@ -299,15 +299,15 @@ abstract class AdvancedPluginSelectorBase extends PluginSelectorBase implements 
    *   The selector's form elements.
    */
   protected function buildSelector(array $root_element, FormStateInterface $form_state, array $plugins) {
-    $build['container'] = array(
-      '#attributes' => array(
-        'class' => array('plugin-selector-' . Html::getClass($this->getPluginId() . '-selector')),
-      ),
+    $build['container'] = [
+      '#attributes' => [
+        'class' => ['plugin-selector-' . Html::getClass($this->getPluginId() . '-selector')],
+      ],
       '#type' => 'container',
-    );
-    $build['container']['plugin_id'] = array(
+    ];
+    $build['container']['plugin_id'] = [
       '#markup' => 'This element must be overridden to provide the plugin ID.',
-    );
+    ];
     $root_element_parents = $root_element['#parents'];
     // Compute the button's name based on its position in the form, but we
     // cannot use "][" to indicate nesting as we would usually do, because then
@@ -315,19 +315,19 @@ abstract class AdvancedPluginSelectorBase extends PluginSelectorBase implements 
     // button when it is clicked.
     $change_button_name_parts = array_merge($root_element_parents, ['select', 'container', 'change']);
     $change_button_name = implode('__', $change_button_name_parts);
-    $build['container']['change'] = array(
-      '#ajax' => array(
-        'callback' => array(get_class(), 'ajaxRebuildForm'),
-      ),
-      '#attributes' => array(
-        'class' => array('js-hide')
-      ),
-      '#limit_validation_errors' => array(array_merge($root_element['#parents'], array('select', 'plugin_id'))),
+    $build['container']['change'] = [
+      '#ajax' => [
+        'callback' => [get_class(), 'ajaxRebuildForm'],
+      ],
+      '#attributes' => [
+        'class' => ['js-hide']
+      ],
+      '#limit_validation_errors' => [array_merge($root_element['#parents'], ['select', 'plugin_id'])],
       '#name' => $change_button_name,
       '#submit' => array(array(get_class(), 'rebuildForm')),
       '#type' => 'submit',
       '#value' => $this->t('Choose'),
-    );
+    ];
 
     return $build;
   }

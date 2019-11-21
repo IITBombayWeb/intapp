@@ -109,7 +109,6 @@ abstract class WorkflowStateActionBase extends ConfigurableActionBase implements
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form = [];
 
     // If we are on admin/config/system/actions and use CREATE AN ADVANCED ACTION
     // Then $context only contains:
@@ -126,18 +125,18 @@ abstract class WorkflowStateActionBase extends ConfigurableActionBase implements
     $wids = workflow_get_workflow_names();
 
     if (empty($field_name) && count($wids) > 1) {
-      drupal_set_message('You have more then one workflow in the system. Please first select the field name
+      drupal_set_message('You have multiple workflows in the system. Please first select the field name
           and save the form. Then, revisit the form to set the correct state value.', 'warning');
     }
-    if (empty($field_name)) {
-      $wid = count($wids) ? array_keys($wids)[0] : '';
-    }
-    else {
+
+    $wid = count($wids) ? array_keys($wids)[0] : '';
+    if (!empty($field_name)) {
       $fields = _workflow_info_fields($entity = NULL, $entity_type = '', $entity_bundle = '', $field_name);
       $wid = count($fields) ? reset($fields)->getSetting('workflow_type') : '';
     }
 
     // Get the common Workflow, or create a dummy Workflow.
+    /** @var Workflow $workflow */
     $workflow = $wid ? Workflow::load($wid) : Workflow::create(['id' => 'dummy_action', 'label' => 'dummy_action']);
     $current_state = $workflow->getCreationState();
 
@@ -183,7 +182,7 @@ abstract class WorkflowStateActionBase extends ConfigurableActionBase implements
       \Drupal::time()->getRequestTime(),
       $comment = $config['comment'],
       $force = $config['force']
-  );
+    );
 
     // Add the WorkflowTransitionForm to the page. @todo
 

@@ -100,13 +100,13 @@ abstract class PluginSelectorBase extends PluginBase implements PluginSelectorIn
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'description' => NULL,
       'label' => NULL,
       'required' => FALSE,
       'collect_plugin_configuration' => TRUE,
       'keep_previously_selected_plugins' => TRUE,
-    );
+    ];
   }
 
   /**

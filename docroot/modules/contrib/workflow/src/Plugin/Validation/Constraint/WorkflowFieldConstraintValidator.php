@@ -3,10 +3,8 @@
 namespace Drupal\workflow\Plugin\Validation\Constraint;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\UserStorageInterface;
-use Drupal\workflow\Entity\WorkflowTransitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -54,6 +52,7 @@ class WorkflowFieldConstraintValidator extends ConstraintValidator implements Co
    */
   public function validate($entity, Constraint $constraint) {
     // Workflow field name on CommentForm has special requirements.
+    /** @var FieldStorageConfig $field_storage */
     $field_storage = $entity->getFieldDefinition()->getFieldStorageDefinition();
     if ($field_storage->getTargetEntityTypeId() == 'comment') {
       if (!$this->isValidFieldname($field_storage)) {
@@ -76,7 +75,7 @@ class WorkflowFieldConstraintValidator extends ConstraintValidator implements Co
       return TRUE;
     }
 
-    $field_name = $field_storage->get('field_name');
+    $field_name = $field_storage->getName();
 
     // Check if the 'comment' field name exists on the 'commented' entity type.
     // @todo: Still not waterproof. You could have a field on a non-relevant entity_type.

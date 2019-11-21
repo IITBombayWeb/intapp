@@ -26,41 +26,40 @@ class Sitemap extends Plugin {
   /**
    * The human-readable name of the plugin.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $title;
 
   /**
    * A short description of the plugin.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $description;
 
   /**
-   * An integer to determine the weight of this item relative to other items in
-   * the Sitemap display.
+   * Sets the weight of this item relative to other items in the sitemap.
    *
-   * @var int optional
+   * @var int
    */
   public $weight = NULL;
 
   /**
    * Whether this plugin is enabled or disabled by default.
    *
-   * @var bool (optional)
+   * @var bool
    */
   public $enabled = FALSE;
 
   /**
    * The default settings for the plugin.
    *
-   * @var array (optional)
+   * @var array
    */
-  public $settings = array();
+  public $settings = [];
 
 }

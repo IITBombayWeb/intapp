@@ -190,7 +190,7 @@ function _workflow_transition_form_get_action_buttons(array $form, array $workfl
       if (isset($form['#form_id']) && substr($form['#form_id'], 0, 24) == 'workflow_transition_form') {
         // Hide same-state-button on the transition-form (that is:
         // view page or workflow history tab) if there is nothing to do.
-        // However, a Transition may be fieldable.
+        // However, a Transition may be fieldable (have attached fields).
         if ($form['comment']['#access'] == FALSE) {
           $workflow_submit_action['#access'] = FALSE;
         }

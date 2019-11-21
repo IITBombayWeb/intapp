@@ -95,6 +95,7 @@ function workflow_state_formatter($entity, $field_name, $current_sid = '') {
   // If user creates a node, and only 1 option is available, the formatter
   // is shown with key, not value, because creation state does not count.
   // In this case, hide the formatter.
+  /** @var \Drupal\workflow\Entity\WorkflowState $state */
   $state = \Drupal\workflow\Entity\WorkflowState::load($current_sid);
   if ($state->isCreationState()) {
     return $element;
@@ -116,4 +117,19 @@ function workflow_state_formatter($entity, $field_name, $current_sid = '') {
   // $element['#weight'] = 0;
 
   return $element;
+}
+
+/**
+ * This function is a residue for installations that have v8.x-1.0
+ * The setting for options_allowed_values is still in the Field confuguration
+ * Saving the field data again does not remove the settings.
+ * So, we copy code from options_allowed_values().
+ *
+ * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $definition
+ *
+ * @return mixed
+ */
+function workflow_state_allowed_values(\Drupal\Core\Field\FieldStorageDefinitionInterface $definition) {
+  $values = $definition->getSetting('allowed_values');
+  return $values;
 }

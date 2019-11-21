@@ -64,9 +64,7 @@ class Predis extends LockBackendAbstract {
         return FALSE;
       }
 
-      $result = $this->client->pipeline()
-        ->psetex($key, (int) ($timeout * 1000), $id)
-        ->exec();
+      $result = $this->client->psetex($key, (int) ($timeout * 1000), $id);
 
       // If the set failed, someone else wrote the key, we failed to acquire
       // the lock.
@@ -84,8 +82,8 @@ class Predis extends LockBackendAbstract {
       // succeed if the key does not exist yet.
       $result = $this->client->set($key, $id, 'nx', 'px', (int) ($timeout * 1000));
 
-      // If the result is FALSE, we failed to acquire the lock.
-      if (FALSE === $result) {
+      // If the result is FALSE or NULL, we failed to acquire the lock.
+      if (FALSE === $result || NULL === $result) {
         return FALSE;
       }
 
@@ -98,10 +96,7 @@ class Predis extends LockBackendAbstract {
     $key = $this->getKey($name);
     $value = $this->client->get($key);
 
-    // In Drupal 7, this method treated the lock as available if the ID did
-    // match. The database backend and test expects it to return FALSE in that
-    // case, updated accordingly.
-    return FALSE === $value;
+    return $value === FALSE || $value === NULL;
   }
 
   public function release($name) {

@@ -59,68 +59,68 @@ $connection->insert('config')
 
 // Create the table for the "Plugin selector" plugin field's values.
 $connection->schema()->createTable('user__field_plugin_selector', array(
-  'fields' => array(
-    'bundle' => array(
+  'fields' => [
+    'bundle' => [
       'type' => 'varchar_ascii',
       'not null' => TRUE,
       'length' => '128',
       'default' => '',
-    ),
-    'deleted' => array(
+    ],
+    'deleted' => [
       'type' => 'int',
       'not null' => TRUE,
       'size' => 'tiny',
       'default' => '0',
-    ),
-    'entity_id' => array(
+    ],
+    'entity_id' => [
       'type' => 'int',
       'not null' => TRUE,
       'size' => 'normal',
       'unsigned' => TRUE,
-    ),
-    'revision_id' => array(
+    ],
+    'revision_id' => [
       'type' => 'int',
       'not null' => TRUE,
       'size' => 'normal',
       'unsigned' => TRUE,
-    ),
-    'langcode' => array(
+    ],
+    'langcode' => [
       'type' => 'varchar_ascii',
       'not null' => TRUE,
       'length' => '32',
       'default' => '',
-    ),
-    'delta' => array(
+    ],
+    'delta' => [
       'type' => 'int',
       'not null' => TRUE,
       'size' => 'normal',
       'unsigned' => TRUE,
-    ),
-    'field_plugin_selector_plugin_id' => array(
+    ],
+    'field_plugin_selector_plugin_id' => [
       'type' => 'varchar',
       'not null' => FALSE,
       'length' => '255',
-    ),
-    'field_plugin_selector_plugin_configuration' => array(
+    ],
+    'field_plugin_selector_plugin_configuration' => [
       'type' => 'blob',
       'not null' => FALSE,
       'size' => 'normal',
-    ),
-  ),
-  'primary key' => array(
+    ],
+  ],
+  'primary key' => [
     'entity_id',
     'deleted',
     'delta',
     'langcode',
-  ),
-  'indexes' => array(
-    'bundle' => array(
+  ],
+  'indexes' => [
+    'bundle' => [
       'bundle',
-    ),
-    'revision_id' => array(
+    ],
+    'revision_id' => [
       'revision_id',
-    ),
-  ),
+    ],
+  ],
   'mysql_character_set' => 'utf8mb4',
 ));
 
@@ -171,68 +171,68 @@ $connection->insert('config')
   ->execute();
 
 // Create the table for the "Mock plugin" plugin field's values.
-$connection->schema()->createTable('user__field_plugin_test_helper_mock', array(
-  'fields' => array(
-    'bundle' => array(
+$connection->schema()->createTable('user__field_plugin_test_helper_mock', [
+  'fields' => [
+    'bundle' => [
       'type' => 'varchar_ascii',
       'not null' => TRUE,
       'length' => '128',
       'default' => '',
-    ),
-    'deleted' => array(
+    ],
+    'deleted' => [
       'type' => 'int',
       'not null' => TRUE,
       'size' => 'tiny',
       'default' => '0',
-    ),
-    'entity_id' => array(
+    ],
+    'entity_id' => [
       'type' => 'int',
       'not null' => TRUE,
       'size' => 'normal',
       'unsigned' => TRUE,
-    ),
-    'revision_id' => array(
+    ],
+    'revision_id' => [
       'type' => 'int',
       'not null' => TRUE,
       'size' => 'normal',
       'unsigned' => TRUE,
-    ),
-    'langcode' => array(
+    ],
+    'langcode' => [
       'type' => 'varchar_ascii',
       'not null' => TRUE,
       'length' => '32',
       'default' => '',
-    ),
-    'delta' => array(
+    ],
+    'delta' => [
       'type' => 'int',
       'not null' => TRUE,
       'size' => 'normal',
       'unsigned' => TRUE,
-    ),
-    'field_plugin_test_helper_mock_plugin_id' => array(
+    ],
+    'field_plugin_test_helper_mock_plugin_id' => [
       'type' => 'varchar',
       'not null' => FALSE,
       'length' => '255',
-    ),
-    'field_plugin_test_helper_mock_plugin_configuration' => array(
+    ],
+    'field_plugin_test_helper_mock_plugin_configuration' => [
       'type' => 'blob',
       'not null' => FALSE,
       'size' => 'normal',
-    ),
-  ),
-  'primary key' => array(
+    ],
+  ],
+  'primary key' => [
     'entity_id',
     'deleted',
     'delta',
     'langcode',
-  ),
-  'indexes' => array(
-    'bundle' => array(
+  ],
+  'indexes' => [
+    'bundle' => [
       'bundle',
-    ),
-    'revision_id' => array(
+    ],
+    'revision_id' => [
       'revision_id',
-    ),
-  ),
+    ],
+  ],
   'mysql_character_set' => 'utf8mb4',
-));
+]);

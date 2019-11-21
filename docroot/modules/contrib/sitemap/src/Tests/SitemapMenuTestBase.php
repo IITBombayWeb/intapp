@@ -14,7 +14,7 @@ abstract class SitemapMenuTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('sitemap', 'node', 'menu_ui');
+  public static $modules = ['sitemap', 'node', 'menu_ui'];
 
   /**
    * Admin user.
@@ -38,23 +38,23 @@ abstract class SitemapMenuTestBase extends WebTestBase {
 
     // Create an Article node type.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+      $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     }
 
     // Create user then login.
-    $this->adminUser = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser([
       'administer sitemap',
       'access sitemap',
       'administer menu',
       'administer nodes',
       'create article content',
-    ));
+    ]);
     $this->drupalLogin($this->adminUser);
 
     // Create anonymous user for use too.
-    $this->anonUser = $this->drupalCreateUser(array(
+    $this->anonUser = $this->drupalCreateUser([
       'access sitemap',
-    ));
+    ]);
   }
 
 }

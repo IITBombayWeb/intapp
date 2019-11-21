@@ -3,8 +3,8 @@
 namespace Drupal\workflow;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\workflow\Entity\WorkflowTransition;
 
 /**
@@ -55,6 +55,7 @@ class WorkflowTransitionListBuilder extends EntityListBuilder {
     $field_name = workflow_url_get_field_name();
 
     // @todo D8-port: document $limit. Should be used in pager, not in load().
+    // N.B. Using the provided default History view is recommended.
     $this->limit = \Drupal::config('workflow.settings')->get('workflow_states_per_page');
     $limit = $this->limit;
     // Get Transitions with highest timestamp first.
@@ -202,7 +203,7 @@ class WorkflowTransitionListBuilder extends EntityListBuilder {
           'class' => ['footer-class'],
           'data' => [
             [
-              'data' => WORKFLOW_MARK_STATE_IS_DELETED . ' ' . t('State is no longer available.'),
+              'data' => self::WORKFLOW_MARK_STATE_IS_DELETED . ' ' . t('State is no longer available.'),
               'colspan' => count($build['table']['#header']),
             ],
           ],
@@ -210,7 +211,7 @@ class WorkflowTransitionListBuilder extends EntityListBuilder {
       ];
        */
       $build['workflow_footer'] = [
-        '#markup' => WORKFLOW_MARK_STATE_IS_DELETED . ' ' . t('State is no longer available.'),
+        '#markup' => self::WORKFLOW_MARK_STATE_IS_DELETED . ' ' . t('State is no longer available.'),
         '#weight' => 500, // @todo Make this better.
       ];
     }

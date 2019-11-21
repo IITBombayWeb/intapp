@@ -2,94 +2,96 @@
 
 namespace Drupal\social_auth_google\Plugin\Network;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Render\MetadataBubblingUrlGenerator;
+use Drupal\Core\Url;
 use Drupal\social_api\SocialApiException;
-use Drupal\social_auth\Plugin\Network\SocialAuthNetwork;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\social_auth\Plugin\Network\NetworkBase;
+use Drupal\social_auth_google\Settings\GoogleAuthSettings;
+use League\OAuth2\Client\Provider\Google;
 
 /**
- * Defines Social Auth Google Network Plugin.
+ * Defines a Network Plugin for Social Auth Google.
+ *
+ * @package Drupal\social_auth_google\Plugin\Network
  *
  * @Network(
  *   id = "social_auth_google",
  *   social_network = "Google",
  *   type = "social_auth",
  *   handlers = {
- *      "settings": {
- *          "class": "\Drupal\social_auth_google\Settings\GoogleAuthSettings",
- *          "config_id": "social_auth_google.settings"
- *      }
+ *     "settings": {
+ *       "class": "\Drupal\social_auth_google\Settings\GoogleAuthSettings",
+ *       "config_id": "social_auth_google.settings"
+ *     }
  *   }
  * )
  */
-class GoogleAuth extends SocialAuthNetwork {
+class GoogleAuth extends NetworkBase implements GoogleAuthInterface {
+
   /**
-   * The url generator.
+   * Sets the underlying SDK library.
    *
-   * @var \Drupal\Core\Render\MetadataBubblingUrlGenerator
-   */
-  protected $urlGenerator;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $container->get('url_generator'),
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('config.factory')
-    );
-  }
-
-  /**
-   * GoogleLogin constructor.
+   * @return \League\OAuth2\Client\Provider\Google|false
+   *   The initialized 3rd party library instance.
+   *   False if library could not be initialized.
    *
-   * @param \Drupal\Core\Render\MetadataBubblingUrlGenerator $url_generator
-   *   Used to generate a absolute url for authentication.
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The configuration factory.
+   * @throws SocialApiException
+   *   If the SDK library does not exist.
    */
-  public function __construct(MetadataBubblingUrlGenerator $url_generator, array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $config_factory);
+  protected function initSdk() {
 
-    $this->urlGenerator = $url_generator;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function initSdk() {
-    $class_name = '\Google_Client';
+    $class_name = '\League\OAuth2\Client\Provider\Google';
     if (!class_exists($class_name)) {
-      throw new SocialApiException(sprintf('The PHP SDK for Google Services could not be found. Class: %s.', $class_name));
+      throw new SocialApiException(sprintf('The Google library for PHP League OAuth2 not found. Class: %s.', $class_name));
     }
 
     /* @var \Drupal\social_auth_google\Settings\GoogleAuthSettings $settings */
     $settings = $this->settings;
 
-    // Gets the absolute url of the callback.
-    $redirect_uri = $this->urlGenerator->generateFromRoute('social_auth_google.callback', [], ['absolute' => TRUE]);
+    if ($this->validateConfig($settings)) {
+      // All these settings are mandatory.
+      $league_settings = [
+        'clientId' => $settings->getClientId(),
+        'clientSecret' => $settings->getClientSecret(),
+        'redirectUri' => Url::fromRoute('social_auth_google.callback')->setAbsolute()->toString(),
+        'accessType' => 'offline',
+        'verify' => FALSE,
+        'hostedDomain' => $settings->getRestrictedDomain() == '' ? NULL : $settings->getRestrictedDomain(),
+      ];
 
-    // Creates a and sets data to Google_Client object.
-    $client = new \Google_Client();
-    $client->setClientId($settings->getClientId());
-    $client->setClientSecret($settings->getClientSecret());
-    $client->setRedirectUri($redirect_uri);
+      // Proxy configuration data for outward proxy.
+      $proxyUrl = $this->siteSettings->get('http_client_config')['proxy']['http'];
+      if ($proxyUrl) {
+        $league_settings['proxy'] = $proxyUrl;
+      }
 
-    return $client;
+      return new Google($league_settings);
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Checks that module is configured.
+   *
+   * @param \Drupal\social_auth_google\Settings\GoogleAuthSettings $settings
+   *   The Google auth settings.
+   *
+   * @return bool
+   *   True if module is configured.
+   *   False otherwise.
+   */
+  protected function validateConfig(GoogleAuthSettings $settings) {
+    $client_id = $settings->getClientId();
+    $client_secret = $settings->getClientSecret();
+    if (!$client_id || !$client_secret) {
+      $this->loggerFactory
+        ->get('social_auth_google')
+        ->error('Define Client ID and Client Secret on module settings.');
+
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
 }

@@ -72,20 +72,20 @@ class SelectListTest extends PluginSelectorBaseTestBase {
 
     $plugin_id_a = $this->randomMachineName();
     $plugin_label_a = $this->randomMachineName();
-    $plugin_definition_a = $this->getMock(PluginLabelDefinitionInterface::class);
+    $plugin_definition_a = $this->createMock(PluginLabelDefinitionInterface::class);
     $plugin_definition_a->expects($this->atLeastOnce())
       ->method('getLabel')
       ->willReturn($plugin_label_a);
-    $plugin_a = $this->getMock(PluginInspectionInterface::class);
+    $plugin_a = $this->createMock(PluginInspectionInterface::class);
     $plugin_a->expects($this->atLeastOnce())
       ->method('getPluginId')
       ->willReturn($plugin_id_a);
     $plugin_id_b = $this->randomMachineName();
-    $plugin_definition_b = $this->getMock(PluginDefinitionInterface::class);
+    $plugin_definition_b = $this->createMock(PluginDefinitionInterface::class);
     $plugin_definition_b->expects($this->atLeastOnce())
       ->method('getId')
       ->willReturn($plugin_id_b);
-    $plugin_b = $this->getMock(PluginInspectionInterface::class);
+    $plugin_b = $this->createMock(PluginInspectionInterface::class);
 
     $this->sut->setSelectedPlugin($plugin_a);
     $selector_title = $this->randomMachineName();
@@ -96,7 +96,7 @@ class SelectListTest extends PluginSelectorBaseTestBase {
     $element = array(
       '#parents' => array('foo', 'bar'),
     );
-    $form_state = $this->getMock(FormStateInterface::class);
+    $form_state = $this->createMock(FormStateInterface::class);
     $available_plugins = [$plugin_a, $plugin_b];
 
     $this->selectablePluginManager->expects($this->atLeastOnce())
@@ -106,40 +106,40 @@ class SelectListTest extends PluginSelectorBaseTestBase {
         $plugin_id_b => $plugin_definition_b,
       ]);
 
-    $expected_build_plugin_id = array(
-      '#ajax' => array(
-        'callback' => array(SelectList::class, 'ajaxRebuildForm'),
+    $expected_build_plugin_id = [
+      '#ajax' => [
+        'callback' => [SelectList::class, 'ajaxRebuildForm'],
         'effect' => 'fade',
         'event' => 'change',
-        'trigger_as' => array(
+        'trigger_as' => [
           'name' => 'foo__bar__select__container__change',
-        ),
-      ),
+        ],
+      ],
       '#default_value' => $plugin_id_a,
       '#empty_value' => '',
-      '#options' => array(
+      '#options' => [
         $plugin_id_a => $plugin_label_a,
         $plugin_id_b => $plugin_id_b,
-      ) ,
+      ],
       '#required' => FALSE,
       '#title' => $selector_title,
       '#description' => $selector_description,
       '#type' => 'select',
-    );
-    $expected_build_change = array(
-      '#ajax' => array(
-        'callback' => array(AdvancedPluginSelectorBase::class, 'ajaxRebuildForm'),
-      ),
-      '#attributes' => array(
-        'class' => array('js-hide')
-      ),
-      '#limit_validation_errors' => array(array('foo', 'bar', 'select', 'plugin_id')),
+    ];
+    $expected_build_change = [
+      '#ajax' => [
+        'callback' => [AdvancedPluginSelectorBase::class, 'ajaxRebuildForm'],
+      ],
+      '#attributes' => [
+        'class' => ['js-hide']
+      ],
+      '#limit_validation_errors' => [['foo', 'bar', 'select', 'plugin_id']],
       '#name' => 'foo__bar__select__container__change',
       '#submit' => [[AdvancedPluginSelectorBase::class, 'rebuildForm']],
       '#type' => 'submit',
       '#value' => 'Choose',
-    );
-    $build = $method->invokeArgs($this->sut, array($element, $form_state, $available_plugins));
+    ];
+    $build = $method->invokeArgs($this->sut, [$element, $form_state, $available_plugins]);
     $this->assertEquals($expected_build_plugin_id, $build['container']['plugin_id']);
     $this->assertEquals($expected_build_change, $build['container']['change']);
     $this->assertSame('container', $build['container']['#type']);

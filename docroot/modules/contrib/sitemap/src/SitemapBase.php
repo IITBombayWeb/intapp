@@ -20,7 +20,7 @@ abstract class SitemapBase extends PluginBase implements SitemapInterface {
    *
    * @var array
    */
-  public $settings = array();
+  public $settings = [];
 
   /**
    * A Boolean indicating whether this mapping is enabled.
@@ -105,20 +105,20 @@ abstract class SitemapBase extends PluginBase implements SitemapInterface {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    return array();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfiguration() {
-    return array(
+    return [
       'id' => $this->getPluginId(),
       'provider' => $this->pluginDefinition['provider'],
       'status' => $this->enabled,
       'weight' => $this->weight,
       'settings' => $this->settings,
-    );
+    ];
   }
 
   /**
@@ -141,11 +141,12 @@ abstract class SitemapBase extends PluginBase implements SitemapInterface {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'provider' => $this->pluginDefinition['provider'],
       'enabled' => $this->pluginDefinition['enabled'],
       'weight' => isset($this->pluginDefinition['weight']) ? $this->pluginDefinition['weight'] : '',
       'settings' => isset($this->pluginDefinition['settings']) ? $this->pluginDefinition['settings'] : [],
-    );
+    ];
   }
+
 }

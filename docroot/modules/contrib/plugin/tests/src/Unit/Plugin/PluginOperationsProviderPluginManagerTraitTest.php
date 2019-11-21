@@ -31,22 +31,22 @@ class PluginOperationsProviderPluginManagerTraitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    $this->classResolver = $this->getMock(ClassResolverInterface::class);
+    $this->classResolver = $this->createMock(ClassResolverInterface::class);
   }
 
   /**
    * @covers ::getOperationsProvider
    */
   public function testGetOperationsProvider() {
-    $plugin_definitions = array(
-      'foo' => array(
+    $plugin_definitions = [
+      'foo' => [
         'id' => 'foo',
         'operations_provider' => PluginOperationsProviderPluginManagerTraitUnitTestOperationsProvider::class,
-      ),
-      'bar' => array(
+      ],
+      'bar' => [
         'id' => 'bar',
-      ),
-    );
+      ],
+    ];
 
     $operations_provider = new \stdClass();
 

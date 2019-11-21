@@ -19,9 +19,11 @@ class SitemapContentTest extends SitemapTestBase {
   public static $modules = ['sitemap', 'block', 'filter'];
 
   /**
-   * Content editor user
+   * Content editor user.
+   *
+   * @var array
    */
-  public $user_editor;
+  public $userEditor;
 
   /**
    * {@inheritdoc}
@@ -61,12 +63,12 @@ class SitemapContentTest extends SitemapTestBase {
     $restricted_html_format->save();
 
     // Create user then login.
-    $this->user_editor = $this->drupalCreateUser([
+    $this->userEditor = $this->drupalCreateUser([
       'administer sitemap',
       'access sitemap',
       $restricted_html_format->getPermissionName(),
     ]);
-    $this->drupalLogin($this->user_editor);
+    $this->drupalLogin($this->userEditor);
   }
 
   /**
@@ -79,9 +81,9 @@ class SitemapContentTest extends SitemapTestBase {
 
     // Change page title.
     $new_title = $this->randomMachineName();
-    $edit = array(
+    $edit = [
       'page_title' => $new_title,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
     drupal_flush_all_caches();
 
@@ -101,9 +103,9 @@ class SitemapContentTest extends SitemapTestBase {
 
     // Change sitemap message.
     $new_message = $this->randomMachineName(16);
-    $edit = array(
+    $edit = [
       'message[value]' => $new_message,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
     drupal_flush_all_caches();
 

@@ -13,17 +13,42 @@ class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function load() {
-    $entities = parent::load();
+  protected function getEntityIds() {
+    $query = $this->getStorage()->getQuery()
+      ->condition('id', 'global', '<>');
 
-    // Move the Global defaults to the top. Don't assume that the global config
-    // exists, it might have been removed.
-    if (isset($entities['global'])) {
-      return ['global' => $entities['global']] + $entities;
+    // Only add the pager if a limit is specified.
+    if ($this->limit) {
+      $query->pager($this->limit);
     }
-    else {
-      return $entities;
+
+    $entity_ids = $query->execute();
+
+    // Load global entity always.
+    return $entity_ids + $this->getParentIds($entity_ids);
+  }
+
+  /**
+   * Gets the parent entity ids for the list of entities to load.
+   *
+   * @param array $entity_ids
+   *   The metatag entity ids.
+   *
+   * @return array
+   *   The list of parents to load
+   */
+  protected function getParentIds(array $entity_ids) {
+    $parents = ['global' => 'global'];
+    foreach ($entity_ids as $entity_id) {
+      if (strpos($entity_id, '__') !== FALSE) {
+        $entity_id_array = explode('__', $entity_id);
+        $parent = reset($entity_id_array);
+        $parents[$parent] = $parent;
+      }
     }
+    $parents_query = $this->getStorage()->getQuery()
+      ->condition('id', $parents, 'IN');
+    return $parents_query->execute();
   }
 
   /**
@@ -31,6 +56,7 @@ class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['label'] = $this->t('Type');
+    $header['status'] = $this->t('Status');
     return $header + parent::buildHeader();
   }
 
@@ -39,6 +65,7 @@ class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $this->getLabelAndConfig($entity);
+    $row['status'] = $entity->status() ? $this->t('Active') : $this->t('Disabled');
     return $row + parent::buildRow($entity);
   }
 
@@ -64,7 +91,7 @@ class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
   /**
    * Renders the Metatag defaults label plus its configuration.
    *
-   * @param Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The Metatag defaults entity.
    *
    * @return array

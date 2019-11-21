@@ -99,20 +99,19 @@ class WorkflowConfigTransitionRoleForm extends WorkflowConfigTransitionFormBase 
               continue;
             }
             $to_sid = $to_state->id();
-            $stay_on_this_state = ($to_sid == $from_sid);
 
             // Load existing config_transitions. Create if not found.
             $config_transitions = $workflow->getTransitionsByStateId($from_sid, $to_sid);
             if (!$config_transition = reset($config_transitions)) {
               $config_transition = $workflow->createTransition($from_sid, $to_sid);
             }
+            $stay_on_this_state = !$config_transition->hasStateChange();
 
-            $row[$to_sid]['workflow_config_transition'] = ['#type' => 'value', '#value' => $config_transition, ];
+            $row[$to_sid]['workflow_config_transition'] = ['#type' => 'value', '#value' => $config_transition,];
             $row[$to_sid]['roles'] = [
-              '#type' => $stay_on_this_state ? 'checkboxes' : 'checkboxes',
+              '#type' => 'checkboxes',
               '#options' => $stay_on_this_state ? [] : $roles,
               '#disabled' => $stay_on_this_state,
-              // When $stay_on_this_state, allow all roles.
               '#default_value' => $stay_on_this_state ? $allow_all_roles : $config_transition->roles,
             ];
           }
@@ -127,24 +126,30 @@ class WorkflowConfigTransitionRoleForm extends WorkflowConfigTransitionFormBase 
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $workflow = $this->workflow;
+
+    // If only the 'Creation' state is available,
+    if (count($form_state->getValue($this->entitiesKey)) < 2) {
+      $form_state->setErrorByName('id', t('Please create at least one other state.',
+        []));
+    }
+
     // Make sure 'author' is checked for (creation) -> [something].
     $creation_state = $workflow->getCreationState();
+    $creation_state_id = $workflow->getCreationState()->id();
+    $author_has_permission = FALSE;
+    foreach ($form_state->getValue($this->entitiesKey) as $from_sid => $to_data) {
+      foreach ($to_data as $to_sid => $transition_data) {
 
-    if (empty($form_state->getValue($this->entitiesKey))) {
-      $author_has_permission = TRUE;
-    }
-    else {
-      $author_has_permission = FALSE;
-      foreach ($form_state->getValue($this->entitiesKey) as $from_sid => $to_data) {
-        foreach ($to_data as $to_sid => $transition_data) {
-          if ($from_sid == $to_sid) {
-            // Same-state-transition do not count.
-          }
-          elseif (!empty($transition_data['roles'][WORKFLOW_ROLE_AUTHOR_RID])) {
-            $author_has_permission = TRUE;
+        if ($from_sid == $creation_state_id) {
+          // Same-state-transitions do not count.
+          if ($from_sid != $to_sid) {
+            if (!empty($transition_data['roles'][WORKFLOW_ROLE_AUTHOR_RID])) {
+              $author_has_permission = TRUE;
+            }
             break;
           }
         }
+
       }
     }
     if (!$author_has_permission) {
@@ -152,7 +157,7 @@ class WorkflowConfigTransitionRoleForm extends WorkflowConfigTransitionFormBase 
         ['%creation' => $creation_state->label()]));
     }
 
-    return;
+    parent::validateForm($form, $form_state);
   }
 
   /**

@@ -38,14 +38,21 @@
       $dropdown.removeClass('js-facets-dropdown-links');
 
       $dropdown.addClass('facets-dropdown');
+      $dropdown.addClass('js-facets-widget');
+      $dropdown.addClass('js-facets-dropdown');
 
       var id = $(this).data('drupal-facet-id');
+      // Add aria-labelledby attribute to reference label.
+      $dropdown.attr('aria-labelledby', "facet_"+id+"_label");
       var default_option_label = settings.facets.dropdown_widget[id]['facet-default-option-label'];
+
       // Add empty text option first.
       var $default_option = $('<option />')
         .attr('value', '')
         .text(default_option_label);
       $dropdown.append($default_option);
+
+      $ul.prepend('<li class="default-option"><a href=".">' + default_option_label + '</a></li>');
 
       var has_active = false;
       $links.each(function () {
@@ -58,17 +65,21 @@
           has_active = true;
           // Set empty text value to this link to unselect facet.
           $default_option.attr('value', $link.attr('href'));
-
+          $ul.find('.default-option a').attr("href", $link.attr('href'));
           $option.attr('selected', 'selected');
           $link.find('.js-facet-deactivate').remove();
         }
-        $option.html($link.text());
+        $option.text($link.text());
         $dropdown.append($option);
       });
 
       // Go to the selected option when it's clicked.
       $dropdown.on('change.facets', function () {
-        window.location.href = $(this).val();
+        var anchor = $($ul).find("[data-drupal-facet-item-id='" + $(this).find(':selected').data('drupalFacetItemId') + "']");
+        var $linkElement = (anchor.length > 0) ? $(anchor) : $ul.find('.default-option a');
+        var url = $linkElement.attr('href');
+
+        $(this).trigger('facets_filter', [ url ]);
       });
 
       // Append empty text option.
@@ -77,7 +88,7 @@
       }
 
       // Replace links with dropdown.
-      $ul.after($dropdown).remove();
+      $ul.after($dropdown).hide();
       Drupal.attachBehaviors($dropdown.parent()[0], Drupal.settings);
     });
   };

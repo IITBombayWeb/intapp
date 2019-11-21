@@ -149,6 +149,34 @@ language_negotiation_method:
   plugin_manager_service_id: plugin.manager.language_negotiation_method
   plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
 
+# Migrate's plugin types.
+# Leave source plugins out for now, as the list page for them crashes!
+# migrate_source:
+#   label: Migrate source
+#   provider: migrate
+#   plugin_manager_service_id: plugin.manager.migrate.source
+#   plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+migrate_process:
+  label: Migrate process
+  provider: migrate
+  plugin_manager_service_id: plugin.manager.migrate.process
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+migrate_destination:
+  label: Migrate destination
+  provider: migrate
+  plugin_manager_service_id: plugin.manager.migrate.destination
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+migrate_id_map:
+  label: Migrate ID map
+  provider: migrate
+  plugin_manager_service_id: plugin.manager.migrate.id_map
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+migration:
+  label: Migration
+  provider: migrate
+  plugin_manager_service_id: plugin.manager.migration
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+
 # Quick Edit's plugin types.
 quickedit_editor:
   label: Quick Edit editor

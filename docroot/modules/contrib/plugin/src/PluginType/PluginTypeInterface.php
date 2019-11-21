@@ -50,6 +50,14 @@ interface PluginTypeInterface {
   public function getProvider();
 
   /**
+   * Gets the service name of the plugin manager.
+   *
+   * @return string
+   *   The service name of the plugin manager.
+   */
+  public function getPluginManagerServiceName();
+
+  /**
    * Gets the plugin manager.
    *
    * @return \Drupal\Component\Plugin\PluginManagerInterface

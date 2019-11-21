@@ -70,8 +70,8 @@ function workflow_ui_help($route_name, RouteMatchInterface $route_match) {
  *
  * @deprecated : @see workflow_url_get_workflow .
  */
-function workflow_ui_url_get_workflow($url = '' ) {
-  return workflow_url_get_workflow($url);
+function workflow_ui_url_get_workflow() {
+  return workflow_url_get_workflow();
 }
 
 /**
@@ -88,6 +88,6 @@ function workflow_ui_url_get_title() {
  *
  * @deprecated : @see workflow_url_get_form_type .
  */
-function workflow_ui_url_get_form_type($url = '' ) {
+function workflow_ui_url_get_form_type($url = '') {
   return workflow_url_get_form_type($url);
 }

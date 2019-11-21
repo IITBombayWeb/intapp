@@ -5,6 +5,7 @@ namespace Drupal\workflow\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\user\UserInterface;
+use Drupal\workflow\WorkflowTypeAttributeTrait;
 
 /**
  * Workflow configuration entity to persistently store configuration.
@@ -45,6 +46,10 @@ use Drupal\user\UserInterface;
  * )
  */
 class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfigTransitionInterface {
+  /*
+   * Add variables and get/set methods for Workflow property.
+   */
+  use WorkflowTypeAttributeTrait;
 
   // Transition data.
   public $id;
@@ -52,11 +57,12 @@ class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfi
   public $to_sid;
   public $roles = [];
 
-  // Extra fields.
-  protected $wid;
-  // The following must explicitly defined, and not be public, to avoid errors
-  // when exporting with json_encode().
-  protected $workflow = NULL;
+  /**
+   * The module implementing this object, for config_export.
+   *
+   * @var string
+   */
+  protected $module = 'workflow';
 
   /*
    * Entity class functions.
@@ -67,7 +73,11 @@ class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfi
    */
   public function __construct(array $values = [], $entityType = NULL) {
     // Please be aware that $entity_type and $entityType are different things!
-    return parent::__construct($values, $entity_type = 'workflow_config_transition');
+    parent::__construct($values, $entity_type = 'workflow_config_transition');
+    $state = WorkflowState::load($this->to_sid ? $this->to_sid : $this->from_sid);
+    if($state) {
+      $this->setWorkflow($state->getWorkflow());
+    }
   }
 
   /**
@@ -76,8 +86,10 @@ class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfi
    * @param $to_sid
    */
   public function setValues($from_sid, $to_sid) {
-    $this->from_sid = $from_sid;
-    $this->to_sid = $to_sid;
+    $state = WorkflowState::load($this->to_sid ? $this->to_sid : $this->from_sid);
+    if($state) {
+      $this->setWorkflow($state->getWorkflow());
+    }
   }
 
   /**
@@ -151,29 +163,6 @@ class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfi
   /**
    * {@inheritdoc}
    */
-  public function getWorkflow() {
-    if (!$this->workflow && $wid = $this->getWorkflowId()) {
-      $this->workflow = Workflow::load($wid);
-    }
-    return $this->workflow;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getWorkflowId() {
-    if (!$this->wid) {
-      $from_sid = $this->getFromSid();
-      $to_sid = $this->getToSid();
-      $state = WorkflowState::load($to_sid ? $to_sid : $from_sid);
-      $this->wid = $state->getWorkflowId();
-    }
-    return $this->wid;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getFromState() {
     return WorkflowState::load($this->from_sid);
   }
@@ -217,6 +206,17 @@ class WorkflowConfigTransition extends ConfigEntityBase implements WorkflowConfi
       return TRUE;
     }
     return TRUE == array_intersect($user->getRoles(), $this->roles);
+  }
+
+  /**
+   * Determines if the State changes by this Transition.
+   * @return bool
+   */
+  public function hasStateChange() {
+    if ($this->from_sid == $this->to_sid) {
+      return FALSE;
+    }
+    return TRUE;
   }
 
 }

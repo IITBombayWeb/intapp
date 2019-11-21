@@ -5,6 +5,7 @@ namespace Drupal\Tests\plugin\Unit\Plugin\views\filter;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\plugin\Plugin\views\filter\PluginId;
 use Drupal\plugin\PluginDefinition\PluginDefinitionInterface;
 use Drupal\plugin\PluginDefinition\PluginLabelDefinitionInterface;
@@ -85,6 +86,11 @@ class PluginIdTest extends UnitTestCase {
    */
   public function testCacheContexts() {
     $plugin_manager_cache_contexts = ['dog', 'ball'];
+
+    $container = $this->prophesize(ContainerInterface::class);
+    $cache_contexts_manager = new CacheContextsManager($container->reveal(), []);
+    $container->get('cache_contexts_manager')->willReturn($cache_contexts_manager);
+    \Drupal::setContainer($container->reveal());
 
     $plugin_manager = $this->prophesize(CacheableDependencyPluginManagerInterface::class);
     $plugin_manager->getCacheContexts()->willReturn($plugin_manager_cache_contexts);
