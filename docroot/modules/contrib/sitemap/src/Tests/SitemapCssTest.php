@@ -9,10 +9,13 @@ namespace Drupal\sitemap\Tests;
  */
 class SitemapCssTest extends SitemapTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalLogin($this->user_admin);
+    $this->drupalLogin($this->userAdmin);
   }
 
   /**

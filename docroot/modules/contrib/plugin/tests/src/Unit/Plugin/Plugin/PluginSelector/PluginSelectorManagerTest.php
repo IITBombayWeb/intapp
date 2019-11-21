@@ -56,13 +56,13 @@ class PluginSelectorManagerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    $this->discovery = $this->getMock(DiscoveryInterface::class);
+    $this->discovery = $this->createMock(DiscoveryInterface::class);
 
-    $this->factory = $this->getMock(FactoryInterface::class);
+    $this->factory = $this->createMock(FactoryInterface::class);
 
-    $this->moduleHandler = $this->getMock(ModuleHandlerInterface::class);
+    $this->moduleHandler = $this->createMock(ModuleHandlerInterface::class);
 
-    $this->cache = $this->getMock(CacheBackendInterface::class);
+    $this->cache = $this->createMock(CacheBackendInterface::class);
 
     $namespaces = new ArrayObject();
 
@@ -89,7 +89,7 @@ class PluginSelectorManagerTest extends UnitTestCase {
    */
   public function testGetFallbackPluginId() {
     $plugin_id = $this->randomMachineName();
-    $plugin_configuration = array($this->randomMachineName());
+    $plugin_configuration = [$this->randomMachineName()];
     $this->assertInternalType('string', $this->sut->getFallbackPluginId($plugin_id, $plugin_configuration));
   }
 
@@ -97,11 +97,11 @@ class PluginSelectorManagerTest extends UnitTestCase {
    * @covers ::getDefinitions
    */
   public function testGetDefinitions() {
-    $definitions = array(
-      'foo' => array(
+    $definitions = [
+      'foo' => [
         'label' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $this->discovery->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($definitions);

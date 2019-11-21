@@ -14,13 +14,13 @@ class SitemapTest extends SitemapTestBase {
    */
   public function testSitemap() {
 
-    // Find the Sitemap page at /sitemap
-    $this->drupalLogin($this->user_view);
+    // Find the Sitemap page at /sitemap.
+    $this->drupalLogin($this->userView);
     $this->drupalGet('/sitemap');
     $this->assertResponse('200');
 
-    // Unauthorized users cannot view the sitemap
-    $this->drupalLogin($this->user_noaccess);
+    // Unauthorized users cannot view the sitemap.
+    $this->drupalLogin($this->userNoAccess);
     $this->drupalGet('/sitemap');
     $this->assertResponse('403');
 
@@ -31,18 +31,16 @@ class SitemapTest extends SitemapTestBase {
    */
   public function testSitemapAdmin() {
 
-    // Find the Sitemap settings page
-    $this->drupalLogin($this->user_admin);
+    // Find the Sitemap settings page.
+    $this->drupalLogin($this->userAdmin);
     $this->drupalGet('/admin/config/search/sitemap');
     $this->assertResponse('200');
 
-    // Unauthorized users cannot view the sitemap
-    $this->drupalLogin($this->user_view);
+    // Unauthorized users cannot view the sitemap.
+    $this->drupalLogin($this->userView);
     $this->drupalGet('/admin/config/search/sitemap');
     $this->assertResponse('403');
 
   }
-
-
 
 }

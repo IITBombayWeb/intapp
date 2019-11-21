@@ -176,9 +176,9 @@ function workflow_entity_delete(\Drupal\Core\Entity\EntityInterface $entity) {
   elseif (!WorkflowManager::isWorkflowEntityType($entity->getEntityTypeId())) {
     // A 'normal' entity is deleted.
     foreach ($fields = _workflow_info_fields($entity) as $field_id => $field_storage) {
-      $entity_type = $field_storage->getTargetEntityTypeId();
       $entity_id = $entity->id();
-      $field_name = $field_storage->get('field_name');
+      $entity_type = $field_storage->getTargetEntityTypeId();
+      $field_name = $field_storage->getName();
       /** @var $transition Drupal\workflow\Entity\WorkflowTransitionInterface */
       foreach (WorkflowScheduledTransition::loadMultipleByProperties($entity_type, [$entity_id], [], $field_name) as $transition) {
         $transition->delete();
@@ -347,8 +347,8 @@ function workflow_get_workflow_names($required = TRUE) {
 function workflow_get_workflow_field_names($entity = NULL, $entity_type = '', $entity_bundle = '', $field_name = '') {
   $result = [];
   foreach (_workflow_info_fields($entity, $entity_type, $entity_bundle, $field_name) as $definition) {
-    $field_name = $definition->getName();
-    $result[$field_name] = $definition->getName();
+    $field_name2 = $definition->getName();
+    $result[$field_name2] = $field_name2;
   }
   return $result;
 }
@@ -397,10 +397,8 @@ function workflow_get_field_name(\Drupal\Core\Entity\EntityInterface $entity, $f
   if ($field_name) {
     return $field_name;
   }
-
-  $fields = _workflow_info_fields($entity);
-  $field = reset($fields);
-  $field_name = $field->getName();
+  $fields = workflow_get_workflow_field_names($entity);
+  $field_name = reset($fields);
   return $field_name;
 }
 
@@ -428,8 +426,6 @@ function workflow_current_user(\Drupal\Core\Session\AccountInterface $account = 
  * @param string $field_name
  *
  * @return string $current_sid
- *
- * @deprecated : use WorkflowManager::getCurrentStateId()
  */
 function workflow_node_current_state(\Drupal\Core\Entity\EntityInterface $entity, $field_name = '') {
   return WorkflowManager::getCurrentStateId($entity, $field_name);
@@ -442,8 +438,6 @@ function workflow_node_current_state(\Drupal\Core\Entity\EntityInterface $entity
  * @param string $field_name
  *
  * @return string $previous_sid
- *
- * @deprecated : use WorkflowManager::getPreviousStateId()
  */
 function workflow_node_previous_state(\Drupal\Core\Entity\EntityInterface $entity, $field_name = '') {
   return WorkflowManager::getPreviousStateId($entity, $field_name);
@@ -486,6 +480,10 @@ function workflow_get_workflows_by_type($entity_bundle, $entity_type) {
   return $map[$entity_type][$entity_bundle];
 }
 
+function workflow_get_workflow_fields_by_entity_type() {
+  return \Drupal::service('entity_field.manager')->getFieldMapByFieldType('workflow');
+}
+
 /**
  * Gets the workflow field names, if not known already.
  *
@@ -522,7 +520,24 @@ function _workflow_info_fields($entity = NULL, $entity_type = '', $entity_bundle
             // Do not use the field_name as ID, but the unique <entity_type>.<field_name>
             // since you cannot share the same field on multiple entity_types (unlike D7).
             $field_config = \Drupal\field\Entity\FieldStorageConfig::loadByName($e_type, $f_name);
-            $field_info[$field_config->id()] = $field_config;
+            if ($field_config) {
+              $field_info[$field_config->id()] = $field_config;
+            }
+            else {
+              // The field is a base/extra field not a configurable Field via Field UI.
+
+              // Refetch the field definitions, with extra data.
+              $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($e_type, $entity_bundle);
+              // @todo ?? Loop over bundles?
+              /** @var \Drupal\Core\Field\BaseFieldDefinition $field_config */
+              $field_config = $field_definitions[$f_name];
+              if ($field_config) {
+                $field_info[$field_config->getUniqueStorageIdentifier()] = $field_config;
+              }
+              else {
+                // @todo ?? Loop over bundles?
+              }
+            }
           }
         }
       }
@@ -545,36 +560,27 @@ function workflow_url_get_entity(\Drupal\Core\Entity\EntityInterface $entity = N
     return $entity;
   }
 
-  $route_match = \Drupal::routeMatch();
-
-  // @todo: get entity for any route.
-  // On node pages, we'd get an object.
-  $entity = $route_match->getParameter('node');
-  if ($entity && is_object($entity)) {
-    return $entity;
+  $entities = [];
+  foreach (\Drupal::routeMatch()->getParameters() as $param) {
+    if ($param instanceof \Drupal\Core\Entity\EntityInterface) {
+      $entities[] = $param;
+    }
   }
-  if ($entity && !is_object($entity)) {
+  $value = reset($entities);
+
+  if ($value && is_object($value)) {
+    return $value;
+  }
+
+  if ($value && !is_object($value)) {
     // On workflow tab, we'd get an id.
-    $entity = \Drupal\node\Entity\Node::load($entity);
+    // This is an indicator that the route is mal-configured.
+    workflow_debug(__FILE__, __FUNCTION__, __LINE__, 'route declaration is not optimal.');
+    $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($value);
     return $entity;
   }
 
-  // It was not a Node, try a Term.
-  // On term pages, we get objects, or id's.
-  $entity = $route_match->getParameter('taxonomy_term');
-  if ($entity && is_object($entity)) {
-    return $entity;
-  }
-  elseif ($entity && !is_object($entity)) {
-    $entity = \Drupal\taxonomy\Entity\Term::load($entity);
-    return $entity;
-  }
-
-  if (!$entity) {
-    // We may be on a entity add page/
-    // Or we may be on a page of some unknown entity.
-  }
-  return $entity;
+  return $value;
 }
 
 /**
@@ -585,10 +591,7 @@ function workflow_url_get_entity(\Drupal\Core\Entity\EntityInterface $entity = N
  * @return string|null $field_name
  */
 function workflow_url_get_field_name() {
-  /** @var $route_match \Drupal\Core\Routing\RouteMatchInterface */
-  $route_match = \Drupal::routeMatch();
-  $field_name = $route_match->getParameter('field_name');
-  return $field_name;
+  return workflow_url_get_parameter('field_name');
 }
 
 /**
@@ -597,55 +600,60 @@ function workflow_url_get_field_name() {
  * @return mixed|string
  */
 function workflow_url_get_operation() {
-  // $url = \Drupal\Core\Url::fromRoute('<current>');
-  // // The last part of the path is the operation: edit, workflow, devel.
-  // $url_parts = explode('/', $url->toString());
-  // $operation = array_pop($url_parts);
-  // // Except for view pages.
-  // if (is_numeric($operation) || $operation == 'view') {
-  //   $operation = '';
-  // }
-  // return $operation;
-  /*
-   * Hack Info:
-   * Issue: Block visibility not working for node alias.
-   * To resolve the issue commented the above code and replaced with below.
-   * By Uday
-   */
-  $routename = \Drupal::routeMatch()->getRouteName();
-  if($routename == "entity.node.canonical") {
-    return "";
-  } else {
-    return $routename;
-  }
+//  $url = \Drupal\Core\Url::fromRoute('<current>');
+  // The last part of the path is the operation: edit, workflow, devel.
+//  $url_parts = explode('/', $url->toString());
+//  $operation = array_pop($url_parts);
+  // Except for view pages.
+//  if (is_numeric($operation) || $operation == 'view') {
+//    $operation = '';
+//  }
+//  return $operation;
+/*
+* Hack Info:
+* Issue: Block visibility not working for node alias.
+* To resolve the issue commented the above code and replaced with below.
+* By Uday
+*/
+$routename = \Drupal::routeMatch()->getRouteName();
+if($routename == "entity.node.canonical") {
+ return "";
+} else {
+ return $routename;
+}
+}
+
+/**
+ * Helper function to get arbitrary parameter from a route.
+ *
+ * @param $parameter
+ *   The requested parameter.
+ * @return string $field_name
+ */
+function workflow_url_get_parameter($parameter) {
+  return \Drupal::routeMatch()->getParameter($parameter);
+  // return \Drupal::request()->get($parameter);
 }
 
 /**
  * Helper function to determine Workflow from Workflow UI URL.
- *
- * @param string $url
  * @return Workflow
  */
-function workflow_url_get_workflow($url = '' ) {
+function workflow_url_get_workflow() {
   /** @var $workflows \Drupal\workflow\Entity\Workflow[] */
   static $workflows = [];
 
-  // For some reason, $_SERVER is not allowed as default.
-  $url = ($url == '') ? $_SERVER['REQUEST_URI'] : $url;
-
-  // The URL may have prefixes: /
-  // ex.1: /en/admin/config/workflow/workflow/MY_WORKFLOW/states
-  // ex.2: /admin/config/workflow/workflow/MY_WORKFLOW/states
-  $base_url = '/config/workflow/workflow/';
-  $string = substr($url, strpos($url, $base_url) + strlen($base_url));
-  $wid = explode('/', $string)[0];
-  if (!isset($workflows[$wid])) {
-    $workflows[$wid] = Workflow::load($wid);
+  $wid = workflow_url_get_parameter('workflow_type');
+  if (is_object($wid)) { // $wid is a Workflow object.
+    return $wid;
   }
 
+  // $wid is a string
+  if (!isset($workflows[$wid])) {
+    $workflows[$wid] = $wid ? Workflow::load($wid) : NULL;
+  }
   return $workflows[$wid];
 }
-
 
 /**
  * Helper function to determine the title of the page.

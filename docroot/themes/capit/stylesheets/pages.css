@@ -721,7 +721,8 @@ a.basiccart-get-quantity:hover {
 	position: absolute;
     top: 0px;
     right: 30px;
-    font-size: 20px;
+	font-size: 20px;
+	display: none;
 }
 /*--buton --*/
 
@@ -1617,3 +1618,12 @@ text-align: center;
 }
 
 #block-capit-footer h2 { color:#FCFCFC; }
+
+#After Upgrade
+.field--label-inline .field--label::after {
+   content: ':' !important;
+}
+
+.field--label-inline .field--label, .field--label-inline .field--items {
+   float: left !important;
+}

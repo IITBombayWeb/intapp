@@ -33,15 +33,6 @@ This module requires the following modules:
  * Admin Toolbar (https://www.drupal.org/project/admin_toolbar)
 
 
-RECOMMENDED MODULES
--------------------
-
- * Admin Toolbar (https://www.drupal.org/project/admin_toolbar):
-   Improve the default Drupal Toolbar (the administration menu at the top of
-   your site) to transform it into a drop-down menu, providing a fast access to
-   all administration pages.
-
-
 INSTALLATION
 ------------
 
@@ -69,3 +60,5 @@ This project has been sponsored by:
    Founded in 2009, emerya is a human-sized company, dedicated to the design and
    implementation of web interfaces. Visit: http://http://emerya.fr/ for more
    information.
+ * trained people
+   Trained People is a training company focused on Drupal.

@@ -24,16 +24,16 @@ class WorkflowStateListBuilder extends DraggableListBuilder {
     $entities = [];
 
     // Get the Workflow from the page.
-    /** @var $workflow \Drupal\workflow\Entity\Workflow */
     if (!$workflow = workflow_url_get_workflow()) {
       // @todo: Generate error message.
       return $entities;
     }
-    $wid = $url_wid = $workflow->id();
 
+    $wid = $workflow->id();
+    /** @var WorkflowState[] $entities */
     $entities = parent::load();
     foreach ($entities as $key => $entity) {
-      if (!isset($entity->wid) || $entity->wid != $wid) {
+      if ($entity->getWorkflowId() != $wid) {
         unset($entities[$key]);
       }
     }

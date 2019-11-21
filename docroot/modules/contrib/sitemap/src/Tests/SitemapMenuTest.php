@@ -19,41 +19,41 @@ class SitemapMenuTest extends SitemapMenuTestBase {
     $this->assertEqual(count($elements), 0, 'Main menu is not included.');
 
     // Configure module to show main menu, with enabled menu items only.
-    $edit = array(
+    $edit = [
       'show_menus[main]' => 'main',
       'show_menus_hidden' => FALSE,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Create dummy node with enabled menu item.
     $node_1_title = $this->randomString();
-    $edit = array(
+    $edit = [
       'title[0][value]' => $node_1_title,
       'menu[enabled]' => TRUE,
       'menu[title]' => $node_1_title,
       // In order to make main navigation menu displayed, there must be at least
       // one child menu item of that menu.
       'menu[menu_parent]' => 'main:',
-    );
+    ];
     $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
 
     // Create dummy node with disabled menu item.
     $node_2_title = $this->randomString();
-    $edit = array(
+    $edit = [
       'title[0][value]' => $node_2_title,
       'menu[enabled]' => TRUE,
       'menu[title]' => $node_2_title,
       'menu[menu_parent]' => 'main:',
-    );
+    ];
     $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
 
     // Disable menu item.
-    $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(array('title' => $node_2_title));
+    $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => $node_2_title]);
     $menu_link = reset($menu_links);
     $mlid = $menu_link->id();
-    $edit = array(
+    $edit = [
       'enabled[value]' => FALSE,
-    );
+    ];
     $this->drupalPostForm("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
 
     // Add admin link that an anonymous user doesn't have access to.
@@ -77,9 +77,9 @@ class SitemapMenuTest extends SitemapMenuTestBase {
     $this->assertNoLink($node_2_title);
 
     // Configure module to show all menu items.
-    $edit = array(
+    $edit = [
       'show_menus_hidden' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that both node 1 and node 2 are listed in the sitemap.

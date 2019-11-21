@@ -14,14 +14,14 @@ class SitemapTaxonomyTest extends SitemapTaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('sitemap', 'node', 'taxonomy');
+  public static $modules = ['sitemap', 'node', 'taxonomy'];
 
   /**
    * A vocabulary entity.
    *
    * @var \Drupal\taxonomy\Entity\Vocabulary
    */
-  protected $vocabulary_to_delete;
+  protected $vocabularyToDelete;
 
   /**
    * Tests vocabulary description.
@@ -37,9 +37,9 @@ class SitemapTaxonomyTest extends SitemapTaxonomyTestBase {
 
     // Set to show all taxonomy terms, even if they are not assigned to any
     // nodes.
-    $edit = array(
+    $edit = [
       'term_threshold' => -1,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that the vocabulary description is included in the sitemap when
@@ -48,9 +48,9 @@ class SitemapTaxonomyTest extends SitemapTaxonomyTestBase {
     $this->assertText($this->vocabulary->getDescription(), 'Vocabulary description is included.');
 
     // Configure module not to show vocabulary descriptions.
-    $edit = array(
+    $edit = [
       'show_description' => FALSE,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that vocabulary description is not included in the sitemap.
@@ -59,27 +59,29 @@ class SitemapTaxonomyTest extends SitemapTaxonomyTestBase {
   }
 
   /**
-   * Ensure that deleted vocabularies do not trigger a fatal error if their ids
-   * still exist in config.
+   * Ensure that deleted vocabularies do not trigger a fatal error if ids.
+   *
+   * Still exist in config.
+   *
    * @TODO add a hook_vocabulary_alter if that is a thing?
    */
-  function testDeletedVocabulary() {
-    // Create the vocabulary to delete
-    $this->vocabulary_to_delete = $this->createVocabulary();
+  public function testDeletedVocabulary() {
+    // Create the vocabulary to delete.
+    $this->vocabularyToDelete = $this->createVocabulary();
 
     // Configure the sitemap to display both vocabularies.
     $vid = $this->vocabulary->id();
-    $vid_to_delete = $this->vocabulary_to_delete->id();
-    $edit = array(
+    $vid_to_delete = $this->vocabularyToDelete->id();
+    $edit = [
       "show_vocabularies[$vid]" => $vid,
       "show_vocabularies[$vid_to_delete]" => $vid_to_delete,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
-    // Delete the vocabulary
-    $this->vocabulary_to_delete->delete();
+    // Delete the vocabulary.
+    $this->vocabularyToDelete->delete();
 
-    // Visit /sitemap
+    // Visit /sitemap.
     $this->drupalGet('/sitemap');
   }
 

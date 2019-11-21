@@ -137,24 +137,24 @@ abstract class PluginCollectionItemBase extends FieldItemBase implements PluginC
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    $columns = array(
-      'plugin_id' => array(
+    $columns = [
+      'plugin_id' => [
         'description' => 'The plugin ID.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
-      ),
-      'plugin_configuration' => array(
+      ],
+      'plugin_configuration' => [
         'description' => 'The plugin configuration.',
         'type' => 'blob',
         'not null' => TRUE,
         'serialize' => TRUE,
-      ),
-    );
+      ],
+    ];
 
-    $schema = array(
+    $schema = [
       'columns' => $columns,
-    );
+    ];
 
     return $schema;
   }

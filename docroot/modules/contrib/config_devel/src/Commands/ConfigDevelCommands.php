@@ -336,10 +336,18 @@ class ConfigDevelCommands extends DrushCommands {
       throw new \Exception(sprintf('The %s directory could not be created', $config_path));
     }
 
+    // Use loadMultiple() rather than get(), as get creates a new config object
+    // if it doesn't manage to load one, and we don't want that to happen.
+    $configs = $this->configFactory->loadMultiple($config_list);
     foreach ($config_list as $name) {
-      $config = $this->configFactory->get($name);
+      if (!isset($configs[$name])) {
+        $this->logger()->warning("No config found for '$name', skipping.") ;
+
+        continue;
+      }
+
       $file_names = [$config_path . '/' . $name . '.yml'];
-      $written_files = $this->configImportExport->writeBackConfig($config, $file_names);
+      $written_files = $this->configImportExport->writeBackConfig($configs[$name], $file_names);
 
       foreach ($written_files as $written_file_name) {
         $this->output()->writeln('Exported config file ' . $written_file_name . '.');

@@ -82,19 +82,19 @@ class AdvancedPluginSelectorBasePluginSelectorForm implements ContainerInjection
     $form['plugin'] = $plugin_selector->buildSelectorForm([], $form_state);
     // Nest the selector in a tree if that's required.
     if ($tree) {
-      $form['tree'] = array(
+      $form['tree'] = [
         '#tree' => TRUE,
-      );
+      ];
       $form['tree']['plugin'] = $form['plugin'];
       unset($form['plugin']);
     }
-    $form['actions'] = array(
+    $form['actions'] = [
       '#type' => 'actions',
-    );
-    $form['actions']['submit'] = array(
+    ];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => t('Submit'),
-    );
+    ];
 
     return $form;
   }

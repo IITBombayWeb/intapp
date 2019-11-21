@@ -15,11 +15,11 @@ trait OperationsProviderTestTrait {
    */
   protected function assertOperationsLinks(array $operations_links) {
     foreach ($operations_links as $link) {
-      \PHPUnit_Framework_Assert::assertArrayHasKey('title', $link);
-      \PHPUnit_Framework_Assert::assertNotEmpty($link['title']);
+      \PHPUnit\Framework\Assert::assertArrayHasKey('title', $link);
+      \PHPUnit\Framework\Assert::assertNotEmpty($link['title']);
 
-      \PHPUnit_Framework_Assert::assertArrayHasKey('url', $link);
-      \PHPUnit_Framework_Assert::assertInstanceOf(Url::class, $link['url']);
+      \PHPUnit\Framework\Assert::assertArrayHasKey('url', $link);
+      \PHPUnit\Framework\Assert::assertInstanceOf(Url::class, $link['url']);
     }
   }
 

@@ -195,6 +195,13 @@ class PluginType implements ConfigurablePluginTypeInterface {
   /**
    * {@inheritdoc}
    */
+  public function getPluginManagerServiceName() {
+    return $this->pluginManagerServiceId;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getPluginManager() {
     return $this->container->get($this->pluginManagerServiceId);
   }

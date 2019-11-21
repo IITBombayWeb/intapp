@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\metatag_open_graph\Tests;
+namespace Drupal\Tests\metatag_open_graph\Functional;
 
-use Drupal\metatag\Tests\MetatagTagsTestBase;
+use Drupal\Tests\metatag\Functional\MetatagTagsTestBase;
 
 /**
  * Tests that each of the Metatag Open Graph tags work correctly.
@@ -32,6 +32,7 @@ class MetatagOpenGraphTagsTest extends MetatagTagsTestBase {
     'og_email',
     'og_fax_number',
     'og_image',
+    'og_image_alt',
     'og_image_height',
     'og_image_secure_url',
     'og_image_type',

@@ -12,7 +12,7 @@ function sitemap_update_8101() {
   $roles = user_roles(FALSE, 'administer site configuration');
   if (!empty($roles)) {
     foreach ($roles as $rid => $role) {
-      user_role_grant_permissions($rid, array('administer sitemap'));
+      user_role_grant_permissions($rid, ['administer sitemap']);
     }
   }
 }

@@ -16,6 +16,7 @@ use Drupal\workflow\Entity\WorkflowState;
 use Drupal\workflow\Entity\WorkflowTransitionInterface;
 use Drupal\basiccart\Form\CartForm;
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Render\Markup;
 
 /**
  * Implements hook_mail().
@@ -47,10 +48,10 @@ function iitinap_mail($key, &$message, $params) {
       break;
 
     case 'create_user':
-      $message['from'] = \Drupal::config('system.site')->get('mail');
-      $message['subject'] = t('Welcome to the site!' . \Drupal::config('system.site')->get('name'));
-      $message['body'][] = $params['message'];
-      break;
+     $message['from'] = \Drupal::config('system.site')->get('mail');
+     $message['subject'] = t('Welcome to the site!' . \Drupal::config('system.site')->get('name'));
+     $message['body'][] = $params['message'];
+     break;
 
   }
 }

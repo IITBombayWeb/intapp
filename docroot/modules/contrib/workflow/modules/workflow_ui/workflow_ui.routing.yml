@@ -23,7 +23,10 @@ entity.workflow_state.collection:
     _title_callback: 'workflow_url_get_title'
   requirements:
     _permission: 'administer workflow'
-
+  options:
+    parameters:
+      workflow_type:
+        type: entity:workflow_type
 
 ### Workflow Transitions
 entity.workflow_transition.collection:
@@ -34,6 +37,10 @@ entity.workflow_transition.collection:
     _title_callback: 'workflow_url_get_title'
   requirements:
     _permission: 'administer workflow'
+  options:
+    parameters:
+      workflow_type:
+        type: entity:workflow_type
 
 ### Workflow Labels
 entity.workflow_label.collection:
@@ -44,3 +51,7 @@ entity.workflow_label.collection:
     _title_callback: 'workflow_url_get_title'
   requirements:
     _permission: 'administer workflow'
+  options:
+    parameters:
+      workflow_type:
+        type: entity:workflow_type

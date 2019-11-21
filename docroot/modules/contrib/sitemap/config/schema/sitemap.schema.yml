@@ -27,6 +27,24 @@ sitemap.settings:
       nullable: true
       sequence:
         type: sitemap.settings.plugins.[%key]
+    plugin_settings__active_tab:
+      type: string
+      label: 'Plugin settings active tab'
+    submit:
+      type: string
+      label: 'Save configuration'
+    form_build_id:
+      type: string
+      label: 'Form build ID'
+    form_token:
+      type: string
+      label: 'Form token'
+    form_id:
+      type: string
+      label: 'sitemap_settings'
+    op:
+      type: string
+      label: 'Save configuration'
 
 #    show_titles:
 #      type: boolean
@@ -89,13 +107,13 @@ sitemap.settings:
 #  type: integer
 #  label: 'Weight'
 #
-#system.menu.*.third_party.sitemap:
-#  type: mapping
-#  label: 'Menu customizations'
-#  mapping:
-#    sitemap_display_name:
-#      type: text
-#      label: 'Sitemap display name'
+system.menu.*.third_party.sitemap:
+  type: mapping
+  label: 'Menu customizations'
+  mapping:
+    sitemap_display_name:
+      type: text
+      label: 'Sitemap display name'
 
 sitemap.settings.plugins.*:
   type: mapping

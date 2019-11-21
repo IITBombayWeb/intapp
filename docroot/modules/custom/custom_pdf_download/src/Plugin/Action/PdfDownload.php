@@ -56,8 +56,7 @@ class PdfDownload extends ActionBase {
    * {@inheritdoc}
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    $access = $object->status->access('edit', $account, TRUE)->andIf($object->access('update', $
-    account, TRUE));
+    $access = $object->status->access('edit', $account, TRUE)->andIf($object->access('update', $account, TRUE));
     return $return_as_object ? $access : $access->isAllowed();
   }
 
