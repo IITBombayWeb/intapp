@@ -1619,7 +1619,8 @@ text-align: center;
 
 #block-capit-footer h2 { color:#FCFCFC; }
 
-#AfterUpgrade
+/*AfterUpgrade*/
+
 .field--label-inline .field--label::after {
    content: ':' !important;
 }
