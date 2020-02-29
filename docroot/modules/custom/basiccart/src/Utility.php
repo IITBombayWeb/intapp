@@ -111,7 +111,7 @@ class Utility {
       return (object) $return;
     }
 
-    $total_price = 0;
+    $total_price = 2000;
     /* for single applicaton wise price
     foreach ($cart['cart'] as $nid => $node) {
     $langcode = $node->language()->getId();
@@ -135,24 +135,25 @@ class Utility {
           $tax_term_load = taxonomy_term_load($tax_term);
           $institute_price = $tax_term_load->getTranslation('en')->get('field_iit_app_price')->getValue()[0]['value'];
           if (isset($institute_price)) {
-            $total_price += $institute_price;
+            //$total_price += $institute_price;
+            $total_price=2000;
           }
           $value = 0;
         }
       }
     }
-    $return['price'] = $total_price;
+    $return['price'] = 2000;
 
     // Checking whether to apply the VAT or not.
-    $vat_is_enabled = (int) $config->get('vat_state');
+/*    $vat_is_enabled = (int) $config->get('vat_state');
     if (!empty($vat_is_enabled) && $vat_is_enabled) {
       $vat_value = (float) $config->get('vat_value');
       $vat_value = ($total_price * $vat_value) / 100;
       $total_price += $vat_value;
       // Adding VAT and total price to the return array.
       $return['vat'] = $vat_value;
-    }
-    $return['total'] = $total_price;
+    }*/
+    $return['total'] = 2000;
     return (object) $return;
   }
 
@@ -189,19 +190,20 @@ class Utility {
    * @return price
    *   The price in the custom format.
    */
+  
   public static function price_format($price) {
     $config = self::cart_settings();
     $format = $config->get('price_format');
     $currency = $config->get('currency');
 
-    $price = (float) $price;
-    switch ($format) {
+    $price = (int) $price;
+   switch ($format) {
       case 0:
         $price = number_format($price, 2, ',', ' ') . ' ' . $currency;
         break;
 
       case 1:
-        $price = number_format($price, 2, '.', ' ') . ' ' . $currency;
+        $price = number_format($price) . ' ' . $currency;
         break;
 
       case 2:
@@ -320,7 +322,7 @@ class Utility {
           'formatter' => [
             'default' => [
               'label' => 'inline',
-              'type' => 'number_decimal',
+              'type' => 'int',
               'weight' => 11,
             ],
             'search_result' => 'default',
