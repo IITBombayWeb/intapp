@@ -44,6 +44,14 @@ class ConfirmPayment extends FormBase {
       $config = $utility::cart_settings();
       $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
       $user = \Drupal::currentUser();
+      $form['welcome1'] = [
+        '#markup' => '<div class="notification"><h5><b><i>Please note </i></b>: Any additional programmes you may apply in future will
+        incur an <b>*additional*</b> expense of <b>Rs. 2000</b> at that time. 
+        Alternatively, you can go back and include all programmes before proceeding to pay now." </h5></div>',
+        '#prefix' => '<div class="basiccart-cart basiccart-grid bascart-totl">',
+        '#suffix' => '</div>',
+        
+      ];
       $form['welcome'] = [
         '#markup' => '<h4><b><h3> Do You Want to Continue payment? </b></h4>',
         '#prefix' => '<div class="basiccart-cart basiccart-grid bascart-totl">',
