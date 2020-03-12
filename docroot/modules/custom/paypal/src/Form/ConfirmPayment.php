@@ -44,6 +44,14 @@ class ConfirmPayment extends FormBase {
       $config = $utility::cart_settings();
       $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
       $user = \Drupal::currentUser();
+      $form['welcome1'] = [
+        '#markup' => '<div class="notification"><h5><b><i>Please note </i></b>: Any additional programmes you may apply in future will
+        incur an <b>*additional*</b> expense of <b>Rs. 2000</b> at that time. 
+        Alternatively, you can go back and include all programmes before proceeding to pay now." </h5></div>',
+        '#prefix' => '<div class="basiccart-cart basiccart-grid bascart-totl">',
+        '#suffix' => '</div>',
+        
+      ];
       $form['welcome'] = [
         '#markup' => '<h4><b><h3> Do You Want to Continue payment? </b></h4>',
         '#prefix' => '<div class="basiccart-cart basiccart-grid bascart-totl">',
@@ -120,16 +128,18 @@ class ConfirmPayment extends FormBase {
       // Firstly Append paypal account to querystring.
       $querystring .= "?business=" . urlencode($paypal_email) . "&";
       $c = 1;
-      foreach ($filtr_iits as $key => $tax_term) {
-        $tax_term_load = taxonomy_term_load($tax_term);
-        $institute_price = $tax_term_load->getTranslation('en')->get('field_iit_app_price')->getValue()[0]['value'];
-        $iit = $tax_term_load->getTranslation('en')->get('name')->getValue()[0]['value'];
-        $institute_price1 = urlencode(stripslashes($institute_price));
-        $iit1 = urlencode(stripslashes($iit));
-        $querystring .= "item_name_" . $c . "=$iit1&";
-        $querystring .= "amount_" . $c . "=$institute_price1&";
-        $c++;
-      }
+      //foreach ($filtr_iits as $key) {
+        $tax_term_load = taxonomy_term_load($filtr_iits);
+        //$institute_price = $tax_term_load->getTranslation('en')->get('field_iit_app_price')->getValue()[0]['value'];
+        $institute_price = 2000;
+       // $iit = $tax_term_load->getTranslation('en')->get('name')->getValue()[0]['value'];
+       $iit="Packets Total";
+       // $institute_price1 = urlencode(stripslashes($institute_price));
+       // $iit1 = urlencode(stripslashes($iit));
+        $querystring .= "item_name_" . $c . "=$iit&";
+        $querystring .= "amount_" . $c . "=$institute_price&";
+        //$c++;
+     // }
       $querystring .= "cmd=" . urlencode($cart_mthd) . "&";
       $querystring .= "upload=" . urlencode($upload) . "&";
       $querystring .= "no_shipping=" . urlencode($no_shipping) . "&";
@@ -137,8 +147,13 @@ class ConfirmPayment extends FormBase {
       $querystring .= "handling=" . urlencode($handling) . "&";
       $querystring .= "custom=" . urlencode($unique_id) . "&";
       // Append paypal return addresses.
+      $notification_url=' "Please note: any additional programmes you may apply in future will
+      incur an *additional* expense of Rs. 2000 at that time. Alternatively, 
+      you can go back and include all programmes before proceeding to pay now." ';
       $querystring .= "return=" . urlencode(stripslashes($return_url)) . "&";
+      $querystring .= "notifcation_return=" . urlencode(stripslashes($notification_url)) . "&";
       $querystring .= "cancel_return=" . urlencode(stripslashes($cancel_url)) . "&";
+      
       $querystring .= "notify_url=" . urlencode($notify_url);
 
       $insert_id = \Drupal::database()->insert('paypal_payment_status')

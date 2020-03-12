@@ -33,10 +33,10 @@ class MultiValuePluginBaseField extends ContentEntityBase {
     $fields = parent::baseFieldDefinitions($entity_type);
     $fields['plugin'] = BaseFieldDefinition::create('plugin:plugin_test_helper_mock')
       ->setLabel(t('Plugin'))
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'type' => 'plugin_label',
         'weight' => 0,
-      ))
+      ])
       ->setDisplayConfigurable('view', TRUE)
       ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 

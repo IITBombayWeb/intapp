@@ -4,13 +4,20 @@
  * Theme implementation to display a single Sitemap plugin item.
  *
  * Available variables:
- * - title: The title of the mapping, if configured.
- * - attributes: Attributes for the mapping conainter.
- * - content: A renderable array of mapping content.
+ * - title: The title of the sitemap item if configured.
+ * - content: A renderable array of sitemap item content.
+ * - sitemap: The sitemap plugin definition.
+ * - attributes: Attributes for the sitemap item conainter.
  **/
  #}
+{%
+  set classes = [
+    'sitemap-item',
+    'sitemap-plugin--' ~ sitemap.id,
+  ]
+ %}
 {% if content %}
-<div{{ attributes.addClass('sitemap-item') }}>
+<div{{ attributes.addClass(classes) }}>
   {% if title %}
     <h2>{{ title }}</h2>
   {% endif %}

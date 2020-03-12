@@ -108,7 +108,7 @@ interface WorkflowManagerInterface {
    *
    * @return
    */
-  public static function getWorkflowTransitionForm(EntityInterface $entity, string $field_name);
+  public static function getWorkflowTransitionForm(EntityInterface $entity, $field_name, array $form_state_additions = []);
 
   /**
    * Returns the attached fields (via Field UI)
@@ -168,6 +168,6 @@ interface WorkflowManagerInterface {
    *
    * @return bool
    */
-  public static function isWorkflowEntityType(string $entity_type_id);
+  public static function isWorkflowEntityType($entity_type_id);
 
 }

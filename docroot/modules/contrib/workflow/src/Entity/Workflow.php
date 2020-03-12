@@ -85,6 +85,13 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
   public $transitions = [];
 
   /**
+   * The module implementing this object, for config_export.
+   *
+   * @var string
+   */
+  protected $module = 'workflow';
+
+  /**
    * CRUD functions.
    */
 
@@ -135,7 +142,10 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface {
    */
   public function delete() {
     if (!$this->isDeletable()) {
-      // @todo: throw error if not workflow->isDeletable().
+      $message = t('Workflow %workflow is not Deletable. Please delete the field where this workflow type is reffered',
+        ['%workflow' => $this->label()]);
+      drupal_set_message($message, 'error');
+      return;
     }
     else {
       // Delete associated state (also deletes any associated transitions).

@@ -1,16 +1,11 @@
 name: Media
-description: 'Create reusable media.'
+description: 'Manages the creation, configuration, and display of media items.'
 type: module
 package: Core
-# version: VERSION
-# core: 8.x
+version: VERSION
+core: 8.x
 dependencies:
-  - file
-  - image
-  - user
-
-# Information added by Drupal.org packaging script on 2019-04-17
-version: '8.5.15'
-core: '8.x'
-project: 'drupal'
-datestamp: 1555533524
+  - drupal:file
+  - drupal:image
+  - drupal:user
+configure: media.settings

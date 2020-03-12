@@ -80,23 +80,23 @@ class PluginTypeManager implements PluginTypeManagerInterface {
 
     $this->pluginTypes = [];
 
+    // List the available plugin type providers.
+    $providers = array_map(function(Extension $module) {
+      return $module->getName();
+    }, $this->moduleHandler->getModuleList());
+    $providers[] = 'core';
+
     // \Drupal\Component\Discovery\YamlDiscovery::findAll() caches raw file
     // contents, but we want to cache plugin types for better performance.
     $files = $this->findFiles();
     $providers_by_file = array_flip($files);
-    $file_cache = FileCacheFactory::get('plugin:plugin_type');
+    $file_cache = FileCacheFactory::get('plugin:plugin_type:' . hash('sha256', serialize($providers)));
 
     // Try to load from the file cache first.
     foreach ($file_cache->getMultiple($files) as $file => $plugin_types_by_file) {
       $this->pluginTypes = array_merge($this->pluginTypes, $plugin_types_by_file);
       unset($providers_by_file[$file]);
     }
-
-    // List the available plugin type providers.
-    $providers = array_map(function(Extension $module) {
-      return $module->getName();
-    }, $this->moduleHandler->getModuleList());
-    $providers[] = 'core';
 
     // If there are files left that were not returned from the cache, load and
     // parse them now. This list was flipped above and is keyed by filename.

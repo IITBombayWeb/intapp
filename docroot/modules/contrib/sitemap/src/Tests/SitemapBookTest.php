@@ -16,7 +16,7 @@ class SitemapBookTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('sitemap', 'book');
+  public static $modules = ['sitemap', 'book'];
 
   /**
    * A book node.
@@ -32,13 +32,13 @@ class SitemapBookTest extends WebTestBase {
     parent::setUp();
 
     // Create user then login.
-    $this->user = $this->drupalCreateUser(array(
+    $this->user = $this->drupalCreateUser([
       'administer sitemap',
       'access sitemap',
       'create book content',
       'create new books',
       'administer book outlines',
-    ));
+    ]);
     $this->drupalLogin($this->user);
   }
 
@@ -57,9 +57,9 @@ class SitemapBookTest extends WebTestBase {
 
     // Configure sitemap to show the test book.
     $bid = $book->id();
-    $edit = array(
+    $edit = [
       'show_books[' . $bid . ']' => $bid,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that all book links are displayed by default.
@@ -70,9 +70,9 @@ class SitemapBookTest extends WebTestBase {
     }
 
     // Configure sitemap to not expand books.
-    $edit = array(
+    $edit = [
       'books_expanded' => FALSE,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that the top-level book link is displayed, but that the others are
@@ -84,7 +84,6 @@ class SitemapBookTest extends WebTestBase {
     }
 
   }
-
 
   /**
    * Creates a new book with a page hierarchy. Adapted from BookTest.
@@ -102,7 +101,7 @@ class SitemapBookTest extends WebTestBase {
      *  |- Node 04
      *  |- Node 05
      */
-    $nodes = array();
+    $nodes = [];
     $nodes[] = $this->createBookNode($book->id());
     $nodes[] = $this->createBookNode($book->id(), $nodes[0]->book['nid']);
     $nodes[] = $this->createBookNode($book->id(), $nodes[0]->book['nid']);
@@ -111,7 +110,6 @@ class SitemapBookTest extends WebTestBase {
 
     return $nodes;
   }
-
 
   /**
    * Creates a book node. From BookTest.
@@ -123,6 +121,8 @@ class SitemapBookTest extends WebTestBase {
    *
    * @return object
    *   Returns object
+   *
+   * @throws \Exception
    */
   protected function createBookNode($book_nid, $parent = NULL) {
     // $number does not use drupal_static as it should not be reset
@@ -130,7 +130,7 @@ class SitemapBookTest extends WebTestBase {
     // Used to ensure that when sorted nodes stay in same order.
     static $number = 0;
 
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = str_pad($number, 2, '0', STR_PAD_LEFT) . ' - SimpleTest test node ' . $this->randomMachineName(10);
     $edit['body[0][value]'] = 'SimpleTest test body ' . $this->randomMachineName(32) . ' ' . $this->randomMachineName(32);
     $edit['book[bid]'] = $book_nid;

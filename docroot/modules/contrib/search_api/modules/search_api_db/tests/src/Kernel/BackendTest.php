@@ -4,8 +4,11 @@ namespace Drupal\Tests\search_api_db\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database as CoreDatabase;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
+use Drupal\search_api\Event\IndexingItemsEvent;
+use Drupal\search_api\Event\SearchApiEvents;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Plugin\search_api\data_type\value\TextToken;
@@ -65,6 +68,30 @@ class BackendTest extends BackendTestBase {
     ]);
 
     $this->installConfig(['search_api_test_db']);
+
+    // Add additional fields to the search index that have the same ID as
+    // column names used by this backend, to see whether this leads to any
+    // conflicts.
+    $index = $this->getIndex();
+    $fields_helper = \Drupal::getContainer()->get('search_api.fields_helper');
+    $column_names = [
+      'item_id',
+      'field_name',
+      'word',
+      'score',
+      'value',
+    ];
+    $field_info = [
+      'datasource_id' => 'entity:entity_test_mulrev_changed',
+      'property_path' => 'type',
+      'type' => 'string',
+    ];
+    foreach ($column_names as $column_name) {
+      $field_info['label'] = "Test field $column_name";
+      $field = $fields_helper->createField($index, $column_name, $field_info);
+      $index->addField($field);
+    }
+    $index->save();
   }
 
   /**
@@ -72,8 +99,10 @@ class BackendTest extends BackendTestBase {
    */
   protected function checkBackendSpecificFeatures() {
     $this->checkMultiValuedInfo();
-    $this->editServerPartial();
+    $this->setServerMatchMode();
     $this->searchSuccessPartial();
+    $this->setServerMatchMode('prefix');
+    $this->searchSuccessStartsWith();
     $this->editServerMinChars();
     $this->searchSuccessMinChars();
     $this->checkUnknownOperator();
@@ -91,6 +120,8 @@ class BackendTest extends BackendTestBase {
     $this->regressionTest2926733();
     $this->regressionTest2938646();
     $this->regressionTest2925464();
+    $this->regressionTest2994022();
+    $this->regressionTest2916534();
   }
 
   /**
@@ -105,13 +136,18 @@ class BackendTest extends BackendTestBase {
       'body',
       'category',
       'created',
+      'field_name',
       'id',
+      'item_id',
       'keywords',
       'name',
+      'score',
       'search_api_datasource',
       'search_api_language',
       'type',
+      'value',
       'width',
+      'word',
     ];
     $actual_fields = array_keys($field_infos);
     sort($actual_fields);
@@ -206,15 +242,17 @@ class BackendTest extends BackendTestBase {
   }
 
   /**
-   * Edits the server to enable partial matches.
+   * Edits the server to sets the match mode.
    *
-   * @param bool $enable
-   *   (optional) Whether partial matching should be enabled or disabled.
+   * @param string $match_mode
+   *   The matching mode to set – "words", "partial" or "prefix".
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function editServerPartial($enable = TRUE) {
+  protected function setServerMatchMode($match_mode = 'partial') {
     $server = $this->getServer();
     $backend_config = $server->getBackendConfig();
-    $backend_config['partial_matches'] = $enable;
+    $backend_config['matching'] = $match_mode;
     $server->setBackendConfig($backend_config);
     $this->assertTrue((bool) $server->save(), 'The server was successfully edited.');
     $this->resetEntityCache();
@@ -243,7 +281,7 @@ class BackendTest extends BackendTestBase {
     $this->assertResults([], $results, 'Partial search for »foo nonexistent«');
 
     $results = $this->buildSearch('bar nonexistent')->execute();
-    $this->assertResults([], $results, 'Partial search for »foo nonexistent«');
+    $this->assertResults([], $results, 'Partial search for »bar nonexistent«');
 
     $keys = [
       '#conjunction' => 'AND',
@@ -272,13 +310,64 @@ class BackendTest extends BackendTestBase {
   }
 
   /**
+   * Tests whether prefix matching works.
+   */
+  protected function searchSuccessStartsWith() {
+    $results = $this->buildSearch('foobaz')->range(0, 1)->execute();
+    $this->assertResults([1], $results, 'Prefix search for »foobaz«');
+
+    $results = $this->buildSearch('foo', [], [], FALSE)
+      ->sort('search_api_relevance', QueryInterface::SORT_DESC)
+      ->sort('id')
+      ->execute();
+    $this->assertResults([1, 2, 4, 3, 5], $results, 'Prefix search for »foo«');
+
+    $results = $this->buildSearch('foo tes')->execute();
+    $this->assertResults([1, 2, 3, 4], $results, 'Prefix search for »foo tes«');
+
+    $results = $this->buildSearch('oob est')->execute();
+    $this->assertResults([], $results, 'Prefix search for »oob est«');
+
+    $results = $this->buildSearch('foo nonexistent')->execute();
+    $this->assertResults([], $results, 'Prefix search for »foo nonexistent«');
+
+    $results = $this->buildSearch('bar nonexistent')->execute();
+    $this->assertResults([], $results, 'Prefix search for »bar nonexistent«');
+
+    $keys = [
+      '#conjunction' => 'AND',
+      'foob',
+      [
+        '#conjunction' => 'OR',
+        'tes',
+        'nonexistent',
+      ],
+    ];
+    $results = $this->buildSearch($keys)->execute();
+    $this->assertResults([1, 2, 3], $results, 'Prefix search for complex keys');
+
+    $results = $this->buildSearch('foo', ['category,item_category'], [], FALSE)
+      ->sort('id', QueryInterface::SORT_DESC)
+      ->execute();
+    $this->assertResults([2, 1], $results, 'Prefix search for »foo« with additional filter');
+
+    $query = $this->buildSearch();
+    $conditions = $query->createConditionGroup('OR');
+    $conditions->addCondition('name', 'test');
+    $conditions->addCondition('body', 'test');
+    $query->addConditionGroup($conditions);
+    $results = $query->execute();
+    $this->assertResults([1, 2, 3, 4], $results, 'Prefix search with multi-field fulltext filter');
+  }
+
+  /**
    * Edits the server to change the "Minimum word length" setting.
    */
   protected function editServerMinChars() {
     $server = $this->getServer();
     $backend_config = $server->getBackendConfig();
     $backend_config['min_chars'] = 4;
-    $backend_config['partial_matches'] = FALSE;
+    $backend_config['matching'] = 'words';
     $server->setBackendConfig($backend_config);
     $success = (bool) $server->save();
     $this->assertTrue($success, 'The server was successfully edited.');
@@ -576,6 +665,79 @@ class BackendTest extends BackendTestBase {
   }
 
   /**
+   * Tests facets functionality for empty result sets.
+   *
+   * @see https://www.drupal.org/node/2994022
+   */
+  protected function regressionTest2994022() {
+    $query = $this->buildSearch('nonexistent_search_term');
+    $facets['category'] = [
+      'field' => 'category',
+      'limit' => 0,
+      'min_count' => 0,
+      'missing' => FALSE,
+      'operator' => 'and',
+    ];
+    $query->setOption('search_api_facets', $facets);
+    $results = $query->execute();
+    $this->assertResults([], $results, 'Non-existent keyword');
+    $expected = [
+      ['count' => 0, 'filter' => '"article_category"'],
+      ['count' => 0, 'filter' => '"item_category"'],
+    ];
+    $category_facets = $results->getExtraData('search_api_facets')['category'];
+    usort($category_facets, [$this, 'facetCompare']);
+    $this->assertEquals($expected, $category_facets, 'Correct facets were returned for minimum count 0');
+
+    $query = $this->buildSearch('nonexistent_search_term');
+    $conditions = $query->createConditionGroup('AND', ['facet:category']);
+    $conditions->addCondition('category', 'article_category');
+    $query->addConditionGroup($conditions);
+    $facets['category'] = [
+      'field' => 'category',
+      'limit' => 0,
+      'min_count' => 0,
+      'missing' => FALSE,
+      'operator' => 'and',
+    ];
+    $query->setOption('search_api_facets', $facets);
+    $results = $query->execute();
+    $this->assertResults([], $results, 'Non-existent keyword with filter');
+    $expected = [
+      ['count' => 0, 'filter' => '"article_category"'],
+      ['count' => 0, 'filter' => '"item_category"'],
+    ];
+    $category_facets = $results->getExtraData('search_api_facets')['category'];
+    usort($category_facets, [$this, 'facetCompare']);
+    $this->assertEquals($expected, $category_facets, 'Correct facets were returned for minimum count 0');
+  }
+
+  /**
+   * Tests edge cases for partial matching.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *
+   * @see https://www.drupal.org/node/2916534
+   */
+  protected function regressionTest2916534() {
+    $old = $this->getServer()->getBackendConfig()['matching'];
+    $this->setServerMatchMode();
+
+    $entity_id = count($this->entities) + 1;
+    $entity = $this->addTestEntity($entity_id, [
+      'name' => 'foo foobar foobar',
+      'type' => 'article',
+    ]);
+    $this->indexItems($this->indexId);
+
+    $results = $this->buildSearch('foo', [], ['name'])->execute();
+    $this->assertResults([1, 2, 4, $entity_id], $results, 'Partial search for »foo«');
+
+    $entity->delete();
+    $this->setServerMatchMode($old);
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function checkIndexWithoutFields() {
@@ -661,7 +823,7 @@ class BackendTest extends BackendTestBase {
     $expected = [
       'search_api_db_database_search_index' => 'search_api_db_database_search_index',
     ];
-    $this->assertEquals($expected, $tables, 'All the tables of the the Database Search module have been removed.');
+    $this->assertEquals($expected, $tables, 'All the tables of the Database Search module have been removed.');
   }
 
   /**
@@ -701,6 +863,9 @@ class BackendTest extends BackendTestBase {
     // \Drupal\search_api\Entity\Index::indexSpecificItems().
     $index->alterIndexedItems($items);
     \Drupal::moduleHandler()->alter('search_api_index_items', $index, $items);
+    $event = new IndexingItemsEvent($index, $items);
+    \Drupal::getContainer()->get('event_dispatcher')
+      ->dispatch(SearchApiEvents::INDEXING_ITEMS, $event);
     foreach ($items as $item) {
       // This will cache the extracted fields so processors, etc., can retrieve
       // them directly.
@@ -788,14 +953,20 @@ class BackendTest extends BackendTestBase {
     // Test different input values, similar to @dataProvider (but with less
     // overhead).
     $t = 1400000000;
-    $f = 'Y-m-d H:i:s';
+    $date_time_format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
+    $date_format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
     $test_values = [
       'null' => [NULL, NULL],
       'timestamp' => [$t, $t],
       'string timestamp' => ["$t", $t],
       'float timestamp' => [$t + 0.12, $t],
-      'date string' => [gmdate($f, $t), $t],
-      'date string with timezone' => [date($f . 'P', $t), $t],
+      'date string' => [gmdate($date_time_format, $t), $t],
+      'date string with timezone' => [date($date_time_format . 'P', $t), $t],
+      'date only' => [
+        date($date_format, $t),
+        // Date-only fields are stored with the default time (12:00:00).
+        strtotime(date($date_format, $t) . 'T12:00:00+00:00'),
+      ],
     ];
 
     // Get storage information for quickly checking the indexed value.
@@ -822,6 +993,99 @@ class BackendTest extends BackendTestBase {
         $this->assertEquals($expected, $indexed_value, "Indexing of date field with $label value.");
       }
     }
+  }
+
+  /**
+   * Tests negated fulltext searches with substring matching.
+   *
+   * @param string $match_mode
+   *   The match mode to use – "partial", "prefix" or "words".
+   *
+   * @see https://www.drupal.org/project/search_api/issues/2949962
+   *
+   * @dataProvider regression2949962DataProvider
+   */
+  public function testRegression2949962($match_mode) {
+    $this->insertExampleContent();
+    $this->setServerMatchMode($match_mode);
+    $this->indexItems($this->indexId);
+
+    $searches = [
+      'not this word' => [
+        'keys' => [
+          '#conjunction' => 'OR',
+          '#negation' => TRUE,
+          'test',
+        ],
+        'expected_results' => [
+          1,
+          3,
+          4,
+          5,
+        ],
+      ],
+      'none of these words' => [
+        'keys' => [
+          '#conjunction' => 'OR',
+          '#negation' => TRUE,
+          'test',
+          'foo',
+        ],
+        'expected_results' => [
+          3,
+          5,
+        ],
+      ],
+      'not all of these words' => [
+        'keys' => [
+          '#conjunction' => 'AND',
+          '#negation' => TRUE,
+          'foo baz',
+        ],
+        'expected_results' => [
+          2,
+          3,
+          5,
+        ],
+      ],
+      'complex keywords' => [
+        'keys' => [
+          [
+            'foo',
+            'bar',
+            '#conjunction' => 'AND',
+          ],
+          [
+            'test',
+            '#conjunction' => 'OR',
+            '#negation' => TRUE,
+          ],
+          '#conjunction' => 'AND',
+        ],
+        'expected_results' => [
+          1,
+        ],
+      ],
+    ];
+
+    foreach ($searches as $search) {
+      $results = $this->buildSearch($search['keys'], [], ['name'])->execute();
+      $this->assertResults($search['expected_results'], $results);
+    }
+  }
+
+  /**
+   * Provides test data for testRegression2949962().
+   *
+   * @return array
+   *   An associative array of argument arrays for testRegression2949962().
+   */
+  public function regression2949962DataProvider() {
+    return [
+      'Match mode "partial"' => ['partial'],
+      'Match mode "prefix"' => ['prefix'],
+      'Match mode "words"' => ['words'],
+    ];
   }
 
 }

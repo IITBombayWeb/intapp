@@ -78,7 +78,7 @@ class WorkflowDefaultWidget extends WidgetBase {
     $field_storage = $field_config->getFieldStorageDefinition();
 
     $entity = $item->getEntity();
-    $field_name = $field_storage->get('field_name');
+    $field_name = $field_storage->getName();
 
     // Create a transition, to pass to the form. No need to use setValues().
     $from_sid = workflow_node_current_state($entity, $field_name);

@@ -16,14 +16,16 @@ class SitemapTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('sitemap');
+  public static $modules = ['sitemap'];
 
   /**
-   * User accounts
+   * User accounts.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
    */
-  public $user_admin;
-  public $user_view;
-  public $user_noaccess;
+  public $userAdmin;
+  public $userView;
+  public $userNoAccess;
 
   /**
    * {@inheritdoc}
@@ -32,18 +34,18 @@ class SitemapTestBase extends WebTestBase {
     parent::setUp();
 
     // Create user with admin permissions.
-    $this->user_admin = $this->drupalCreateUser(array(
+    $this->userAdmin = $this->drupalCreateUser([
       'administer sitemap',
       'access sitemap',
-    ));
+    ]);
 
     // Create user with view permissions.
-    $this->user_view = $this->drupalCreateUser(array(
+    $this->userView = $this->drupalCreateUser([
       'access sitemap',
-    ));
+    ]);
 
     // Create user without any sitemap permissions.
-    $this->user_noaccess = $this->drupalCreateUser();
+    $this->userNoAccess = $this->drupalCreateUser();
   }
 
 }

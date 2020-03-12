@@ -2,9 +2,6 @@
 
 namespace Drupal\sitemap\Tests;
 
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
-
 /**
  * Tests the display of taxonomies based on sitemap settings.
  *
@@ -18,17 +15,17 @@ class SitemapTaxonomyTermsTest extends SitemapTaxonomyTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create terms
+    // Create terms.
     $this->terms = $this->createTerms($this->vocabulary);
 
   }
 
   /**
-   * Tests the term_threshold setting
+   * Tests the term_threshold setting.
    */
   public function testTermThreshold() {
     // Get term names from terms.
-    $names = array();
+    $names = [];
     foreach ($this->terms as $term) {
       $names[] = $term->label();
     }
@@ -40,9 +37,9 @@ class SitemapTaxonomyTermsTest extends SitemapTaxonomyTestBase {
     }
 
     // Show all taxonomy terms, even if they are not assigned to any nodes.
-    $edit = array(
+    $edit = [
       'term_threshold' => -1,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that terms without nodes are now displayed on the sitemap.
@@ -64,9 +61,9 @@ class SitemapTaxonomyTermsTest extends SitemapTaxonomyTestBase {
     }
 
     // Require at least one node for taxonomy terms to show up.
-    $edit = array(
+    $edit = [
       'term_threshold' => 0,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that terms with content are displayed on the sitemap as links.
@@ -76,9 +73,9 @@ class SitemapTaxonomyTermsTest extends SitemapTaxonomyTestBase {
     }
 
     // Require at least two nodes for taxonomy terms to show up.
-    $edit = array(
+    $edit = [
       'term_threshold' => 1,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     $terms = $this->terms;
@@ -106,9 +103,9 @@ class SitemapTaxonomyTermsTest extends SitemapTaxonomyTestBase {
     $this->assertEqual(substr_count($this->getTextContent(), '(1)'), 3, 'Node counts are included');
 
     // Configure module to hide node counts.
-    $edit = array(
+    $edit = [
       'show_count' => FALSE,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that node counts are not included in the sitemap.
@@ -123,21 +120,21 @@ class SitemapTaxonomyTermsTest extends SitemapTaxonomyTestBase {
 
     // Set to show all taxonomy terms, even if they are not assigned to any
     // nodes.
-    $edit = array(
+    $edit = [
       'term_threshold' => -1,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Get tags from terms.
-    $tags = array();
+    $tags = [];
     foreach ($this->terms as $term) {
       $tags[] = $term->label();
     }
 
     // Change vocabulary depth to -1.
-    $edit = array(
+    $edit = [
       'vocabulary_depth' => -1,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that all tags are listed in the sitemap.
@@ -147,9 +144,9 @@ class SitemapTaxonomyTermsTest extends SitemapTaxonomyTestBase {
     }
 
     // Change vocabulary depth to 0.
-    $edit = array(
+    $edit = [
       'vocabulary_depth' => 0,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that no tags are listed in the sitemap.
@@ -159,9 +156,9 @@ class SitemapTaxonomyTermsTest extends SitemapTaxonomyTestBase {
     }
 
     // Change vocabulary depth to 1.
-    $edit = array(
+    $edit = [
       'vocabulary_depth' => 1,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that only tag 1 is listed in the sitemap.
@@ -171,9 +168,9 @@ class SitemapTaxonomyTermsTest extends SitemapTaxonomyTestBase {
     $this->assertNoText($tags[2]);
 
     // Change vocabulary depth to 2.
-    $edit = array(
+    $edit = [
       'vocabulary_depth' => 2,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that tag 1 and tag 2 are listed in the sitemap.
@@ -183,9 +180,9 @@ class SitemapTaxonomyTermsTest extends SitemapTaxonomyTestBase {
     $this->assertNoText($tags[2]);
 
     // Change vocabulary depth to 3.
-    $edit = array(
+    $edit = [
       'vocabulary_depth' => 3,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that all tags are listed in the sitemap.

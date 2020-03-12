@@ -140,21 +140,13 @@ class WorkflowManager implements WorkflowManagerInterface {
   public static function executeTransitionsOfEntity(EntityInterface $entity) {
 
     // Avoid this hook on workflow objects.
-    if (in_array($entity->getEntityTypeId(), [
-      'workflow_type',
-      'workflow_state',
-      'workflow_config_transition',
-      'workflow_transition',
-      'workflow_scheduled_transition',
-    ])) {
+    if (WorkflowManager::isWorkflowEntityType($entity->getEntityTypeId())) {
       return;
     }
 
     $user = workflow_current_user();
 
-    foreach (_workflow_info_fields($entity) as $field_info) {
-      $field_name = $field_info->getName();
-
+    foreach (workflow_get_workflow_field_names($entity) as $field_name) {
       // Transition is created in widget or WorkflowTransitionForm.
       /** @var $transition WorkflowTransitionInterface */
       $transition = $entity->$field_name->__get('workflow_transition');
@@ -345,7 +337,7 @@ class WorkflowManager implements WorkflowManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getWorkflowTransitionForm(EntityInterface $entity, string $field_name) {
+  public static function getWorkflowTransitionForm(EntityInterface $entity, $field_name, array $form_state_additions = []) {
     // Create a transition, to pass to the form. No need to use setValues().
     $current_sid = workflow_node_current_state($entity, $field_name);
     $transition = WorkflowTransition::create([$current_sid, 'field_name' => $field_name]);
@@ -353,7 +345,7 @@ class WorkflowManager implements WorkflowManagerInterface {
     // Create the WorkflowTransitionForm.
     /** @var \Drupal\Core\Entity\EntityFormBuilder $entity_form_builder */
     $entity_form_builder = \Drupal::getContainer()->get('entity.form_builder');
-    $form = $entity_form_builder->getForm($transition, 'add');
+    $form = $entity_form_builder->getForm($transition, 'add', $form_state_additions);
     return $form;
   }
 
@@ -455,7 +447,7 @@ class WorkflowManager implements WorkflowManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public static function isWorkflowEntityType(string $entity_type_id) {
+  public static function isWorkflowEntityType($entity_type_id) {
     return in_array($entity_type_id, [
       'workflow_type',
       'workflow_state',

@@ -19,13 +19,6 @@ function workflow_install() {
 }
 
 /**
- * Implements hook_uninstall().
- */
-function workflow_uninstall() {
-//  \Drupal::config('workflow.settings')->clear('workflow_states_per_page')->save(); // @FIXME
-}
-
-/**
  * Implements hook_requirements().
  *
  * Let admins know that Workflow is in use.

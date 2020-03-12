@@ -58,7 +58,7 @@ class WorkflowTransitionListController extends EntityListController implements C
 
   /**
    * Generates an overview table of older revisions of a node,
-   * but only if this::historyAccess() allows it.
+   * but only if WorkflowHistoryAccess::access() allows it.
    *
    * @param EntityInterface $node
    *   A node object.
@@ -135,83 +135,6 @@ class WorkflowTransitionListController extends EntityListController implements C
     $form['table']['#weight'] = 201;
 
     return $form;
-  }
-
-  /**
-   * Menu access control callback. Checks access to Workflow tab.
-   *
-   * This used to be D7-function workflow_tab_access($user, $entity).
-   *
-   * The History tab should not be used with multiple workflows per entity.
-   * Use the dedicated view for this use case.
-   * @todo D8: remove this in favour of View 'Workflow history per entity'.
-   * @todo D8-port: make this workflow for non-Node entity types.
-   *
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   Run access checks for this account.
-   *
-   * @return \Drupal\Core\Access\AccessResult
-   */
-  public function historyAccess(AccountInterface $account) {
-    static $access = [];
-
-    $uid = ($account) ? $account->id() : -1;
-
-    // @todo D8-port: make Workflow History tab happen for every entity_type.
-    // @see workflow.routing.yml, workflow.links.task.yml, WorkflowTransitionListController.
-    // ATM it only works for Nodes and Terms.
-    // This is a hack. The Route should always pass an object.
-    // On view tab, $entity is object,
-    // On workflow tab, $entity is id().
-    // Get the entity for this form.
-    $entity = workflow_url_get_entity();
-
-    /* @var $entity EntityInterface */
-    // Figure out the $entity's bundle and id.
-    $entity_type = $entity->getEntityTypeId();
-    $entity_bundle = $entity->bundle();
-    $entity_id = ($entity) ? $entity->id() : '';
-    $field_name = workflow_url_get_field_name();
-
-    if (isset($access[$uid][$entity_type][$entity_id][$field_name ? $field_name : 'no_field'])) {
-      return $access[$uid][$entity_type][$entity_id][$field_name ? $field_name : 'no_field'];
-    }
-
-    $access_result = AccessResult::forbidden();
-
-    // When having multiple workflows per bundle, use Views display
-    // 'Workflow history per entity' instead!
-    $fields = _workflow_info_fields($entity, $entity_type, $entity_bundle, $field_name);
-    if (!$fields) {
-      return AccessResult::forbidden();
-    }
-    else {
-      // @todo: Keep below code aligned between WorkflowState, ~Transition, ~TransitionListController
-      $uid = ($account) ? $account->id() : -1;
-      $entity_id = ($entity) ? $entity->id() : '';
-      // Determine if user is owner of the entity.
-      $is_owner = WorkflowManager::isOwner($account, $entity);
-
-      /**
-       * Determine if user has Access. Fill the cache.
-       */
-      // @todo: what to do with multiple workflow_fields per bundle? Use Views instead! Or introduce a setting.
-      // @todo D8-port: workflow_tab_access: use proper 'WORKFLOW_TYPE' permissions
-      foreach ($fields as $definition) {
-        $type_id = $definition->getSetting('workflow_type');
-        if ($account->hasPermission("access any $type_id workflow_transion overview")) {
-          $access_result = AccessResult::allowed();
-        }
-        elseif ($is_owner && $account->hasPermission("access own $type_id workflow_transion overview")) {
-          $access_result = AccessResult::allowed();
-        }
-        elseif ($account->hasPermission('administer nodes')) {
-          $access_result = AccessResult::allowed();
-        }
-        $access[$uid][$entity_type][$entity_id][$field_name ? $field_name : 'no_field'] = $access_result;
-      }
-    }
-    return $access_result;
   }
 
 }

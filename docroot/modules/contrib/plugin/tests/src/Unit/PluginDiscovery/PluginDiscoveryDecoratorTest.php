@@ -29,7 +29,7 @@ class PluginDiscoveryDecoratorTest extends UnitTestCase {
   protected $sut;
 
   public function setUp() {
-    $this->decoratedDiscovery = $this->getMock(DiscoveryInterface::class);
+    $this->decoratedDiscovery = $this->createMock(DiscoveryInterface::class);
 
     $this->sut = new PluginDiscoveryDecorator($this->decoratedDiscovery);
   }
@@ -77,8 +77,6 @@ class PluginDiscoveryDecoratorTest extends UnitTestCase {
    * @covers ::clearCachedDefinitions
    */
   public function testClearCachedDefinitionsWithUncachedDecoratedDiscovery() {
-    $this->decoratedDiscovery->expects($this->never())
-      ->method('clearCachedDefinitions');
     $this->decoratedDiscovery->expects($this->exactly(2))
       ->method('getDefinitions')
       ->willReturn([]);

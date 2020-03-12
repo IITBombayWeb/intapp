@@ -20,9 +20,9 @@ class Radios extends AdvancedPluginSelectorBase {
    */
   public function buildSelectorForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildSelectorForm($form, $form_state);
-    $form['clear'] = array(
+    $form['clear'] = [
       '#markup' => '<div style="clear: both;"></div>',
-    );
+    ];
 
     return $form;
   }
@@ -39,16 +39,16 @@ class Radios extends AdvancedPluginSelectorBase {
       $plugin_options[$plugin->getPluginId()] = $plugin_definition instanceof PluginLabelDefinitionInterface ? $plugin_definition->getLabel() : $plugin_definition->getId();
     }
     natcasesort($plugin_options);
-    $element['container']['plugin_id'] = array(
-      '#ajax' => array(
-        'callback' => array(get_class(), 'ajaxRebuildForm'),
+    $element['container']['plugin_id'] = [
+      '#ajax' => [
+        'callback' => [get_class(), 'ajaxRebuildForm'],
         'effect' => 'fade',
         'event' => 'change',
         'progress' => 'none',
-        'trigger_as' => array(
+        'trigger_as' => [
           'name' => $element['container']['change']['#name'],
-        ),
-      ),
+        ],
+      ],
       '#attached' => [
         'library' => ['plugin/plugin_selector.plugin_radios'],
       ],
@@ -59,7 +59,7 @@ class Radios extends AdvancedPluginSelectorBase {
       '#title' => $this->getlabel(),
       '#description' => $this->getDescription(),
       '#type' => 'radios',
-    );
+    ];
 
     return $element;
   }

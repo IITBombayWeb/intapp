@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\workflow\WorkflowTypeAttributeTrait;
 
 /**
  * Workflow configuration entity to persistently store configuration.
@@ -54,6 +55,11 @@ use Drupal\Core\Language\LanguageInterface;
  */
 class WorkflowState extends ConfigEntityBase {
 
+  /*
+   * Add variables and get/set methods for Workflow property.
+   */
+  use WorkflowTypeAttributeTrait;
+
   /**
    * The machine name.
    *
@@ -69,13 +75,6 @@ class WorkflowState extends ConfigEntityBase {
   public $label;
 
   /**
-   * The machine_name of the attached Workflow.
-   *
-   * @var string
-   */
-  public $wid;
-
-  /**
    * The weight of this Workflow state.
    *
    * @var int
@@ -89,11 +88,11 @@ class WorkflowState extends ConfigEntityBase {
   public $status = 1;
 
   /**
-   * The attached Workflow.
+   * The module implementing this object, for config_export.
    *
-   * @var Workflow
+   * @var string
    */
-  protected $workflow;
+  protected $module = 'workflow';
 
   /**
    * CRUD functions.
@@ -133,7 +132,7 @@ class WorkflowState extends ConfigEntityBase {
     // Create the machine_name for new states.
     // N.B.: Keep machine_name in WorkflowState and ~ListBuilder aligned.
     $sid = $this->id();
-    $wid = $this->wid;
+    $wid = $this->getWorkflowId();
     $label = $this->label();
 
     // Set the workflow-including machine_name.
@@ -185,7 +184,7 @@ class WorkflowState extends ConfigEntityBase {
     $result = [];
     foreach ($states as $state) {
       /** @var  WorkflowState $state */
-      if ((!$wid) || ($wid == $state->wid)) {
+      if ((!$wid) || ($wid == $state->getWorkflowId())) {
         $result[$state->id()] = $state;
       }
     }
@@ -198,8 +197,8 @@ class WorkflowState extends ConfigEntityBase {
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
     /** @var WorkflowState $a */
     /** @var WorkflowState $b */
-    $a_wid = $a->wid;
-    $b_wid = $b->wid;
+    $a_wid = $a->getWorkflowId();
+    $b_wid = $b->getWorkflowId();
     if ($a_wid == $b_wid) {
       $a_weight = $a->getWeight();
       $b_weight = $b->getWeight();
@@ -263,7 +262,7 @@ class WorkflowState extends ConfigEntityBase {
     }
 
     // Delete the transitions this state is involved in.
-    $workflow = Workflow::load($this->wid);
+    $workflow = Workflow::load($this->getWorkflowId());
     /** @var WorkflowInterface $workflow */
     /** @var WorkflowTransitionInterface $transition */
     foreach ($workflow->getTransitionsByStateId($current_sid, '') as $transition) {
@@ -293,39 +292,6 @@ class WorkflowState extends ConfigEntityBase {
    */
   public function getWeight() {
     return $this->weight;
-  }
-
-  /**
-   * Returns the Workflow ID of this State.
-   *
-   * @return string
-   *   Workflow Id.
-   */
-  public function getWorkflowId() {
-    return $this->wid;
-  }
-
-  /**
-   * Returns the Workflow object of this State.
-   *
-   * @return Workflow
-   *   Workflow object.
-   */
-  public function getWorkflow() {
-    if (!isset($this->workflow)) {
-      $this->workflow = Workflow::load($this->wid);
-    }
-    return $this->workflow;
-  }
-
-  /**
-   * @param Workflow $workflow
-   */
-  public function setWorkflow(Workflow $workflow) {
-    workflow_debug(__FILE__, __FUNCTION__, __LINE__);  // @todo D8-port: still test this snippet.
-
-    $this->wid = $workflow->id();
-    $this->workflow = $workflow;
   }
 
   /**
@@ -396,15 +362,16 @@ class WorkflowState extends ConfigEntityBase {
       // No workflow, no options ;-)
       return $transitions;
     }
+    // Load a User object, since we cannot add Roles to AccountInterface.
+    if (!$user = workflow_current_user($account)) {
+      // In some edge cases, no user is provided.
+      return $transitions;
+    }
 
     // @todo: Keep below code aligned between WorkflowState, ~Transition, ~TransitionListController
-
     /**
      * Get permissions of user, adding a Role to user, depending on situation.
      */
-    // Load a User object, since we cannot add Roles to AccountInterface.
-    /** @var \Drupal\user\UserInterface $user */
-    $user = workflow_current_user($account);
     // Determine if user is owner of the entity.
     $is_owner = WorkflowManager::isOwner($user, $entity);
 
@@ -423,6 +390,7 @@ class WorkflowState extends ConfigEntityBase {
      * Get the object and its permissions.
      */
     /** @var WorkflowConfigTransition[] $transitions */
+    /** @var Workflow $workflow */
     $transitions = $workflow->getTransitionsByStateId($this->id(), '');
 
     /**
@@ -518,6 +486,7 @@ class WorkflowState extends ConfigEntityBase {
       // We cannot use getTransitions, since there are no ConfigTransitions
       // from State with ID 0, and we do not want to repeat States.
       /** @var WorkflowState $state */
+      /** @var Workflow $workflow */
       foreach ($workflow->getStates() as $state) {
         $options[$state->id()] = html_entity_decode(t('@label', ['@label' => $state->label()]));
       }

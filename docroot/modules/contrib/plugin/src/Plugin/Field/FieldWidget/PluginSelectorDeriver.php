@@ -38,11 +38,11 @@ class PluginSelectorDeriver extends DeriverBase implements ContainerDeriverInter
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     foreach ($this->pluginSelectorManager->getDefinitions() as $plugin_id => $plugin_definition) {
-      $this->derivatives[$plugin_id] = array(
+      $this->derivatives[$plugin_id] = [
           'description' => isset($plugin_definition['description']) ? $plugin_definition['description'] : NULL,
           'label' => $plugin_definition['label'],
           'plugin_selector_id' => $plugin_id,
-        ) + $base_plugin_definition;
+        ] + $base_plugin_definition;
     }
 
     return parent::getDerivativeDefinitions($base_plugin_definition);

@@ -14,7 +14,7 @@ class SitemapTaxonomyTermsRssTest extends SitemapTaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('sitemap', 'node', 'taxonomy');
+  public static $modules = ['sitemap', 'node', 'taxonomy'];
 
   /**
    * {@inheritdoc}
@@ -22,14 +22,14 @@ class SitemapTaxonomyTermsRssTest extends SitemapTaxonomyTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create terms
+    // Create terms.
     $this->terms = $this->createTerms($this->vocabulary);
 
     // Set to show all taxonomy terms, even if they are not assigned to any
     // nodes.
-    $edit = array(
+    $edit = [
       'term_threshold' => -1,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
   }
@@ -46,9 +46,9 @@ class SitemapTaxonomyTermsRssTest extends SitemapTaxonomyTestBase {
     }
 
     // Change module not to include RSS links.
-    $edit = array(
+    $edit = [
       'show_rss_links' => 0,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that RSS links are not included in the sitemap.
@@ -65,9 +65,9 @@ class SitemapTaxonomyTermsRssTest extends SitemapTaxonomyTestBase {
     $terms = $this->terms;
 
     // Set RSS feed depth to -1.
-    $edit = array(
+    $edit = [
       'rss_taxonomy' => -1,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that all RSS links are included in the sitemap.
@@ -77,9 +77,9 @@ class SitemapTaxonomyTermsRssTest extends SitemapTaxonomyTestBase {
     }
 
     // Change RSS feed depth to 0.
-    $edit = array(
+    $edit = [
       'rss_taxonomy' => 0,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that RSS links are not included in the sitemap.
@@ -89,9 +89,9 @@ class SitemapTaxonomyTermsRssTest extends SitemapTaxonomyTestBase {
     }
 
     // Change RSS feed depth to 1.
-    $edit = array(
+    $edit = [
       'rss_taxonomy' => 1,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that only RSS feed link for term 1 is included in the sitemap.
@@ -101,9 +101,9 @@ class SitemapTaxonomyTermsRssTest extends SitemapTaxonomyTestBase {
     $this->assertNoLinkByHref('/taxonomy/term/' . $terms[2]->id() . '/feed');
 
     // Change RSS feed depth to 2.
-    $edit = array(
+    $edit = [
       'rss_taxonomy' => 2,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that RSS feed link for term 1 and term 2 is included in the site
@@ -114,9 +114,9 @@ class SitemapTaxonomyTermsRssTest extends SitemapTaxonomyTestBase {
     $this->assertNoLinkByHref('/taxonomy/term/' . $terms[2]->id() . '/feed');
 
     // Change RSS feed depth to 3.
-    $edit = array(
+    $edit = [
       'rss_taxonomy' => 3,
-    );
+    ];
     $this->drupalPostForm('admin/config/search/sitemap', $edit, t('Save configuration'));
 
     // Assert that all RSS links are included in the sitemap.

@@ -5,7 +5,6 @@ sitemap.settings:
     _title: 'Sitemap'
   requirements:
     _permission: 'administer sitemap'
-
 sitemap.page:
   path: '/sitemap'
   defaults:

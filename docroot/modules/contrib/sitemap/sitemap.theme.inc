@@ -23,24 +23,24 @@ function template_preprocess_sitemap_feed_icon(array &$variables) {
 
   switch ($variables['type']) {
     case 'node':
-      $image = array(
+      $image = [
         '#theme' => 'image',
         '#uri' => drupal_get_path('module', 'sitemap') . '/images/feed-small.png',
         '#title' => t('Syndicated feed icon'),
         '#alt' => t('Syndicated feed icon'),
-      );
+      ];
       $output = \Drupal::service('renderer')->render($image);
       break;
   }
 
   if (!empty($variables['url'])) {
-    $output = Link::fromTextAndUrl($output, Url::fromUri('base://' . $variables['url'], array(
-      'attributes' => array(
+    $output = Link::fromTextAndUrl($output, Url::fromUri('base://' . $variables['url'], [
+      'attributes' => [
         'class' => 'feed-link',
-        'title' => t('Syndicated feed for @feed_name', array('@feed_name' => $variables['name'])),
-      ),
+        'title' => t('Syndicated feed for @feed_name', ['@feed_name' => $variables['name']]),
+      ],
       'html' => TRUE,
-    )))->toString();
+    ]))->toString();
   }
 
   $variables['icon'] = $output;
@@ -107,71 +107,4 @@ function theme_sitemap_menu_link(array $variables) {
   $url->setOption('set_active_class', TRUE);
   $output = \Drupal::linkGenerator()->generate($element['#title'], $url);
   return '<li' . new Attribute($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
-}
-
-
-/**
- * Preprocesses the variables for sitemap.html.twig.
- *
- * @see sitemap.html.twig
- */
-function template_preprocess_sitemap(array &$variables) {
-/*
-  $config = \Drupal::config('sitemap.settings');
-
-  $message = $config->get('message.value');
-  if (!empty($message)) {
-    $variables['message'] = ['#markup' => $message];
-  }
-
-  if ($config->get('show_titles')) {
-    $variables['show_titles'] = TRUE;
-  }
-
-  $variables['sitemap_items'] = [];
-  $sitemap_order = $config->get('order');
-  asort($sitemap_order);
-
-  foreach ($sitemap_order as $content => $weight) {
-    // Get type of content.
-    $type = substr($content, 0, strpos($content, '_'));
-    $id = substr($content, strpos($content, '_') + 1);
-    if (empty($type)) {
-      $type = $content;
-      $id = NULL;
-    }
-
-    switch ($type) {
-      case 'books':
-        $books = $config->get('show_books');
-        if (!empty($books)) {
-          $variables['sitemap_items']['books'] = _sitemap_books();
-        }
-        break;
-
-      case 'menus':
-        $menus = array_filter($config->get('show_menus'));
-        if (!empty($menus[$id])) {
-          $variables['sitemap_items']['menu_' . $id] = _sitemap_menus($id);
-        }
-        break;
-
-      case 'vocabularies':
-        $vocabulary = \Drupal::entityManager()->getStorage('taxonomy_vocabulary')->load($id);
-        $vocabularies = $config->get('show_vocabularies');
-
-        if ($vocabulary && !empty($vocabularies[$vocabulary->id()])) {
-          // Compile the vocabulary trees.
-          $variables['sitemap_items']['vocabulary_' . $vocabulary->id()] = \Drupal::service('sitemap.helper')->getTerms($vocabulary);
-        }
-        break;
-    }
-  }
-
-  // Invoke all custom modules and integrate themed HTML into the sitemap.
-  $additional = \Drupal::service('module_handler')->invokeAll('sitemap');
-  foreach ($additional as $themed_sitemap_code) {
-    $variables['additional'] = $themed_sitemap_code;
-  }
-*/
 }

@@ -2,94 +2,101 @@
 
 namespace Drupal\social_auth_google;
 
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\social_auth\AuthManager\OAuth2Manager;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Google_Service_Oauth2;
+use Drupal\Core\Config\ConfigFactory;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 
 /**
- * Manages the authentication requests.
+ * Contains all the logic for Google OAuth2 authentication.
  */
 class GoogleAuthManager extends OAuth2Manager {
 
   /**
-   * The request object.
+   * Constructor.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   *   Used for accessing configuration object factory.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger factory.
    */
-  protected $request;
-
-  /**
-   * The Google service client.
-   *
-   * @var \Google_Client
-   */
-  protected $client;
-
-  /**
-   * Code returned by Google for authentication.
-   *
-   * @var string
-   */
-  protected $code;
-
-  /**
-   * GoogleLoginManager constructor.
-   *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request
-   *   Used to get the parameter code returned by Google.
-   */
-  public function __construct(RequestStack $request) {
-    $this->request = $request->getCurrentRequest();
+  public function __construct(ConfigFactory $configFactory, LoggerChannelFactoryInterface $logger_factory) {
+    parent::__construct($configFactory->get('social_auth_google.settings'), $logger_factory);
   }
 
   /**
    * {@inheritdoc}
    */
   public function authenticate() {
-    $this->client->setAccessToken($this->getAccessToken());
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getAccessToken() {
-    if (!$this->accessToken) {
-      $this->accessToken = $this->client->fetchAccessTokenWithAuthCode($this->getCode());
+    try {
+      $this->setAccessToken($this->client->getAccessToken('authorization_code',
+        ['code' => $_GET['code']]));
     }
-
-    return $this->accessToken;
+    catch (IdentityProviderException $e) {
+      $this->loggerFactory->get('social_auth_google')
+        ->error('There was an error during authentication. Exception: ' . $e->getMessage());
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function getUserInfo() {
-    return $this->getOauth2Service()->userinfo->get();
-  }
-
-  /**
-   * Gets Google Oauth2 Service.
-   *
-   * @return Google_Service_Oauth2
-   *   The Google Oauth2 service.
-   */
-  protected function getOauth2Service() {
-    return new Google_Service_Oauth2($this->getClient());
-  }
-
-  /**
-   * Gets the code returned by Google to authenticate.
-   *
-   * @return string
-   *   The code string returned by Google.
-   */
-  protected function getCode() {
-    if (!$this->code) {
-      $this->code = $this->request->query->get('code');
+    if (!$this->user) {
+      $this->user = $this->client->getResourceOwner($this->getAccessToken());
     }
 
-    return $this->code;
+    return $this->user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAuthorizationUrl() {
+    $scopes = [
+      'email',
+      'profile',
+    ];
+
+    $extra_scopes = $this->getScopes();
+    if ($extra_scopes) {
+      $scopes = array_merge($scopes, explode(',', $extra_scopes));
+    }
+
+    // Returns the URL where user will be redirected.
+    return $this->client->getAuthorizationUrl([
+      'scope' => $scopes,
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requestEndPoint($method, $path, $domain = NULL, array $options = []) {
+    if (!$domain) {
+      $domain = 'https://www.googleapis.com';
+    }
+
+    $url = $domain . $path;
+
+    $request = $this->client->getAuthenticatedRequest($method, $url, $this->getAccessToken(), $options);
+
+    try {
+      return $this->client->getParsedResponse($request);
+    }
+    catch (IdentityProviderException $e) {
+      $this->loggerFactory->get('social_auth_google')
+        ->error('There was an error when requesting ' . $url . '. Exception: ' . $e->getMessage());
+    }
+
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getState() {
+    return $this->client->getState();
   }
 
 }

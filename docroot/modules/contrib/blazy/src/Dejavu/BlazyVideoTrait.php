@@ -171,7 +171,7 @@ trait BlazyVideoTrait {
 
     $bundle = $media->bundle();
     $fields = $media->getFields();
-    $config = $media->getType()->getConfiguration();
+    $config = method_exists($media, 'getSource') ? $media->getSource()->getConfiguration() : $media->getType()->getConfiguration();
     $source = isset($config['source_url_field']) ? $config['source_url_field'] : '';
 
     $source_field[$bundle]    = isset($config['source_field']) ? $config['source_field'] : $source;
@@ -206,7 +206,7 @@ trait BlazyVideoTrait {
           $this->buildVideo($settings, $input_url);
         }
       }
-      elseif (isset($value[0]['alt'])) {
+      elseif (isset($value[0]['alt']) || is_null($value[0]['alt'])) {
         $settings['type'] = 'image';
       }
 

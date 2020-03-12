@@ -49,6 +49,7 @@ interface SitemapInterface extends ConfigurablePluginInterface, PluginInspection
    * Returns the administrative label for this mapping plugin.
    *
    * @return string
+   *   The label.
    */
   public function getLabel();
 
@@ -56,6 +57,8 @@ interface SitemapInterface extends ConfigurablePluginInterface, PluginInspection
    * Returns the administrative description for this mapping plugin.
    *
    * @return string
+   *   The description.
    */
   public function getDescription();
+
 }
