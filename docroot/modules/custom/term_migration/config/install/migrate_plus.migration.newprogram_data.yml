@@ -1,0 +1,159 @@
+id: newprogram_data
+label: Academic program and associateddatas.
+migration_group: newprogram_data
+# Source.
+#
+# Under the source, we define the key "plugin" and other
+# configurations specific to the plugin.
+source:
+  # We will be importing from a CSV file, so we will require
+  # the migrate_source_csv module which introduces the CSV
+  # source plugin with the identifier "csv".
+  plugin: csv
+  # Specify the path to the CSV data source.
+  path: 'public://institutes.csv'
+
+     
+  # Number of rows at the beginning which are not actual data.
+  header_row_count: 1
+  track_changes: true
+  # Unique ID.
+  #
+  # These are the column names from the CSV file representing the
+  # unique identifier for each source record. These will be used
+  # by the Migration API to relate source records to migrated
+  # entities usually for an updating imported records or for performing
+  # rollbacks.
+  keys:
+    - id
+  # Definitions for fields available in the source.
+  #
+  # This is an optional configuration but it makes the UI more
+  # explanatory. It is a set of key-value pairs where the key
+  # is the property name and the value is a string describing what
+  # the property is all about.
+  column_names:
+    0:
+      id: ProgramId
+    1:
+      field_institute: Institute
+    2:
+      field_departments: Department
+    3:
+      field_degree: Type_of_Degree
+    4:
+      Specialisation: Specialisation
+    5:
+      field_course_duration: Course_Duration(In Months)
+    6:
+      field_description: Description
+    7:
+      field_institute_link: Institute_link
+    8:
+      Additional_Supporting_Documents: Additional_Supporting_Documents
+   
+    # 8:
+    #   field_institute_link: Institute link
+    # 9:
+    #   field_institute_title: Institute title
+  # Static values for the migration.
+  #
+  # We can assign hard-coded values to certain properties using constants.
+  constants:
+    bool_0: 0
+    bool_1: 1
+    uid_root: 1
+    restricted_html: restricted_html
+    packet: 1
+    conj : in
+    seprator : at
+# Destination.
+destination:
+  # We want to import data from a CSV file, but how do we save it?
+  # This plugin will be responsible for storing the records read during
+  # the migration in to nodes. We can also store them as other entities
+  # like taxonomy terms, etc. But in this case we want nodes.
+  plugin: 'entity:node'
+  # We specify the default node type as "program" because
+  # we will only be importing nodes of type "program" in this
+  # migration.
+  default_bundle: programme
+# Mapping.
+#
+# We can create simple mappings without any changes to
+# source data or we can pass the source data through one or more
+# plugins before the processed value is assigned to the
+# destination.
+process:
+  # Here, we make a direct assignment of the "Title" column
+  # as the node title. Not specifying a plugin name results in
+  # the usage of the plugin "get" which simply copies the source
+  # property value to the destination property.
+  title: 
+    plugin: concat
+    source:
+      - field_degree
+      - constants/conj
+      - Specialisation
+      - constants/seprator
+      - field_institute
+    delimiter: ' '
+
+  field_institute:
+    plugin: entity_generate
+    source: field_institute
+    entity_type: taxonomy_term
+    bundle_key: vid
+    bundle: iit_institute
+    value_key: name
+
+  field_departments:
+    plugin: entity_generate
+    source: field_departments
+    entity_type: taxonomy_term
+    bundle_key: vid
+    bundle: departments
+    value_key: name
+  #Degree field
+  field_degree: field_degree
+  #Specialisation
+  field_specialisation: Specialisation
+  field_course_duration: field_course_duration
+  field_description: field_description
+  field_institute_link/uri: field_institute_link
+  field_institute_link/title: field_institute
+  field_supporting_documents: Additional_Supporting_Documents
+  # There are certain destination fields which do not have
+  # corresponding source fields. for these, we defined constants
+  # in the "source" parameter. We can refer to them here as
+  # "constants/NAME".
+  #
+  # The below segment makes the imported "program" nodes non-sticky.
+  sticky: constants/bool_0
+  # Similarly, we can specify whether we need or do not need the nodes
+  # to be promoted to the front page. Although nodes are promoted to
+  # front-page by default, I added the below line for demonstration.
+  promote: constants/bool_1
+  # Similarly, we can define a default user for the imported nodes.
+  uid: constants/uid_root
+  # Some fields have multiple properties! For example, the "body" field
+  # can have the actual full text, a summary, etc. Values can be
+  # assigned to specific properties using the syntax used below. We
+  # wrap the destination property name in quotes to comply with YAML
+  # specifications.
+  #
+  # Unfortunately, at the time of writing this code, there is no UI or
+  # drush migrate-fields-destination. Hence, one might have to refer
+  # to the structure of various field-types for determining the properties
+  # supported by various fields.
+  #
+  # Reference: https://www.drupal.org/node/2630732
+  'body/value': Body
+  # We copied the text into the _value_ for the _body_ field, however,
+  # we did not specify how the text is to be treated. We do that by
+  # specifying the _format_ property of the _body_ field.
+  #
+  # In the line below we tell Drupal to treat the _body_ as full HTML.
+  # Since this value does not come from the data source, we use a constant
+  # value defined in "source".
+  'body/format': constants/restricted_html
