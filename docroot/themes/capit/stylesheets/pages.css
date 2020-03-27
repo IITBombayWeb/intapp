@@ -1451,7 +1451,7 @@ text-align: center;
 		top: 0;
 	}
 	.search-result .field--label-inline, .page-node-type-programme .field--label-above {
-		font-size: 18px;
+		font-size: 17px;
 	}
 	h3.applicant {
 		font-size: 35px;
@@ -1513,6 +1513,9 @@ text-align: center;
 	}
 	.bascart-totl {
 		margin:  0 0 20px;
+	}
+	h5.bascart-totl{
+		color: red;
 	}
 	.basiccart-cart-total-price-contents .basiccart-total-price {
 		border-top: 1px solid #ccc;
